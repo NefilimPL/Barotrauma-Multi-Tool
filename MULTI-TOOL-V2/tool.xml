@@ -112,6 +112,9 @@
       <RequiredItems identifier="toolpl" type="Contained" excludebroken="false" excludefullcondition="true" />
       <RequiredItems items="oxygensource" type="Contained" msg="ItemMsgAmmoRequired" />
     </ItemComponent>
+    <StatusEffect type="OnSpawn" target="Contained" targetidentifiers="toolwe" Condition="100.0" setvalue="true" />
+    <StatusEffect type="OnSpawn" target="Contained" targetidentifiers="toolpl" Condition="0.0" setvalue="true" />
+    <StatusEffect type="OnSpawn" target="Contained" targetidentifiers="tooldamageflag" Condition="0.0" setvalue="true" />
     <RepairTool firedamage="100.0" structurefixamount="5" range="200" barrelpos="50,15" particles="weld" repairmultiple="true" repairthroughwalls="false" combatpriority="0" levelwallfixamount="-0.35" targetforce="10">
       <RequiredItems identifier="toolwe" type="Contained" />
       <RequiredItems items="oxygensource" type="Contained" />
@@ -146,11 +149,21 @@
       <StatusEffect type="OnSuccess" targettype="UseTarget" Condition="-15.0" />
       <Fixable identifier="structure" />
     </RepairTool>
+    <RepairTool range="200" barrelpos="66,14" targetforce="50" repairmultiple="true" repairthroughwalls="false" repairthroughholes="true" maxoverlappingwalldist="0.0">
+      <RequiredItems identifier="tooldamageflag" type="Contained" excludebroken="true" />
+      <RequiredItems items="oxygensource" type="Contained" />
+      <ParticleEmitterHitCharacter particle="fleshsmoke" particlespersecond="3" anglemin="-5" anglemax="5" velocitymin="10" velocitymax="100" />
+      <StatusEffect type="OnUse" targettype="UseTarget">
+        <Conditional entitytype="Character" />
+        <Affliction identifier="burn" strength="3.0" />
+        <Affliction identifier="lacerations" strength="1.5" />
+      </StatusEffect>
+    </RepairTool>
     <ItemContainer capacity="1" maxstacksize="1" hideitems="false">
       <Containable items="oxygensource" hide="true" containedstateindicatorstyle="oxygensource" />
       <SlotIcon slotindex="0" texture="Content/UI/StatusMonitorUI.png" sourcerect="64,448,64,64" origin="0.5,0.5" />
     </ItemContainer>
-    <ItemContainer canbeselected="false" drawinventory="false" allowaccess="false" capacity="1" maxstacksize="1" hideitems="true" spawnwithid="toolwe,toolpl" removecontaineditemsondeconstruct="true">
+    <ItemContainer canbeselected="false" drawinventory="false" allowaccess="false" capacity="1" maxstacksize="1" hideitems="true" spawnwithid="toolwe,toolpl,tooldamageflag" removecontaineditemsondeconstruct="true">
       <SubContainer capacity="1" maxstacksize="1">
         <Containable identifier="toolwe">
           <StatusEffect type="OnContaining" target="This" targetitemcomponent="Holdable" isactive="true" characterusable="true" disablewhenrangedweaponequipped="false" />
@@ -159,6 +172,9 @@
       </SubContainer>
       <SubContainer capacity="1" maxstacksize="1">
         <Containable identifier="toolpl" />
+      </SubContainer>
+      <SubContainer capacity="1" maxstacksize="1">
+        <Containable identifier="tooldamageflag" hide="true" />
       </SubContainer>
     </ItemContainer>
     <CustomInterface canbeselected="false" drawhudwhenequipped="true" allowuioverlap="true">
@@ -169,6 +185,10 @@
         <StatusEffect type="OnUse" target="Contained" targetidentifiers="toolwe" condition="0.0" setvalue="true" />
         <StatusEffect type="OnSecondaryUse" target="Contained" targetidentifiers="toolwe" condition="100.0" setvalue="true" />
       </TickBox>
+      <TickBox text="label.enabledamage">
+        <StatusEffect type="OnUse" target="Contained" targetidentifiers="tooldamageflag" condition="100.0" setvalue="true" />
+        <StatusEffect type="OnSecondaryUse" target="Contained" targetidentifiers="tooldamageflag" condition="0.0" setvalue="true" />
+      </TickBox>
     </CustomInterface>
     <aitarget sightrange="2000" soundrange="500" fadeouttime="3" />
   </Item>
@@ -176,6 +196,9 @@
     <Sprite texture="Content/Items/Weapons/weapons_new.png" sourcerect="0,0,2,2" depth="0.55" origin="0.5,0.5" />
   </Item>
   <Item identifier="toolpl" noninteractable="true" hideinmenus="true">
+    <Sprite texture="Content/Items/Weapons/weapons_new.png" sourcerect="0,0,2,2" depth="0.55" origin="0.5,0.5" />
+  </Item>
+  <Item identifier="tooldamageflag" noninteractable="true" hideinmenus="true">
     <Sprite texture="Content/Items/Weapons/weapons_new.png" sourcerect="0,0,2,2" depth="0.55" origin="0.5,0.5" />
   </Item>
   <!--old

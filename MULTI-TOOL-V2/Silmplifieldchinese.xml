@@ -3,6 +3,7 @@
   <entityname.Multi-toolSET>复合多功能工具</entityname.Multi-toolSET>
   <entitydescription.Multi-toolSET>一种高级复合工具，点击切换焊接/切割器，附带有修理工具，使用氧气罐。</entitydescription.Multi-toolSET>
   <label.changetool>改变工具类型</label.changetool>
+  <label.enabledamage>启用切割伤害</label.enabledamage>
   <entityname.wrenchscrewdrivertwoinoneSET>二合一螺丝刀扳手</entityname.wrenchscrewdrivertwoinoneSET>
   <entitydescription.wrenchscrewdrivertwoinoneSET>潜艇工程师的好帮手，双击右键切换扳手/螺丝刀。</entitydescription.wrenchscrewdrivertwoinoneSET>
 </infotexts>
