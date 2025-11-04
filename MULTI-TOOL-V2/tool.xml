@@ -132,7 +132,6 @@
     </RepairTool>
     <RepairTool structurefixamount="-0.75" range="200" barrelpos="66,14" targetforce="50" repairmultiple="true" repairthroughwalls="false" maxoverlappingwalldist="0.0" repairthroughholes="true" levelwallfixamount="-20.0">
       <RequiredItems identifier="toolpl" type="Contained" />
-      <RequiredItems identifier="tooldamageflag" type="Contained" excludebroken="true" />
       <RequiredItems items="oxygensource" type="Contained" />
       <ParticleEmitter particle="weld" particlespersecond="50" copyentityangle="true" scalemin="1.5" scalemax="1.5" ColorMultiplier="20,50,255,155" />
       <ParticleEmitterHitStructure particle="weldspark" particlespersecond="200" anglemin="-40" anglemax="40" velocitymin="200" velocitymax="800" />
@@ -147,6 +146,17 @@
       <StatusEffect type="OnSuccess" targettype="UseTarget" targets="weldable" Stuck="-15.0" />
       <StatusEffect type="OnSuccess" targettype="UseTarget" Condition="-15.0" />
       <Fixable identifier="structure" />
+    </RepairTool>
+    <RepairTool range="200" barrelpos="66,14" targetforce="50" repairmultiple="true" repairthroughwalls="false" repairthroughholes="true" maxoverlappingwalldist="0.0">
+      <RequiredItems identifier="toolpl" type="Contained" />
+      <RequiredItems identifier="tooldamageflag" type="Contained" excludebroken="true" />
+      <RequiredItems items="oxygensource" type="Contained" />
+      <ParticleEmitterHitCharacter particle="fleshsmoke" particlespersecond="3" anglemin="-5" anglemax="5" velocitymin="10" velocitymax="100" />
+      <StatusEffect type="OnUse" targettype="UseTarget">
+        <Conditional entitytype="Character" />
+        <Affliction identifier="burn" strength="3.0" />
+        <Affliction identifier="lacerations" strength="1.5" />
+      </StatusEffect>
     </RepairTool>
     <ItemContainer capacity="1" maxstacksize="1" hideitems="false">
       <Containable items="oxygensource" hide="true" containedstateindicatorstyle="oxygensource" />
@@ -175,7 +185,11 @@
         <StatusEffect type="OnSecondaryUse" target="Contained" targetidentifiers="toolwe" condition="100.0" setvalue="true" />
       </TickBox>
       <TickBox text="label.enabledamage">
+        <StatusEffect type="OnUse" target="Contained" targetidentifiers="toolpl" condition="100.0" setvalue="true" />
+        <StatusEffect type="OnUse" target="Contained" targetidentifiers="toolwe" condition="0.0" setvalue="true" />
         <StatusEffect type="OnUse" target="Contained" targetidentifiers="tooldamageflag" condition="100.0" setvalue="true" />
+        <StatusEffect type="OnSecondaryUse" target="Contained" targetidentifiers="toolpl" condition="0.0" setvalue="true" />
+        <StatusEffect type="OnSecondaryUse" target="Contained" targetidentifiers="toolwe" condition="100.0" setvalue="true" />
         <StatusEffect type="OnSecondaryUse" target="Contained" targetidentifiers="tooldamageflag" condition="0.0" setvalue="true" />
       </TickBox>
     </CustomInterface>
