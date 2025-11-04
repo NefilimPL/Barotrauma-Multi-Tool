@@ -3,6 +3,7 @@
   <entityname.Multi-toolSET>Композитный мультитул</entityname.Multi-toolSET>
   <entitydescription.Multi-toolSET>Композитный инструмент, нажмите, чтобы переключить сварочный аппарат / резак, поставляется с ремонтным инструментом и использует кислородный баллон.</entitydescription.Multi-toolSET>
   <label.changetool>Изменение типа инструмента</label.changetool>
+  <label.enabledamage>Включить урон резака</label.enabledamage>
   <entityname.wrenchscrewdrivertwoinoneSET>Отвертка и гаечный ключ 2-в-1</entityname.wrenchscrewdrivertwoinoneSET>
   <entitydescription.wrenchscrewdrivertwoinoneSET>Предназначен для инженеров-подводников, двойной щелчок правой кнопкой мыши для переключения гаечных ключей/отверток.</entitydescription.wrenchscrewdrivertwoinoneSET>
 </infotexts>

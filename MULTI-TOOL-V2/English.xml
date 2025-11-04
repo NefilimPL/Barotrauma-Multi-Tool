@@ -3,6 +3,7 @@
   <entityname.Multi-toolSET>Composite multi-tool</entityname.Multi-toolSET>
   <entitydescription.Multi-toolSET>An composite tool,click to switch welder/cutter, comes with a repair tool, and uses an oxygen tank.</entitydescription.Multi-toolSET>
   <label.changetool>Change tool type</label.changetool>
+  <label.enabledamage>Enable cutter damage</label.enabledamage>
   <entityname.wrenchscrewdrivertwoinoneSET>2-in-1 screwdriver wrench</entityname.wrenchscrewdrivertwoinoneSET>
   <entitydescription.wrenchscrewdrivertwoinoneSET>Designed for submarine engineers, double right-click to switch wrenches/screwdrivers.</entitydescription.wrenchscrewdrivertwoinoneSET>
 </infotexts>
