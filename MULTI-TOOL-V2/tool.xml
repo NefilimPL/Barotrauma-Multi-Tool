@@ -112,6 +112,8 @@
       <RequiredItems identifier="toolpl" type="Contained" excludebroken="false" excludefullcondition="true" />
       <RequiredItems items="oxygensource" type="Contained" msg="ItemMsgAmmoRequired" />
     </ItemComponent>
+    <StatusEffect type="OnSpawn" target="Contained" targetidentifiers="toolwe" Condition="100.0" setvalue="true" />
+    <StatusEffect type="OnSpawn" target="Contained" targetidentifiers="toolpl" Condition="0.0" setvalue="true" />
     <StatusEffect type="OnSpawn" target="Contained" targetidentifiers="tooldamageflag" Condition="0.0" setvalue="true" />
     <RepairTool firedamage="100.0" structurefixamount="5" range="200" barrelpos="50,15" particles="weld" repairmultiple="true" repairthroughwalls="false" combatpriority="0" levelwallfixamount="-0.35" targetforce="10">
       <RequiredItems identifier="toolwe" type="Contained" />
@@ -148,7 +150,6 @@
       <Fixable identifier="structure" />
     </RepairTool>
     <RepairTool range="200" barrelpos="66,14" targetforce="50" repairmultiple="true" repairthroughwalls="false" repairthroughholes="true" maxoverlappingwalldist="0.0">
-      <RequiredItems identifier="toolpl" type="Contained" />
       <RequiredItems identifier="tooldamageflag" type="Contained" excludebroken="true" />
       <RequiredItems items="oxygensource" type="Contained" />
       <ParticleEmitterHitCharacter particle="fleshsmoke" particlespersecond="3" anglemin="-5" anglemax="5" velocitymin="10" velocitymax="100" />
