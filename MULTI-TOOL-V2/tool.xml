@@ -185,11 +185,7 @@
         <StatusEffect type="OnSecondaryUse" target="Contained" targetidentifiers="toolwe" condition="100.0" setvalue="true" />
       </TickBox>
       <TickBox text="label.enabledamage">
-        <StatusEffect type="OnUse" target="Contained" targetidentifiers="toolpl" condition="100.0" setvalue="true" />
-        <StatusEffect type="OnUse" target="Contained" targetidentifiers="toolwe" condition="0.0" setvalue="true" />
         <StatusEffect type="OnUse" target="Contained" targetidentifiers="tooldamageflag" condition="100.0" setvalue="true" />
-        <StatusEffect type="OnSecondaryUse" target="Contained" targetidentifiers="toolpl" condition="0.0" setvalue="true" />
-        <StatusEffect type="OnSecondaryUse" target="Contained" targetidentifiers="toolwe" condition="100.0" setvalue="true" />
         <StatusEffect type="OnSecondaryUse" target="Contained" targetidentifiers="tooldamageflag" condition="0.0" setvalue="true" />
       </TickBox>
     </CustomInterface>
