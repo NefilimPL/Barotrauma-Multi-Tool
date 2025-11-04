@@ -1,0 +1,7 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<contentpackage name="MULTI-TOOL-V2" modversion="1.0.5" corepackage="False" gameversion="1.6.19.1">
+  <Item file="%ModDir%/tool.xml" />
+  <Text file="%ModDir%/Silmplifieldchinese.xml" />
+  <Text file="%ModDir%/Russian.xml" />
+  <Text file="%ModDir%/English.xml" />
+</contentpackage>
