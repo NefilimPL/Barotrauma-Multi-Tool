@@ -169,14 +169,26 @@
     <CustomInterface canbeselected="false" drawhudwhenequipped="true" allowuioverlap="true">
       <GuiFrame relativesize="0.083,0.04" anchor="CenterRight" relativeoffset="0.0,-0.17" style="MainMenuGUIButton" hidedragicons="true" draggable="true" />
       <TickBox text="label.changetool">
-        <StatusEffect type="OnUse" target="Contained" targetidentifiers="toolpl" condition="100.0" setvalue="true" />
-        <StatusEffect type="OnSecondaryUse" target="Contained" targetidentifiers="toolpl" condition="0.0" setvalue="true" />
-        <StatusEffect type="OnUse" target="Contained" targetidentifiers="toolwe" condition="0.0" setvalue="true" />
-        <StatusEffect type="OnSecondaryUse" target="Contained" targetidentifiers="toolwe" condition="100.0" setvalue="true" />
+        <StatusEffect type="OnUse" target="Contained" targetidentifiers="toolpl" condition="100.0" setvalue="true">
+          <Conditional isOn="true" />
+        </StatusEffect>
+        <StatusEffect type="OnUse" target="Contained" targetidentifiers="toolpl" condition="0.0" setvalue="true">
+          <Conditional isOn="false" />
+        </StatusEffect>
+        <StatusEffect type="OnUse" target="Contained" targetidentifiers="toolwe" condition="0.0" setvalue="true">
+          <Conditional isOn="true" />
+        </StatusEffect>
+        <StatusEffect type="OnUse" target="Contained" targetidentifiers="toolwe" condition="100.0" setvalue="true">
+          <Conditional isOn="false" />
+        </StatusEffect>
       </TickBox>
       <TickBox text="label.enabledamage">
-        <StatusEffect type="OnUse" target="Contained" targetidentifiers="tooldamageflag" condition="100.0" setvalue="true" />
-        <StatusEffect type="OnSecondaryUse" target="Contained" targetidentifiers="tooldamageflag" condition="0.0" setvalue="true" />
+        <StatusEffect type="OnUse" target="Contained" targetidentifiers="tooldamageflag" condition="100.0" setvalue="true">
+          <Conditional isOn="true" />
+        </StatusEffect>
+        <StatusEffect type="OnUse" target="Contained" targetidentifiers="tooldamageflag" condition="0.0" setvalue="true">
+          <Conditional isOn="false" />
+        </StatusEffect>
       </TickBox>
     </CustomInterface>
     <aitarget sightrange="2000" soundrange="500" fadeouttime="3" />
