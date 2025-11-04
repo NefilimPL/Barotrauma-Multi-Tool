@@ -138,7 +138,7 @@
     <!-- ================================================================ -->
     <!--  Welding mode: standard repair functionality powered by toolwe   -->
     <!-- ================================================================ -->
-    <RepairTool firedamage="100.0" structurefixamount="5" range="200" barrelpos="50,15" particles="weld" repairmultiple="true" repairthroughwalls="false" combatpriority="0" levelwallfixamount="-0.35" targetforce="10">
+    <RepairTool firedamage="100.0" structurefixamount="5" range="200" barrelpos="50,15" particles="weld" repairmultiple="true" repairthroughwalls="true" combatpriority="0" levelwallfixamount="-0.35" targetforce="10">
       <RequiredItems identifier="toolwe" type="Contained" />
       <RequiredItems items="oxygensource" type="Contained" />
       <ParticleEmitter particle="weld" particlespersecond="50" copyentityangle="true" scalemin="1.5" scalemax="1.5" ColorMultiplier="20,50,255,155" />
@@ -180,13 +180,14 @@
     <!-- ================================================================ -->
     <!--  Offensive mode: burn/laceration effect when safety disabled     -->
     <!-- ================================================================ -->
-    <RepairTool range="200" barrelpos="66,14" targetforce="50" repairmultiple="true" repairthroughwalls="false" repairthroughholes="true" maxoverlappingwalldist="0.0">
+    <RepairTool range="300" barrelpos="66,14" targetforce="50" repairmultiple="true" repairthroughwalls="false" repairthroughholes="true" maxoverlappingwalldist="0.0">
       <RequiredItems identifier="tooldamageflag" type="Contained" excludebroken="true" />
       <RequiredItems items="oxygensource" type="Contained" />
       <ParticleEmitterHitCharacter particle="fleshsmoke" particlespersecond="3" anglemin="-5" anglemax="5" velocitymin="10" velocitymax="100" />
       <StatusEffect type="OnUse" targettype="UseTarget">
         <Conditional entitytype="Character" />
-        <Affliction identifier="burn" strength="3.0" />
+        <Affliction identifier="burn" strength="5.0" />
+		<Affliction identifier="stun" strength="5.0" />
         <Affliction identifier="lacerations" strength="1.5" />
       </StatusEffect>
     </RepairTool>
