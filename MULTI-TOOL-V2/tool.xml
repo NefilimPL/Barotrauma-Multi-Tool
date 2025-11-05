@@ -215,14 +215,14 @@
 
     <!-- Przełączniki umożliwiają zmianę trybów i aktywację obrażeń -->
     <CustomInterface canbeselected="false" drawhudwhenequipped="true" allowuioverlap="true">
-      <GuiFrame relativesize="0.083,0.04" anchor="CenterRight" relativeoffset="0.0,-0.17" style="MainMenuGUIButton" hidedragicons="true" draggable="true" />
-      <TickBox text="label.changetool">
+      <GuiFrame relativesize="0.2,0.070" anchor="CenterRight" relativeoffset="0.0,-0.17" style="MainMenuGUIButton" hidedragicons="true" draggable="true" />
+      <TickBox text="label.changetool" textscale="2.0">
         <StatusEffect type="OnUse" target="Contained" targetidentifiers="toolpl" condition="100.0" setvalue="true" />
         <StatusEffect type="OnSecondaryUse" target="Contained" targetidentifiers="toolpl" condition="0.0" setvalue="true" />
         <StatusEffect type="OnUse" target="Contained" targetidentifiers="toolwe" condition="0.0" setvalue="true" />
         <StatusEffect type="OnSecondaryUse" target="Contained" targetidentifiers="toolwe" condition="100.0" setvalue="true" />
       </TickBox>
-      <TickBox text="label.enabledamage">
+      <TickBox text="label.enabledamage" textscale="2.0">
         <StatusEffect type="OnUse" target="Contained" targetidentifiers="tooldamageflag" condition="100.0" setvalue="true" />
         <StatusEffect type="OnSecondaryUse" target="Contained" targetidentifiers="tooldamageflag" condition="0.0" setvalue="true" />
       </TickBox>
