@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <infotexts language="Polish" nowhitespace="false" translatedname="Polski">
   <entityname.Multi-toolSET>Kompozytowy multitool</entityname.Multi-toolSET>
-  <entitydescription.Multi-toolSET>Kompozytowe narzędzie; kliknięcie przełącza spawarkę/wycinarkę, posiada moduł naprawczy i zużywa butlę tlenową.</entitydescription.Multi-toolSET>
+  <entitydescription.Multi-toolSET>Kompozytowe narzędzie; kliknięcie przełącza spawarkę/wycinarkę, posiada moduł naprawczy, świeci wbudowaną latarką, ma slot na latarkę i zużywa butlę tlenową.</entitydescription.Multi-toolSET>
   <label.changetool>Włącz destrukcję obiektów</label.changetool>
   <label.enabledamage>Włącz zadawanie obrażeń NPC</label.enabledamage>
   <entityname.wrenchscrewdrivertwoinoneSET>Klucz-śrubokręt 2 w 1</entityname.wrenchscrewdrivertwoinoneSET>

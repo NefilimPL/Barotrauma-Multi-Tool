@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <infotexts language="Simplified Chinese" nowhitespace="true" translatedname="中文(简体)">
   <entityname.Multi-toolSET>复合多功能工具</entityname.Multi-toolSET>
-  <entitydescription.Multi-toolSET>一种高级复合工具，点击切换焊接/切割器，附带有修理工具，使用氧气罐。</entitydescription.Multi-toolSET>
+  <entitydescription.Multi-toolSET>一种高级复合工具，点击切换焊接/切割器，附带修理工具，带有内置手电照明和手电插槽，并使用氧气罐。</entitydescription.Multi-toolSET>
   <label.changetool>启用物体破坏</label.changetool>
   <label.enabledamage>启用对NPC造成伤害</label.enabledamage>
   <entityname.wrenchscrewdrivertwoinoneSET>二合一螺丝刀扳手</entityname.wrenchscrewdrivertwoinoneSET>

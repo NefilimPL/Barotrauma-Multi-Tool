@@ -124,6 +124,8 @@
     <Body width="128" height="128" density="15" />
     <!-- Dane trzymania pozwalają używać narzędzia jak klasycznego -->
     <Holdable slots="Any,RightHand,LeftHand" controlpose="true" aimpos="60,-15" handle1="-40,-0" msg="ItemMsgPickUpSelect" />
+    <!-- Zintegrowana latarka zapewnia światło skierowane wraz z narzędziem -->
+    <LightComponent isactive="true" range="650" brightness="1.1" color="255,240,210,255" coneangle="35" flicker="0.02" castshadows="true" drawlightwhenequipped="true" usevolumetrics="true" volumetricintensity="0.2" />
     <!-- Komponent nadrzędny wymusza posiadanie wymaganych modułów -->
     <ItemComponent characterusable="true">
       <RequiredItems identifier="toolpl" type="Contained" excludebroken="false" excludefullcondition="true" />
@@ -195,6 +197,12 @@
     <ItemContainer capacity="1" maxstacksize="1" hideitems="false">
       <Containable items="oxygensource" hide="true" containedstateindicatorstyle="oxygensource" />
       <SlotIcon slotindex="0" texture="Content/UI/StatusMonitorUI.png" sourcerect="64,448,64,64" origin="0.5,0.5" />
+    </ItemContainer>
+
+    <!-- Dodatkowy slot na latarkę pozwala trzymać zapasową sztukę -->
+    <ItemContainer capacity="1" maxstacksize="1" hideitems="false">
+      <Containable items="flashlight" allowdroponcharacter="false" />
+      <SlotIcon slotindex="0" texture="Content/UI/InventoryUI.png" sourcerect="256,320,64,64" origin="0.5,0.5" />
     </ItemContainer>
 
     <!-- Ukryty pojemnik porządkuje moduły wewnętrzne -->
