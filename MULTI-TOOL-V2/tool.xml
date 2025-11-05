@@ -200,7 +200,7 @@
     </ItemContainer>
 
     <!-- Dodatkowy slot na latarkę pozwala trzymać zapasową sztukę -->
-    <ItemContainer capacity="1" maxstacksize="1" hideitems="false">
+    <ItemContainer capacity="1" maxstacksize="1" hideitems="false" allowaccess="true" drawinventory="true">
       <Containable items="flashlight" allowdroponcharacter="false" />
       <SlotIcon slotindex="0" texture="Content/UI/InventoryUI.png" sourcerect="256,320,64,64" origin="0.5,0.5" />
     </ItemContainer>
