@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <infotexts language="Russian" nowhitespace="false" translatedname="Русский">
   <entityname.Multi-toolSET>Композитный мультитул</entityname.Multi-toolSET>
-  <entitydescription.Multi-toolSET>Композитный инструмент, нажмите, чтобы переключить сварочный аппарат / резак, поставляется с ремонтным инструментом и использует кислородный баллон.</entitydescription.Multi-toolSET>
+  <entitydescription.Multi-toolSET>Композитный инструмент; нажмите, чтобы переключить сварочный аппарат/резак, поставляется с ремонтным инструментом, светит встроенным фонарём, имеет слот под фонарь и использует кислородный баллон.</entitydescription.Multi-toolSET>
   <label.changetool>Включить разрушение объектов</label.changetool>
   <label.enabledamage>Включить урон по NPC</label.enabledamage>
   <entityname.wrenchscrewdrivertwoinoneSET>Отвертка и гаечный ключ 2-в-1</entityname.wrenchscrewdrivertwoinoneSET>
