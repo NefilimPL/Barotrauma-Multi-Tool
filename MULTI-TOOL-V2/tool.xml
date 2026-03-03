@@ -131,11 +131,6 @@
       <RequiredItems identifier="toolpl" type="Contained" excludebroken="false" excludefullcondition="true" />
       <RequiredItems items="oxygensource" type="Contained" msg="ItemMsgAmmoRequired" />
     </ItemComponent>
-    <!-- Wypełnij wewnętrzne kontenery przy stworzeniu dla natychmiastowego użycia -->
-    <StatusEffect type="OnSpawn" target="Contained" targetidentifiers="toolwe" Condition="100.0" setvalue="true" />
-    <StatusEffect type="OnSpawn" target="Contained" targetidentifiers="toolpl" Condition="0.0" setvalue="true" />
-    <StatusEffect type="OnSpawn" target="Contained" targetidentifiers="tooldamageflag" Condition="0.0" setvalue="true" />
-
     <!-- ================================================================ -->
     <!--  Tryb spawania: standardowe naprawy zasilane przez toolwe        -->
     <!-- ================================================================ -->
@@ -202,11 +197,15 @@
     <!-- Dodatkowy slot na latarkę pozwala trzymać zapasową sztukę -->
     <ItemContainer capacity="1" maxstacksize="1" hideitems="false" allowaccess="true" drawinventory="true">
       <Containable items="flashlight" allowdroponcharacter="false" />
-      <SlotIcon slotindex="0" texture="Content/UI/InventoryUI.png" sourcerect="256,320,64,64" origin="0.5,0.5" />
+      <SlotIcon slotindex="0" texture="Content/Items/InventoryIconAtlas.png" sourcerect="256,320,64,64" origin="0.5,0.5" />
     </ItemContainer>
 
     <!-- Ukryty pojemnik porządkuje moduły wewnętrzne -->
     <ItemContainer canbeselected="false" drawinventory="false" allowaccess="false" capacity="1" maxstacksize="1" hideitems="true" spawnwithid="toolwe,toolpl,tooldamageflag" removecontaineditemsondeconstruct="true">
+      <!-- Ustaw domyślne stany trybów po wygenerowaniu ukrytych znaczników -->
+      <StatusEffect type="OnSpawn" target="Contained" targetidentifiers="toolwe" condition="100.0" setvalue="true" />
+      <StatusEffect type="OnSpawn" target="Contained" targetidentifiers="toolpl" condition="0.0" setvalue="true" />
+      <StatusEffect type="OnSpawn" target="Contained" targetidentifiers="tooldamageflag" condition="0.0" setvalue="true" />
       <SubContainer capacity="1" maxstacksize="1">
         <Containable identifier="toolwe">
           <StatusEffect type="OnContaining" target="This" targetitemcomponent="Holdable" isactive="true" characterusable="true" disablewhenrangedweaponequipped="false" />
