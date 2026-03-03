@@ -133,12 +133,15 @@
     <StatusEffect type="OnSpawn" target="Contained" targetidentifiers="toolwe" Condition="100.0" setvalue="true" />
     <StatusEffect type="OnSpawn" target="Contained" targetidentifiers="toolpl" Condition="0.0" setvalue="true" />
     <StatusEffect type="OnSpawn" target="Contained" targetidentifiers="tooldamageflag" Condition="0.0" setvalue="true" />
+    <StatusEffect type="OnSpawn" target="Contained" targetidentifiers="toolexton" Condition="0.0" setvalue="true" />
+    <StatusEffect type="OnSpawn" target="Contained" targetidentifiers="toolextoff" Condition="100.0" setvalue="true" />
 
     <!-- ================================================================ -->
     <!--  Tryb spawania: standardowe naprawy zasilane przez toolwe        -->
     <!-- ================================================================ -->
     <RepairTool firedamage="100.0" structurefixamount="5" range="200" barrelpos="50,15" particles="weld" repairmultiple="true" repairthroughwalls="true" combatpriority="0" levelwallfixamount="-0.35" targetforce="10">
       <RequiredItems identifier="toolwe" type="Contained" />
+      <RequiredItems identifier="toolextoff" type="Contained" />
       <RequiredItems items="oxygensource" type="Contained" />
       <ParticleEmitter particle="weld" particlespersecond="50" copyentityangle="true" scalemin="1.5" scalemax="1.5" ColorMultiplier="20,50,255,155" />
       <ParticleEmitterHitStructure particle="weldspark" particlespersecond="200" anglemin="-40" anglemax="40" velocitymin="200" velocitymax="800" />
@@ -160,6 +163,7 @@
     <!-- ================================================================ -->
     <RepairTool structurefixamount="-0.75" range="200" barrelpos="66,14" targetforce="50" repairmultiple="true" repairthroughwalls="false" maxoverlappingwalldist="0.0" repairthroughholes="true" levelwallfixamount="-20.0">
       <RequiredItems identifier="toolpl" type="Contained" />
+      <RequiredItems identifier="toolextoff" type="Contained" />
       <RequiredItems items="oxygensource" type="Contained" />
       <ParticleEmitter particle="weld" particlespersecond="50" copyentityangle="true" scalemin="1.5" scalemax="1.5" ColorMultiplier="20,50,255,155" />
       <ParticleEmitterHitStructure particle="weldspark" particlespersecond="200" anglemin="-40" anglemax="40" velocitymin="200" velocitymax="800" />
@@ -177,10 +181,28 @@
     </RepairTool>
 
     <!-- ================================================================ -->
+    <!--  Tryb gaśnicy: wspólny slot tlenu, gaszenie pożarów i płomieni   -->
+    <!-- ================================================================ -->
+    <RepairTool range="200" barrelpos="50,15" repairmultiple="true" repairthroughwalls="false" combatpriority="1" extinguishamount="25">
+      <RequiredItems identifier="toolexton" type="Contained" />
+      <RequiredItems items="oxygensource" type="Contained" />
+      <StatusEffect type="OnUse" targettype="Contained" targets="oxygentank" Condition="-1.0" />
+      <StatusEffect type="OnUse" targettype="Contained" targets="oxygenitetank" Condition="-0.5" />
+      <Fixable identifier="structure" />
+    </RepairTool>
+    <RepairTool range="200" barrelpos="50,15" repairmultiple="true" repairthroughwalls="false" combatpriority="5" extinguishamount="25">
+      <RequiredItems identifier="toolexton" type="Contained" />
+      <RequiredItems items="oxygensource" type="Contained" />
+      <StatusEffect type="OnUse" targettype="Contained" targets="oxygentank" Condition="-1.0" />
+      <StatusEffect type="OnUse" targettype="Contained" targets="oxygenitetank" Condition="-0.5" />
+    </RepairTool>
+
+    <!-- ================================================================ -->
     <!--  Tryb ofensywny: oparzenia i rozcięcia po wyłączeniu zabezpieczeń -->
     <!-- ================================================================ -->
     <RepairTool range="300" barrelpos="66,14" targetforce="50" repairmultiple="true" repairthroughwalls="false" repairthroughholes="true" maxoverlappingwalldist="0.0">
       <RequiredItems identifier="tooldamageflag" type="Contained" excludebroken="true" />
+      <RequiredItems identifier="toolextoff" type="Contained" />
       <RequiredItems items="oxygensource" type="Contained" />
       <ParticleEmitterHitCharacter particle="fleshsmoke" particlespersecond="3" anglemin="-5" anglemax="5" velocitymin="10" velocitymax="100" />
       <StatusEffect type="OnUse" targettype="UseTarget">
@@ -198,7 +220,7 @@
     </ItemContainer>
 
     <!-- Ukryty pojemnik porządkuje moduły wewnętrzne -->
-    <ItemContainer canbeselected="false" drawinventory="false" allowaccess="false" capacity="1" maxstacksize="1" hideitems="true" spawnwithid="toolwe,toolpl,tooldamageflag" removecontaineditemsondeconstruct="true">
+    <ItemContainer canbeselected="false" drawinventory="false" allowaccess="false" capacity="1" maxstacksize="1" hideitems="true" spawnwithid="toolwe,toolpl,tooldamageflag,toolexton,toolextoff" removecontaineditemsondeconstruct="true">
       <SubContainer capacity="1" maxstacksize="1">
         <Containable identifier="toolwe">
           <StatusEffect type="OnContaining" target="This" targetitemcomponent="Holdable" isactive="true" characterusable="true" disablewhenrangedweaponequipped="false" />
@@ -211,16 +233,28 @@
       <SubContainer capacity="1" maxstacksize="1">
         <Containable identifier="tooldamageflag" hide="true" />
       </SubContainer>
+      <SubContainer capacity="1" maxstacksize="1">
+        <Containable identifier="toolexton" hide="true" />
+      </SubContainer>
+      <SubContainer capacity="1" maxstacksize="1">
+        <Containable identifier="toolextoff" hide="true" />
+      </SubContainer>
     </ItemContainer>
 
-    <!-- Przełączniki umożliwiają zmianę trybów i aktywację obrażeń -->
+    <!-- Przełączniki umożliwiają zmianę trybów, gaśnicę i aktywację obrażeń -->
     <CustomInterface canbeselected="false" drawhudwhenequipped="true" allowuioverlap="true">
-      <GuiFrame relativesize="0.2,0.070" anchor="CenterRight" relativeoffset="0.0,-0.17" style="MainMenuGUIButton" hidedragicons="true" draggable="true" />
+      <GuiFrame relativesize="0.24,0.105" anchor="CenterRight" relativeoffset="0.0,-0.17" style="MainMenuGUIButton" hidedragicons="true" draggable="true" />
       <TickBox text="label.changetool" textscale="2.0">
         <StatusEffect type="OnUse" target="Contained" targetidentifiers="toolpl" condition="100.0" setvalue="true" />
         <StatusEffect type="OnSecondaryUse" target="Contained" targetidentifiers="toolpl" condition="0.0" setvalue="true" />
         <StatusEffect type="OnUse" target="Contained" targetidentifiers="toolwe" condition="0.0" setvalue="true" />
         <StatusEffect type="OnSecondaryUse" target="Contained" targetidentifiers="toolwe" condition="100.0" setvalue="true" />
+      </TickBox>
+      <TickBox text="label.enableextinguisher" textscale="2.0">
+        <StatusEffect type="OnUse" target="Contained" targetidentifiers="toolexton" condition="100.0" setvalue="true" />
+        <StatusEffect type="OnSecondaryUse" target="Contained" targetidentifiers="toolexton" condition="0.0" setvalue="true" />
+        <StatusEffect type="OnUse" target="Contained" targetidentifiers="toolextoff" condition="0.0" setvalue="true" />
+        <StatusEffect type="OnSecondaryUse" target="Contained" targetidentifiers="toolextoff" condition="100.0" setvalue="true" />
       </TickBox>
       <TickBox text="label.enabledamage" textscale="2.0">
         <StatusEffect type="OnUse" target="Contained" targetidentifiers="tooldamageflag" condition="100.0" setvalue="true" />
@@ -240,6 +274,12 @@
     <Sprite texture="Content/Items/Weapons/weapons_new.png" sourcerect="0,0,2,2" depth="0.55" origin="0.5,0.5" />
   </Item>
   <Item identifier="tooldamageflag" noninteractable="true" hideinmenus="true">
+    <Sprite texture="Content/Items/Weapons/weapons_new.png" sourcerect="0,0,2,2" depth="0.55" origin="0.5,0.5" />
+  </Item>
+  <Item identifier="toolexton" noninteractable="true" hideinmenus="true">
+    <Sprite texture="Content/Items/Weapons/weapons_new.png" sourcerect="0,0,2,2" depth="0.55" origin="0.5,0.5" />
+  </Item>
+  <Item identifier="toolextoff" noninteractable="true" hideinmenus="true">
     <Sprite texture="Content/Items/Weapons/weapons_new.png" sourcerect="0,0,2,2" depth="0.55" origin="0.5,0.5" />
   </Item>
 
