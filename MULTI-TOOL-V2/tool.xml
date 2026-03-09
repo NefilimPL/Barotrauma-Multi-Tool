@@ -128,13 +128,46 @@
     <ItemComponent characterusable="true">
       <RequiredItems identifier="toolpl" type="Contained" excludebroken="false" excludefullcondition="true" />
       <RequiredItems items="oxygensource" type="Contained" msg="ItemMsgAmmoRequired" />
+      <!-- Synchronizacja trybów z legalnymi kontrolkami CustomInterface -->
+      <StatusEffect type="Always" target="Contained" targetidentifiers="toolpl" Condition="100.0" setvalue="true">
+        <Conditional targetcontainer="true" targetitemcomponent="Pump" IsOn="true" />
+      </StatusEffect>
+      <StatusEffect type="Always" target="Contained" targetidentifiers="toolpl" Condition="0.0" setvalue="true">
+        <Conditional targetcontainer="true" targetitemcomponent="Pump" IsOn="false" />
+      </StatusEffect>
+      <StatusEffect type="Always" target="Contained" targetidentifiers="toolwe" Condition="0.0" setvalue="true">
+        <Conditional targetcontainer="true" targetitemcomponent="Pump" IsOn="true" />
+      </StatusEffect>
+      <StatusEffect type="Always" target="Contained" targetidentifiers="toolwe" Condition="100.0" setvalue="true">
+        <Conditional targetcontainer="true" targetitemcomponent="Pump" IsOn="false" />
+      </StatusEffect>
+      <StatusEffect type="Always" target="Contained" targetidentifiers="toolexton" Condition="100.0" setvalue="true">
+        <Conditional targetcontainer="true" targetitemcomponent="LightComponent" IsOn="true" />
+      </StatusEffect>
+      <StatusEffect type="Always" target="Contained" targetidentifiers="toolexton" Condition="0.0" setvalue="true">
+        <Conditional targetcontainer="true" targetitemcomponent="LightComponent" IsOn="false" />
+      </StatusEffect>
+      <StatusEffect type="Always" target="Contained" targetidentifiers="toolextoff" Condition="0.0" setvalue="true">
+        <Conditional targetcontainer="true" targetitemcomponent="LightComponent" IsOn="true" />
+      </StatusEffect>
+      <StatusEffect type="Always" target="Contained" targetidentifiers="toolextoff" Condition="100.0" setvalue="true">
+        <Conditional targetcontainer="true" targetitemcomponent="LightComponent" IsOn="false" />
+      </StatusEffect>
+      <StatusEffect type="Always" target="Contained" targetidentifiers="tooldamageflag" Condition="100.0" setvalue="true">
+        <Conditional targetcontainer="true" targetitemcomponent="Controller" State="true" />
+      </StatusEffect>
+      <StatusEffect type="Always" target="Contained" targetidentifiers="tooldamageflag" Condition="0.0" setvalue="true">
+        <Conditional targetcontainer="true" targetitemcomponent="Controller" State="false" />
+      </StatusEffect>
+      <StatusEffect type="OnSpawn" target="Contained" targetidentifiers="toolwe" Condition="100.0" setvalue="true" />
+      <StatusEffect type="OnSpawn" target="Contained" targetidentifiers="toolpl" Condition="0.0" setvalue="true" />
+      <StatusEffect type="OnSpawn" target="Contained" targetidentifiers="tooldamageflag" Condition="0.0" setvalue="true" />
+      <StatusEffect type="OnSpawn" target="Contained" targetidentifiers="toolexton" Condition="0.0" setvalue="true" />
+      <StatusEffect type="OnSpawn" target="Contained" targetidentifiers="toolextoff" Condition="100.0" setvalue="true" />
     </ItemComponent>
-    <!-- Wypełnij wewnętrzne kontenery przy stworzeniu dla natychmiastowego użycia -->
-    <StatusEffect type="OnSpawn" target="Contained" targetidentifiers="toolwe" Condition="100.0" setvalue="true" />
-    <StatusEffect type="OnSpawn" target="Contained" targetidentifiers="toolpl" Condition="0.0" setvalue="true" />
-    <StatusEffect type="OnSpawn" target="Contained" targetidentifiers="tooldamageflag" Condition="0.0" setvalue="true" />
-    <StatusEffect type="OnSpawn" target="Contained" targetidentifiers="toolexton" Condition="0.0" setvalue="true" />
-    <StatusEffect type="OnSpawn" target="Contained" targetidentifiers="toolextoff" Condition="100.0" setvalue="true" />
+    <Pump canbeselected="false" maxflow="0" powerconsumption="0" ison="false" />
+    <LightComponent canbeselected="false" range="1" lightcolor="0,0,0,0" ison="false" />
+    <Controller canbeselected="false" IsToggle="true" State="false" Output="" FalseOutput="" HideHUD="true" />
 
     <!-- ================================================================ -->
     <!--  Tryb spawania: standardowe naprawy zasilane przez toolwe        -->
@@ -183,18 +216,24 @@
     <!-- ================================================================ -->
     <!--  Tryb gaśnicy: wspólny slot tlenu, gaszenie pożarów i płomieni   -->
     <!-- ================================================================ -->
-    <RepairTool range="200" barrelpos="50,15" repairmultiple="true" repairthroughwalls="false" combatpriority="1" extinguishamount="25">
+    <RepairTool range="200" barrelpos="50,15" repairmultiple="true" repairthroughwalls="false" repairthroughholes="true" combatpriority="1" extinguishamount="25">
       <RequiredItems identifier="toolexton" type="Contained" />
       <RequiredItems items="oxygensource" type="Contained" />
+      <ParticleEmitter particle="extinguisher" particlespersecond="100" copyentityangle="false" anglemin="-5" anglemax="5" velocitymin="500" velocitymax="2000" scalemin="1.0" scalemax="1.0" />
+      <sound file="Content/Items/Tools/Extinguisher.ogg" type="OnUse" range="500.0" loop="true" />
       <StatusEffect type="OnUse" targettype="Contained" targets="oxygentank" Condition="-1.0" />
       <StatusEffect type="OnUse" targettype="Contained" targets="oxygenitetank" Condition="-0.5" />
       <Fixable identifier="structure" />
     </RepairTool>
-    <RepairTool range="200" barrelpos="50,15" repairmultiple="true" repairthroughwalls="false" combatpriority="5" extinguishamount="25">
+    <RepairTool range="200" barrelpos="50,15" repairmultiple="true" repairthroughwalls="false" combatpriority="5">
       <RequiredItems identifier="toolexton" type="Contained" />
       <RequiredItems items="oxygensource" type="Contained" />
       <StatusEffect type="OnUse" targettype="Contained" targets="oxygentank" Condition="-1.0" />
       <StatusEffect type="OnUse" targettype="Contained" targets="oxygenitetank" Condition="-0.5" />
+      <StatusEffect type="OnUse" target="UseTarget">
+        <Conditional entitytype="Character" />
+        <ReduceAffliction identifier="burning" amount="15.0" />
+      </StatusEffect>
     </RepairTool>
 
     <!-- ================================================================ -->
@@ -244,22 +283,9 @@
     <!-- Przełączniki umożliwiają zmianę trybów, gaśnicę i aktywację obrażeń -->
     <CustomInterface canbeselected="false" drawhudwhenequipped="true" allowuioverlap="true">
       <GuiFrame relativesize="0.24,0.105" anchor="CenterRight" relativeoffset="0.0,-0.17" style="MainMenuGUIButton" hidedragicons="true" draggable="true" />
-      <TickBox text="label.changetool" textscale="2.0">
-        <StatusEffect type="OnUse" target="Contained" targetidentifiers="toolpl" condition="100.0" setvalue="true" />
-        <StatusEffect type="OnSecondaryUse" target="Contained" targetidentifiers="toolpl" condition="0.0" setvalue="true" />
-        <StatusEffect type="OnUse" target="Contained" targetidentifiers="toolwe" condition="0.0" setvalue="true" />
-        <StatusEffect type="OnSecondaryUse" target="Contained" targetidentifiers="toolwe" condition="100.0" setvalue="true" />
-      </TickBox>
-      <TickBox text="label.enableextinguisher" textscale="2.0">
-        <StatusEffect type="OnUse" target="Contained" targetidentifiers="toolexton" condition="100.0" setvalue="true" />
-        <StatusEffect type="OnSecondaryUse" target="Contained" targetidentifiers="toolexton" condition="0.0" setvalue="true" />
-        <StatusEffect type="OnUse" target="Contained" targetidentifiers="toolextoff" condition="0.0" setvalue="true" />
-        <StatusEffect type="OnSecondaryUse" target="Contained" targetidentifiers="toolextoff" condition="100.0" setvalue="true" />
-      </TickBox>
-      <TickBox text="label.enabledamage" textscale="2.0">
-        <StatusEffect type="OnUse" target="Contained" targetidentifiers="tooldamageflag" condition="100.0" setvalue="true" />
-        <StatusEffect type="OnSecondaryUse" target="Contained" targetidentifiers="tooldamageflag" condition="0.0" setvalue="true" />
-      </TickBox>
+      <TickBox text="label.changetool" textscale="2.0" targetitemcomponent="Pump" propertyname="IsOn" ContinuousSignal="false" GetValueInterval="1" />
+      <TickBox text="label.enableextinguisher" textscale="2.0" targetitemcomponent="LightComponent" propertyname="IsOn" ContinuousSignal="false" GetValueInterval="1" />
+      <TickBox text="label.enabledamage" textscale="2.0" targetitemcomponent="Controller" propertyname="State" ContinuousSignal="false" GetValueInterval="1" />
     </CustomInterface>
 
     <!-- Wyższy wskaźnik zagrożenia niż kompaktowy wariant -->
