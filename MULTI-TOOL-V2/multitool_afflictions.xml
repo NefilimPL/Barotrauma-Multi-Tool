@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Afflictions>
+  <Affliction
+    identifier="multitool_fuelrod_repairboost"
+    type="talentbuff"
+    isbuff="true"
+    limbspecific="false"
+    hideiconafterdelay="true"
+    maxstrength="1"
+    showiconthreshold="1000"
+    treatmentthreshold="1000"
+    showicontoothersthreshold="1000"
+    showinhealthscannerthreshold="1000"
+    duration="1">
+    <Effect minstrength="0" maxstrength="1">
+      <StatValue stattype="RepairSpeed" value="0.15" />
+      <StatValue stattype="MechanicalSkillGainSpeed" value="0.4" />
+      <StatValue stattype="ElectricalSkillGainSpeed" value="0.4" />
+    </Effect>
+  </Affliction>
+</Afflictions>

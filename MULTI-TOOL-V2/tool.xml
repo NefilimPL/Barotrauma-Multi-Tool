@@ -123,11 +123,21 @@
     <Sprite texture="%ModDir%/gfx.png" sourcerect="0,0,128,128" depth="0.55" origin="0.5,0.5" />
     <Body width="128" height="128" density="15" />
     <!-- Dane trzymania pozwalają używać narzędzia jak klasycznego -->
-    <Holdable slots="Any,RightHand,LeftHand" controlpose="true" aimpos="60,-15" handle1="-40,-0" msg="ItemMsgPickUpSelect" />
+    <Holdable slots="Any,RightHand,LeftHand" controlpose="true" aimpos="60,-15" handle1="-40,-0" msg="ItemMsgPickUpSelect">
+      <StatusEffect type="Always" target="Character" interval="0.9" disabledeltatime="true">
+        <RequiredItem items="reactorfuel" type="Contained" />
+        <Affliction identifier="multitool_fuelrod_repairboost" amount="1" />
+      </StatusEffect>
+      <StatusEffect type="Always" target="Character" interval="60" disabledeltatime="true">
+        <RequiredItem items="reactorfuel" type="Contained" />
+        <GiveSkill skillidentifier="mechanical" amount="1" triggertalents="false" />
+        <GiveSkill skillidentifier="electrical" amount="1" triggertalents="false" />
+      </StatusEffect>
+    </Holdable>
     <!-- Komponent nadrzędny wymusza posiadanie wymaganych modułów -->
     <ItemComponent characterusable="true">
       <RequiredItems identifier="toolpl" type="Contained" excludebroken="false" excludefullcondition="true" />
-      <RequiredItems items="oxygensource" type="Contained" msg="ItemMsgAmmoRequired" />
+      <RequiredItems items="weldingtoolfuel,oxygensource,mobilebattery,reactorfuel" type="Contained" msg="ItemMsgAmmoRequired" />
       <!-- Synchronizacja trybów z legalnymi kontrolkami CustomInterface -->
       <StatusEffect type="Always" target="Contained" targetidentifiers="toolpl" Condition="100.0" setvalue="true">
         <Conditional targetcontainer="true" targetitemcomponent="Pump" IsOn="true" />
@@ -175,7 +185,7 @@
     <RepairTool firedamage="100.0" structurefixamount="5" range="200" barrelpos="50,15" particles="weld" repairmultiple="true" repairthroughwalls="true" combatpriority="0" levelwallfixamount="-0.35" targetforce="10">
       <RequiredItems identifier="toolwe" type="Contained" />
       <RequiredItems identifier="toolextoff" type="Contained" />
-      <RequiredItems items="oxygensource" type="Contained" />
+      <RequiredItems items="weldingtoolfuel,oxygensource,mobilebattery,reactorfuel" type="Contained" />
       <ParticleEmitter particle="weld" particlespersecond="50" copyentityangle="true" scalemin="1.5" scalemax="1.5" ColorMultiplier="20,50,255,155" />
       <ParticleEmitterHitStructure particle="weldspark" particlespersecond="200" anglemin="-40" anglemax="40" velocitymin="200" velocitymax="800" />
       <ParticleEmitterHitStructure particle="GlowDot" particlespersecond="60" emitinterval="0.7" particleamount="10" scalemin="0.9" scalemax="1.0" anglemin="0" anglemax="360" velocitymin="10" velocitymax="50" />
@@ -184,8 +194,11 @@
       <ParticleEmitterHitItem identifiers="door,hatch,ductblock" particle="MistSmoke" particlespersecond="20" anglemin="-10" anglemax="10" velocitymin="10" velocitymax="100" />
       <ParticleEmitterHitCharacter particle="fleshsmoke" particlespersecond="3" anglemin="-5" anglemax="5" velocitymin="10" velocitymax="100" />
       <sound file="%ModDir%/tool.ogg" type="OnUse" range="500.0" loop="true" />
+      <StatusEffect type="OnUse" targettype="Contained" targets="weldingfueltank" Condition="-1.0" />
       <StatusEffect type="OnUse" targettype="Contained" targets="oxygentank" Condition="-1.0" />
       <StatusEffect type="OnUse" targettype="Contained" targets="oxygenitetank" Condition="-0.5" />
+      <StatusEffect type="OnUse" targettype="Contained" targets="mobilebattery" Condition="-0.2" />
+      <StatusEffect type="OnUse" targettype="Contained" targets="reactorfuel" Condition="-0.05" />
       <StatusEffect type="OnSuccess" targettype="UseTarget" targets="weldable" Stuck="20.0" />
       <StatusEffect type="OnSuccess" targettype="UseTarget" Condition="-15.0" />
       <Fixable identifier="structure" />
@@ -197,7 +210,7 @@
     <RepairTool structurefixamount="-0.75" range="200" barrelpos="66,14" targetforce="50" repairmultiple="true" repairthroughwalls="false" maxoverlappingwalldist="0.0" repairthroughholes="true" levelwallfixamount="-20.0">
       <RequiredItems identifier="toolpl" type="Contained" />
       <RequiredItems identifier="toolextoff" type="Contained" />
-      <RequiredItems items="oxygensource" type="Contained" />
+      <RequiredItems items="weldingtoolfuel,oxygensource,mobilebattery,reactorfuel" type="Contained" />
       <ParticleEmitter particle="weld" particlespersecond="50" copyentityangle="true" scalemin="1.5" scalemax="1.5" ColorMultiplier="20,50,255,155" />
       <ParticleEmitterHitStructure particle="weldspark" particlespersecond="200" anglemin="-40" anglemax="40" velocitymin="200" velocitymax="800" />
       <ParticleEmitterHitStructure particle="GlowDot" particlespersecond="60" emitinterval="0.7" particleamount="10" scalemin="0.9" scalemax="1.0" anglemin="0" anglemax="360" velocitymin="10" velocitymax="50" />
@@ -206,8 +219,11 @@
       <ParticleEmitterHitItem identifiers="door,hatch,ductblock" particle="MistSmoke" particlespersecond="20" anglemin="-10" anglemax="10" velocitymin="10" velocitymax="100" />
       <ParticleEmitterHitCharacter particle="fleshsmoke" particlespersecond="3" anglemin="-5" anglemax="5" velocitymin="10" velocitymax="100" />
       <sound file="%ModDir%/tool.ogg" type="OnUse" range="500.0" loop="true" />
+      <StatusEffect type="OnUse" targettype="Contained" targets="weldingfueltank" Condition="-1.0" />
       <StatusEffect type="OnUse" targettype="Contained" targets="oxygentank" Condition="-1.0" />
       <StatusEffect type="OnUse" targettype="Contained" targets="oxygenitetank" Condition="-0.5" />
+      <StatusEffect type="OnUse" targettype="Contained" targets="mobilebattery" Condition="-0.2" />
+      <StatusEffect type="OnUse" targettype="Contained" targets="reactorfuel" Condition="-0.05" />
       <StatusEffect type="OnSuccess" targettype="UseTarget" targets="weldable" Stuck="-15.0" />
       <StatusEffect type="OnSuccess" targettype="UseTarget" Condition="-15.0" />
       <Fixable identifier="structure" />
@@ -216,20 +232,26 @@
     <!-- ================================================================ -->
     <!--  Tryb gaśnicy: wspólny slot tlenu, gaszenie pożarów i płomieni   -->
     <!-- ================================================================ -->
-    <RepairTool range="200" barrelpos="50,15" repairmultiple="true" repairthroughwalls="false" repairthroughholes="true" combatpriority="1" extinguishamount="25">
+    <RepairTool range="500" barrelpos="50,15" repairmultiple="true" repairthroughwalls="false" repairthroughholes="true" combatpriority="1" extinguishamount="60" hititems="false" IgnoreCharacters="true">
       <RequiredItems identifier="toolexton" type="Contained" />
-      <RequiredItems items="oxygensource" type="Contained" />
-      <ParticleEmitter particle="extinguisher" particlespersecond="100" copyentityangle="false" anglemin="-5" anglemax="5" velocitymin="500" velocitymax="2000" scalemin="1.0" scalemax="1.0" />
+      <RequiredItems items="weldingtoolfuel,oxygensource,mobilebattery,reactorfuel" type="Contained" />
+      <ParticleEmitter particle="extinguisher" particlespersecond="100" copyentityangle="false" anglemin="-5" anglemax="5" velocitymin="1000" velocitymax="1650" scalemin="1.0" scalemax="1.0" />
       <sound file="Content/Items/Tools/Extinguisher.ogg" type="OnUse" range="500.0" loop="true" />
+      <StatusEffect type="OnUse" targettype="Contained" targets="weldingfueltank" Condition="-1.0" />
       <StatusEffect type="OnUse" targettype="Contained" targets="oxygentank" Condition="-1.0" />
       <StatusEffect type="OnUse" targettype="Contained" targets="oxygenitetank" Condition="-0.5" />
+      <StatusEffect type="OnUse" targettype="Contained" targets="mobilebattery" Condition="-0.2" />
+      <StatusEffect type="OnUse" targettype="Contained" targets="reactorfuel" Condition="-0.05" />
       <Fixable identifier="structure" />
     </RepairTool>
-    <RepairTool range="200" barrelpos="50,15" repairmultiple="true" repairthroughwalls="false" combatpriority="5">
+    <RepairTool range="500" barrelpos="50,15" repairmultiple="true" repairthroughwalls="false" combatpriority="5" IgnoreCharacters="false">
       <RequiredItems identifier="toolexton" type="Contained" />
-      <RequiredItems items="oxygensource" type="Contained" />
+      <RequiredItems items="weldingtoolfuel,oxygensource,mobilebattery,reactorfuel" type="Contained" />
+      <StatusEffect type="OnUse" targettype="Contained" targets="weldingfueltank" Condition="-1.0" />
       <StatusEffect type="OnUse" targettype="Contained" targets="oxygentank" Condition="-1.0" />
       <StatusEffect type="OnUse" targettype="Contained" targets="oxygenitetank" Condition="-0.5" />
+      <StatusEffect type="OnUse" targettype="Contained" targets="mobilebattery" Condition="-0.2" />
+      <StatusEffect type="OnUse" targettype="Contained" targets="reactorfuel" Condition="-0.05" />
       <StatusEffect type="OnUse" target="UseTarget">
         <Conditional entitytype="Character" />
         <ReduceAffliction identifier="burning" amount="15.0" />
@@ -242,7 +264,7 @@
     <RepairTool range="300" barrelpos="66,14" targetforce="50" repairmultiple="true" repairthroughwalls="false" repairthroughholes="true" maxoverlappingwalldist="0.0">
       <RequiredItems identifier="tooldamageflag" type="Contained" excludebroken="true" />
       <RequiredItems identifier="toolextoff" type="Contained" />
-      <RequiredItems items="oxygensource" type="Contained" />
+      <RequiredItems items="weldingtoolfuel,oxygensource,mobilebattery,reactorfuel" type="Contained" />
       <ParticleEmitterHitCharacter particle="fleshsmoke" particlespersecond="3" anglemin="-5" anglemax="5" velocitymin="10" velocitymax="100" />
       <StatusEffect type="OnUse" targettype="UseTarget">
         <Conditional entitytype="Character" />
@@ -254,7 +276,7 @@
 
     <!-- Widoczne gniazdo tlenu dla szybkiej wymiany butli -->
     <ItemContainer capacity="1" maxstacksize="1" hideitems="false">
-      <Containable items="oxygensource" hide="true" containedstateindicatorstyle="oxygensource" />
+      <Containable items="weldingtoolfuel,oxygensource,mobilebattery,reactorfuel" hide="true" containedstateindicatorstyle="tank" />
       <SlotIcon slotindex="0" texture="Content/UI/StatusMonitorUI.png" sourcerect="64,448,64,64" origin="0.5,0.5" />
     </ItemContainer>
 
@@ -335,9 +357,19 @@
     <InventoryIcon texture="%ModDir%/gfx.png" sourcerect="0,0,128,128" origin="0.5,0.5" />
     <Sprite texture="%ModDir%/gfx.png" sourcerect="0,0,128,128" depth="0.55" origin="0.5,0.5" />
     <Body width="128" height="128" density="15" />
-    <Holdable slots="Any,RightHand,LeftHand" controlpose="true" aimpos="60,-15" handle1="-40,-0" msg="ItemMsgPickUpSelect" />
+    <Holdable slots="Any,RightHand,LeftHand" controlpose="true" aimpos="60,-15" handle1="-40,-0" msg="ItemMsgPickUpSelect">
+      <StatusEffect type="Always" target="Character" interval="0.9" disabledeltatime="true">
+        <RequiredItem items="reactorfuel" type="Contained" />
+        <Affliction identifier="multitool_fuelrod_repairboost" amount="1" />
+      </StatusEffect>
+      <StatusEffect type="Always" target="Character" interval="60" disabledeltatime="true">
+        <RequiredItem items="reactorfuel" type="Contained" />
+        <GiveSkill skillidentifier="mechanical" amount="1" triggertalents="false" />
+        <GiveSkill skillidentifier="electrical" amount="1" triggertalents="false" />
+      </StatusEffect>
+    </Holdable>
     <RepairTool firedamage="100.0" structurefixamount="5" range="200" barrelpos="50,15" particles="weld" repairmultiple="true" repairthroughwalls="false" combatpriority="0" levelwallfixamount="-0.35" targetforce="10">
-      <RequiredItems items="oxygensource" type="Contained" msg="ItemMsgOxygenTankRequired" />
+      <RequiredItems items="weldingtoolfuel,oxygensource,mobilebattery,reactorfuel" type="Contained" msg="ItemMsgOxygenTankRequired" />
       <ParticleEmitter particle="weld" particlespersecond="50" copyentityangle="true" scalemin="1.5" scalemax="1.5" ColorMultiplier="20,50,255,155" />
       <ParticleEmitterHitStructure particle="weldspark" particlespersecond="200" anglemin="-40" anglemax="40" velocitymin="200" velocitymax="800" />
       <ParticleEmitterHitStructure particle="GlowDot" particlespersecond="60" emitinterval="0.7" particleamount="10" scalemin="0.9" scalemax="1.0" anglemin="0" anglemax="360" velocitymin="10" velocitymax="50" />
@@ -346,15 +378,18 @@
       <ParticleEmitterHitItem identifiers="door,hatch,ductblock" particle="MistSmoke" particlespersecond="20" anglemin="-10" anglemax="10" velocitymin="10" velocitymax="100" />
       <ParticleEmitterHitCharacter particle="fleshsmoke" particlespersecond="3" anglemin="-5" anglemax="5" velocitymin="10" velocitymax="100" />
       <sound file="%ModDir%/tool.ogg" type="OnUse" range="500.0" loop="true" />
+      <StatusEffect type="OnUse" targettype="Contained" targets="weldingfueltank" Condition="-1.0" />
       <StatusEffect type="OnUse" targettype="Contained" targets="oxygentank" Condition="-1.0" />
       <StatusEffect type="OnUse" targettype="Contained" targets="oxygenitetank" Condition="-0.5" />
+      <StatusEffect type="OnUse" targettype="Contained" targets="mobilebattery" Condition="-0.2" />
+      <StatusEffect type="OnUse" targettype="Contained" targets="reactorfuel" Condition="-0.05" />
       <StatusEffect type="OnUse" targettype="UseTarget" targets="door,ductblock" Stuck="4.0" Condition="2.0" />
       <StatusEffect type="OnUse" targettype="UseTarget" Condition="-3.0" />
       <Fixable identifier="structure" />
     </RepairTool>
     <ItemContainer capacity="1" maxstacksize="1" hideitems="true" containedstateindicatorstyle="tank">
       <SlotIcon slotindex="0" texture="Content/UI/StatusMonitorUI.png" sourcerect="64,448,64,64" origin="0.5,0.5" />
-      <Containable items="oxygensource" />
+      <Containable items="weldingtoolfuel,oxygensource,mobilebattery,reactorfuel" />
     </ItemContainer>
     <AiTarget sightrange="3000" />
   </Item>-->
