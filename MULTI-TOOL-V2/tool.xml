@@ -192,7 +192,7 @@
       <StatusEffect type="OnUse" targettype="Contained" targets="reactorfuel" Condition="-0.05" />
       <StatusEffect type="OnUse" target="Character">
         <Conditional PressureProtection="lt 1000" />
-        <Affliction identifier="radiationsickness" strength="0.75" />
+        <Affliction identifier="radiationsickness" strength="10.0" />
       </StatusEffect>
       <StatusEffect type="OnUse" target="Character">
         <RequiredItem items="divingsuit,abyssdivingsuit,combatdivingsuit,respawndivingsuit,pucs,clownexosuit,exosuit,ExoSuit_mk4,orangejumpsuit1" type="Equipped" />
@@ -254,7 +254,7 @@
       <StatusEffect type="OnUse" targettype="Contained" targets="reactorfuel" Condition="-0.05" />
       <StatusEffect type="OnUse" target="Character">
         <Conditional PressureProtection="lt 1000" />
-        <Affliction identifier="radiationsickness" strength="0.75" />
+        <Affliction identifier="radiationsickness" strength="10.0" />
       </StatusEffect>
       <StatusEffect type="OnUse" target="Character">
         <RequiredItem items="divingsuit,abyssdivingsuit,combatdivingsuit,respawndivingsuit,pucs,clownexosuit,exosuit,ExoSuit_mk4,orangejumpsuit1" type="Equipped" />
@@ -278,7 +278,7 @@
       <StatusEffect type="OnUse" target="Character">
         <RequiredItem items="reactorfuel" type="Contained" />
         <Conditional PressureProtection="lt 1000" />
-        <Affliction identifier="radiationsickness" strength="0.75" />
+        <Affliction identifier="radiationsickness" strength="10.0" />
       </StatusEffect>
       <StatusEffect type="OnUse" target="Character">
         <RequiredItem items="reactorfuel" type="Contained" />
@@ -298,7 +298,7 @@
       <StatusEffect type="OnUse" target="Character">
         <RequiredItem items="reactorfuel" type="Contained" />
         <Conditional PressureProtection="lt 1000" />
-        <Affliction identifier="radiationsickness" strength="0.75" />
+        <Affliction identifier="radiationsickness" strength="10.0" />
       </StatusEffect>
       <StatusEffect type="OnUse" target="Character">
         <RequiredItem items="reactorfuel" type="Contained" />
@@ -347,7 +347,7 @@
       <StatusEffect type="OnUse" targettype="Contained" targets="reactorfuel" Condition="-0.05" />
       <StatusEffect type="OnUse" target="Character">
         <Conditional PressureProtection="lt 1000" />
-        <Affliction identifier="radiationsickness" strength="0.75" />
+        <Affliction identifier="radiationsickness" strength="10.0" />
       </StatusEffect>
       <StatusEffect type="OnUse" target="Character">
         <RequiredItem items="divingsuit,abyssdivingsuit,combatdivingsuit,respawndivingsuit,pucs,clownexosuit,exosuit,ExoSuit_mk4,orangejumpsuit1" type="Equipped" />
@@ -358,7 +358,7 @@
         <Affliction identifier="burn" strength="2.15" />
         <Affliction identifier="stun" strength="5.0" />
         <Affliction identifier="lacerations" strength="0.43" />
-        <Affliction identifier="radiationsickness" strength="1.0" />
+        <Affliction identifier="radiationsickness" strength="15.0" />
       </StatusEffect>
     </RepairTool>
 
