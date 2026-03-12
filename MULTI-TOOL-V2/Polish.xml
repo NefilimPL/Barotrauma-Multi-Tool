@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <infotexts language="Polish" nowhitespace="false" translatedname="Polski">
   <entityname.Multi-toolSET>Kompozytowy multitool</entityname.Multi-toolSET>
-  <entitydescription.Multi-toolSET>Kompozytowe narzędzie; przełącza spawarkę i przecinarkę, dodaje tryb gaśnicy i korzysta ze wspólnej butli tlenowej.</entitydescription.Multi-toolSET>
+  <entitydescription.Multi-toolSET>Kompozytowe narzędzie; przełącza spawarkę i przecinarkę, świeci wbudowaną latarką, dodaje tryb gaśnicy i korzysta ze wspólnej butli tlenowej.</entitydescription.Multi-toolSET>
   <label.changetool>Włącz tryb przecinarki</label.changetool>
   <label.enableextinguisher>Włącz tryb gaśnicy</label.enableextinguisher>
   <label.enabledamage>Włącz zadawanie obrażeń NPC</label.enabledamage>

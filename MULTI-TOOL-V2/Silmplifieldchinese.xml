@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <infotexts language="Simplified Chinese" nowhitespace="true" translatedname="中文(简体)">
   <entityname.Multi-toolSET>复合多功能工具</entityname.Multi-toolSET>
-  <entitydescription.Multi-toolSET>一种高级复合工具，可切换焊接和切割模式，新增灭火器模式，并共用同一个氧气瓶槽位。</entitydescription.Multi-toolSET>
+  <entitydescription.Multi-toolSET>一种高级复合工具，可切换焊接和切割模式，自带手电照明，新增灭火器模式，并共用同一个氧气瓶槽位。</entitydescription.Multi-toolSET>
   <label.changetool>启用切割模式</label.changetool>
   <label.enableextinguisher>启用灭火器模式</label.enableextinguisher>
   <label.enabledamage>启用对NPC造成伤害</label.enabledamage>

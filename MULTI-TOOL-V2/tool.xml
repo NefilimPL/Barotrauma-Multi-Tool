@@ -125,12 +125,10 @@
       <StatusEffect type="Always" target="Contained" targetidentifiers="toolpl" Condition="0.0" setvalue="true"><Conditional targetcontainer="true" targetitemcomponent="Pump" IsOn="eq false" /></StatusEffect>
       <StatusEffect type="Always" target="Contained" targetidentifiers="toolwe" Condition="0.0" setvalue="true"><Conditional targetcontainer="true" targetitemcomponent="Pump" IsOn="eq true" /></StatusEffect>
       <StatusEffect type="Always" target="Contained" targetidentifiers="toolwe" Condition="100.0" setvalue="true"><Conditional targetcontainer="true" targetitemcomponent="Pump" IsOn="eq false" /></StatusEffect>
-      <StatusEffect type="Always" target="Contained" targetidentifiers="toolexton" Condition="100.0" setvalue="true"><Conditional targetcontainer="true" targetitemcomponent="LightComponent" IsOn="eq true" /></StatusEffect>
-      <StatusEffect type="Always" target="Contained" targetidentifiers="toolexton" Condition="0.0" setvalue="true"><Conditional targetcontainer="true" targetitemcomponent="LightComponent" IsOn="eq false" /></StatusEffect>
-      <StatusEffect type="Always" target="Contained" targetidentifiers="toolextoff" Condition="0.0" setvalue="true"><Conditional targetcontainer="true" targetitemcomponent="LightComponent" IsOn="eq true" /></StatusEffect>
-      <StatusEffect type="Always" target="Contained" targetidentifiers="toolextoff" Condition="100.0" setvalue="true"><Conditional targetcontainer="true" targetitemcomponent="LightComponent" IsOn="eq false" /></StatusEffect>
-      <StatusEffect type="Always" target="Contained" targetidentifiers="tooldamageflag" Condition="100.0" setvalue="true"><Conditional targetcontainer="true" targetitemcomponent="Controller" State="eq true" /></StatusEffect>
-      <StatusEffect type="Always" target="Contained" targetidentifiers="tooldamageflag" Condition="0.0" setvalue="true"><Conditional targetcontainer="true" targetitemcomponent="Controller" State="eq false" /></StatusEffect>
+      <StatusEffect type="Always" target="Contained" targetidentifiers="toolexton" Condition="100.0" setvalue="true"><Conditional targetcontainer="true" targetitemcomponent="Controller" State="eq true" /></StatusEffect>
+      <StatusEffect type="Always" target="Contained" targetidentifiers="toolexton" Condition="0.0" setvalue="true"><Conditional targetcontainer="true" targetitemcomponent="Controller" State="eq false" /></StatusEffect>
+      <StatusEffect type="Always" target="Contained" targetidentifiers="toolextoff" Condition="0.0" setvalue="true"><Conditional targetcontainer="true" targetitemcomponent="Controller" State="eq true" /></StatusEffect>
+      <StatusEffect type="Always" target="Contained" targetidentifiers="toolextoff" Condition="100.0" setvalue="true"><Conditional targetcontainer="true" targetitemcomponent="Controller" State="eq false" /></StatusEffect>
       <StatusEffect type="OnSpawn" target="Contained" targetidentifiers="toolwe" Condition="100.0" setvalue="true" />
       <StatusEffect type="OnSpawn" target="Contained" targetidentifiers="toolpl" Condition="0.0" setvalue="true" />
       <StatusEffect type="OnSpawn" target="Contained" targetidentifiers="tooldamageflag" Condition="0.0" setvalue="true" />
@@ -138,7 +136,7 @@
       <StatusEffect type="OnSpawn" target="Contained" targetidentifiers="toolextoff" Condition="100.0" setvalue="true" />
     </ItemComponent>
     <Pump canbeselected="false" maxflow="0" powerconsumption="0" ison="false" />
-    <LightComponent canbeselected="false" range="1" lightcolor="0,0,0,0" ison="false" />
+    <LightComponent canbeselected="false" isactive="true" ison="true" range="650" brightness="1.1" color="255,240,210,255" coneangle="35" flicker="0.02" castshadows="true" drawlightwhenequipped="true" usevolumetrics="true" volumetricintensity="0.2" />
     <Controller canbeselected="false" IsToggle="true" State="false" Output="" FalseOutput="" HideHUD="true" />
 
     <RepairTool firedamage="10.0" structurefixamount="2.0" range="200" barrelpos="50,15" particles="weld" repairmultiple="true" repairthroughwalls="true" combatpriority="0" levelwallfixamount="-0.425" targetforce="10">
@@ -391,8 +389,11 @@
     <CustomInterface canbeselected="false" drawhudwhenequipped="true" allowuioverlap="false">
       <GuiFrame relativesize="0.24,0.105" anchor="CenterRight" relativeoffset="0.0,-0.17" style="MainMenuGUIButton" hidedragicons="true" draggable="true" />
       <TickBox text="label.changetool" textscale="2.0" targetitemcomponent="Pump" propertyname="IsOn" ContinuousSignal="false" GetValueInterval="0.25" />
-      <TickBox text="label.enableextinguisher" textscale="2.0" targetitemcomponent="LightComponent" propertyname="IsOn" ContinuousSignal="false" GetValueInterval="0.25" />
-      <TickBox text="label.enabledamage" textscale="2.0" targetitemcomponent="Controller" propertyname="State" ContinuousSignal="false" GetValueInterval="0.25" />
+      <TickBox text="label.enableextinguisher" textscale="2.0" targetitemcomponent="Controller" propertyname="State" ContinuousSignal="false" GetValueInterval="0.25" />
+      <TickBox text="label.enabledamage" textscale="2.0">
+        <StatusEffect type="OnUse" target="Contained" targetidentifiers="tooldamageflag" condition="100.0" setvalue="true" />
+        <StatusEffect type="OnSecondaryUse" target="Contained" targetidentifiers="tooldamageflag" condition="0.0" setvalue="true" />
+      </TickBox>
     </CustomInterface>
 
     <aitarget sightrange="2000" soundrange="500" fadeouttime="3" />
