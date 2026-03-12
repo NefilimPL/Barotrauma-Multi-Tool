@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Items>
-  <!-- ================================================================== -->
-  <!--  SEGMENT: Kompaktowe narzędzie dwa w jednym dla wczesnej produkcji -->
-  <!-- ================================================================== -->
   <Item identifier="wrenchscrewdrivertwoinoneSET" category="Equipment" tags="smallitem,tool,simpletool,mountableweapon" cargocontaineridentifier="metalcrate" scale="0.5" impactsoundtag="impact_metal_light" requireaimtouse="true">
-    <!-- Listy pojawiania gwarantują obecność w inżynierskich schowkach -->
     <Preferredcontainer secondary="respawncontainer" amount="1" spawnprobability="0.1" notcampaign="true" />
     <PreferredContainer primary="engcab" secondary="reactorcab" />
     <PreferredContainer secondary="wreckstoragecab,abandonedstoragecab,piratestoragecab" amount="1" spawnprobability="0.02" />
@@ -12,7 +8,6 @@
     <PreferredContainer primary="wreckreactorcab,abandonedreactorcab,piratereactorcab" amount="1" spawnprobability="0.05" />
     <PreferredContainer secondary="outpostcrewcabinet" amount="1" spawnprobability="0.03" />
     <PreferredContainer secondary="outposttrashcan" amount="1" spawnprobability="0.01" />
-    <!-- Dostępność w sklepach i korekty cen dla różnych handlarzy -->
     <Price baseprice="57" minavailable="10">
       <Price storeidentifier="merchantoutpost" />
       <Price storeidentifier="merchantcity" minavailable="5" />
@@ -21,7 +16,6 @@
       <Price storeidentifier="merchantmine" />
       <Price storeidentifier="merchantengineering" minavailable="10" multiplier="0.9" />
     </Price>
-    <!-- Schemat demontażu i wytwarzania wzajemnie się odzwierciedla -->
     <Deconstruct time="5">
       <Item identifier="wrench" />
       <Item identifier="screwdriver" />
@@ -33,11 +27,9 @@
       <RequiredItem identifier="screwdriver" />
       <RequiredItem identifier="copper" />
     </Fabricate>
-    <!-- Wygląd oraz parametry fizyczne -->
     <InventoryIcon texture="%ModDir%/wrench.png" sourcerect="0,0,93,19" />
     <Sprite texture="%ModDir%/wrench.png" sourcerect="0,0,93,19" depth="0.55" origin="0.5,0.5" />
     <Body width="80" height="15" density="25" />
-    <!-- Profil bojowy odwzorowuje i klucz, i śrubokręt -->
     <MeleeWeapon slots="Any,RightHand,LeftHand" aimpos="40,5" handle1="0,0" reload="1.0" range="50" combatpriority="9" msg="ItemMsgPickUpSelect">
       <Attack structuredamage="0" itemdamage="4" targetimpulse="4">
         <Affliction identifier="lacerations" strength="5" probability="0.5" />
@@ -84,18 +76,13 @@
         <Conditional hasstatustag="! dblclick_timingdelaymin" />
       </StatusEffect>
     </MeleeWeapon>
-    <!-- SI traktuje je jako niewielkie zagrożenie -->
     <AiTarget sightrange="500" soundrange="250" fadeouttime="1" />
     <Quality>
       <QualityStat stattype="RepairSpeed" value="0.1" />
     </Quality>
   </Item>
 
-  <!-- ================================================================== -->
-  <!--  SEGMENT: Zaawansowany multitool z trybami plazmy i spawania       -->
-  <!-- ================================================================== -->
   <Item identifier="Multi-toolSET" category="Equipment" Tags="smallitem,tool,cuttingequipment,electricalrepairtool,mechanicalrepairtool,provocative,screwdriver,wrench,weldingequipment,crowbaritem" cargocontaineridentifier="metalcrate" Scale="0.4" impactsoundtag="impact_metal_light">
-    <!-- Miejsca pojawiania oraz dostępność handlowa -->
     <PreferredContainer primary="storagecab" spawnprobability="0.05" />
     <PreferredContainer secondary="wreckstoragecab" spawnprobability="0.02" />
     <Price baseprice="1300" sold="true">
@@ -105,7 +92,6 @@
       <Price storeidentifier="merchantmilitary" multiplier="1.0" />
       <Price storeidentifier="merchantmine" multiplier="1.0" />
     </Price>
-    <!-- Przebieg wytwarzania i odzyskiwania surowców -->
     <Fabricate suitablefabricators="fabricator,milfabricator" requiredtime="10">
       <RequiredSkill identifier="mechanical" level="20" />
       <RequiredItem identifier="weldingtool" amount="2" />
@@ -118,13 +104,20 @@
       <Item identifier="plastic" amount="2" />
       <Item identifier="titaniumaluminiumalloy" amount="1" />
     </Deconstruct>
-    <!-- Współdzielone zasoby graficzne -->
     <InventoryIcon texture="%ModDir%/gfx.png" sourcerect="0,0,128,128" origin="0.5,0.5" />
     <Sprite texture="%ModDir%/gfx.png" sourcerect="0,0,128,128" depth="0.55" origin="0.5,0.5" />
     <Body width="128" height="128" density="15" />
-    <!-- Dane trzymania pozwalają używać narzędzia jak klasycznego -->
-    <Holdable slots="Any,RightHand,LeftHand" controlpose="true" aimpos="60,-15" handle1="-40,-0" msg="ItemMsgPickUpSelect" />
-    <!-- Komponent nadrzędny wymusza posiadanie wymaganych modułów -->
+    <Holdable slots="Any,RightHand,LeftHand" controlpose="true" aimpos="60,-15" handle1="-40,-0" msg="ItemMsgPickUpSelect">
+      <StatusEffect type="Always" target="Character" interval="0.9" disabledeltatime="true">
+        <RequiredItem items="reactorfuel" type="Contained" />
+        <Affliction identifier="multitool_fuelrod_repairboost" amount="1" />
+      </StatusEffect>
+      <StatusEffect type="Always" target="Character" interval="60" disabledeltatime="true">
+        <RequiredItem items="reactorfuel" type="Contained" />
+        <GiveSkill skillidentifier="mechanical" amount="1" triggertalents="false" />
+        <GiveSkill skillidentifier="electrical" amount="1" triggertalents="false" />
+      </StatusEffect>
+    </Holdable>
     <ItemComponent characterusable="true">
       <RequiredItems identifier="toolpl" type="Contained" excludebroken="false" excludefullcondition="true" />
       <RequiredItems items="weldingtoolfuel,oxygensource,mobilebattery,reactorfuel" type="Contained" msg="ItemMsgAmmoRequired" />
@@ -148,31 +141,130 @@
     <LightComponent canbeselected="false" range="1" lightcolor="0,0,0,0" ison="false" />
     <Controller canbeselected="false" IsToggle="true" State="false" Output="" FalseOutput="" HideHUD="true" />
 
-    <!-- ================================================================ -->
-    <!--  Tryb spawania: standardowe naprawy zasilane przez toolwe        -->
-    <!-- ================================================================ -->
-    <RepairTool firedamage="100.0" structurefixamount="4.2" range="200" barrelpos="50,15" particles="weld" repairmultiple="true" repairthroughwalls="true" combatpriority="0" levelwallfixamount="-0.28" targetforce="10"><RequiredItems identifier="toolwe" type="Contained" /><RequiredItems identifier="toolextoff" type="Contained" /><RequiredItems items="weldingtoolfuel,oxygensource" type="Contained" /><ParticleEmitter particle="weld" particlespersecond="50" copyentityangle="true" scalemin="1.5" scalemax="1.5" ColorMultiplier="20,50,255,155" /><ParticleEmitterHitStructure particle="weldspark" particlespersecond="200" anglemin="-40" anglemax="40" velocitymin="200" velocitymax="800" /><ParticleEmitterHitStructure particle="GlowDot" particlespersecond="60" emitinterval="0.7" particleamount="10" scalemin="0.9" scalemax="1.0" anglemin="0" anglemax="360" velocitymin="10" velocitymax="50" /><ParticleEmitterHitStructure particle="MistSmoke" particlespersecond="20" anglemin="-10" anglemax="10" velocitymin="0" velocitymax="50" /><ParticleEmitterHitItem identifiers="door,hatch,ductblock" particle="weldspark" particlespersecond="200" anglemin="-40" anglemax="40" velocitymin="200" velocitymax="800" /><ParticleEmitterHitItem identifiers="door,hatch,ductblock" particle="MistSmoke" particlespersecond="20" anglemin="-10" anglemax="10" velocitymin="10" velocitymax="100" /><ParticleEmitterHitCharacter particle="fleshsmoke" particlespersecond="3" anglemin="-5" anglemax="5" velocitymin="10" velocitymax="100" /><sound file="%ModDir%/tool.ogg" type="OnUse" range="500.0" loop="true" /><StatusEffect type="OnUse" targettype="Contained" targets="weldingfueltank" Condition="-1.0" /><StatusEffect type="OnUse" targettype="Contained" targets="oxygentank" Condition="-1.0" /><StatusEffect type="OnUse" targettype="Contained" targets="oxygenitetank" Condition="-0.5" /><StatusEffect type="OnUse" targettype="Contained" targets="mobilebattery" Condition="-0.2" /><StatusEffect type="OnUse" targettype="Contained" targets="reactorfuel" Condition="-0.05" /><StatusEffect type="OnSuccess" targettype="UseTarget" targets="weldable" Stuck="20.0" /><StatusEffect type="OnSuccess" targettype="UseTarget" Condition="-15.0" /><Fixable identifier="structure" /></RepairTool>
-    <RepairTool firedamage="100.0" structurefixamount="5" range="200" barrelpos="50,15" particles="weld" repairmultiple="true" repairthroughwalls="true" combatpriority="0" levelwallfixamount="-0.35" targetforce="10"><RequiredItems identifier="toolwe" type="Contained" /><RequiredItems identifier="toolextoff" type="Contained" /><RequiredItems items="mobilebattery" excludedidentifiers="fulguriumbatterycell" type="Contained" /><ParticleEmitter particle="weld" particlespersecond="50" copyentityangle="true" scalemin="1.5" scalemax="1.5" ColorMultiplier="20,50,255,155" /><ParticleEmitterHitStructure particle="weldspark" particlespersecond="200" anglemin="-40" anglemax="40" velocitymin="200" velocitymax="800" /><ParticleEmitterHitStructure particle="GlowDot" particlespersecond="60" emitinterval="0.7" particleamount="10" scalemin="0.9" scalemax="1.0" anglemin="0" anglemax="360" velocitymin="10" velocitymax="50" /><ParticleEmitterHitStructure particle="MistSmoke" particlespersecond="20" anglemin="-10" anglemax="10" velocitymin="0" velocitymax="50" /><ParticleEmitterHitItem identifiers="door,hatch,ductblock" particle="weldspark" particlespersecond="200" anglemin="-40" anglemax="40" velocitymin="200" velocitymax="800" /><ParticleEmitterHitItem identifiers="door,hatch,ductblock" particle="MistSmoke" particlespersecond="20" anglemin="-10" anglemax="10" velocitymin="10" velocitymax="100" /><ParticleEmitterHitCharacter particle="fleshsmoke" particlespersecond="3" anglemin="-5" anglemax="5" velocitymin="10" velocitymax="100" /><sound file="%ModDir%/tool.ogg" type="OnUse" range="500.0" loop="true" /><StatusEffect type="OnUse" targettype="Contained" targets="weldingfueltank" Condition="-1.0" /><StatusEffect type="OnUse" targettype="Contained" targets="oxygentank" Condition="-1.0" /><StatusEffect type="OnUse" targettype="Contained" targets="oxygenitetank" Condition="-0.5" /><StatusEffect type="OnUse" targettype="Contained" targets="mobilebattery" Condition="-0.2" /><StatusEffect type="OnUse" targettype="Contained" targets="reactorfuel" Condition="-0.05" /><StatusEffect type="OnSuccess" targettype="UseTarget" targets="weldable" Stuck="20.0" /><StatusEffect type="OnSuccess" targettype="UseTarget" Condition="-15.0" /><Fixable identifier="structure" /></RepairTool>
-    <RepairTool firedamage="100.0" structurefixamount="5.6" range="200" barrelpos="50,15" particles="weld" repairmultiple="true" repairthroughwalls="true" combatpriority="0" levelwallfixamount="-0.42" targetforce="10"><RequiredItems identifier="toolwe" type="Contained" /><RequiredItems identifier="toolextoff" type="Contained" /><RequiredItems identifier="fulguriumbatterycell" type="Contained" /><ParticleEmitter particle="weld" particlespersecond="50" copyentityangle="true" scalemin="1.5" scalemax="1.5" ColorMultiplier="20,50,255,155" /><ParticleEmitterHitStructure particle="weldspark" particlespersecond="200" anglemin="-40" anglemax="40" velocitymin="200" velocitymax="800" /><ParticleEmitterHitStructure particle="GlowDot" particlespersecond="60" emitinterval="0.7" particleamount="10" scalemin="0.9" scalemax="1.0" anglemin="0" anglemax="360" velocitymin="10" velocitymax="50" /><ParticleEmitterHitStructure particle="MistSmoke" particlespersecond="20" anglemin="-10" anglemax="10" velocitymin="0" velocitymax="50" /><ParticleEmitterHitItem identifiers="door,hatch,ductblock" particle="weldspark" particlespersecond="200" anglemin="-40" anglemax="40" velocitymin="200" velocitymax="800" /><ParticleEmitterHitItem identifiers="door,hatch,ductblock" particle="MistSmoke" particlespersecond="20" anglemin="-10" anglemax="10" velocitymin="10" velocitymax="100" /><ParticleEmitterHitCharacter particle="fleshsmoke" particlespersecond="3" anglemin="-5" anglemax="5" velocitymin="10" velocitymax="100" /><sound file="%ModDir%/tool.ogg" type="OnUse" range="500.0" loop="true" /><StatusEffect type="OnUse" targettype="Contained" targets="weldingfueltank" Condition="-1.0" /><StatusEffect type="OnUse" targettype="Contained" targets="oxygentank" Condition="-1.0" /><StatusEffect type="OnUse" targettype="Contained" targets="oxygenitetank" Condition="-0.5" /><StatusEffect type="OnUse" targettype="Contained" targets="mobilebattery" Condition="-0.2" /><StatusEffect type="OnUse" targettype="Contained" targets="reactorfuel" Condition="-0.05" /><StatusEffect type="OnSuccess" targettype="UseTarget" targets="weldable" Stuck="20.0" /><StatusEffect type="OnSuccess" targettype="UseTarget" Condition="-15.0" /><Fixable identifier="structure" /></RepairTool>
-    <RepairTool firedamage="100.0" structurefixamount="6.2" range="200" barrelpos="50,15" particles="weld" repairmultiple="true" repairthroughwalls="true" combatpriority="0" levelwallfixamount="-0.50" targetforce="10"><RequiredItems identifier="toolwe" type="Contained" /><RequiredItems identifier="toolextoff" type="Contained" /><RequiredItems items="reactorfuel" excludedidentifiers="fulguriumfuelrod,thoriumfuelrod,fulguriumfuelrodvolatile" type="Contained" /><ParticleEmitter particle="weld" particlespersecond="50" copyentityangle="true" scalemin="1.5" scalemax="1.5" ColorMultiplier="20,50,255,155" /><ParticleEmitterHitStructure particle="weldspark" particlespersecond="200" anglemin="-40" anglemax="40" velocitymin="200" velocitymax="800" /><ParticleEmitterHitStructure particle="GlowDot" particlespersecond="60" emitinterval="0.7" particleamount="10" scalemin="0.9" scalemax="1.0" anglemin="0" anglemax="360" velocitymin="10" velocitymax="50" /><ParticleEmitterHitStructure particle="MistSmoke" particlespersecond="20" anglemin="-10" anglemax="10" velocitymin="0" velocitymax="50" /><ParticleEmitterHitItem identifiers="door,hatch,ductblock" particle="weldspark" particlespersecond="200" anglemin="-40" anglemax="40" velocitymin="200" velocitymax="800" /><ParticleEmitterHitItem identifiers="door,hatch,ductblock" particle="MistSmoke" particlespersecond="20" anglemin="-10" anglemax="10" velocitymin="10" velocitymax="100" /><ParticleEmitterHitCharacter particle="fleshsmoke" particlespersecond="3" anglemin="-5" anglemax="5" velocitymin="10" velocitymax="100" /><sound file="%ModDir%/tool.ogg" type="OnUse" range="500.0" loop="true" /><StatusEffect type="OnUse" targettype="Contained" targets="weldingfueltank" Condition="-1.0" /><StatusEffect type="OnUse" targettype="Contained" targets="oxygentank" Condition="-1.0" /><StatusEffect type="OnUse" targettype="Contained" targets="oxygenitetank" Condition="-0.5" /><StatusEffect type="OnUse" targettype="Contained" targets="mobilebattery" Condition="-0.2" /><StatusEffect type="OnUse" targettype="Contained" targets="reactorfuel" Condition="-0.05" /><StatusEffect type="OnSuccess" targettype="UseTarget" targets="weldable" Stuck="20.0" /><StatusEffect type="OnSuccess" targettype="UseTarget" Condition="-15.0" /><Fixable identifier="structure" /></RepairTool>
-    <RepairTool firedamage="100.0" structurefixamount="6.8" range="200" barrelpos="50,15" particles="weld" repairmultiple="true" repairthroughwalls="true" combatpriority="0" levelwallfixamount="-0.56" targetforce="10"><RequiredItems identifier="toolwe" type="Contained" /><RequiredItems identifier="toolextoff" type="Contained" /><RequiredItems identifier="fulguriumfuelrod" type="Contained" /><ParticleEmitter particle="weld" particlespersecond="50" copyentityangle="true" scalemin="1.5" scalemax="1.5" ColorMultiplier="20,50,255,155" /><ParticleEmitterHitStructure particle="weldspark" particlespersecond="200" anglemin="-40" anglemax="40" velocitymin="200" velocitymax="800" /><ParticleEmitterHitStructure particle="GlowDot" particlespersecond="60" emitinterval="0.7" particleamount="10" scalemin="0.9" scalemax="1.0" anglemin="0" anglemax="360" velocitymin="10" velocitymax="50" /><ParticleEmitterHitStructure particle="MistSmoke" particlespersecond="20" anglemin="-10" anglemax="10" velocitymin="0" velocitymax="50" /><ParticleEmitterHitItem identifiers="door,hatch,ductblock" particle="weldspark" particlespersecond="200" anglemin="-40" anglemax="40" velocitymin="200" velocitymax="800" /><ParticleEmitterHitItem identifiers="door,hatch,ductblock" particle="MistSmoke" particlespersecond="20" anglemin="-10" anglemax="10" velocitymin="10" velocitymax="100" /><ParticleEmitterHitCharacter particle="fleshsmoke" particlespersecond="3" anglemin="-5" anglemax="5" velocitymin="10" velocitymax="100" /><sound file="%ModDir%/tool.ogg" type="OnUse" range="500.0" loop="true" /><StatusEffect type="OnUse" targettype="Contained" targets="weldingfueltank" Condition="-1.0" /><StatusEffect type="OnUse" targettype="Contained" targets="oxygentank" Condition="-1.0" /><StatusEffect type="OnUse" targettype="Contained" targets="oxygenitetank" Condition="-0.5" /><StatusEffect type="OnUse" targettype="Contained" targets="mobilebattery" Condition="-0.2" /><StatusEffect type="OnUse" targettype="Contained" targets="reactorfuel" Condition="-0.05" /><StatusEffect type="OnSuccess" targettype="UseTarget" targets="weldable" Stuck="20.0" /><StatusEffect type="OnSuccess" targettype="UseTarget" Condition="-15.0" /><Fixable identifier="structure" /></RepairTool>
-    <RepairTool firedamage="100.0" structurefixamount="7.4" range="200" barrelpos="50,15" particles="weld" repairmultiple="true" repairthroughwalls="true" combatpriority="0" levelwallfixamount="-0.63" targetforce="10"><RequiredItems identifier="toolwe" type="Contained" /><RequiredItems identifier="toolextoff" type="Contained" /><RequiredItems identifier="thoriumfuelrod" type="Contained" /><ParticleEmitter particle="weld" particlespersecond="50" copyentityangle="true" scalemin="1.5" scalemax="1.5" ColorMultiplier="20,50,255,155" /><ParticleEmitterHitStructure particle="weldspark" particlespersecond="200" anglemin="-40" anglemax="40" velocitymin="200" velocitymax="800" /><ParticleEmitterHitStructure particle="GlowDot" particlespersecond="60" emitinterval="0.7" particleamount="10" scalemin="0.9" scalemax="1.0" anglemin="0" anglemax="360" velocitymin="10" velocitymax="50" /><ParticleEmitterHitStructure particle="MistSmoke" particlespersecond="20" anglemin="-10" anglemax="10" velocitymin="0" velocitymax="50" /><ParticleEmitterHitItem identifiers="door,hatch,ductblock" particle="weldspark" particlespersecond="200" anglemin="-40" anglemax="40" velocitymin="200" velocitymax="800" /><ParticleEmitterHitItem identifiers="door,hatch,ductblock" particle="MistSmoke" particlespersecond="20" anglemin="-10" anglemax="10" velocitymin="10" velocitymax="100" /><ParticleEmitterHitCharacter particle="fleshsmoke" particlespersecond="3" anglemin="-5" anglemax="5" velocitymin="10" velocitymax="100" /><sound file="%ModDir%/tool.ogg" type="OnUse" range="500.0" loop="true" /><StatusEffect type="OnUse" targettype="Contained" targets="weldingfueltank" Condition="-1.0" /><StatusEffect type="OnUse" targettype="Contained" targets="oxygentank" Condition="-1.0" /><StatusEffect type="OnUse" targettype="Contained" targets="oxygenitetank" Condition="-0.5" /><StatusEffect type="OnUse" targettype="Contained" targets="mobilebattery" Condition="-0.2" /><StatusEffect type="OnUse" targettype="Contained" targets="reactorfuel" Condition="-0.05" /><StatusEffect type="OnSuccess" targettype="UseTarget" targets="weldable" Stuck="20.0" /><StatusEffect type="OnSuccess" targettype="UseTarget" Condition="-15.0" /><Fixable identifier="structure" /></RepairTool>
-    <RepairTool firedamage="100.0" structurefixamount="8.0" range="200" barrelpos="50,15" particles="weld" repairmultiple="true" repairthroughwalls="true" combatpriority="0" levelwallfixamount="-0.70" targetforce="10"><RequiredItems identifier="toolwe" type="Contained" /><RequiredItems identifier="toolextoff" type="Contained" /><RequiredItems identifier="fulguriumfuelrodvolatile" type="Contained" /><ParticleEmitter particle="weld" particlespersecond="50" copyentityangle="true" scalemin="1.5" scalemax="1.5" ColorMultiplier="20,50,255,155" /><ParticleEmitterHitStructure particle="weldspark" particlespersecond="200" anglemin="-40" anglemax="40" velocitymin="200" velocitymax="800" /><ParticleEmitterHitStructure particle="GlowDot" particlespersecond="60" emitinterval="0.7" particleamount="10" scalemin="0.9" scalemax="1.0" anglemin="0" anglemax="360" velocitymin="10" velocitymax="50" /><ParticleEmitterHitStructure particle="MistSmoke" particlespersecond="20" anglemin="-10" anglemax="10" velocitymin="0" velocitymax="50" /><ParticleEmitterHitItem identifiers="door,hatch,ductblock" particle="weldspark" particlespersecond="200" anglemin="-40" anglemax="40" velocitymin="200" velocitymax="800" /><ParticleEmitterHitItem identifiers="door,hatch,ductblock" particle="MistSmoke" particlespersecond="20" anglemin="-10" anglemax="10" velocitymin="10" velocitymax="100" /><ParticleEmitterHitCharacter particle="fleshsmoke" particlespersecond="3" anglemin="-5" anglemax="5" velocitymin="10" velocitymax="100" /><sound file="%ModDir%/tool.ogg" type="OnUse" range="500.0" loop="true" /><StatusEffect type="OnUse" targettype="Contained" targets="weldingfueltank" Condition="-1.0" /><StatusEffect type="OnUse" targettype="Contained" targets="oxygentank" Condition="-1.0" /><StatusEffect type="OnUse" targettype="Contained" targets="oxygenitetank" Condition="-0.5" /><StatusEffect type="OnUse" targettype="Contained" targets="mobilebattery" Condition="-0.2" /><StatusEffect type="OnUse" targettype="Contained" targets="reactorfuel" Condition="-0.05" /><StatusEffect type="OnSuccess" targettype="UseTarget" targets="weldable" Stuck="20.0" /><StatusEffect type="OnSuccess" targettype="UseTarget" Condition="-15.0" /><Fixable identifier="structure" /></RepairTool>
+    <RepairTool firedamage="10.0" structurefixamount="2.0" range="200" barrelpos="50,15" particles="weld" repairmultiple="true" repairthroughwalls="true" combatpriority="0" levelwallfixamount="-0.425" targetforce="10">
+      <RequiredItems identifier="toolwe" type="Contained" />
+      <RequiredItems identifier="toolextoff" type="Contained" />
+      <RequiredItems items="weldingtoolfuel,oxygensource" type="Contained" />
+      <ParticleEmitter particle="weld" particlespersecond="50" copyentityangle="true" scalemin="1.5" scalemax="1.5" ColorMultiplier="20,50,255,155" />
+      <ParticleEmitterHitStructure particle="weldspark" particlespersecond="200" anglemin="-40" anglemax="40" velocitymin="200" velocitymax="800" />
+      <ParticleEmitterHitStructure particle="GlowDot" particlespersecond="60" emitinterval="0.7" particleamount="10" scalemin="0.9" scalemax="1.0" anglemin="0" anglemax="360" velocitymin="10" velocitymax="50" />
+      <ParticleEmitterHitStructure particle="MistSmoke" particlespersecond="20" anglemin="-10" anglemax="10" velocitymin="0" velocitymax="50" />
+      <ParticleEmitterHitItem identifiers="door,hatch,ductblock" particle="weldspark" particlespersecond="200" anglemin="-40" anglemax="40" velocitymin="200" velocitymax="800" />
+      <ParticleEmitterHitItem identifiers="door,hatch,ductblock" particle="MistSmoke" particlespersecond="20" anglemin="-10" anglemax="10" velocitymin="10" velocitymax="100" />
+      <ParticleEmitterHitCharacter particle="fleshsmoke" particlespersecond="3" anglemin="-5" anglemax="5" velocitymin="10" velocitymax="100" />
+      <sound file="%ModDir%/tool.ogg" type="OnUse" range="500.0" loop="true" />
+      <StatusEffect type="OnUse" targettype="Contained" targets="weldingfueltank" Condition="-1.0" />
+      <StatusEffect type="OnUse" targettype="Contained" targets="oxygentank" Condition="-1.0" />
+      <StatusEffect type="OnUse" targettype="Contained" targets="oxygenitetank" Condition="-0.5" />
+      <StatusEffect type="OnSuccess" targettype="UseTarget" targets="weldable" Stuck="5.0" />
+      <StatusEffect type="OnSuccess" targettype="UseTarget" Condition="-3.0" />
+      <Fixable identifier="structure" />
+    </RepairTool>
+    <RepairTool firedamage="10.0" structurefixamount="2.2" range="200" barrelpos="50,15" particles="weld" repairmultiple="true" repairthroughwalls="true" combatpriority="0" levelwallfixamount="-0.47" targetforce="10">
+      <RequiredItems identifier="toolwe" type="Contained" />
+      <RequiredItems identifier="toolextoff" type="Contained" />
+      <RequiredItems items="mobilebattery" type="Contained" />
+      <ParticleEmitter particle="weld" particlespersecond="50" copyentityangle="true" scalemin="1.5" scalemax="1.5" ColorMultiplier="20,50,255,155" />
+      <ParticleEmitterHitStructure particle="weldspark" particlespersecond="200" anglemin="-40" anglemax="40" velocitymin="200" velocitymax="800" />
+      <ParticleEmitterHitStructure particle="GlowDot" particlespersecond="60" emitinterval="0.7" particleamount="10" scalemin="0.9" scalemax="1.0" anglemin="0" anglemax="360" velocitymin="10" velocitymax="50" />
+      <ParticleEmitterHitStructure particle="MistSmoke" particlespersecond="20" anglemin="-10" anglemax="10" velocitymin="0" velocitymax="50" />
+      <ParticleEmitterHitItem identifiers="door,hatch,ductblock" particle="weldspark" particlespersecond="200" anglemin="-40" anglemax="40" velocitymin="200" velocitymax="800" />
+      <ParticleEmitterHitItem identifiers="door,hatch,ductblock" particle="MistSmoke" particlespersecond="20" anglemin="-10" anglemax="10" velocitymin="10" velocitymax="100" />
+      <ParticleEmitterHitCharacter particle="fleshsmoke" particlespersecond="3" anglemin="-5" anglemax="5" velocitymin="10" velocitymax="100" />
+      <sound file="%ModDir%/tool.ogg" type="OnUse" range="500.0" loop="true" />
+      <StatusEffect type="OnUse" targettype="Contained" targets="mobilebattery" Condition="-0.2" />
+      <StatusEffect type="OnSuccess" targettype="UseTarget" targets="weldable" Stuck="5.5" />
+      <StatusEffect type="OnSuccess" targettype="UseTarget" Condition="-3.3" />
+      <Fixable identifier="structure" />
+    </RepairTool>
+    <RepairTool firedamage="10.0" structurefixamount="2.86" range="200" barrelpos="50,15" particles="weld" repairmultiple="true" repairthroughwalls="true" combatpriority="0" levelwallfixamount="-0.61" targetforce="10">
+      <RequiredItems identifier="toolwe" type="Contained" />
+      <RequiredItems identifier="toolextoff" type="Contained" />
+      <RequiredItems items="reactorfuel" type="Contained" />
+      <ParticleEmitter particle="weld" particlespersecond="50" copyentityangle="true" scalemin="1.5" scalemax="1.5" ColorMultiplier="20,50,255,155" />
+      <ParticleEmitterHitStructure particle="weldspark" particlespersecond="200" anglemin="-40" anglemax="40" velocitymin="200" velocitymax="800" />
+      <ParticleEmitterHitStructure particle="GlowDot" particlespersecond="60" emitinterval="0.7" particleamount="10" scalemin="0.9" scalemax="1.0" anglemin="0" anglemax="360" velocitymin="10" velocitymax="50" />
+      <ParticleEmitterHitStructure particle="MistSmoke" particlespersecond="20" anglemin="-10" anglemax="10" velocitymin="0" velocitymax="50" />
+      <ParticleEmitterHitItem identifiers="door,hatch,ductblock" particle="weldspark" particlespersecond="200" anglemin="-40" anglemax="40" velocitymin="200" velocitymax="800" />
+      <ParticleEmitterHitItem identifiers="door,hatch,ductblock" particle="MistSmoke" particlespersecond="20" anglemin="-10" anglemax="10" velocitymin="10" velocitymax="100" />
+      <ParticleEmitterHitCharacter particle="fleshsmoke" particlespersecond="3" anglemin="-5" anglemax="5" velocitymin="10" velocitymax="100" />
+      <sound file="%ModDir%/tool.ogg" type="OnUse" range="500.0" loop="true" />
+      <StatusEffect type="OnUse" targettype="Contained" targets="reactorfuel" Condition="-0.05" />
+      <StatusEffect type="OnUse" target="Character">
+        <Conditional PressureProtection="lt 1000" />
+        <Affliction identifier="radiationsickness" strength="10.0" />
+      </StatusEffect>
+      <StatusEffect type="OnUse" target="Character">
+        <RequiredItem items="divingsuit,abyssdivingsuit,combatdivingsuit,respawndivingsuit,pucs,clownexosuit,exosuit,ExoSuit_mk4,orangejumpsuit1" type="Equipped" />
+        <ReduceAffliction identifier="radiationsickness" amount="0.75" />
+      </StatusEffect>
+      <StatusEffect type="OnSuccess" targettype="UseTarget" targets="weldable" Stuck="7.15" />
+      <StatusEffect type="OnSuccess" targettype="UseTarget" Condition="-4.29" />
+      <Fixable identifier="structure" />
+    </RepairTool>
 
-    <!-- ================================================================ -->
-    <!--  Tryb plazmowy: uszkadzanie struktur / cięcie z toolpl           -->
-    <!-- ================================================================ -->
-    <RepairTool structurefixamount="-0.55" range="200" barrelpos="66,14" targetforce="50" repairmultiple="true" repairthroughwalls="false" maxoverlappingwalldist="0.0" repairthroughholes="true" levelwallfixamount="-15.0"><RequiredItems identifier="toolpl" type="Contained" /><RequiredItems identifier="toolextoff" type="Contained" /><RequiredItems items="weldingtoolfuel,oxygensource" type="Contained" /><ParticleEmitter particle="weld" particlespersecond="50" copyentityangle="true" scalemin="1.5" scalemax="1.5" ColorMultiplier="20,50,255,155" /><ParticleEmitterHitStructure particle="weldspark" particlespersecond="200" anglemin="-40" anglemax="40" velocitymin="200" velocitymax="800" /><ParticleEmitterHitStructure particle="GlowDot" particlespersecond="60" emitinterval="0.7" particleamount="10" scalemin="0.9" scalemax="1.0" anglemin="0" anglemax="360" velocitymin="10" velocitymax="50" /><ParticleEmitterHitStructure particle="MistSmoke" particlespersecond="20" anglemin="-10" anglemax="10" velocitymin="0" velocitymax="50" /><ParticleEmitterHitItem identifiers="door,hatch,ductblock" particle="weldspark" particlespersecond="200" anglemin="-40" anglemax="40" velocitymin="200" velocitymax="800" /><ParticleEmitterHitItem identifiers="door,hatch,ductblock" particle="MistSmoke" particlespersecond="20" anglemin="-10" anglemax="10" velocitymin="10" velocitymax="100" /><ParticleEmitterHitCharacter particle="fleshsmoke" particlespersecond="3" anglemin="-5" anglemax="5" velocitymin="10" velocitymax="100" /><sound file="%ModDir%/tool.ogg" type="OnUse" range="500.0" loop="true" /><StatusEffect type="OnUse" targettype="Contained" targets="weldingfueltank" Condition="-1.0" /><StatusEffect type="OnUse" targettype="Contained" targets="oxygentank" Condition="-1.0" /><StatusEffect type="OnUse" targettype="Contained" targets="oxygenitetank" Condition="-0.5" /><StatusEffect type="OnUse" targettype="Contained" targets="mobilebattery" Condition="-0.2" /><StatusEffect type="OnUse" targettype="Contained" targets="reactorfuel" Condition="-0.05" /><StatusEffect type="OnSuccess" targettype="UseTarget" targets="weldable" Stuck="-15.0" /><StatusEffect type="OnSuccess" targettype="UseTarget" Condition="-15.0" /><Fixable identifier="structure" /></RepairTool>
-    <RepairTool structurefixamount="-0.75" range="200" barrelpos="66,14" targetforce="50" repairmultiple="true" repairthroughwalls="false" maxoverlappingwalldist="0.0" repairthroughholes="true" levelwallfixamount="-20.0"><RequiredItems identifier="toolpl" type="Contained" /><RequiredItems identifier="toolextoff" type="Contained" /><RequiredItems items="mobilebattery" excludedidentifiers="fulguriumbatterycell" type="Contained" /><ParticleEmitter particle="weld" particlespersecond="50" copyentityangle="true" scalemin="1.5" scalemax="1.5" ColorMultiplier="20,50,255,155" /><ParticleEmitterHitStructure particle="weldspark" particlespersecond="200" anglemin="-40" anglemax="40" velocitymin="200" velocitymax="800" /><ParticleEmitterHitStructure particle="GlowDot" particlespersecond="60" emitinterval="0.7" particleamount="10" scalemin="0.9" scalemax="1.0" anglemin="0" anglemax="360" velocitymin="10" velocitymax="50" /><ParticleEmitterHitStructure particle="MistSmoke" particlespersecond="20" anglemin="-10" anglemax="10" velocitymin="0" velocitymax="50" /><ParticleEmitterHitItem identifiers="door,hatch,ductblock" particle="weldspark" particlespersecond="200" anglemin="-40" anglemax="40" velocitymin="200" velocitymax="800" /><ParticleEmitterHitItem identifiers="door,hatch,ductblock" particle="MistSmoke" particlespersecond="20" anglemin="-10" anglemax="10" velocitymin="10" velocitymax="100" /><ParticleEmitterHitCharacter particle="fleshsmoke" particlespersecond="3" anglemin="-5" anglemax="5" velocitymin="10" velocitymax="100" /><sound file="%ModDir%/tool.ogg" type="OnUse" range="500.0" loop="true" /><StatusEffect type="OnUse" targettype="Contained" targets="weldingfueltank" Condition="-1.0" /><StatusEffect type="OnUse" targettype="Contained" targets="oxygentank" Condition="-1.0" /><StatusEffect type="OnUse" targettype="Contained" targets="oxygenitetank" Condition="-0.5" /><StatusEffect type="OnUse" targettype="Contained" targets="mobilebattery" Condition="-0.2" /><StatusEffect type="OnUse" targettype="Contained" targets="reactorfuel" Condition="-0.05" /><StatusEffect type="OnSuccess" targettype="UseTarget" targets="weldable" Stuck="-15.0" /><StatusEffect type="OnSuccess" targettype="UseTarget" Condition="-15.0" /><Fixable identifier="structure" /></RepairTool>
-    <RepairTool structurefixamount="-0.9" range="200" barrelpos="66,14" targetforce="50" repairmultiple="true" repairthroughwalls="false" maxoverlappingwalldist="0.0" repairthroughholes="true" levelwallfixamount="-24.0"><RequiredItems identifier="toolpl" type="Contained" /><RequiredItems identifier="toolextoff" type="Contained" /><RequiredItems identifier="fulguriumbatterycell" type="Contained" /><ParticleEmitter particle="weld" particlespersecond="50" copyentityangle="true" scalemin="1.5" scalemax="1.5" ColorMultiplier="20,50,255,155" /><ParticleEmitterHitStructure particle="weldspark" particlespersecond="200" anglemin="-40" anglemax="40" velocitymin="200" velocitymax="800" /><ParticleEmitterHitStructure particle="GlowDot" particlespersecond="60" emitinterval="0.7" particleamount="10" scalemin="0.9" scalemax="1.0" anglemin="0" anglemax="360" velocitymin="10" velocitymax="50" /><ParticleEmitterHitStructure particle="MistSmoke" particlespersecond="20" anglemin="-10" anglemax="10" velocitymin="0" velocitymax="50" /><ParticleEmitterHitItem identifiers="door,hatch,ductblock" particle="weldspark" particlespersecond="200" anglemin="-40" anglemax="40" velocitymin="200" velocitymax="800" /><ParticleEmitterHitItem identifiers="door,hatch,ductblock" particle="MistSmoke" particlespersecond="20" anglemin="-10" anglemax="10" velocitymin="10" velocitymax="100" /><ParticleEmitterHitCharacter particle="fleshsmoke" particlespersecond="3" anglemin="-5" anglemax="5" velocitymin="10" velocitymax="100" /><sound file="%ModDir%/tool.ogg" type="OnUse" range="500.0" loop="true" /><StatusEffect type="OnUse" targettype="Contained" targets="weldingfueltank" Condition="-1.0" /><StatusEffect type="OnUse" targettype="Contained" targets="oxygentank" Condition="-1.0" /><StatusEffect type="OnUse" targettype="Contained" targets="oxygenitetank" Condition="-0.5" /><StatusEffect type="OnUse" targettype="Contained" targets="mobilebattery" Condition="-0.2" /><StatusEffect type="OnUse" targettype="Contained" targets="reactorfuel" Condition="-0.05" /><StatusEffect type="OnSuccess" targettype="UseTarget" targets="weldable" Stuck="-15.0" /><StatusEffect type="OnSuccess" targettype="UseTarget" Condition="-15.0" /><Fixable identifier="structure" /></RepairTool>
-    <RepairTool structurefixamount="-1.05" range="200" barrelpos="66,14" targetforce="50" repairmultiple="true" repairthroughwalls="false" maxoverlappingwalldist="0.0" repairthroughholes="true" levelwallfixamount="-28.0"><RequiredItems identifier="toolpl" type="Contained" /><RequiredItems identifier="toolextoff" type="Contained" /><RequiredItems items="reactorfuel" excludedidentifiers="fulguriumfuelrod,thoriumfuelrod,fulguriumfuelrodvolatile" type="Contained" /><ParticleEmitter particle="weld" particlespersecond="50" copyentityangle="true" scalemin="1.5" scalemax="1.5" ColorMultiplier="20,50,255,155" /><ParticleEmitterHitStructure particle="weldspark" particlespersecond="200" anglemin="-40" anglemax="40" velocitymin="200" velocitymax="800" /><ParticleEmitterHitStructure particle="GlowDot" particlespersecond="60" emitinterval="0.7" particleamount="10" scalemin="0.9" scalemax="1.0" anglemin="0" anglemax="360" velocitymin="10" velocitymax="50" /><ParticleEmitterHitStructure particle="MistSmoke" particlespersecond="20" anglemin="-10" anglemax="10" velocitymin="0" velocitymax="50" /><ParticleEmitterHitItem identifiers="door,hatch,ductblock" particle="weldspark" particlespersecond="200" anglemin="-40" anglemax="40" velocitymin="200" velocitymax="800" /><ParticleEmitterHitItem identifiers="door,hatch,ductblock" particle="MistSmoke" particlespersecond="20" anglemin="-10" anglemax="10" velocitymin="10" velocitymax="100" /><ParticleEmitterHitCharacter particle="fleshsmoke" particlespersecond="3" anglemin="-5" anglemax="5" velocitymin="10" velocitymax="100" /><sound file="%ModDir%/tool.ogg" type="OnUse" range="500.0" loop="true" /><StatusEffect type="OnUse" targettype="Contained" targets="weldingfueltank" Condition="-1.0" /><StatusEffect type="OnUse" targettype="Contained" targets="oxygentank" Condition="-1.0" /><StatusEffect type="OnUse" targettype="Contained" targets="oxygenitetank" Condition="-0.5" /><StatusEffect type="OnUse" targettype="Contained" targets="mobilebattery" Condition="-0.2" /><StatusEffect type="OnUse" targettype="Contained" targets="reactorfuel" Condition="-0.05" /><StatusEffect type="OnSuccess" targettype="UseTarget" targets="weldable" Stuck="-15.0" /><StatusEffect type="OnSuccess" targettype="UseTarget" Condition="-15.0" /><Fixable identifier="structure" /></RepairTool>
-    <RepairTool structurefixamount="-1.2" range="200" barrelpos="66,14" targetforce="50" repairmultiple="true" repairthroughwalls="false" maxoverlappingwalldist="0.0" repairthroughholes="true" levelwallfixamount="-32.0"><RequiredItems identifier="toolpl" type="Contained" /><RequiredItems identifier="toolextoff" type="Contained" /><RequiredItems identifier="fulguriumfuelrod" type="Contained" /><ParticleEmitter particle="weld" particlespersecond="50" copyentityangle="true" scalemin="1.5" scalemax="1.5" ColorMultiplier="20,50,255,155" /><ParticleEmitterHitStructure particle="weldspark" particlespersecond="200" anglemin="-40" anglemax="40" velocitymin="200" velocitymax="800" /><ParticleEmitterHitStructure particle="GlowDot" particlespersecond="60" emitinterval="0.7" particleamount="10" scalemin="0.9" scalemax="1.0" anglemin="0" anglemax="360" velocitymin="10" velocitymax="50" /><ParticleEmitterHitStructure particle="MistSmoke" particlespersecond="20" anglemin="-10" anglemax="10" velocitymin="0" velocitymax="50" /><ParticleEmitterHitItem identifiers="door,hatch,ductblock" particle="weldspark" particlespersecond="200" anglemin="-40" anglemax="40" velocitymin="200" velocitymax="800" /><ParticleEmitterHitItem identifiers="door,hatch,ductblock" particle="MistSmoke" particlespersecond="20" anglemin="-10" anglemax="10" velocitymin="10" velocitymax="100" /><ParticleEmitterHitCharacter particle="fleshsmoke" particlespersecond="3" anglemin="-5" anglemax="5" velocitymin="10" velocitymax="100" /><sound file="%ModDir%/tool.ogg" type="OnUse" range="500.0" loop="true" /><StatusEffect type="OnUse" targettype="Contained" targets="weldingfueltank" Condition="-1.0" /><StatusEffect type="OnUse" targettype="Contained" targets="oxygentank" Condition="-1.0" /><StatusEffect type="OnUse" targettype="Contained" targets="oxygenitetank" Condition="-0.5" /><StatusEffect type="OnUse" targettype="Contained" targets="mobilebattery" Condition="-0.2" /><StatusEffect type="OnUse" targettype="Contained" targets="reactorfuel" Condition="-0.05" /><StatusEffect type="OnSuccess" targettype="UseTarget" targets="weldable" Stuck="-15.0" /><StatusEffect type="OnSuccess" targettype="UseTarget" Condition="-15.0" /><Fixable identifier="structure" /></RepairTool>
-    <RepairTool structurefixamount="-1.35" range="200" barrelpos="66,14" targetforce="50" repairmultiple="true" repairthroughwalls="false" maxoverlappingwalldist="0.0" repairthroughholes="true" levelwallfixamount="-36.0"><RequiredItems identifier="toolpl" type="Contained" /><RequiredItems identifier="toolextoff" type="Contained" /><RequiredItems identifier="thoriumfuelrod" type="Contained" /><ParticleEmitter particle="weld" particlespersecond="50" copyentityangle="true" scalemin="1.5" scalemax="1.5" ColorMultiplier="20,50,255,155" /><ParticleEmitterHitStructure particle="weldspark" particlespersecond="200" anglemin="-40" anglemax="40" velocitymin="200" velocitymax="800" /><ParticleEmitterHitStructure particle="GlowDot" particlespersecond="60" emitinterval="0.7" particleamount="10" scalemin="0.9" scalemax="1.0" anglemin="0" anglemax="360" velocitymin="10" velocitymax="50" /><ParticleEmitterHitStructure particle="MistSmoke" particlespersecond="20" anglemin="-10" anglemax="10" velocitymin="0" velocitymax="50" /><ParticleEmitterHitItem identifiers="door,hatch,ductblock" particle="weldspark" particlespersecond="200" anglemin="-40" anglemax="40" velocitymin="200" velocitymax="800" /><ParticleEmitterHitItem identifiers="door,hatch,ductblock" particle="MistSmoke" particlespersecond="20" anglemin="-10" anglemax="10" velocitymin="10" velocitymax="100" /><ParticleEmitterHitCharacter particle="fleshsmoke" particlespersecond="3" anglemin="-5" anglemax="5" velocitymin="10" velocitymax="100" /><sound file="%ModDir%/tool.ogg" type="OnUse" range="500.0" loop="true" /><StatusEffect type="OnUse" targettype="Contained" targets="weldingfueltank" Condition="-1.0" /><StatusEffect type="OnUse" targettype="Contained" targets="oxygentank" Condition="-1.0" /><StatusEffect type="OnUse" targettype="Contained" targets="oxygenitetank" Condition="-0.5" /><StatusEffect type="OnUse" targettype="Contained" targets="mobilebattery" Condition="-0.2" /><StatusEffect type="OnUse" targettype="Contained" targets="reactorfuel" Condition="-0.05" /><StatusEffect type="OnSuccess" targettype="UseTarget" targets="weldable" Stuck="-15.0" /><StatusEffect type="OnSuccess" targettype="UseTarget" Condition="-15.0" /><Fixable identifier="structure" /></RepairTool>
-    <RepairTool structurefixamount="-1.5" range="200" barrelpos="66,14" targetforce="50" repairmultiple="true" repairthroughwalls="false" maxoverlappingwalldist="0.0" repairthroughholes="true" levelwallfixamount="-40.0"><RequiredItems identifier="toolpl" type="Contained" /><RequiredItems identifier="toolextoff" type="Contained" /><RequiredItems identifier="fulguriumfuelrodvolatile" type="Contained" /><ParticleEmitter particle="weld" particlespersecond="50" copyentityangle="true" scalemin="1.5" scalemax="1.5" ColorMultiplier="20,50,255,155" /><ParticleEmitterHitStructure particle="weldspark" particlespersecond="200" anglemin="-40" anglemax="40" velocitymin="200" velocitymax="800" /><ParticleEmitterHitStructure particle="GlowDot" particlespersecond="60" emitinterval="0.7" particleamount="10" scalemin="0.9" scalemax="1.0" anglemin="0" anglemax="360" velocitymin="10" velocitymax="50" /><ParticleEmitterHitStructure particle="MistSmoke" particlespersecond="20" anglemin="-10" anglemax="10" velocitymin="0" velocitymax="50" /><ParticleEmitterHitItem identifiers="door,hatch,ductblock" particle="weldspark" particlespersecond="200" anglemin="-40" anglemax="40" velocitymin="200" velocitymax="800" /><ParticleEmitterHitItem identifiers="door,hatch,ductblock" particle="MistSmoke" particlespersecond="20" anglemin="-10" anglemax="10" velocitymin="10" velocitymax="100" /><ParticleEmitterHitCharacter particle="fleshsmoke" particlespersecond="3" anglemin="-5" anglemax="5" velocitymin="10" velocitymax="100" /><sound file="%ModDir%/tool.ogg" type="OnUse" range="500.0" loop="true" /><StatusEffect type="OnUse" targettype="Contained" targets="weldingfueltank" Condition="-1.0" /><StatusEffect type="OnUse" targettype="Contained" targets="oxygentank" Condition="-1.0" /><StatusEffect type="OnUse" targettype="Contained" targets="oxygenitetank" Condition="-0.5" /><StatusEffect type="OnUse" targettype="Contained" targets="mobilebattery" Condition="-0.2" /><StatusEffect type="OnUse" targettype="Contained" targets="reactorfuel" Condition="-0.05" /><StatusEffect type="OnSuccess" targettype="UseTarget" targets="weldable" Stuck="-15.0" /><StatusEffect type="OnSuccess" targettype="UseTarget" Condition="-15.0" /><Fixable identifier="structure" /></RepairTool>
+    <RepairTool firedamage="10.0" structurefixamount="-0.5" range="200" barrelpos="66,14" targetforce="50" repairmultiple="true" repairthroughwalls="false" maxoverlappingwalldist="0.0" repairthroughholes="true" levelwallfixamount="-5.0">
+      <RequiredItems identifier="toolpl" type="Contained" />
+      <RequiredItems identifier="toolextoff" type="Contained" />
+      <RequiredItems items="weldingtoolfuel,oxygensource" type="Contained" />
+      <ParticleEmitter particle="weld" particlespersecond="50" copyentityangle="true" scalemin="1.5" scalemax="1.5" ColorMultiplier="20,50,255,155" />
+      <ParticleEmitterHitStructure particle="weldspark" particlespersecond="200" anglemin="-40" anglemax="40" velocitymin="200" velocitymax="800" />
+      <ParticleEmitterHitStructure particle="GlowDot" particlespersecond="60" emitinterval="0.7" particleamount="10" scalemin="0.9" scalemax="1.0" anglemin="0" anglemax="360" velocitymin="10" velocitymax="50" />
+      <ParticleEmitterHitStructure particle="MistSmoke" particlespersecond="20" anglemin="-10" anglemax="10" velocitymin="0" velocitymax="50" />
+      <ParticleEmitterHitItem identifiers="door,hatch,ductblock" particle="weldspark" particlespersecond="200" anglemin="-40" anglemax="40" velocitymin="200" velocitymax="800" />
+      <ParticleEmitterHitItem identifiers="door,hatch,ductblock" particle="MistSmoke" particlespersecond="20" anglemin="-10" anglemax="10" velocitymin="10" velocitymax="100" />
+      <ParticleEmitterHitCharacter particle="fleshsmoke" particlespersecond="3" anglemin="-5" anglemax="5" velocitymin="10" velocitymax="100" />
+      <sound file="%ModDir%/tool.ogg" type="OnUse" range="500.0" loop="true" />
+      <StatusEffect type="OnUse" targettype="Contained" targets="weldingfueltank" Condition="-1.0" />
+      <StatusEffect type="OnUse" targettype="Contained" targets="oxygentank" Condition="-1.0" />
+      <StatusEffect type="OnUse" targettype="Contained" targets="oxygenitetank" Condition="-0.5" />
+      <StatusEffect type="OnSuccess" targettype="UseTarget" targets="weldable" Stuck="-20.0" />
+      <StatusEffect type="OnSuccess" targettype="UseTarget" Condition="-15.0" />
+      <Fixable identifier="structure" />
+    </RepairTool>
+    <RepairTool firedamage="10.0" structurefixamount="-0.55" range="200" barrelpos="66,14" targetforce="50" repairmultiple="true" repairthroughwalls="false" maxoverlappingwalldist="0.0" repairthroughholes="true" levelwallfixamount="-5.5">
+      <RequiredItems identifier="toolpl" type="Contained" />
+      <RequiredItems identifier="toolextoff" type="Contained" />
+      <RequiredItems items="mobilebattery" type="Contained" />
+      <ParticleEmitter particle="weld" particlespersecond="50" copyentityangle="true" scalemin="1.5" scalemax="1.5" ColorMultiplier="20,50,255,155" />
+      <ParticleEmitterHitStructure particle="weldspark" particlespersecond="200" anglemin="-40" anglemax="40" velocitymin="200" velocitymax="800" />
+      <ParticleEmitterHitStructure particle="GlowDot" particlespersecond="60" emitinterval="0.7" particleamount="10" scalemin="0.9" scalemax="1.0" anglemin="0" anglemax="360" velocitymin="10" velocitymax="50" />
+      <ParticleEmitterHitStructure particle="MistSmoke" particlespersecond="20" anglemin="-10" anglemax="10" velocitymin="0" velocitymax="50" />
+      <ParticleEmitterHitItem identifiers="door,hatch,ductblock" particle="weldspark" particlespersecond="200" anglemin="-40" anglemax="40" velocitymin="200" velocitymax="800" />
+      <ParticleEmitterHitItem identifiers="door,hatch,ductblock" particle="MistSmoke" particlespersecond="20" anglemin="-10" anglemax="10" velocitymin="10" velocitymax="100" />
+      <ParticleEmitterHitCharacter particle="fleshsmoke" particlespersecond="3" anglemin="-5" anglemax="5" velocitymin="10" velocitymax="100" />
+      <sound file="%ModDir%/tool.ogg" type="OnUse" range="500.0" loop="true" />
+      <StatusEffect type="OnUse" targettype="Contained" targets="mobilebattery" Condition="-0.2" />
+      <StatusEffect type="OnSuccess" targettype="UseTarget" targets="weldable" Stuck="-22.0" />
+      <StatusEffect type="OnSuccess" targettype="UseTarget" Condition="-16.5" />
+      <Fixable identifier="structure" />
+    </RepairTool>
+    <RepairTool firedamage="10.0" structurefixamount="-0.72" range="200" barrelpos="66,14" targetforce="50" repairmultiple="true" repairthroughwalls="false" maxoverlappingwalldist="0.0" repairthroughholes="true" levelwallfixamount="-7.15">
+      <RequiredItems identifier="toolpl" type="Contained" />
+      <RequiredItems identifier="toolextoff" type="Contained" />
+      <RequiredItems items="reactorfuel" type="Contained" />
+      <ParticleEmitter particle="weld" particlespersecond="50" copyentityangle="true" scalemin="1.5" scalemax="1.5" ColorMultiplier="20,50,255,155" />
+      <ParticleEmitterHitStructure particle="weldspark" particlespersecond="200" anglemin="-40" anglemax="40" velocitymin="200" velocitymax="800" />
+      <ParticleEmitterHitStructure particle="GlowDot" particlespersecond="60" emitinterval="0.7" particleamount="10" scalemin="0.9" scalemax="1.0" anglemin="0" anglemax="360" velocitymin="10" velocitymax="50" />
+      <ParticleEmitterHitStructure particle="MistSmoke" particlespersecond="20" anglemin="-10" anglemax="10" velocitymin="0" velocitymax="50" />
+      <ParticleEmitterHitItem identifiers="door,hatch,ductblock" particle="weldspark" particlespersecond="200" anglemin="-40" anglemax="40" velocitymin="200" velocitymax="800" />
+      <ParticleEmitterHitItem identifiers="door,hatch,ductblock" particle="MistSmoke" particlespersecond="20" anglemin="-10" anglemax="10" velocitymin="10" velocitymax="100" />
+      <ParticleEmitterHitCharacter particle="fleshsmoke" particlespersecond="3" anglemin="-5" anglemax="5" velocitymin="10" velocitymax="100" />
+      <sound file="%ModDir%/tool.ogg" type="OnUse" range="500.0" loop="true" />
+      <StatusEffect type="OnUse" targettype="Contained" targets="reactorfuel" Condition="-0.05" />
+      <StatusEffect type="OnUse" target="Character">
+        <Conditional PressureProtection="lt 1000" />
+        <Affliction identifier="radiationsickness" strength="10.0" />
+      </StatusEffect>
+      <StatusEffect type="OnUse" target="Character">
+        <RequiredItem items="divingsuit,abyssdivingsuit,combatdivingsuit,respawndivingsuit,pucs,clownexosuit,exosuit,ExoSuit_mk4,orangejumpsuit1" type="Equipped" />
+        <ReduceAffliction identifier="radiationsickness" amount="0.75" />
+      </StatusEffect>
+      <StatusEffect type="OnSuccess" targettype="UseTarget" targets="weldable" Stuck="-28.6" />
+      <StatusEffect type="OnSuccess" targettype="UseTarget" Condition="-21.45" />
+      <Fixable identifier="structure" />
+    </RepairTool>
 
-    <!-- ================================================================ -->
-    <!--  Tryb gaśnicy: wspólny slot tlenu, gaszenie pożarów i płomieni   -->
-    <!-- ================================================================ -->
     <RepairTool range="500" barrelpos="50,15" repairmultiple="true" repairthroughwalls="false" repairthroughholes="true" combatpriority="1" extinguishamount="60" hititems="false" IgnoreCharacters="true">
       <RequiredItems identifier="toolexton" type="Contained" />
       <RequiredItems items="weldingtoolfuel,oxygensource,mobilebattery,reactorfuel" type="Contained" />
@@ -183,6 +275,16 @@
       <StatusEffect type="OnUse" targettype="Contained" targets="oxygenitetank" Condition="-0.5" />
       <StatusEffect type="OnUse" targettype="Contained" targets="mobilebattery" Condition="-0.2" />
       <StatusEffect type="OnUse" targettype="Contained" targets="reactorfuel" Condition="-0.05" />
+      <StatusEffect type="OnUse" target="Character">
+        <RequiredItem items="reactorfuel" type="Contained" />
+        <Conditional PressureProtection="lt 1000" />
+        <Affliction identifier="radiationsickness" strength="10.0" />
+      </StatusEffect>
+      <StatusEffect type="OnUse" target="Character">
+        <RequiredItem items="reactorfuel" type="Contained" />
+        <RequiredItem items="divingsuit,abyssdivingsuit,combatdivingsuit,respawndivingsuit,pucs,clownexosuit,exosuit,ExoSuit_mk4,orangejumpsuit1" type="Equipped" />
+        <ReduceAffliction identifier="radiationsickness" amount="0.75" />
+      </StatusEffect>
       <Fixable identifier="structure" />
     </RepairTool>
     <RepairTool range="500" barrelpos="50,15" repairmultiple="true" repairthroughwalls="false" combatpriority="5" IgnoreCharacters="false">
@@ -193,35 +295,78 @@
       <StatusEffect type="OnUse" targettype="Contained" targets="oxygenitetank" Condition="-0.5" />
       <StatusEffect type="OnUse" targettype="Contained" targets="mobilebattery" Condition="-0.2" />
       <StatusEffect type="OnUse" targettype="Contained" targets="reactorfuel" Condition="-0.05" />
+      <StatusEffect type="OnUse" target="Character">
+        <RequiredItem items="reactorfuel" type="Contained" />
+        <Conditional PressureProtection="lt 1000" />
+        <Affliction identifier="radiationsickness" strength="10.0" />
+      </StatusEffect>
+      <StatusEffect type="OnUse" target="Character">
+        <RequiredItem items="reactorfuel" type="Contained" />
+        <RequiredItem items="divingsuit,abyssdivingsuit,combatdivingsuit,respawndivingsuit,pucs,clownexosuit,exosuit,ExoSuit_mk4,orangejumpsuit1" type="Equipped" />
+        <ReduceAffliction identifier="radiationsickness" amount="0.75" />
+      </StatusEffect>
       <StatusEffect type="OnUse" target="UseTarget">
         <Conditional entitytype="Character" />
         <ReduceAffliction identifier="burning" amount="15.0" />
       </StatusEffect>
     </RepairTool>
 
-    <!-- ================================================================ -->
-    <!--  Tryb ofensywny: oparzenia i rozcięcia po wyłączeniu zabezpieczeń -->
-    <!-- ================================================================ -->
     <RepairTool range="300" barrelpos="66,14" targetforce="50" repairmultiple="true" repairthroughwalls="false" repairthroughholes="true" maxoverlappingwalldist="0.0">
       <RequiredItems identifier="tooldamageflag" type="Contained" excludebroken="true" />
       <RequiredItems identifier="toolextoff" type="Contained" />
-      <RequiredItems items="weldingtoolfuel,oxygensource,mobilebattery,reactorfuel" type="Contained" />
+      <RequiredItems items="weldingtoolfuel,oxygensource" type="Contained" />
       <ParticleEmitterHitCharacter particle="fleshsmoke" particlespersecond="3" anglemin="-5" anglemax="5" velocitymin="10" velocitymax="100" />
+      <StatusEffect type="OnUse" targettype="Contained" targets="weldingfueltank" Condition="-1.0" />
+      <StatusEffect type="OnUse" targettype="Contained" targets="oxygentank" Condition="-1.0" />
+      <StatusEffect type="OnUse" targettype="Contained" targets="oxygenitetank" Condition="-0.5" />
       <StatusEffect type="OnUse" targettype="UseTarget">
         <Conditional entitytype="Character" />
-        <Affliction identifier="burn" strength="5.0" />
-		<Affliction identifier="stun" strength="5.0" />
-        <Affliction identifier="lacerations" strength="1.5" />
+        <Affliction identifier="burn" strength="1.5" />
+        <Affliction identifier="stun" strength="5.0" />
+        <Affliction identifier="lacerations" strength="0.30" />
+      </StatusEffect>
+    </RepairTool>
+    <RepairTool range="300" barrelpos="66,14" targetforce="50" repairmultiple="true" repairthroughwalls="false" repairthroughholes="true" maxoverlappingwalldist="0.0">
+      <RequiredItems identifier="tooldamageflag" type="Contained" excludebroken="true" />
+      <RequiredItems identifier="toolextoff" type="Contained" />
+      <RequiredItems items="mobilebattery" type="Contained" />
+      <ParticleEmitterHitCharacter particle="fleshsmoke" particlespersecond="3" anglemin="-5" anglemax="5" velocitymin="10" velocitymax="100" />
+      <StatusEffect type="OnUse" targettype="Contained" targets="mobilebattery" Condition="-0.2" />
+      <StatusEffect type="OnUse" targettype="UseTarget">
+        <Conditional entitytype="Character" />
+        <Affliction identifier="burn" strength="1.65" />
+        <Affliction identifier="stun" strength="5.0" />
+        <Affliction identifier="lacerations" strength="0.33" />
+      </StatusEffect>
+    </RepairTool>
+    <RepairTool range="300" barrelpos="66,14" targetforce="50" repairmultiple="true" repairthroughwalls="false" repairthroughholes="true" maxoverlappingwalldist="0.0">
+      <RequiredItems identifier="tooldamageflag" type="Contained" excludebroken="true" />
+      <RequiredItems identifier="toolextoff" type="Contained" />
+      <RequiredItems items="reactorfuel" type="Contained" />
+      <ParticleEmitterHitCharacter particle="fleshsmoke" particlespersecond="3" anglemin="-5" anglemax="5" velocitymin="10" velocitymax="100" />
+      <StatusEffect type="OnUse" targettype="Contained" targets="reactorfuel" Condition="-0.05" />
+      <StatusEffect type="OnUse" target="Character">
+        <Conditional PressureProtection="lt 1000" />
+        <Affliction identifier="radiationsickness" strength="10.0" />
+      </StatusEffect>
+      <StatusEffect type="OnUse" target="Character">
+        <RequiredItem items="divingsuit,abyssdivingsuit,combatdivingsuit,respawndivingsuit,pucs,clownexosuit,exosuit,ExoSuit_mk4,orangejumpsuit1" type="Equipped" />
+        <ReduceAffliction identifier="radiationsickness" amount="0.75" />
+      </StatusEffect>
+      <StatusEffect type="OnUse" targettype="UseTarget">
+        <Conditional entitytype="Character" />
+        <Affliction identifier="burn" strength="2.15" />
+        <Affliction identifier="stun" strength="5.0" />
+        <Affliction identifier="lacerations" strength="0.43" />
+        <Affliction identifier="radiationsickness" strength="15.0" />
       </StatusEffect>
     </RepairTool>
 
-    <!-- Widoczne gniazdo tlenu dla szybkiej wymiany butli -->
     <ItemContainer capacity="1" maxstacksize="1" hideitems="false">
       <Containable items="weldingtoolfuel,oxygensource,mobilebattery,reactorfuel" hide="true" containedstateindicatorstyle="tank" />
       <SlotIcon slotindex="0" texture="Content/UI/StatusMonitorUI.png" sourcerect="64,448,64,64" origin="0.5,0.5" />
     </ItemContainer>
 
-    <!-- Ukryty pojemnik porządkuje moduły wewnętrzne -->
     <ItemContainer canbeselected="false" drawinventory="false" allowaccess="false" capacity="1" maxstacksize="1" hideitems="true" spawnwithid="toolwe,toolpl,tooldamageflag,toolexton,toolextoff" removecontaineditemsondeconstruct="true">
       <SubContainer capacity="1" maxstacksize="1">
         <Containable identifier="toolwe">
@@ -243,7 +388,6 @@
       </SubContainer>
     </ItemContainer>
 
-    <!-- Przełączniki umożliwiają zmianę trybów, gaśnicę i aktywację obrażeń -->
     <CustomInterface canbeselected="false" drawhudwhenequipped="true" allowuioverlap="false">
       <GuiFrame relativesize="0.24,0.105" anchor="CenterRight" relativeoffset="0.0,-0.17" style="MainMenuGUIButton" hidedragicons="true" draggable="true" />
       <TickBox text="label.changetool" textscale="2.0" targetitemcomponent="Pump" propertyname="IsOn" ContinuousSignal="false" GetValueInterval="0.25" />
@@ -251,11 +395,9 @@
       <TickBox text="label.enabledamage" textscale="2.0" targetitemcomponent="Controller" propertyname="State" ContinuousSignal="false" GetValueInterval="0.25" />
     </CustomInterface>
 
-    <!-- Wyższy wskaźnik zagrożenia niż kompaktowy wariant -->
     <aitarget sightrange="2000" soundrange="500" fadeouttime="3" />
   </Item>
 
-  <!-- Wewnętrzne elementy pomocnicze używane przez multitool -->
   <Item identifier="toolwe" noninteractable="true" hideinmenus="true">
     <Sprite texture="Content/Items/Weapons/weapons_new.png" sourcerect="0,0,2,2" depth="0.55" origin="0.5,0.5" />
   </Item>
@@ -271,67 +413,4 @@
   <Item identifier="toolextoff" noninteractable="true" hideinmenus="true">
     <Sprite texture="Content/Items/Weapons/weapons_new.png" sourcerect="0,0,2,2" depth="0.55" origin="0.5,0.5" />
   </Item>
-
-  <!-- Zachowana definicja starej wersji dla odniesienia -->
-  <!--old
-  <Item identifier="Multi-toolSET1" category="Equipment" Tags="smallitem,tool,cuttingequipment,electricalrepairtool,mechanicalrepairtool,provocative,screwdriver,wrench,weldingequipment,crowbaritem" cargocontaineridentifier="metalcrate" Scale="0.4" impactsoundtag="impact_metal_light">
-    <PreferredContainer primary="storagecab" spawnprobability="0.05" />
-    <PreferredContainer secondary="wreckstoragecab" spawnprobability="0.02" />
-    <Price baseprice="1300" sold="true" >
-      <Price storeidentifier="merchantoutpost" multiplier="1.0" />
-      <Price storeidentifier="merchantcity" multiplier="1.0" />
-      <Price storeidentifier="merchantresearch" multiplier="1.0" />
-      <Price storeidentifier="merchantmilitary" multiplier="1.0" />
-      <Price storeidentifier="merchantmine" multiplier="1.0" />
-    </Price>
-    <Fabricate suitablefabricators="fabricator,milfabricator" requiredtime="10">
-      <RequiredSkill identifier="mechanical" level="20" />
-      <RequiredItem identifier="weldingtool" amount="2" />
-      <RequiredItem identifier="plasmacutter" amount="2" />
-    </Fabricate>
-    <Deconstruct time="10">
-      <Item identifier="physicorium" amount="1" />
-      <Item identifier="plastic" amount="2" />
-      <Item identifier="titaniumaluminiumalloy" amount="1" />
-    </Deconstruct>
-    <Body width="128" height="128" density="15" />
-    <InventoryIcon texture="%ModDir%/gfx.png" sourcerect="0,0,128,128" origin="0.5,0.5" />
-    <Sprite texture="%ModDir%/gfx.png" sourcerect="0,0,128,128" depth="0.55" origin="0.5,0.5" />
-    <Body width="128" height="128" density="15" />
-    <Holdable slots="Any,RightHand,LeftHand" controlpose="true" aimpos="60,-15" handle1="-40,-0" msg="ItemMsgPickUpSelect">
-      <StatusEffect type="Always" target="Character" interval="0.9" disabledeltatime="true">
-        <RequiredItem items="reactorfuel" type="Contained" />
-        <Affliction identifier="multitool_fuelrod_repairboost" amount="1" />
-      </StatusEffect>
-      <StatusEffect type="Always" target="Character" interval="60" disabledeltatime="true">
-        <RequiredItem items="reactorfuel" type="Contained" />
-        <GiveSkill skillidentifier="mechanical" amount="1" triggertalents="false" />
-        <GiveSkill skillidentifier="electrical" amount="1" triggertalents="false" />
-      </StatusEffect>
-    </Holdable>
-    <RepairTool firedamage="100.0" structurefixamount="5" range="200" barrelpos="50,15" particles="weld" repairmultiple="true" repairthroughwalls="false" combatpriority="0" levelwallfixamount="-0.35" targetforce="10">
-      <RequiredItems items="weldingtoolfuel,oxygensource,mobilebattery,reactorfuel" type="Contained" msg="ItemMsgOxygenTankRequired" />
-      <ParticleEmitter particle="weld" particlespersecond="50" copyentityangle="true" scalemin="1.5" scalemax="1.5" ColorMultiplier="20,50,255,155" />
-      <ParticleEmitterHitStructure particle="weldspark" particlespersecond="200" anglemin="-40" anglemax="40" velocitymin="200" velocitymax="800" />
-      <ParticleEmitterHitStructure particle="GlowDot" particlespersecond="60" emitinterval="0.7" particleamount="10" scalemin="0.9" scalemax="1.0" anglemin="0" anglemax="360" velocitymin="10" velocitymax="50" />
-      <ParticleEmitterHitStructure particle="MistSmoke" particlespersecond="20" anglemin="-10" anglemax="10" velocitymin="0" velocitymax="50" />
-      <ParticleEmitterHitItem identifiers="door,hatch,ductblock" particle="weldspark" particlespersecond="200" anglemin="-40" anglemax="40" velocitymin="200" velocitymax="800" />
-      <ParticleEmitterHitItem identifiers="door,hatch,ductblock" particle="MistSmoke" particlespersecond="20" anglemin="-10" anglemax="10" velocitymin="10" velocitymax="100" />
-      <ParticleEmitterHitCharacter particle="fleshsmoke" particlespersecond="3" anglemin="-5" anglemax="5" velocitymin="10" velocitymax="100" />
-      <sound file="%ModDir%/tool.ogg" type="OnUse" range="500.0" loop="true" />
-      <StatusEffect type="OnUse" targettype="Contained" targets="weldingfueltank" Condition="-1.0" />
-      <StatusEffect type="OnUse" targettype="Contained" targets="oxygentank" Condition="-1.0" />
-      <StatusEffect type="OnUse" targettype="Contained" targets="oxygenitetank" Condition="-0.5" />
-      <StatusEffect type="OnUse" targettype="Contained" targets="mobilebattery" Condition="-0.2" />
-      <StatusEffect type="OnUse" targettype="Contained" targets="reactorfuel" Condition="-0.05" />
-      <StatusEffect type="OnUse" targettype="UseTarget" targets="door,ductblock" Stuck="4.0" Condition="2.0" />
-      <StatusEffect type="OnUse" targettype="UseTarget" Condition="-3.0" />
-      <Fixable identifier="structure" />
-    </RepairTool>
-    <ItemContainer capacity="1" maxstacksize="1" hideitems="true" containedstateindicatorstyle="tank">
-      <SlotIcon slotindex="0" texture="Content/UI/StatusMonitorUI.png" sourcerect="64,448,64,64" origin="0.5,0.5" />
-      <Containable items="weldingtoolfuel,oxygensource,mobilebattery,reactorfuel" />
-    </ItemContainer>
-    <AiTarget sightrange="3000" />
-  </Item>-->
 </Items>
