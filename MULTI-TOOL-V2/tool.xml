@@ -107,7 +107,17 @@
     <InventoryIcon texture="%ModDir%/gfx.png" sourcerect="0,0,128,128" origin="0.5,0.5" />
     <Sprite texture="%ModDir%/gfx.png" sourcerect="0,0,128,128" depth="0.55" origin="0.5,0.5" />
     <Body width="128" height="128" density="15" />
-    <Holdable slots="Any,RightHand,LeftHand" controlpose="true" aimpos="60,-15" handle1="-40,-0" msg="ItemMsgPickUpSelect" />
+    <Holdable slots="Any,RightHand,LeftHand" controlpose="true" aimpos="60,-15" handle1="-40,-0" msg="ItemMsgPickUpSelect">
+      <StatusEffect type="Always" target="Character" interval="0.9" disabledeltatime="true">
+        <RequiredItem items="reactorfuel" type="Contained" />
+        <Affliction identifier="multitool_fuelrod_repairboost" amount="1" />
+      </StatusEffect>
+      <StatusEffect type="Always" target="Character" interval="60" disabledeltatime="true">
+        <RequiredItem items="reactorfuel" type="Contained" />
+        <GiveSkill skillidentifier="mechanical" amount="1" triggertalents="false" />
+        <GiveSkill skillidentifier="electrical" amount="1" triggertalents="false" />
+      </StatusEffect>
+    </Holdable>
     <ItemComponent characterusable="true">
       <RequiredItems identifier="toolpl" type="Contained" excludebroken="false" excludefullcondition="true" />
       <RequiredItems items="weldingtoolfuel,oxygensource,mobilebattery,reactorfuel" type="Contained" msg="ItemMsgAmmoRequired" />
@@ -181,11 +191,12 @@
       <sound file="%ModDir%/tool.ogg" type="OnUse" range="500.0" loop="true" />
       <StatusEffect type="OnUse" targettype="Contained" targets="reactorfuel" Condition="-0.05" />
       <StatusEffect type="OnUse" target="Character">
-        <Affliction identifier="radiationsickness" strength="0.15" />
+        <Conditional PressureProtection="lt 1000" />
+        <Affliction identifier="radiationsickness" strength="0.75" />
       </StatusEffect>
       <StatusEffect type="OnUse" target="Character">
-        <RequiredItem items="diving,deepdiving,deepdivinglarge,divinggear_wearableindoors,radiationproof" type="Equipped" />
-        <ReduceAffliction identifier="radiationsickness" amount="0.15" />
+        <RequiredItem items="divingsuit,abyssdivingsuit,combatdivingsuit,respawndivingsuit,pucs,clownexosuit,exosuit,ExoSuit_mk4,orangejumpsuit1" type="Equipped" />
+        <ReduceAffliction identifier="radiationsickness" amount="0.75" />
       </StatusEffect>
       <StatusEffect type="OnSuccess" targettype="UseTarget" targets="weldable" Stuck="7.15" />
       <StatusEffect type="OnSuccess" targettype="UseTarget" Condition="-4.29" />
@@ -242,11 +253,12 @@
       <sound file="%ModDir%/tool.ogg" type="OnUse" range="500.0" loop="true" />
       <StatusEffect type="OnUse" targettype="Contained" targets="reactorfuel" Condition="-0.05" />
       <StatusEffect type="OnUse" target="Character">
-        <Affliction identifier="radiationsickness" strength="0.15" />
+        <Conditional PressureProtection="lt 1000" />
+        <Affliction identifier="radiationsickness" strength="0.75" />
       </StatusEffect>
       <StatusEffect type="OnUse" target="Character">
-        <RequiredItem items="diving,deepdiving,deepdivinglarge,divinggear_wearableindoors,radiationproof" type="Equipped" />
-        <ReduceAffliction identifier="radiationsickness" amount="0.15" />
+        <RequiredItem items="divingsuit,abyssdivingsuit,combatdivingsuit,respawndivingsuit,pucs,clownexosuit,exosuit,ExoSuit_mk4,orangejumpsuit1" type="Equipped" />
+        <ReduceAffliction identifier="radiationsickness" amount="0.75" />
       </StatusEffect>
       <StatusEffect type="OnSuccess" targettype="UseTarget" targets="weldable" Stuck="-28.6" />
       <StatusEffect type="OnSuccess" targettype="UseTarget" Condition="-21.45" />
@@ -265,12 +277,13 @@
       <StatusEffect type="OnUse" targettype="Contained" targets="reactorfuel" Condition="-0.05" />
       <StatusEffect type="OnUse" target="Character">
         <RequiredItem items="reactorfuel" type="Contained" />
-        <Affliction identifier="radiationsickness" strength="0.15" />
+        <Conditional PressureProtection="lt 1000" />
+        <Affliction identifier="radiationsickness" strength="0.75" />
       </StatusEffect>
       <StatusEffect type="OnUse" target="Character">
         <RequiredItem items="reactorfuel" type="Contained" />
-        <RequiredItem items="diving,deepdiving,deepdivinglarge,divinggear_wearableindoors,radiationproof" type="Equipped" />
-        <ReduceAffliction identifier="radiationsickness" amount="0.15" />
+        <RequiredItem items="divingsuit,abyssdivingsuit,combatdivingsuit,respawndivingsuit,pucs,clownexosuit,exosuit,ExoSuit_mk4,orangejumpsuit1" type="Equipped" />
+        <ReduceAffliction identifier="radiationsickness" amount="0.75" />
       </StatusEffect>
       <Fixable identifier="structure" />
     </RepairTool>
@@ -284,12 +297,13 @@
       <StatusEffect type="OnUse" targettype="Contained" targets="reactorfuel" Condition="-0.05" />
       <StatusEffect type="OnUse" target="Character">
         <RequiredItem items="reactorfuel" type="Contained" />
-        <Affliction identifier="radiationsickness" strength="0.15" />
+        <Conditional PressureProtection="lt 1000" />
+        <Affliction identifier="radiationsickness" strength="0.75" />
       </StatusEffect>
       <StatusEffect type="OnUse" target="Character">
         <RequiredItem items="reactorfuel" type="Contained" />
-        <RequiredItem items="diving,deepdiving,deepdivinglarge,divinggear_wearableindoors,radiationproof" type="Equipped" />
-        <ReduceAffliction identifier="radiationsickness" amount="0.15" />
+        <RequiredItem items="divingsuit,abyssdivingsuit,combatdivingsuit,respawndivingsuit,pucs,clownexosuit,exosuit,ExoSuit_mk4,orangejumpsuit1" type="Equipped" />
+        <ReduceAffliction identifier="radiationsickness" amount="0.75" />
       </StatusEffect>
       <StatusEffect type="OnUse" target="UseTarget">
         <Conditional entitytype="Character" />
@@ -332,18 +346,19 @@
       <ParticleEmitterHitCharacter particle="fleshsmoke" particlespersecond="3" anglemin="-5" anglemax="5" velocitymin="10" velocitymax="100" />
       <StatusEffect type="OnUse" targettype="Contained" targets="reactorfuel" Condition="-0.05" />
       <StatusEffect type="OnUse" target="Character">
-        <Affliction identifier="radiationsickness" strength="0.15" />
+        <Conditional PressureProtection="lt 1000" />
+        <Affliction identifier="radiationsickness" strength="0.75" />
       </StatusEffect>
       <StatusEffect type="OnUse" target="Character">
-        <RequiredItem items="diving,deepdiving,deepdivinglarge,divinggear_wearableindoors,radiationproof" type="Equipped" />
-        <ReduceAffliction identifier="radiationsickness" amount="0.15" />
+        <RequiredItem items="divingsuit,abyssdivingsuit,combatdivingsuit,respawndivingsuit,pucs,clownexosuit,exosuit,ExoSuit_mk4,orangejumpsuit1" type="Equipped" />
+        <ReduceAffliction identifier="radiationsickness" amount="0.75" />
       </StatusEffect>
       <StatusEffect type="OnUse" targettype="UseTarget">
         <Conditional entitytype="Character" />
         <Affliction identifier="burn" strength="2.15" />
         <Affliction identifier="stun" strength="5.0" />
         <Affliction identifier="lacerations" strength="0.43" />
-        <Affliction identifier="radiationsickness" strength="0.20" />
+        <Affliction identifier="radiationsickness" strength="1.0" />
       </StatusEffect>
     </RepairTool>
 
