@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<contentpackage name="MULTI-TOOL-V2" modversion="1.0.5" corepackage="False" steamworkshopid="3599880642" gameversion="1.10.7.2">
+<contentpackage name="MULTI-TOOL-V2" modversion="1.0.6" corepackage="False" steamworkshopid="3599880642" gameversion="1.10.7.2">
   <Item file="%ModDir%/tool.xml" />
+  <Item file="%ModDir%/emergency_node.xml" />
   <Afflictions file="%ModDir%/multitool_afflictions.xml" />
   <Text file="%ModDir%/Silmplifieldchinese.xml" />
   <Text file="%ModDir%/Russian.xml" />

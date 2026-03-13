@@ -7,4 +7,6 @@
   <label.enabledamage>Enable NPC damage</label.enabledamage>
   <entityname.wrenchscrewdrivertwoinoneSET>2-in-1 screwdriver wrench</entityname.wrenchscrewdrivertwoinoneSET>
   <entitydescription.wrenchscrewdrivertwoinoneSET>Designed for submarine engineers, double right-click to switch wrenches/screwdrivers.</entitydescription.wrenchscrewdrivertwoinoneSET>
+  <entityname.EmergencyServiceNodeSET>Emergency service node</entityname.EmergencyServiceNodeSET>
+  <entitydescription.EmergencyServiceNodeSET>Throwable emergency node. It auto-sticks after impact, blinks green while armed, lights the room for 5 minutes, pumps and slowly repairs flooded compartments for up to 1 minute of charge, and releases up to 3 extinguisher bursts per full recharge. Recharge it in a battery charger or oxygen refiller.</entitydescription.EmergencyServiceNodeSET>
 </infotexts>

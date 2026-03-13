@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Items>
+  <Item
+    identifier="EmergencyServiceNodeSET"
+    category="Equipment,Electrical"
+    Tags="smallitem,tool,loadable,weldingfuel,refillableoxygensource,fireextinguisher,provocative"
+    health="240"
+    scale="0.5"
+    allowasextracargo="true"
+    cargocontaineridentifier="metalcrate"
+    impactsoundtag="impact_metal_light">
+    <PreferredContainer primary="batterycellrecharger" maxcondition="239" />
+    <PreferredContainer primary="oxygentankrefiller" maxcondition="239" />
+    <PreferredContainer primary="engcab,reactorcab,storagecab" mincondition="240" />
+    <PreferredContainer secondary="engcab,reactorcab,storagecab" />
+    <PreferredContainer secondary="wreckengcab,abandonedengcab,pirateengcab,outpostengcab,beaconengcab" amount="1" spawnprobability="0.02" />
+    <Price baseprice="420" sold="true">
+      <Price storeidentifier="merchantoutpost" />
+      <Price storeidentifier="merchantcity" multiplier="0.95" />
+      <Price storeidentifier="merchantresearch" multiplier="1.2" />
+      <Price storeidentifier="merchantmilitary" multiplier="1.15" />
+      <Price storeidentifier="merchantmine" />
+      <Price storeidentifier="merchantengineering" multiplier="0.9" />
+    </Price>
+    <Fabricate suitablefabricators="fabricator,milfabricator" requiredtime="20">
+      <RequiredSkill identifier="mechanical" level="45" />
+      <RequiredSkill identifier="electrical" level="35" />
+      <RequiredItem identifier="steel" amount="2" />
+      <RequiredItem identifier="plastic" amount="2" />
+      <RequiredItem identifier="fpgacircuit" />
+      <RequiredItem identifier="batterycell" />
+    </Fabricate>
+    <Deconstruct time="15">
+      <Item identifier="steel" />
+      <Item identifier="plastic" />
+      <Item identifier="fpgacircuit" />
+    </Deconstruct>
+    <InventoryIcon texture="Content/Items/JobGear/TalentGear.png" sourcerect="0,312,58,56" origin="0.5,0.5" />
+    <Sprite texture="Content/Items/JobGear/TalentGear.png" sourcerect="7,129,56,61" depth="0.55" origin="0.5,0.5" />
+    <Body width="50" height="55" density="25" friction="1.0" angulardamping="20.0" lineardamping="1.5" />
+
+    <Throwable characterusable="true" slots="Any,RightHand,LeftHand" throwforce="3.5" aimpos="35,-10" msg="ItemMsgPickUpSelect">
+      <StatusEffect type="OnImpact" target="This" targetitemcomponent="ItemComponent" IsActive="true" DontCleanUp="true">
+        <Conditional IsActive="false" targetitemcomponent="ItemComponent" />
+      </StatusEffect>
+      <StatusEffect type="OnImpact" target="This" statuseffecttags="esn_deploying" duration="1.0" stackable="false">
+        <Conditional IsActive="false" targetitemcomponent="ItemComponent" />
+      </StatusEffect>
+      <StatusEffect type="OnImpact" target="This">
+        <Conditional IsActive="false" targetitemcomponent="ItemComponent" />
+        <Sound file="Content/Items/Button/Switch1.ogg" range="500.0" />
+      </StatusEffect>
+    </Throwable>
+
+    <Holdable
+      selectkey="Select"
+      pickkey="Use"
+      slots="Any,RightHand,LeftHand"
+      msg="ItemMsgDetach"
+      MsgWhenDropped="ItemMsgPickupSelect"
+      PickingTime="5.0"
+      aimpos="65,-10"
+      handle1="0,0"
+      attachable="true"
+      aimable="true"
+      limitedattachable="true"
+      AttachesToFloor="true" />
+
+    <ItemComponent IsActive="false" CharacterUsable="true">
+      <StatusEffect type="OnContained" target="This" targetitemcomponent="ItemComponent" IsActive="false" setvalue="true" />
+      <StatusEffect type="OnContained" target="This" targetitemcomponent="Pump" IsOn="false" setvalue="true" />
+
+      <StatusEffect type="Always" target="This" targetitemcomponent="Pump" IsOn="true" setvalue="true">
+        <Conditional IsActive="true" targetitemcomponent="ItemComponent" />
+        <Conditional HasStatusTag="!eq esn_deploying" />
+        <Conditional WaterPercentage="gt 0" targetitemcomponent="WaterDetector" />
+        <Conditional Condition="gt 0.0" />
+      </StatusEffect>
+      <StatusEffect type="Always" target="This" targetitemcomponent="Pump" IsOn="false" setvalue="true">
+        <Conditional Condition="lte 0.0" />
+      </StatusEffect>
+      <StatusEffect type="Always" target="This" targetitemcomponent="Pump" IsOn="false" setvalue="true">
+        <Conditional WaterPercentage="lte 0" targetitemcomponent="WaterDetector" />
+      </StatusEffect>
+
+      <StatusEffect type="OnNotContained" target="This" targetitemcomponent="PowerContainer" Charge="-1.0" interval="1" disabledeltatime="true" stackable="false">
+        <Conditional IsActive="true" targetitemcomponent="ItemComponent" />
+        <Conditional HasStatusTag="!eq esn_deploying" />
+        <Conditional CurrFlow="gt 0.0" targetitemcomponent="Pump" />
+        <Conditional Charge="gt 0.0" targetitemcomponent="PowerContainer" />
+      </StatusEffect>
+      <StatusEffect type="OnNotContained" target="This" targetitemcomponent="PowerContainer" Charge="-1.0" interval="1" disabledeltatime="true" stackable="false">
+        <Conditional IsActive="true" targetitemcomponent="ItemComponent" />
+        <Conditional HasStatusTag="!eq esn_deploying" />
+        <Conditional HasStatusTag="esn_fireburst_active" />
+        <Conditional Charge="gt 0.0" targetitemcomponent="PowerContainer" />
+      </StatusEffect>
+
+      <StatusEffect type="OnNotContained" target="This" interval="1" disabledeltatime="true" stackable="false">
+        <Conditional IsActive="true" targetitemcomponent="ItemComponent" />
+        <Conditional HasStatusTag="!eq esn_deploying" />
+        <Conditional WaterPercentage="gt 0" targetitemcomponent="WaterDetector" />
+        <Conditional Condition="gt 0.0" />
+        <Explosion range="280.0" structuredamage="-4.0" itemdamage="0.0" force="0.0" showeffects="false" shockwave="false" smoke="false" flames="false" sparks="false" underwaterbubble="false" camerashake="0.0" playtinnitus="false" applyfireeffects="false" onlyinside="true" />
+      </StatusEffect>
+
+      <StatusEffect type="OnNotContained" target="This" statuseffecttags="esn_fireburst_active" duration="2.0" stackable="false" interval="1" disabledeltatime="true">
+        <Conditional IsActive="true" targetitemcomponent="ItemComponent" />
+        <Conditional HasStatusTag="!eq esn_deploying" />
+        <Conditional FireInRange="true" targetitemcomponent="SmokeDetector" />
+        <Conditional HasStatusTag="!eq esn_fireburst_cooldown" />
+        <Conditional Condition="gt 79.0" />
+      </StatusEffect>
+      <StatusEffect type="OnNotContained" target="This" statuseffecttags="esn_fireburst_cooldown" duration="5.0" stackable="false" interval="1" disabledeltatime="true" Condition="-80.0">
+        <Conditional IsActive="true" targetitemcomponent="ItemComponent" />
+        <Conditional HasStatusTag="!eq esn_deploying" />
+        <Conditional FireInRange="true" targetitemcomponent="SmokeDetector" />
+        <Conditional HasStatusTag="!eq esn_fireburst_cooldown" />
+        <Conditional Condition="gt 79.0" />
+      </StatusEffect>
+      <StatusEffect type="OnNotContained" target="This" interval="0.2" disabledeltatime="true" stackable="false">
+        <Conditional IsActive="true" targetitemcomponent="ItemComponent" />
+        <Conditional HasStatusTag="!eq esn_deploying" />
+        <Conditional HasStatusTag="esn_fireburst_active" />
+        <Conditional Condition="gt 0.0" />
+        <Use />
+      </StatusEffect>
+    </ItemComponent>
+
+    <PowerContainer capacity="300.0" Charge="300.0" canbeselected="false" maxrechargespeed="1000.0" maxoutput="1.0" />
+    <WaterDetector canbeselected="false" Output="1" FalseOutput="0" />
+    <SmokeDetector FireSizeThreshold="20" Output="1" FalseOutput="0" canbeselected="false" />
+
+    <Pump canbeselected="false" maxflow="180" PowerConsumption="0.0" MinVoltage="0.0" IsOn="false">
+      <sound file="Content/Items/Pump/Pump.ogg" type="OnActive" range="500.0" volumeproperty="CurrFlow" volume="0.005" loop="true" />
+      <PumpInEmitter particle="bubbles" particlespersecond="5" position="7,-51" anglemin="180" anglemax="180" velocitymin="100" velocitymax="200" scalemin="0.5" scalemax="0.6" />
+      <PumpInEmitter particle="watersplash" particlespersecond="50" position="7,-51" anglemin="180" anglemax="180" velocitymin="200" velocitymax="400" scalemin="0.5" scalemax="0.6" />
+      <PumpOutEmitter particle="bubbles" particlespersecond="5" position="7,-51" anglemin="0" anglemax="360" velocitymin="0" velocitymax="0" scalemin="0.5" scalemax="0.6" />
+      <StatusEffect type="OnActive" target="This" Condition="-4.0" interval="1" disabledeltatime="true" stackable="false">
+        <Conditional CurrFlow="gt 0.0" targetitemcomponent="Pump" />
+      </StatusEffect>
+    </Pump>
+
+    <RepairTool range="350" barrelpos="0,0" repairmultiple="true" repairthroughwalls="true" repairthroughholes="true" combatpriority="1" extinguishamount="60" hititems="false" IgnoreCharacters="true" spread="360" unskilledspread="360">
+      <ParticleEmitter particle="extinguisher" particlespersecond="90" anglemin="-8" anglemax="8" velocitymin="700" velocitymax="1200" scalemin="0.8" scalemax="1.0" />
+      <sound file="Content/Items/Tools/Extinguisher.ogg" type="OnUse" range="500.0" loop="true" />
+      <Fixable identifier="structure" />
+    </RepairTool>
+    <RepairTool range="350" barrelpos="0,0" repairmultiple="true" repairthroughwalls="true" combatpriority="2" IgnoreCharacters="false" spread="360" unskilledspread="360">
+      <StatusEffect type="OnUse" target="UseTarget">
+        <Conditional entitytype="Character" />
+        <ReduceAffliction identifier="burning" amount="15.0" />
+      </StatusEffect>
+    </RepairTool>
+
+    <LightComponent LightColor="60,255,120,180" range="30" powerconsumption="0" IsOn="true" blinkfrequency="0.2" castshadows="false">
+      <IsActive targetitemcomponent="ItemComponent" IsActive="true" />
+      <IsActive hasstatustag="!eq esn_deploying" />
+      <IsActive condition="gt 0.0" />
+    </LightComponent>
+
+    <LightComponent LightColor="255,70,70,220" range="35" powerconsumption="0" IsOn="true" blinkfrequency="1.0" castshadows="false">
+      <IsActive targetitemcomponent="ItemComponent" IsActive="true" />
+      <IsActive hasstatustag="!eq esn_deploying" />
+      <IsActive condition="lte 0.0" />
+    </LightComponent>
+
+    <LightComponent LightColor="255,240,210,170" range="650" brightness="1.0" powerconsumption="0" IsOn="true" castshadows="true">
+      <IsActive targetitemcomponent="ItemComponent" IsActive="true" />
+      <IsActive hasstatustag="!eq esn_deploying" />
+      <IsActive targetitemcomponent="Pump" CurrFlow="gt 0.0" />
+      <IsActive targetitemcomponent="PowerContainer" Charge="gt 0.0" />
+    </LightComponent>
+    <LightComponent LightColor="255,240,210,170" range="650" brightness="1.0" powerconsumption="0" IsOn="true" castshadows="true">
+      <IsActive targetitemcomponent="ItemComponent" IsActive="true" />
+      <IsActive hasstatustag="!eq esn_deploying" />
+      <IsActive hasstatustag="esn_fireburst_active" />
+      <IsActive targetitemcomponent="PowerContainer" Charge="gt 0.0" />
+    </LightComponent>
+
+    <AiTarget sightrange="1500" soundrange="400" fadeouttime="2" />
+  </Item>
+</Items>

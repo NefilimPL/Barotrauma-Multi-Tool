@@ -7,4 +7,6 @@
   <label.enabledamage>Włącz zadawanie obrażeń NPC</label.enabledamage>
   <entityname.wrenchscrewdrivertwoinoneSET>Klucz-śrubokręt 2 w 1</entityname.wrenchscrewdrivertwoinoneSET>
   <entitydescription.wrenchscrewdrivertwoinoneSET>Zaprojektowany dla inżynierów okrętów podwodnych; podwójny prawy klik przełącza tryb klucza/śrubokręta.</entitydescription.wrenchscrewdrivertwoinoneSET>
+  <entityname.EmergencyServiceNodeSET>Awaryjny wezel serwisowy</entityname.EmergencyServiceNodeSET>
+  <entitydescription.EmergencyServiceNodeSET>Rzucany awaryjny modul serwisowy. Po uderzeniu sam sie przykleja, miga na zielono gdy jest uzbrojony, oswietla pomieszczenie przez 5 minut, wypompowuje wode i bardzo wolno naprawia zalany przedzial przez maksymalnie 1 minute ladunku oraz wypuszcza do 3 burstow gasniczych na pelnym naladowaniu. Laduje sie w ladowarce baterii albo uzupelniaczu tlenu.</entitydescription.EmergencyServiceNodeSET>
 </infotexts>
