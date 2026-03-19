@@ -8,5 +8,7 @@
   <entityname.wrenchscrewdrivertwoinoneSET>2-in-1 screwdriver wrench</entityname.wrenchscrewdrivertwoinoneSET>
   <entitydescription.wrenchscrewdrivertwoinoneSET>Designed for submarine engineers, double right-click to switch wrenches/screwdrivers.</entitydescription.wrenchscrewdrivertwoinoneSET>
   <entityname.EmergencyServiceNodeSET>Emergency service node</entityname.EmergencyServiceNodeSET>
-  <entitydescription.EmergencyServiceNodeSET>Throwable emergency node. It auto-sticks after impact, blinks green while armed, lights the room for 5 minutes, pumps and slowly repairs flooded compartments for up to 1 minute of charge, and releases up to 3 extinguisher bursts per full recharge. Recharge it in a battery charger or oxygen refiller.</entitydescription.EmergencyServiceNodeSET>
+  <entitydescription.EmergencyServiceNodeSET>Service module for an emergency service detonator. While mounted, it waits for water or fire, then slowly repairs flooded compartments, pumps water, and releases extinguisher bursts using a shared 1-minute charge budget. Recharge it in a battery charger or oxygen refiller.</entitydescription.EmergencyServiceNodeSET>
+  <entityname.EmergencyServiceDetonatorSET>Emergency service detonator</entityname.EmergencyServiceDetonatorSET>
+  <entitydescription.EmergencyServiceDetonatorSET>Wall-mounted service detonator for the emergency service node. Bots can keep a fully charged module here and take depleted ones back to chargers.</entitydescription.EmergencyServiceDetonatorSET>
 </infotexts>

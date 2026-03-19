@@ -8,5 +8,7 @@
   <entityname.wrenchscrewdrivertwoinoneSET>Klucz-śrubokręt 2 w 1</entityname.wrenchscrewdrivertwoinoneSET>
   <entitydescription.wrenchscrewdrivertwoinoneSET>Zaprojektowany dla inżynierów okrętów podwodnych; podwójny prawy klik przełącza tryb klucza/śrubokręta.</entitydescription.wrenchscrewdrivertwoinoneSET>
   <entityname.EmergencyServiceNodeSET>Awaryjny wezel serwisowy</entityname.EmergencyServiceNodeSET>
-  <entitydescription.EmergencyServiceNodeSET>Rzucany awaryjny modul serwisowy. Po uderzeniu sam sie przykleja, miga na zielono gdy jest uzbrojony, oswietla pomieszczenie przez 5 minut, wypompowuje wode i bardzo wolno naprawia zalany przedzial przez maksymalnie 1 minute ladunku oraz wypuszcza do 3 burstow gasniczych na pelnym naladowaniu. Laduje sie w ladowarce baterii albo uzupelniaczu tlenu.</entitydescription.EmergencyServiceNodeSET>
+  <entitydescription.EmergencyServiceNodeSET>Modul serwisowy do awaryjnego detonatora serwisowego. Po zamontowaniu czeka na wykrycie wody albo ognia, a potem wolno naprawia zalany przedzial, wypompowuje wode i wypuszcza bursty gasnicze ze wspolnego budzetu okolo 1 minuty pracy. Laduje sie w ladowarce baterii albo uzupelniaczu tlenu.</entitydescription.EmergencyServiceNodeSET>
+  <entityname.EmergencyServiceDetonatorSET>Awaryjny detonator serwisowy</entityname.EmergencyServiceDetonatorSET>
+  <entitydescription.EmergencyServiceDetonatorSET>Scienny detonator serwisowy dla awaryjnego wezla serwisowego. Boty moga trzymac tu naladowany modul i zabierac rozladowane sztuki do ladowania.</entitydescription.EmergencyServiceDetonatorSET>
 </infotexts>
