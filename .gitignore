@@ -1,0 +1,6 @@
+.local-tools/
+.runtime/
+.superpowers/
+__pycache__/
+*.pyc
+output/

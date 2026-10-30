@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Items>
+  <Item identifier="combatmultitool" name="Aegis combat multitool" category="Equipment,Weapon"
+        tags="tool,weapon,weldingequipment,cuttingequipment,electricalrepairtool,mechanicalrepairtool,screwdriver,wrench,fireextinguisher,crowbaritem,provocative"
+        cargocontaineridentifier="metalcrate" scale="0.085" maxstacksize="1" requireaimtouse="true" impactsoundtag="impact_metal_heavy">
+    <Price baseprice="6500" sold="false" />
+    <Fabricate suitablefabricators="fabricator,milfabricator" requiredtime="30">
+      <RequiredSkill identifier="mechanical" level="50" />
+      <RequiredSkill identifier="electrical" level="40" />
+      <RequiredItem identifier="Multi-toolSET" />
+      <RequiredItem identifier="titaniumaluminiumalloy" amount="2" />
+      <RequiredItem identifier="copper" amount="2" />
+      <RequiredItem identifier="fpgacircuit" />
+      <RequiredItem identifier="fulgurium" />
+    </Fabricate>
+    <Deconstruct time="20">
+      <Item identifier="titaniumaluminiumalloy" />
+      <Item identifier="copper" />
+      <Item identifier="plastic" />
+    </Deconstruct>
+    <InventoryIcon texture="%ModDir%/Assets/Combat/weapon.png" sourcerect="0,0,1774,887" origin="0.5,0.5" />
+    <Sprite texture="%ModDir%/Assets/Combat/weapon.png" sourcerect="0,0,1774,887" origin="0.5,0.5" depth="0.55" />
+    <Body width="1700" height="560" density="8" />
+    <Holdable slots="Any,RightHand+LeftHand" controlpose="true" holdpos="35,-10" aimpos="55,-10"
+              handle1="-420,170" handle2="280,230" holdangle="-30"
+              disablewhenrangedweaponequipped="false" msg="ItemMsgPickUpSelect" />
+    <RangedWeapon barrelpos="810,0" reload="0.65" holdtrigger="true" combatpriority="75" spread="0" unskilledspread="0">
+      <RequiredItems items="mobilebattery,reactorfuel" type="Contained" msg="ItemMsgAmmoRequired" />
+    </RangedWeapon>
+    <!-- First RepairTool must be a welder: native leak AI asks for the first. -->
+    <RepairTool usablein="None" characterusable="false" structurefixamount="2.2" firedamage="10" range="200" barrelpos="810,0" particles="weld"
+                repairmultiple="true" repairthroughwalls="false" repairthroughholes="true" combatpriority="0" ignorecharacters="true">
+      <RequiredItems items="mobilebattery,reactorfuel" type="Contained" />
+      <ParticleEmitter particle="weld" particlespersecond="50" copyentityangle="true" scalemin="1.5" scalemax="1.5" colormultiplier="20,180,255,155" />
+      <ParticleEmitterHitStructure particle="weldspark" particlespersecond="150" anglemin="-40" anglemax="40" velocitymin="200" velocitymax="800" />
+      <ParticleEmitterHitStructure particle="MistSmoke" particlespersecond="15" velocitymin="0" velocitymax="50" />
+      <sound file="%ModDir%/tool.ogg" type="OnUse" range="500" loop="true" />
+      <StatusEffect type="OnSuccess" target="UseTarget" targets="weldable" Stuck="5.5" />
+      <Fixable identifier="structure" />
+    </RepairTool>
+    <RepairTool usablein="None" characterusable="false" structurefixamount="-0.55" firedamage="10" levelwallfixamount="-5.5" range="200" barrelpos="810,0"
+                repairmultiple="true" repairthroughwalls="false" repairthroughholes="true" combatpriority="0" ignorecharacters="true">
+      <RequiredItems items="mobilebattery,reactorfuel" type="Contained" />
+      <ParticleEmitter particle="weld" particlespersecond="50" copyentityangle="true" scalemin="1.5" scalemax="1.5" colormultiplier="20,180,255,155" />
+      <ParticleEmitterHitStructure particle="weldspark" particlespersecond="150" anglemin="-40" anglemax="40" velocitymin="200" velocitymax="800" />
+      <sound file="%ModDir%/tool.ogg" type="OnUse" range="500" loop="true" />
+      <StatusEffect type="OnSuccess" target="UseTarget" targets="weldable" Stuck="-22" />
+      <StatusEffect type="OnSuccess" target="UseTarget" Condition="-16.5" />
+      <Fixable identifier="structure" />
+    </RepairTool>
+    <RepairTool usablein="None" characterusable="false" extinguishamount="60" range="500" barrelpos="810,0" repairmultiple="true"
+                repairthroughwalls="false" hititems="false" ignorecharacters="true" combatpriority="0">
+      <RequiredItems items="mobilebattery,reactorfuel" type="Contained" />
+      <ParticleEmitter particle="extinguisher" particlespersecond="100" anglemin="-5" anglemax="5" velocitymin="1000" velocitymax="1650" />
+      <sound file="Content/Items/Tools/Extinguisher.ogg" type="OnUse" range="500" loop="true" />
+    </RepairTool>
+    <ItemContainer capacity="2" maxstacksize="1" hideitems="false" keepopenwhenequipped="true">
+      <Containable items="mobilebattery,reactorfuel" hide="true" containedstateindicatorstyle="battery" />
+      <SlotIcon slotindex="0" texture="Content/UI/StatusMonitorUI.png" sourcerect="64,448,64,64" origin="0.5,0.5" />
+      <SlotIcon slotindex="1" texture="Content/UI/StatusMonitorUI.png" sourcerect="64,448,64,64" origin="0.5,0.5" />
+    </ItemContainer>
+    <Pump canbeselected="false" maxflow="0" powerconsumption="0" ison="false" />
+    <Controller canbeselected="false" istoggle="true" state="false" output="" falseoutput="" hidehud="true" />
+    <!-- IsOn of the first light is a native saved/networked damage permission. -->
+    <LightComponent canbeselected="false" ison="false" range="0" brightness="0" />
+    <LightComponent canbeselected="false" ison="false" range="1100" brightness="1.5" color="225,245,255,255"
+                    coneangle="40" castshadows="true" drawlightwhenequipped="true" usevolumetrics="true" volumetricintensity="0.2" />
+    <CustomInterface canbeselected="false" drawhudwhenequipped="true" allowuioverlap="false">
+      <GuiFrame relativesize="0.25,0.14" anchor="CenterRight" relativeoffset="0,-0.17" style="MainMenuGUIButton" draggable="true" />
+      <TickBox text="label.changetool" targetitemcomponent="Pump" propertyname="IsOn" continuoussignal="false" getvalueinterval="0.25" />
+      <TickBox text="label.enableextinguisher" targetitemcomponent="Controller" propertyname="State" continuoussignal="false" getvalueinterval="0.25" />
+      <TickBox text="label.enabledamage" targetitemcomponent="LightComponent" propertyname="IsOn" continuoussignal="false" getvalueinterval="0.25" />
+      <TextBlock text="label.combatpowerslots" />
+    </CustomInterface>
+    <Quality><QualityStat stattype="RepairSpeed" value="0.1" /></Quality>
+    <AiTarget sightrange="2000" soundrange="800" fadeouttime="3" />
+  </Item>
+</Items>
