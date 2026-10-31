@@ -1,5 +1,31 @@
 # Aegis 1.1.0 — weryfikacja
 
+## Poprawka 1.1.1 — zgłoszenie z testera statku
+
+Zrzut konsoli użytkownika ujawnił `attempt to index a nil value` w
+`visuals.lua` podczas rysowania arkusza. Kod wymagał globalnego
+`SpriteEffects.None`, którego nie było na kliencie. Teraz korzysta
+z domyślnego argumentu natywnego `Sprite.Draw`. Poprawiono również
+odwołanie do rysowania linii: aktualny LuaCs udostępnia je przez `GUI.GUI`.
+Test renderera używa tego układu API i braku globalnego enumu; odtworzył
+błąd przed zmianą i przechodzi po poprawce.
+
+Latarka otrzymała `directional="true"`, natywny `LightTexture` z
+`Content/Lights/lightcone.png` oraz `LightColor` i przesunięcie do lufy.
+Samo `coneangle` bez tekstury nie tworzyło stożka. Osobny test wykazał
+błędną konfigurację przed poprawką i przechodzi po zmianie.
+
+Pełny zestaw ma teraz **45/45 testów automatycznych**. Walidacja obejmuje
+8 XML i 13 Lua. Natywne API potwierdziło, że zwykłe `batterycell` ma tag
+`mobilebattery`, jest dopuszczone w obu slotach i daje się włożyć.
+Ponowiony test podstawowy przeszedł **13/13 sprawdzeń**, w tym ograniczenia
+obu slotów i rzeczywisty callback checkboxa zamiast ręcznej zmiany flagi.
+Nie odtworzono jeszcze zgłoszonej odmowy wkładania na kliencie użytkownika;
+nie należy traktować jej jako usuniętej. Dodano niemodyfikującą stanu
+komendę `aegis_status`, sprawdzoną również na rzeczywistym serwerze.
+Pełny test renderera w kliencie i ponowna próba użytkownika pozostają
+konieczne. Dalszy tekst opisuje wcześniejszą weryfikację 1.1.0.
+
 Weryfikacja końcowa: 2026-10-31. Kod i paczka są przeznaczone do prób w grze;
 poniższe wyniki nie zastępują sprawdzenia grafiki i synchronizacji na klientach.
 

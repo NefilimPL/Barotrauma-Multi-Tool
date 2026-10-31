@@ -145,6 +145,7 @@ function Module.new(E)
     end
     function G.dispose()
         G.cleanup()
+        if G.disposeDiagnostics then G.disposeDiagnostics() end
         if E.Hook and E.Hook.Remove then
             E.Hook.Remove('think','bmt.combat.update')
             E.Hook.Remove('roundEnd','bmt.combat.reset')

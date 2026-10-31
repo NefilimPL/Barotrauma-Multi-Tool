@@ -16,6 +16,7 @@ local ok,err=pcall(function()
     end
     if CLIENT then require('CombatTool.visuals').install(G,_G,modPath) end
     require('CombatTool.runtime').install(G,_G)
+    require('CombatTool.diagnostics').install(G,_G)
 end)
 if not ok then
     G.dispose()

@@ -3,6 +3,9 @@ local C=require('CombatTool.config')
 local Core=require('CombatTool.core')
 local M={}
 function M.install(G,E,root)
+    -- Current LuaCs exposes GUI drawing under GUI.GUI. Sprite.Draw supplies
+    -- SpriteEffects.None by default; the optional global enum may be absent.
+    local gui=type(E.GUI)=='table' and E.GUI.GUI or E.GUI
     local assets={}
     for _,name in ipairs({'shield-active','shield-hit','shield-break','shield-contact'}) do
         assets[name]=E.Sprite(root..'/Assets/Combat/'..name..'.png',E.Vector2(.5,.5))
@@ -36,10 +39,10 @@ function M.install(G,E,root)
         local origin=frame(sprite,index)
         local screen=cam.WorldToScreen(E.Vector2(point.x,point.y))
         sprite.Draw(batch,screen,E.Color(255,255,255,math.floor(255*(alpha or 1))),origin,-angle,
-            E.Vector2(sx*cam.Zoom,sy*cam.Zoom),E.SpriteEffects.None,0)
+            E.Vector2(sx*cam.Zoom,sy*cam.Zoom))
     end
     local function line(batch,cam,a,b,color,width)
-        E.GUI.DrawLine(batch,cam.WorldToScreen(E.Vector2(a.x,a.y)),cam.WorldToScreen(E.Vector2(b.x,b.y)),color,0,width*cam.Zoom)
+        gui.DrawLine(batch,cam.WorldToScreen(E.Vector2(a.x,a.y)),cam.WorldToScreen(E.Vector2(b.x,b.y)),color,0,math.max(1,math.floor(width*cam.Zoom+.5)))
     end
     local function circle(batch,cam,x,y,angle,radius,color,width)
         local previous=nil

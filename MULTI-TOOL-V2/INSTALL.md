@@ -1,4 +1,4 @@
-# MULTI-TOOL-V2 1.1.0 — Aegis
+# MULTI-TOOL-V2 1.1.1 — Aegis
 
 Wypakuj ten folder do `Barotrauma/LocalMods/` i włącz pakiet w grze.
 Wymagane jest zgodne **Lua for Barotrauma / LuaCs na kliencie i serwerze**.
@@ -18,4 +18,10 @@ Broń zajmuje dwie ręce, a po schowaniu jeden zwykły slot.
 
 Podgląd animacji: [Assets/Combat/preview.html](Assets/Combat/preview.html).
 Balans: `Lua/CombatTool/config.lua`.
+
+Po aktualizacji zastąp stary folder moda i uruchom grę ponownie. Samo
+`reloadlua` nie przeładowuje definicji XML latarki.
+Diagnostyka w konsoli F3: `aegis_status` (bez prefiksu `lua`).
+Wynik pokazuje tryb, zgodę na obrażenia, oba źródła zasilania, błąd rysowania
+i dopuszczenie zwykłego ogniwa baterii w obu slotach.
 LuaCs: https://github.com/evilfactory/LuaCsForBarotrauma

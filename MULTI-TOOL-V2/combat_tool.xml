@@ -63,8 +63,10 @@
     <Controller canbeselected="false" istoggle="true" state="false" output="" falseoutput="" hidehud="true" />
     <!-- IsOn of the first light is a native saved/networked damage permission. -->
     <LightComponent canbeselected="false" ison="false" range="0" brightness="0" />
-    <LightComponent canbeselected="false" ison="false" range="1100" brightness="1.5" color="225,245,255,255"
-                    coneangle="40" castshadows="true" drawlightwhenequipped="true" usevolumetrics="true" volumetricintensity="0.2" />
+    <LightComponent canbeselected="false" ison="false" range="1100" lightcolor="225,245,255,255"
+                    directional="true" lightoffset="810,0" powerconsumption="0" castshadows="true">
+      <LightTexture texture="Content/Lights/lightcone.png" origin="0.0,0.5" size="1.0,1.0" />
+    </LightComponent>
     <CustomInterface canbeselected="false" drawhudwhenequipped="true" allowuioverlap="false">
       <GuiFrame relativesize="0.25,0.14" anchor="CenterRight" relativeoffset="0,-0.17" style="MainMenuGUIButton" draggable="true" />
       <TickBox text="label.changetool" targetitemcomponent="Pump" propertyname="IsOn" continuoussignal="false" getvalueinterval="0.25" />

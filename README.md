@@ -90,6 +90,12 @@ lub użyj konsolowego `reloadlua` na serwerze i klientach.
 
 ## Sprawdzenia
 
+Wersja 1.1.1 poprawia błąd rysowania efektów na kliencie oraz ustawia
+natywne światło kierunkowe z teksturą stożka. Po aktualizacji uruchom grę
+ponownie, aby przeładować XML. Komenda `aegis_status` w konsoli F3 wypisuje
+stan broni i sprawdza natywne ograniczenia slotów dla zwykłego ogniwa baterii.
+W konsoli klienta kod Lua wykonuje się przez `cl_lua`, na serwerze przez `lua`.
+
 ```powershell
 python -m pip install -r tests/requirements.txt
 python tools/run_tests.py

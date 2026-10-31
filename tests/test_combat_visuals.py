@@ -8,7 +8,9 @@ class VisualContractTests(LuaCase):
             local function v(x,y) return {X=x,Y=y} end
             local env={Sprite=function() return {Draw=function() draws=(draws or 0)+1 end} end,
                 Vector2=v,Rectangle=function(x,y,w,h) assert(x>=0 and y>=0 and x+w<=1254 and y+h<=1254);return {} end,
-                Color=function() return {} end,SpriteEffects={None=0},GUI={DrawLine=function() end}}
+                Color=function() return {} end,GUI={GUI={DrawLine=function(_,_,_,_,_,width)
+                    assert(width>=1 and width%1==0,'native GUI line width must be a positive integer')
+                end}}}
             local G={now=0,authoritative=false,remote={received=0,shields={},rings={}},
                 patch=function(_,_,method,fn,after) assert(method=='DrawMap' and after);drawPatch=fn end,
                 cast=function() return nil end}
@@ -20,6 +22,7 @@ class VisualContractTests(LuaCase):
                 G.now=i/25;G.remote.received=G.now
                 G.remote.shields={{x=0,y=0,angle=0,energy=100}}
                 drawPatch(screen,{spriteBatch=batch})
+                assert(not G.visualError,G.visualError)
                 G.updateVisuals(.03)
             end
             G.now=1;G.remote.received=1
