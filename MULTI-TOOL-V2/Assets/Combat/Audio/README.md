@@ -1,7 +1,8 @@
 Bundled effects are original procedurally synthesized, noise-driven discharges
 and impacts, without tonal laser sweeps. The primary shot references Barotrauma's
-native Coilgun1/2 through Content paths; those game assets are not redistributed.
-The bundled shot-1/2 files are a quiet secondary discharge layer.
+native ShotgunShot1/2 through Content paths at full source gain; those game assets
+are not redistributed. The bundled shot-1/2 files add a secondary discharge
+layer at 0.4 gain. The primary shot has a 1400-unit audible range.
 Rebuild the synthesized files with `python tools/generate_combat_audio.py`
 (Python standard library and ffmpeg with libvorbis).
 

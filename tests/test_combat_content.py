@@ -6,6 +6,13 @@ ROOT=Path(__file__).resolve().parents[1]
 
 
 class CombatContentTests(unittest.TestCase):
+    def test_aiming_has_native_crosshair_and_hud_enabled(self):
+        item=ET.parse(ROOT/'MULTI-TOOL-V2/combat_tool.xml').getroot().find('Item')
+        ranged=item.find('RangedWeapon')
+        self.assertEqual(ranged.get('drawhudwhenequipped'),'true')
+        self.assertIsNotNone(ranged.find('Crosshair'))
+        self.assertIsNotNone(ranged.find('CrosshairPointer'))
+
     def test_one_shared_power_slot(self):
         item=ET.parse(ROOT/'MULTI-TOOL-V2/combat_tool.xml').getroot().find('Item')
         container=item.find('ItemContainer')

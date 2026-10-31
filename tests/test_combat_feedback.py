@@ -2,6 +2,29 @@ from lua_support import LuaCase
 
 
 class CombatFeedbackTests(LuaCase):
+    def test_actual_held_fire_cadence_is_about_twenty_percent_faster(self):
+        self.lua.execute('''
+            local C=require('CombatTool.config')
+            local charge,reload=C.chargeTime,C.reloadTime
+            local function count(a,b)
+                C.chargeTime=a;C.reloadTime=b
+                local G=require('CombatTool.game').new({})
+                local component={Item={ID=1},Name='RangedWeapon'}
+                local shots=0
+                G.context=function() return {valid=true,aim=true,damage=true,mode='combat'} end
+                G.canSpend=function() return true end;G.spend=function() return true end
+                G.fire=function() shots=shots+1 end
+                for i=0,1800 do G.now=i/60;G.frame=i;G.use(component,nil,1/60) end
+                return shots
+            end
+            local old=count(.12,.34)
+            local current=count(charge,reload)
+            C.chargeTime=charge;C.reloadTime=reload
+            ratio=current/old
+        ''')
+        self.assertGreater(self.lua.globals().ratio,1.15)
+        self.assertLess(self.lua.globals().ratio,1.26)
+
     def test_snapshot_keeps_trail_but_never_links_it_through_a_wall(self):
         self.lua.execute('''
             local G={now=0,cast=function() return nil end}

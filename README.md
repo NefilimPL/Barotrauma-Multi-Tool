@@ -93,6 +93,12 @@ lub użyj konsolowego `reloadlua` na serwerze i klientach.
 
 ## Sprawdzenia
 
+Wersja 1.1.5 dodaje natywny celownik podczas celowania i zwiększa
+szybkostrzelność o około 20%: ładowanie 0,10 s, przerwa po strzale 0,28 s.
+Główny dźwięk to teraz mocny wystrzał strzelby przy pełnej głośności źródła,
+z głośniejszą warstwą elektrycznego wyładowania i większym zasięgiem słyszalności.
+Aktualizacja wymaga ponownego uruchomienia gry, także na serwerze.
+
 Wersja 1.1.4 wprowadza jeden wspólny slot zasilania i automatyczną zgodę
 na walkę dla botów. Dźwięk wystrzału korzysta z natywnego nagrania broni
 elektromagnetycznej z cichą, krótką warstwą wyładowania. Usunięto tonalne

@@ -12,6 +12,18 @@ Timer.Wait(function()
         local Sort=LuaUserData.CreateEnumTable('Microsoft.Xna.Framework.Graphics.SpriteSortMode')
         batch=SB(gm.Instance.GraphicsDevice)
         local cam=gm.GameScreen.Cam
+        local weaponType=LuaUserData.RegisterType('Barotrauma.Items.Components.RangedWeapon')
+        LuaUserData.MakeFieldAccessible(weaponType,'crosshairSprite')
+        LuaUserData.MakeFieldAccessible(weaponType,'crosshairPointerSprite')
+        local gun=Item(ItemPrefab.Prefabs['combatmultitool'],Vector2.Zero,nil)
+        local ranged=require('CombatTool.util').component(gun,'RangedWeapon')
+        assert(ranged.DrawHudWhenEquipped,'native weapon HUD is disabled')
+        assert(ranged.crosshairSprite and ranged.crosshairPointerSprite,'native crosshair assets did not load')
+        batch.Begin(Sort.Deferred,Blend.NonPremultiplied)
+        ranged.crosshairSprite.Draw(batch,Vector2(300,300),Color.White,0,ranged.CrossHairScale)
+        ranged.crosshairPointerSprite.Draw(batch,Vector2(300,300),Color.White,0,.1)
+        batch.End()
+        gun.Remove()
         local G=BMTCombat
         local previous=G.authoritative
         G.authoritative=false
@@ -46,6 +58,6 @@ Timer.Wait(function()
         assert(not G.audioError,G.audioError)
     end)
     File.Write('LocalMods/MULTI-TOOL-V2/client-results.txt',
-        ok and 'PASS native GPU: 16 frames, 4 angles, animated rings/trails, 8 effect kinds; 5 native spatial audio channels' or 'FAIL '..tostring(err))
+        ok and 'PASS native GPU: loaded weapon HUD and drew both crosshair sprites; 16 frames, 4 angles, animated rings/trails, 8 effect kinds; 5 native spatial audio channels' or 'FAIL '..tostring(err))
     if not ok then print('[BMT CLIENT] '..tostring(err)) end
 end,4000)

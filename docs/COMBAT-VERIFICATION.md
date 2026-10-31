@@ -1,5 +1,36 @@
 # Aegis — weryfikacja wersji 1.1.x
 
+## Poprawka 1.1.5 — mocniejszy wystrzał, szybkostrzelność i celownik
+
+- Zgłoszony brak celownika wynikał z braku `Crosshair`, `CrosshairPointer`
+  i `drawhudwhenequipped` w komponencie RangedWeapon. Dodano natywne grafiki
+  celownika gry ze skalą 0,18; obsługa celowania pozostaje w natywnym HUD.
+- Nagrania Coilgun zastąpiono mocniejszymi ShotgunShot1/2 przy głośności 1,0
+  i zasięgu 1400. Warstwa wyładowania wzrosła z 0,14 do 0,4 i zasięgu 1100.
+  Pliki gry są referencjami Content, bez dołączania ich do paczki moda.
+  Zachowano natywne tłumienie przez wodę, ściany i ustawienia dźwięku.
+- Ładowanie 0,10 s i przerwa 0,28 s zamiast 0,12/0,34: nominalnie 21% więcej
+  strzałów. Test rzeczywistej pętli przytrzymanego spustu przy 60 Hz daje
+  wzrost około 24% wskutek zaokrąglania do klatek. XML i Lua mają tę samą
+  przerwę. Koszt pojedynczego strzału pozostaje taki sam, więc szybszy ogień
+  szybciej zużywa energię.
+
+Oba nowe testy regresji najpierw odtworzyły brak celownika i starą
+szybkostrzelność; po poprawce **62/62** testy przechodzą. Walidator potwierdza
+9 XML, 14 modułów Lua i obecność referencji Content w instalacji 1.13.5.0.
+Rzeczywisty klient utworzył broń, sprawdził włączony natywny HUD, załadował
+i narysował obie grafiki celownika na GPU. Przeszedł także 16 klatek/cztery
+kąty/osiem efektów i pięć rodzin przestrzennych kanałów audio. Test nie
+zastępuje oceny brzmienia w rozgrywce ani ręcznej oceny położenia celownika.
+
+Świeży serwer: **13/13** prób podstawowych oraz **3/3** prób naturalnej
+samoobrony, w tym 12 strzałów bota z początkowo wyłączonym checkboxem gracza.
+Ponowiona próba naprawy/walki przeszła **5/5** sprawdzeń: 304 użycia spawarki
+bez innych funkcji, potem 6 strzałów w walce bez funkcji technicznych;
+usunięcie zagrożenia zatrzymało strzelanie i tarczę. Liczba strzałów w tym
+scenariuszu zależy także od czasu namierzania, więc nie służy do pomiaru
+szybkostrzelności.
+
 ## Poprawka 1.1.4 — wspólne zasilanie, samoobrona i dźwięk
 
 Użytkownik zmienił wymagania: jeden slot dla całego zasilania; bot ma sam

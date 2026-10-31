@@ -1,4 +1,4 @@
-# MULTI-TOOL-V2 1.1.4 — Aegis
+# MULTI-TOOL-V2 1.1.5 — Aegis
 
 Wypakuj ten folder do `Barotrauma/LocalMods/` i włącz pakiet w grze.
 Wymagane jest zgodne **Lua for Barotrauma / LuaCs na kliencie i serwerze**.
@@ -19,9 +19,11 @@ Broń zajmuje dwie ręce, a po schowaniu jeden zwykły slot.
 
 Podgląd animacji: [Assets/Combat/preview.html](Assets/Combat/preview.html).
 Balans: `Lua/CombatTool/config.lua`.
-Wersja 1.1.3 dodaje przestrzenne dźwięki broni i trafień, impuls odpychający
-NPC oraz pulsujący pierścień ze śladem energii. Odstęp strzałów wynosi około
-0,46 s, a lot jest o 25% wolniejszy przy zachowanym zasięgu.
+Broń ma przestrzenne dźwięki broni i trafień, impuls odpychający NPC oraz
+pulsujący pierścień ze śladem energii. Wersja 1.1.5 skraca ładowanie do 0,10 s
+i przerwę po strzale do 0,28 s: około 20% więcej strzałów przy trzymaniu spustu.
+Dodaje natywny celownik przy celowaniu. Strzał korzysta teraz z mocnego nagrania
+wystrzału strzelby przy pełnej głośności źródła i głośniejszego wyładowania.
 Podgląd dźwięków: [Assets/Combat/Audio/preview.html](Assets/Combat/Audio/preview.html).
 W multiplayer serwer i wszyscy gracze powinni mieć tę samą wersję moda.
 Wersja 1.1.4 zmienia dźwięki na krótkie, cięższe wystrzały i suche wyładowania,
@@ -29,7 +31,7 @@ Wersja 1.1.4 zmienia dźwięki na krótkie, cięższe wystrzały i suche wyłado
 Przed aktualizacją wyjmij oba źródła ze starszej wersji broni — nowa ma jeden slot.
 
 Po aktualizacji zastąp stary folder moda i uruchom grę ponownie. Samo
-`reloadlua` nie przeładowuje definicji XML latarki.
+`reloadlua` nie przeładowuje definicji XML celownika ani dźwięków.
 Diagnostyka w konsoli F3: `aegis_status` (bez prefiksu `lua`).
 Wynik pokazuje tryb, skuteczne zezwolenie na walkę, wspólne źródło zasilania,
 błąd rysowania i dopuszczenie zwykłego ogniwa baterii.
