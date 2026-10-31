@@ -72,5 +72,13 @@ function P.install(G,E)
         local kick=impulse and E.Vector2(impulse.x,impulse.y) or E.Vector2.Zero
         target.AddDamage(E.Vector2(position.x,position.y),afflictions,stun or 0,true,kick,owner,1)
     end
+    function G.shock(target,position,owner,burn,stun)
+        -- Native DamageLimb applies its stun argument BEFORE checking friendly
+        -- fire. Afflictions are applied AFTER that check, protecting allies from
+        -- both the burn and the electrical stagger when friendly fire is off.
+        local afflictions={E.AfflictionPrefab.Prefabs['burn'].Instantiate(burn),
+            E.AfflictionPrefab.Prefabs['stun'].Instantiate(stun)}
+        target.AddDamage(E.Vector2(position.x,position.y),afflictions,0,true,E.Vector2.Zero,owner,1)
+    end
 end
 return P

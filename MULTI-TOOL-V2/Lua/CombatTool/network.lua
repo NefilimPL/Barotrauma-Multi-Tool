@@ -5,22 +5,23 @@ local N={}
 function N.install(G,E)
     local snapshotName=C.protocol..'.snapshot'
     local eventName=C.protocol..'.effect'
-    local eventIDs={charge=1,shot=2,hit=3,bounce=4,shieldhit=5,['break']=6,contact=7,wallhit=8}
+    local eventIDs={charge=1,shot=2,hit=3,bounce=4,shieldhit=5,['break']=6,contact=7,wallhit=8,arc=9}
     G.eventNames={};for name,id in pairs(eventIDs) do G.eventNames[id]=name end
     G.authoritative=E.SERVER or E.Game.IsSingleplayer
     G.remote={shields={},rings={}}
     local sequence,lastSequence=0,-1
     local epoch=math.floor(E.Timer.GetTime()*1000)%4294967296
     local lastEpoch,oldEpochs=nil,{}
-    function G.event(kind,s,position)
+    function G.event(kind,s,position,endpoint)
         local point=type(position)=='table' and position or U.point(position)
         local _,angle=G.direction(s.item)
         if point.nx and point.ny then angle=Core.angle(point.nx,point.ny) end
-        if G.onEffect then G.onEffect(kind,point,angle,s.item.ID) end
+        if G.onEffect then G.onEffect(kind,point,angle,s.item.ID,endpoint) end
         if not E.SERVER or not E.Game.Server then return end
         local message=E.Networking.Start(eventName)
         message.WriteByte(eventIDs[kind]);message.WriteUInt16(s.item.ID)
         message.WriteSingle(point.x);message.WriteSingle(point.y);message.WriteSingle(angle)
+        if kind=='arc' then message.WriteSingle(endpoint.x);message.WriteSingle(endpoint.y) end
         E.Networking.Send(message)
     end
     if E.CLIENT then
@@ -31,7 +32,9 @@ function N.install(G,E)
             local id=message.ReadUInt16()
             local point={x=message.ReadSingle(),y=message.ReadSingle()}
             local angle=message.ReadSingle()
-            if kind and G.onEffect then G.onEffect(kind,point,angle,id) end
+            local endpoint
+            if kind=='arc' then endpoint={x=message.ReadSingle(),y=message.ReadSingle()} end
+            if kind and G.onEffect then G.onEffect(kind,point,angle,id,endpoint) end
         end)
         E.Networking.Receive(snapshotName,function(message)
             local incomingEpoch=message.ReadUInt32()

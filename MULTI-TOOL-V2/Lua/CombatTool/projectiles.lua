@@ -1,4 +1,5 @@
 local Core=require('CombatTool.core')
+local U=require('CombatTool.util')
 local C=Core.config
 local M={}
 function M.install(G,E)
@@ -24,6 +25,28 @@ function M.install(G,E)
         for _,ring in ipairs(G.rings) do if ring.weapon==item then ring.alive=false end end
     end
     function G.clearProjectiles() G.rings={} end
+    -- Called only by the authoritative simulation. One successful secondary
+    -- discharge per ring, including its ricochets; the direct victim is excluded.
+    function G.tryArc(ring,hit)
+        if ring.arcDischarged or not E.Character or math.random()>=C.arcChance then return end
+        local origin={x=hit.x+(hit.nx or 0)*.75,y=hit.y+(hit.ny or 0)*.75}
+        local nearest,endpoint
+        local best=C.arcRadius*C.arcRadius
+        U.each(E.Character.CharacterList,function(target)
+            if target==ring.owner or target==hit.target or target.Removed or target.IsDead then return end
+            local limb=target.AnimController and target.AnimController.MainLimb
+            local p=U.point(limb and limb.WorldPosition or target.WorldPosition)
+            local dx,dy=p.x-hit.x,p.y-hit.y
+            local distance=dx*dx+dy*dy
+            if distance<=best and not G.cast(origin,p,0,ring.owner,true) then
+                nearest,endpoint,best=target,p,distance
+            end
+        end)
+        if not nearest then return end
+        ring.arcDischarged=true
+        G.shock(nearest,endpoint,ring.owner,C.arcBurn*ring.damageMultiplier,C.arcStun)
+        G.event('arc',G.state(ring.weapon),origin,endpoint)
+    end
     function G.updateRings(dt)
         for i=#G.rings,1,-1 do
             local ring=G.rings[i]
@@ -41,13 +64,17 @@ function M.install(G,E)
                     G.damage(hit.target,hit,r.owner,C.burnDamage*r.damageMultiplier,C.bluntDamage*r.damageMultiplier,0,
                         {x=r.dx*impulse,y=r.dy*impulse})
                     G.event('hit',G.state(r.weapon),hit)
+                    G.tryArc(r,hit)
                 elseif hit.kind=='shield' then
                     local blocked=G.blockShield(hit.state,Core.bulletCost(30*r.damageMultiplier),hit)
                     -- Insufficient shield energy lets this ring continue from the contact.
                     if not blocked then
                         r.alive=true;r.x=r.x+r.dx*.05;r.y=r.y+r.dy*.05
                     end
-                elseif hit.kind=='wall' then G.event(r.alive and 'bounce' or 'wallhit',G.state(r.weapon),hit) end
+                elseif hit.kind=='wall' then
+                    G.event(r.alive and 'bounce' or 'wallhit',G.state(r.weapon),hit)
+                    G.tryArc(r,hit)
+                end
             end)
             if not ring.alive then table.remove(G.rings,i) end
         end

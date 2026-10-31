@@ -2,6 +2,27 @@ from lua_support import LuaCase
 
 
 class VisualContractTests(LuaCase):
+    def test_impact_is_visible_at_contact_and_arc_reaches_its_destination(self):
+        self.lua.execute('''
+            local function v(x,y) return {X=x,Y=y} end
+            local E={Sprite=function() return {Draw=function(_,_,_,_,_,scale) sheetSize=scale.X end} end,
+                Vector2=v,Rectangle=function(x,y,w,h) return {X=x,Y=y,Width=w,Height=h} end,
+                LuaUserData={RegisterType=function() end,CreateEnumTable=function() return {} end,CreateStatic=function() return {} end},
+                Color=function(r,g,b,a) return {A=a} end,
+                GUI={GUI={DrawLine=function(_,a,b,color,_,width)
+                    if width>=3 and color.A>=180 then brightLines=(brightLines or 0)+1 end
+                    if math.abs(b.X-80)<.01 and math.abs(b.Y-30)<.01 then reached=true end
+                end}}}
+            local G={now=0,authoritative=false,remote={received=0,rings={},shields={}},patch=function() end}
+            require('CombatTool.visuals').install(G,E,'mod')
+            local camera={Zoom=1,WorldToScreen=function(p) return p end}
+            G.onEffect('wallhit',{x=0,y=0},0,1);G.draw({},camera)
+            assert(sheetSize>=.22,'impact sheet is too small to read in combat')
+            assert(brightLines and brightLines>0,'impact has no bright substantial flash')
+            G.onEffect('arc',{x=0,y=0},0,1,{x=80,y=30});G.draw({},camera)
+            assert(reached,'electrical bolt did not reach the affected character')
+        ''')
+
     def test_ring_animates_in_place_and_drawing_never_repeats_sound(self):
         self.lua.execute('''
             local function v(x,y) return {X=x,Y=y} end

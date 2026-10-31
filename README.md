@@ -93,6 +93,15 @@ lub użyj konsolowego `reloadlua` na serwerze i klientach.
 
 ## Sprawdzenia
 
+Wersja 1.1.6 zastępuje nagranie broni palnej własnym wyładowaniem kondensatora
+z basowym impulsem i trzaskiem elektrycznym. Trafienia mają większy rozbłysk,
+iskry i rozchodzący się impuls. Odpychanie postaci wzrosło o 15%.
+Każde trafienie powierzchni lub postaci daje 15% szansy na lekki przeskok
+prądu do jednej innej postaci w promieniu 90 jednostek, najwyżej raz na pocisk.
+Bezpośrednia ofiara i strzelec są pomijani. Ściany blokują przeskok, a friendly
+fire rozgrywki chroni sojuszników zarówno przed oparzeniem, jak i ogłuszeniem.
+Decyzja należy do serwera; klienci otrzymują oba końce widocznego łuku.
+
 Wersja 1.1.5 dodaje natywny celownik podczas celowania i zwiększa
 szybkostrzelność o około 20%: ładowanie 0,10 s, przerwa po strzale 0,28 s.
 Główny dźwięk to teraz mocny wystrzał strzelby przy pełnej głośności źródła,

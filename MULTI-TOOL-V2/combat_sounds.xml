@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <sounds>
-  <aegis_shot identifier="aegis_shot_1" file="Content/Items/Weapons/ShotgunShot1.ogg" volume="1.0" range="1400" />
-  <aegis_shot identifier="aegis_shot_2" file="Content/Items/Weapons/ShotgunShot2.ogg" volume="1.0" range="1400" />
-  <aegis_discharge identifier="aegis_discharge_1" file="%ModDir%/Assets/Combat/Audio/shot-1.ogg" volume="0.4" range="1100" />
-  <aegis_discharge identifier="aegis_discharge_2" file="%ModDir%/Assets/Combat/Audio/shot-2.ogg" volume="0.4" range="1100" />
+  <aegis_shot identifier="aegis_shot_1" file="%ModDir%/Assets/Combat/Audio/shot-1.ogg" volume="1.0" range="1400" />
+  <aegis_shot identifier="aegis_shot_2" file="%ModDir%/Assets/Combat/Audio/shot-2.ogg" volume="1.0" range="1400" />
+  <aegis_arc identifier="aegis_arc_1" file="%ModDir%/Assets/Combat/Audio/arc-1.ogg" volume="0.85" range="900" />
+  <aegis_arc identifier="aegis_arc_2" file="%ModDir%/Assets/Combat/Audio/arc-2.ogg" volume="0.85" range="900" />
   <aegis_bodyhit identifier="aegis_bodyhit_1" file="%ModDir%/Assets/Combat/Audio/bodyhit-1.ogg" volume="0.85" range="850" />
   <aegis_bodyhit identifier="aegis_bodyhit_2" file="%ModDir%/Assets/Combat/Audio/bodyhit-2.ogg" volume="0.85" range="850" />
   <aegis_wallhit identifier="aegis_wallhit_1" file="%ModDir%/Assets/Combat/Audio/wallhit-1.ogg" volume="0.7" range="900" />

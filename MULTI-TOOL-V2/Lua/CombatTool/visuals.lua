@@ -14,9 +14,9 @@ function M.install(G,E,root)
         assets[name]=E.Sprite(root..'/Assets/Combat/'..name..'.png',E.Vector2(.5,.5))
     end
     local effects={}
-    function G.onEffect(kind,point,angle,id)
+    function G.onEffect(kind,point,angle,id,endpoint)
         if G.playCombatSound then G.playCombatSound(kind,point) end
-        effects[#effects+1]={kind=kind,x=point.x,y=point.y,angle=angle,age=0,id=id}
+        effects[#effects+1]={kind=kind,x=point.x,y=point.y,angle=angle,age=0,id=id,endpoint=endpoint}
         if #effects>256 then table.remove(effects,1) end
     end
     function G.updateVisuals(dt)
@@ -97,16 +97,40 @@ function M.install(G,E,root)
     end
     local function impactSparks(batch,cam,e)
         local t=e.age
-        if t>.24 then return end
-        local alpha=math.floor(220*(1-t/.24))
-        for i=0,5 do
-            local angle=e.angle+(i-2.5)*.37+math.sin((e.id or 0)+i)*.18
-            local distance=3+t*(75+i*13)
-            local a={x=e.x+math.cos(angle)*distance,y=e.y+math.sin(angle)*distance-t*t*40}
-            local b={x=e.x+math.cos(angle)*(distance+3),y=e.y+math.sin(angle)*(distance+3)-t*t*40}
-            line(batch,cam,a,b,E.Color(150,245,255,alpha),1)
+        if t>.34 then return end
+        local alpha=math.floor(255*(1-t/.34))
+        if t<.09 then
+            local flash=math.floor(255*(1-t/.09))
+            circle(batch,cam,e.x,e.y,0,12+t*140,E.Color(100,225,255,math.floor(flash*.65)),9,0,nil,1)
+            line(batch,cam,{x=e.x-15,y=e.y},{x=e.x+15,y=e.y},E.Color(235,255,255,flash),4)
+            line(batch,cam,{x=e.x,y=e.y-15},{x=e.x,y=e.y+15},E.Color(235,255,255,flash),4)
         end
-        circle(batch,cam,e.x,e.y,e.angle,4+t*45,E.Color(90,220,255,math.floor(alpha*.45)),1)
+        for i=0,11 do
+            local angle=e.angle+(i-5.5)*.32+math.sin((e.id or 0)+i)*.18
+            local distance=4+t*(100+i*13)
+            local a={x=e.x+math.cos(angle)*distance,y=e.y+math.sin(angle)*distance-t*t*40}
+            local b={x=e.x+math.cos(angle)*(distance+9),y=e.y+math.sin(angle)*(distance+9)-t*t*40}
+            line(batch,cam,a,b,E.Color(150,245,255,alpha),2)
+        end
+        circle(batch,cam,e.x,e.y,0,6+t*100,E.Color(90,220,255,math.floor(alpha*.6)),2,0,nil,1)
+    end
+    local function drawArc(batch,cam,e)
+        if not e.endpoint or e.age>.22 then return end
+        local dx,dy=e.endpoint.x-e.x,e.endpoint.y-e.y
+        local length=math.sqrt(dx*dx+dy*dy)
+        if length<.01 then return end
+        local alpha=math.floor(255*(1-e.age/.22))
+        local previous={x=e.x,y=e.y}
+        local phase=math.floor(e.age*45)+(e.id or 0)
+        for i=1,10 do
+            local u=i/10
+            local jitter=i<10 and math.sin(i*12.7+phase*2.9)*7*math.sin(u*math.pi) or 0
+            local p={x=e.x+dx*u-dy/length*jitter,y=e.y+dy*u+dx/length*jitter}
+            line(batch,cam,previous,p,E.Color(20,130,255,math.floor(alpha*.35)),7)
+            line(batch,cam,previous,p,E.Color(205,255,255,alpha),2)
+            previous=p
+        end
+        circle(batch,cam,e.endpoint.x,e.endpoint.y,0,9+e.age*45,E.Color(110,240,255,alpha),2,0,nil,1)
     end
     local function drawShield(batch,cam,s)
         local points={}
@@ -170,8 +194,11 @@ function M.install(G,E,root)
                 elseif effect.kind=='contact' then
                     drawSheet(batch,cam,'shield-contact',f,effect,effect.angle,.18,.18,.55)
                 elseif effect.kind=='shieldhit' or effect.kind=='hit' or effect.kind=='bounce' or effect.kind=='wallhit' then
-                    drawSheet(batch,cam,'shield-hit',f,effect,effect.angle,.12,.12,.55)
+                    local size=effect.kind=='shieldhit' and .12 or .26
+                    drawSheet(batch,cam,'shield-hit',f,effect,effect.angle,size,size,.8)
                     impactSparks(batch,cam,effect)
+                elseif effect.kind=='arc' then
+                    drawArc(batch,cam,effect)
                 elseif effect.kind=='shot' and effect.age<.16 then
                     local fade=1-effect.age/.16
                     circle(batch,cam,effect.x,effect.y,effect.angle,7+effect.age*90,E.Color(90,225,255,math.floor(150*fade)),4)

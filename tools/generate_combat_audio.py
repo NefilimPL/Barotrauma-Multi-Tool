@@ -21,9 +21,21 @@ def synth(kind,duration,variant):
         slow=.96*slow+.04*noise
         band=filtered-slow
         if kind=='shot':
-            # Noise-driven electrical discharge: no pitched laser/whistle sweep.
-            value=(1.4*band+.4*noise)*math.exp(-t*38)
-            value+=.2*math.sin(2*math.pi*85*t)*math.exp(-t*55)
+            # Capacitor discharge: sharp ionization, a sub pulse, a rough
+            # cross-modulated coil and irregular crackle. No firearm recording
+            # or high-to-low "pew" whistle; the electrical body lasts ~0.3 s.
+            value=.8*noise*math.exp(-t*90)+1.4*band*math.exp(-t*11)
+            value+=.85*math.sin(2*math.pi*58*pitch*t)*math.exp(-t*14)
+            coil=math.sin(2*math.pi*210*pitch*t+4.2*math.sin(2*math.pi*73*t))
+            value+=.32*coil*math.exp(-t*15)
+            for start,weight in ((.018,.8),(.047,.65),(.083,.45),(.132,.3)):
+                if t>=start:
+                    value+=weight*(noise-filtered)*math.exp(-(t-start)*125)
+            value=math.tanh(value*1.35)
+        elif kind=='arc':
+            gate=.35+.65*abs(math.sin(2*math.pi*137*t+math.sin(2*math.pi*41*t)))
+            value=(1.3*(noise-filtered)*gate+.2*math.sin(2*math.pi*960*pitch*t))*math.exp(-t*24)
+            if t>.035: value+=.6*band*math.exp(-(t-.035)*55)
         elif kind=='bodyhit':
             value=(.6*math.sin(2*math.pi*90*t)+1.8*filtered)*math.exp(-t*32)
         elif kind=='wallhit':
@@ -43,7 +55,7 @@ def generate():
     if not encoder: raise SystemExit('ffmpeg with libvorbis is required')
     target=ROOT/'MULTI-TOOL-V2/Assets/Combat/Audio';target.mkdir(exist_ok=True)
     with tempfile.TemporaryDirectory() as tmp:
-        for kind,duration,variants in [('shot',.14,2),('bodyhit',.16,2),('wallhit',.18,2),('bounce',.09,2),('charge',.07,1)]:
+        for kind,duration,variants in [('shot',.34,2),('arc',.2,2),('bodyhit',.16,2),('wallhit',.18,2),('bounce',.09,2),('charge',.07,1)]:
             for variant in range(variants):
                 pcm=Path(tmp)/'effect.wav'
                 with wave.open(str(pcm),'wb') as f:

@@ -28,7 +28,7 @@ Timer.Wait(function()
         local previous=G.authoritative
         G.authoritative=false
         local listener=gm.SoundManager.ListenerPosition
-        for _,kind in ipairs({'shot','hit','bounce','wallhit','charge'}) do
+        for _,kind in ipairs({'shot','hit','bounce','wallhit','charge','arc'}) do
             local channel=G.playCombatSound(kind,{x=listener.X,y=listener.Y})
             assert(channel,'native sound did not create a spatial channel: '..kind..' '..tostring(G.audioError))
             channel.Dispose()
@@ -42,8 +42,8 @@ Timer.Wait(function()
                 ring.id=1;ring.age=frame/25
                 ring.trail={{x=120,y=0,age=ring.age-.05},{x=150,y=0,age=ring.age}}
                 G.remote={received=G.now,shields={{x=0,y=0,angle=angle,energy=100}},rings={ring}}
-                for _,kind in ipairs({'shieldhit','break','contact','hit','bounce','wallhit','shot','charge'}) do
-                    G.onEffect(kind,{x=0,y=0},angle,0)
+                for _,kind in ipairs({'shieldhit','break','contact','hit','bounce','wallhit','shot','charge','arc'}) do
+                    G.onEffect(kind,{x=0,y=0},angle,0,{x=70*math.cos(angle),y=70*math.sin(angle)})
                 end
                 G.updateVisuals(.02)
                 batch.Begin(Sort.Deferred,Blend.NonPremultiplied)
@@ -58,6 +58,6 @@ Timer.Wait(function()
         assert(not G.audioError,G.audioError)
     end)
     File.Write('LocalMods/MULTI-TOOL-V2/client-results.txt',
-        ok and 'PASS native GPU: loaded weapon HUD and drew both crosshair sprites; 16 frames, 4 angles, animated rings/trails, 8 effect kinds; 5 native spatial audio channels' or 'FAIL '..tostring(err))
+        ok and 'PASS native GPU: loaded weapon HUD and drew both crosshair sprites; 16 frames, 4 angles, animated rings/trails, 9 effect kinds including impact arcs; 6 native spatial audio channels' or 'FAIL '..tostring(err))
     if not ok then print('[BMT CLIENT] '..tostring(err)) end
 end,4000)

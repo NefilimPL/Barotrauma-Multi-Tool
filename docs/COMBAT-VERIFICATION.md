@@ -1,5 +1,46 @@
 # Aegis — weryfikacja wersji 1.1.x
 
+## Poprawka 1.1.6 — energetyczny strzał i przeskok prądu
+
+- Zgłoszenie dotyczy brzmienia broni palnej zamiast energetycznej, słabo
+  widocznego trafienia, większego stopping power i małej szansy porażenia obok.
+  Ostatnie nagranie ShotgunShot było rzeczywistym odgłosem strzelby; zastąpiono
+  je własnym 0,34-sekundowym wyładowaniem kondensatora z basem, modulacją cewki
+  i nieregularnym trzaskiem. Dwa warianty strzału grają z głośnością 1,0.
+  Usunięto osobną cichą warstwę strzału. Doszły dwa krótkie dźwięki przeskoku.
+- Efekty trafień były już emitowane, ale arkusz miał skalę 0,12 i cienkie,
+  krótkie iskry. Skala trafienia ściany/NPC/odbicia wynosi teraz 0,26, pojawia
+  się jasny krzyż w punkcie kontaktu, dwanaście iskier i rozszerzający impuls.
+- Impuls trafienia wzrósł z 7,5 do 8,625 (+15%). Bezpośrednie obrażenia,
+  szybkostrzelność i koszt strzału pozostają takie jak w 1.1.5.
+- Decyzje wykonawcy dla dodatkowego porażenia: 15% szansy na kontakt ze ścianą
+  lub postacią, zasięg 90 jednostek, jedna najbliższa widoczna postać, najwyżej
+  jeden udany przeskok na pierścień. Pomijani są strzelec, bezpośrednia ofiara,
+  martwe i usunięte postacie. Test widoczności używa prawdziwych kolizji ścian
+  i zamkniętych drzwi. Porażenie daje 1 oparzenia (słabsze po odbiciu) i 0,2 s
+  ogłuszenia. Odbijający się pierścień może dalej lecieć po przeskoku.
+- Losuje wyłącznie serwer/symulacja single player. Zdarzenie `arc` (ID 9)
+  przekazuje oba końce wyładowania; istniejące zdarzenia zachowują format.
+  Klient rysuje migoczący łuk przez 0,22 s i odtwarza przestrzenny trzask.
+- Natywne `DamageLimb` ustawia argument stun przed sprawdzeniem friendly fire.
+  Dlatego nowy przeskok przekazuje ogłuszenie jako affliction, razem z oparzeniem,
+  za natywną kontrolą friendly fire. Nie dodano własnej odporności sojuszników.
+
+Weryfikacja: sześć nowych regresji najpierw odtworzyło brak przeskoku,
+brak przesyłania końca łuku i zbyt delikatny efekt. Po zmianie **68/68 testów**
+przechodzi. Natywny serwer: **5/5** prób pierścienia (obrażenia, impuls,
+friendly fire i wyrównanie emiterów), **4/4** prób elektrycznych (wrogie obrażenia
+i ogłuszenie, FF off chroni oba, FF on dopuszcza oba, jeden przeskok na ring),
+**13/13** prób podstawowych. W testach elektrycznych wymuszono udany wynik
+losowania; postacie, raycasty, affliction i ustawienia rozgrywki były natywne.
+
+Natywny klient z GPU: celownik, 16 klatek/cztery kąty/dziewięć rodzajów efektów,
+w tym łuk, oraz sześć rodzin kanałów audio — PASS. Walidator: 9 XML/14 Lua,
+referencje i receptura zgodne; wszystkie 11 plików Vorbis poprawnie dekoduje się.
+Subiektywna barwa dźwięku i czytelność efektów wymagają oceny w rozgrywce.
+Nowy format zdarzenia wymaga tej samej wersji moda na kliencie i serwerze;
+po aktualizacji należy ponownie uruchomić grę, aby wczytać XML dźwięków.
+
 ## Poprawka 1.1.5 — mocniejszy wystrzał, szybkostrzelność i celownik
 
 - Zgłoszony brak celownika wynikał z braku `Crosshair`, `CrosshairPointer`
