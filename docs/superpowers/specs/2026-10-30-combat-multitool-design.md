@@ -1,6 +1,6 @@
 # Dwuręczny multitool bojowy — projekt
 
-Data: 2026-10-30. Status: projekt do zatwierdzenia przed implementacją.
+Data: 2026-10-30. Status: zatwierdzony poleceniem „działaj”; zaimplementowany w wersji 1.1.0. Zakres wykonanych testów: `docs/COMBAT-VERIFICATION.md`.
 
 ## Cel i uzgodnienia
 

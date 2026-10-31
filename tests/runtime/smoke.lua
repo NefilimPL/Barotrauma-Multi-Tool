@@ -89,15 +89,15 @@ check('shield final-energy and three-second lockout',function()
     assert(not G.blockShield(state,2,{x=position.X,y=position.Y}))
     assert(not state.shield and b.Condition==0 and state.brokenUntil>G.now)
 end)
-check('native AI resupply constructs slot-specific subobjective',function()
-    a.Condition=0
+check('native AI replaces partial weapon source in its exact slot',function()
+    a.Condition=.4
     local source=Item(ItemPrefab.Prefabs['batterycell'],position,nil)
     assert(bot.Inventory.TryPutItem(source,bot,{InvSlotType.Any}))
     bot.AIController.Enabled=true
     local manager=bot.AIController.ObjectiveManager
     local parent=manager.CurrentObjective or AIObjectiveIdle(bot,manager)
     assert(parent)
-    assert(A.resupply(bot,item,0,parent))
+    assert(A.resupply(bot,item,0,parent,1))
     assert(state.resupply.TargetSlot==0)
     state.resupply.TryComplete(.016)
     assert(G.powered(item,0),'native containment did not replace empty source')

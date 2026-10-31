@@ -1,6 +1,6 @@
 # Combat Multitool Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [x]`) syntax for tracking.
 
 **Goal:** Deliver the approved two-handed energy-ring multitool with a powered shield and exclusive AI tool/combat modes.
 
@@ -33,52 +33,56 @@
 **Files:** `MULTI-TOOL-V2/Lua/CombatTool/{config,core}.lua`, `tests/test_combat_core.py`.
 **Interfaces:** `Core.mode(context) -> string`; `Core.reflect(v,n) -> vector`; `Core.segmentArc(a,b,shield) -> t,point`; `Core.spend(source,cost) -> boolean`; `Core.bounces(quality) -> integer`.
 
-- [ ] Write failing tests for mutually exclusive player/bot modes, hard damage disable, 1–4 bounce limits, reflection, nearest arc hits and one-slot spending.
-- [ ] Run `python -m unittest discover -s tests -v` with local Lupa; expect failures because modules are missing.
-- [ ] Implement pure modules with all tuning values in config; cover TTL, attenuated bounce damage and shield contact costs.
-- [ ] Run the same command; expect all core tests to pass.
+- [x] Write failing tests for mutually exclusive player/bot modes, hard damage disable, 1–4 bounce limits, reflection, nearest arc hits and one-slot spending.
+- [x] Run `python -m unittest discover -s tests -v` with local Lupa; expect failures because modules are missing.
+- [x] Implement pure modules with all tuning values in config; cover TTL, attenuated bounce damage and shield contact costs.
+- [x] Run the same command; expect all core tests to pass.
 
 ### Task 2: Native item and exclusive AI integration
 
 **Files:** `MULTI-TOOL-V2/combat_tool.xml`, manifest/text files, `Lua/CombatTool/{game,ai}.lua`, `Lua/Autorun/combatmultitool.lua`, `tests/test_combat_adapter.py`.
 **Interfaces:** `Game.state(item)`, `Game.context(item,character)`, `Game.use(component,character,dt)`; AI adapter uses the executing objective and its actual selected tool, not queued orders. Core interfaces from Task 1.
 
-- [ ] Add adapter tests proving use gates, owner transition cancellation and independent resupply slots; watch them fail.
-- [ ] Inspect actual runtime methods/fields and native item XML. Implement component use patches and slot-specific AI resupply with ordinary game objectives.
-- [ ] Add a craftable item with two-hand Holdable, RangedWeapon, appropriate RepairTools, two visible slots, private mode tokens and the same three checkbox properties.
-- [ ] Verify all XML parses, old identifiers remain and recipe identifiers exist in installed content. Expect adapter tests green.
+- [x] Add adapter tests proving use gates, owner transition cancellation and independent resupply slots; watch them fail.
+- [x] Inspect actual runtime methods/fields and native item XML. Implement component use patches and slot-specific AI resupply with ordinary game objectives.
+- [x] Add a craftable item with two-hand Holdable, RangedWeapon, appropriate RepairTools, two visible slots, private mode tokens and the same three checkbox properties.
+- [x] Verify all XML parses, old identifiers remain and recipe identifiers exist in installed content. Expect adapter tests green.
 
 ### Task 3: Authoritative rings, shields and networking
 
 **Files:** `Lua/CombatTool/{projectiles,shield,network}.lua`, extend adapter tests.
 **Interfaces:** `Projectiles.fire(state,context)`, `Projectiles.update(dt)`; `Shield.update(state,context,dt)`, `Shield.intercept(projectile,start,end)`; `Network.emit(kind,data)` and bounded snapshot sync. Modules consume Core geometry and Game state.
 
-- [ ] Write failing tests for ricochet budget/remaining travel, shield front/back interception, last-energy behavior, source separation and replay throttling.
-- [ ] Implement swept movement using native physics fixtures and consistent world/submarine conversion, character-local damage and attenuated bounces.
-- [ ] Patch physical projectile launch/travel and hitscan resolution before damage, resolving shield/wall nearest intersections. Add contact shock, cooldown and energy debit.
-- [ ] Send validated authoritative snapshots/events to clients, include late join/reload cleanup and disable cancellation. Expect tests green.
+- [x] Write failing tests for ricochet budget/remaining travel, shield front/back interception, last-energy behavior, source separation and replay throttling.
+- [x] Implement swept movement using native physics fixtures and consistent world/submarine conversion, character-local damage and attenuated bounces.
+- [x] Patch physical projectile launch/travel and hitscan resolution before damage, resolving shield/wall nearest intersections. Add contact shock, cooldown and energy debit.
+- [x] Send validated authoritative snapshots/events to clients, include late join/reload cleanup and disable cancellation. Expect tests green.
 
 ### Task 4: Raster assets and animated rendering
 
 **Files:** `Assets/Combat/*`, `Lua/CombatTool/visuals.lua`, item sprite references, asset prompt record.
 **Interfaces:** `Visuals.receive(snapshot/event)`, `Visuals.draw(spriteBatch,cam)`; assets are project-local alpha PNGs with explicit frame rectangles.
 
-- [ ] Use built-in imagegen for weapon and separate shield active/hit/break/contact animation sheets.
-- [ ] Inspect actual outputs and alpha, copy final files into the mod and record prompts/dimensions. No project references outside the package.
-- [ ] Render anchored shield frames, impact/break/shock events and rotating rings; add aimed flashlight and native tool effects.
-- [ ] Validate frame rectangles, dimensions, alpha and paths; inspect a standalone preview.
+- [x] Use built-in imagegen for weapon and separate shield active/hit/break/contact animation sheets.
+- [x] Inspect actual outputs and alpha, copy final files into the mod and record prompts/dimensions. No project references outside the package.
+- [x] Render anchored shield frames, impact/break/shock events and rotating rings; add aimed flashlight and native tool effects.
+- [x] Validate frame rectangles, dimensions, alpha and paths; inspect a standalone preview.
 
 ### Task 5: Runtime loading, integration checks and delivery
 
 **Files:** `tests/runtime/*`, `tools/*`, README, packaged ZIP under ignored `output/`, verification record.
 **Interfaces:** isolated dedicated-server stdin/console + Lua runtime smoke script; `python -m unittest discover -s tests -v`.
 
-- [ ] Copy a disposable server runtime inside ignored `.runtime/` and enable only the base package plus this mod; do not alter the installed game.
-- [ ] Load the mod on actual LuaCs; exercise hooks, native component definitions and API contracts. Fix concrete runtime failures with regression tests.
-- [ ] Exercise bots and shield/projectile interactions when available; record precisely which scenarios were run and which still require two-client visual verification.
-- [ ] Run full suite, asset/content checks and `git diff --check`. Request one fresh whole-change code review; address important findings and retest.
-- [ ] Document installation, mode priority, balance settings, exact runtime versions and verification limits. Build a ZIP of the actual mod folder; leave all changes reviewable on `dev_weapon`.
+- [x] Copy a disposable server runtime inside ignored `.runtime/` and enable only the base package plus this mod; do not alter the installed game.
+- [x] Load the mod on actual LuaCs; exercise hooks, native component definitions and API contracts. Fix concrete runtime failures with regression tests.
+- [x] Exercise bots and shield/projectile interactions when available; record precisely which scenarios were run and which still require two-client visual verification.
+- [x] Run full suite, asset/content checks and `git diff --check`. Request one fresh whole-change code review; address important findings and retest.
+- [x] Document installation, mode priority, balance settings, exact runtime versions and verification limits. Build a ZIP of the actual mod folder; leave all changes reviewable on `dev_weapon`.
 
 ## Execution decisions
 
 The user explicitly authorized implementing the approved design. Plan review and extra worktree consent are not new blockers: use the existing feature branch and implement inline. Skill shell helpers may be replaced by an equivalent PowerShell/Python ledger because this host has no Bash/SDK assumption. No push, merge or Workshop publication is authorized.
+
+## Completion record — 2026-10-31
+
+Implemented and verified: 43 automated tests; 12 native smoke checks, 5 native shield/physics checks, 5 native AI checks. Content validation passes. Review findings have regression coverage. See docs/COMBAT-VERIFICATION.md for exact commands and client, network, fabrication and navigation limitations. No push, merge or publication.
