@@ -1,0 +1,89 @@
+-- Isolated client only. Exercise production rendering against a real GPU batch.
+if not CLIENT then return end
+Timer.Wait(function()
+    local batch
+    local ok,err=pcall(function()
+        assert(BMTCombat and BMTCombat.draw,'client renderer did not initialize')
+        LuaUserData.RegisterType('Barotrauma.GameMain')
+        LuaUserData.RegisterType('Microsoft.Xna.Framework.Graphics.GraphicsDevice')
+        local gm=LuaUserData.CreateStatic('Barotrauma.GameMain')
+        local SB=LuaUserData.CreateStatic('Microsoft.Xna.Framework.Graphics.SpriteBatch')
+        local Blend=LuaUserData.CreateStatic('Microsoft.Xna.Framework.Graphics.BlendState')
+        local Sort=LuaUserData.CreateEnumTable('Microsoft.Xna.Framework.Graphics.SpriteSortMode')
+        batch=SB(gm.Instance.GraphicsDevice)
+        local cam=gm.GameScreen.Cam
+        local weaponType=LuaUserData.RegisterType('Barotrauma.Items.Components.RangedWeapon')
+        LuaUserData.MakeFieldAccessible(weaponType,'crosshairSprite')
+        LuaUserData.MakeFieldAccessible(weaponType,'crosshairPointerSprite')
+        local gun=Item(ItemPrefab.Prefabs['combatmultitool'],Vector2.Zero,nil)
+        local ranged=require('CombatTool.util').component(gun,'RangedWeapon')
+        local lamp=require('CombatTool.util').component(gun,'LightComponent',2)
+        BMTCombat.state(gun)
+        for _,dir in ipairs({1,-1}) do
+            for _,angle in ipairs({0,math.pi/4,math.pi/2,-math.pi/2,math.pi}) do
+                gun.body.Dir=dir
+                gun.body.SetTransform(Vector2.Zero,angle)
+                gun.body.UpdateDrawPosition(false)
+                lamp.SetLightSourceTransform()
+                if BMTCombat.updateFlashlights then BMTCombat.updateFlashlights() end
+                local x,y=lamp.LightOffset.X*gun.Scale*dir,lamp.LightOffset.Y*gun.Scale
+                local ex,ey=x*math.cos(angle)-y*math.sin(angle),x*math.sin(angle)+y*math.cos(angle)
+                local actual=lamp.Light.OffsetFromBody
+                assert(math.abs(actual.X-ex)<.01 and math.abs(actual.Y-ey)<.01,
+                    'native cone mount detached at aim '..angle..' facing '..dir..': '..actual.X..','..actual.Y..' expected '..ex..','..ey)
+            end
+        end
+        assert(ranged.DrawHudWhenEquipped,'native weapon HUD is disabled')
+        assert(ranged.crosshairSprite and ranged.crosshairPointerSprite,'native crosshair assets did not load')
+        batch.Begin(Sort.Deferred,Blend.NonPremultiplied)
+        ranged.crosshairSprite.Draw(batch,Vector2(300,300),Color.White,0,ranged.CrossHairScale)
+        ranged.crosshairPointerSprite.Draw(batch,Vector2(300,300),Color.White,0,.1)
+        batch.End()
+        gun.Remove()
+        local G=BMTCombat
+        local previous=G.authoritative
+        G.authoritative=false
+        local listener=gm.SoundManager.ListenerPosition
+        for _,kind in ipairs({'shot','hit','bounce','wallhit','charge','arc'}) do
+            local channel=G.playCombatSound(kind,{x=listener.X,y=listener.Y})
+            assert(channel,'native sound did not create a spatial channel: '..kind..' '..tostring(G.audioError))
+            channel.Dispose()
+        end
+        local audio=G.playCombatSound
+        G.playCombatSound=nil -- The frame stress test must not emit hundreds of simultaneous sounds.
+        local view=cam.WorldView
+        local center={x=view.X+view.Width/2,y=view.Y-view.Height/2}
+        local beforeParticles=gm.ParticleManager.ParticleCount
+        G.onEffect('arc',center,0,0,{x=center.x+70,y=center.y})
+        assert(gm.ParticleManager.ParticleCount>=beforeParticles+3,'native ElectricShock particles were not created')
+        for frame=0,15 do
+            for _,angle in ipairs({0,math.pi/2,math.pi,-math.pi/2}) do
+                G.now=frame/25
+                local ring=require('CombatTool.core').ring({x=150,y=0},{x=math.cos(angle),y=math.sin(angle)},1)
+                ring.id=1;ring.age=frame/25
+                ring.trail={{x=120,y=0,age=ring.age-.05},{x=150,y=0,age=ring.age}}
+                G.remote={received=G.now,shields={{x=0,y=0,angle=angle,energy=100}},rings={ring}}
+                for _,kind in ipairs({'shieldhit','break','contact','hit','bounce','wallhit','shot','charge','arc'}) do
+                    if kind=='arc' then
+                        for hop=0,2 do
+                            G.onEffect(kind,{x=70*hop*math.cos(angle),y=70*hop*math.sin(angle)},angle,0,
+                                {x=70*(hop+1)*math.cos(angle),y=70*(hop+1)*math.sin(angle)})
+                        end
+                    else G.onEffect(kind,{x=0,y=0},angle,0) end
+                end
+                G.updateVisuals(.02)
+                batch.Begin(Sort.Deferred,Blend.NonPremultiplied)
+                G.draw(batch,cam)
+                batch.End()
+            end
+        end
+        G.playCombatSound=audio
+        G.authoritative=previous
+        batch.Dispose();batch=nil
+        assert(not G.visualError,G.visualError)
+        assert(not G.audioError,G.audioError)
+    end)
+    File.Write('LocalMods/MULTI-TOOL-V2/client-results.txt',
+        ok and 'PASS native Electricity animation and ElectricShock particles; flashlight 5 angles x 2 facings; GPU crosshair, 16 frames x 4 angles x 9 effects including 3-segment chains; 6 spatial audio channels' or 'FAIL '..tostring(err))
+    if not ok then print('[BMT CLIENT] '..tostring(err)) end
+end,4000)

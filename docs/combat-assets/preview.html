@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="pl"><meta charset="utf-8"><meta name="viewport" content="width=device-width">
+<title>Aegis — grafika i animacje</title>
+<style>
+body{margin:0;background:#07121b;color:#e3f5f7;font:16px system-ui,sans-serif;padding:32px}
+main{max-width:1100px;margin:auto}h1{font-size:28px}p{color:#9ab4be}.weapon{width:100%;max-height:330px;object-fit:contain}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+figure{margin:0;background:#102632;border:1px solid #294451;border-radius:8px;padding:16px;text-align:center}
+canvas{width:100%;aspect-ratio:1;image-rendering:auto}button{padding:10px 18px;background:#54e7ed;color:#062026;border:0;border-radius:4px;cursor:pointer}
+</style><main>
+<h1>Bojowy multitool Aegis</h1><p>Oryginalne PNG z kanałem alfa. Podgląd odtwarza po 16 klatek każdego arkusza; nie symuluje mechaniki gry.</p>
+<img class="weapon" src="../../MULTI-TOOL-V2/Assets/Combat/weapon.png" alt="Dwuręczny, futurystyczny multitool">
+<p><button id="toggle">Zatrzymaj animację</button> <span id="frame"></span></p>
+<div class="grid">
+<figure><canvas data-image="../../MULTI-TOOL-V2/Assets/Combat/shield-active.png"></canvas><figcaption>Aktywna tarcza</figcaption></figure>
+<figure><canvas data-image="../../MULTI-TOOL-V2/Assets/Combat/shield-hit.png"></canvas><figcaption>Trafienie w tarczę</figcaption></figure>
+<figure><canvas data-image="../../MULTI-TOOL-V2/Assets/Combat/shield-break.png"></canvas><figcaption>Przeciążenie i rozpad</figcaption></figure>
+<figure><canvas data-image="../../MULTI-TOOL-V2/Assets/Combat/shield-contact.png"></canvas><figcaption>Porażenie przy kontakcie</figcaption></figure>
+</div></main><script>
+const canvases=[...document.querySelectorAll('canvas')].map(canvas=>{canvas.width=314;canvas.height=314;const image=new Image();image.src=canvas.dataset.image;return{canvas,image};});
+let playing=true,index=0,last=0;
+document.querySelector('#toggle').onclick=e=>{playing=!playing;e.target.textContent=playing?'Zatrzymaj animację':'Odtwórz animację';};
+function draw(time){if(playing&&time-last>65){index=(index+1)%16;last=time;}
+for(const{canvas,image}of canvases){const ctx=canvas.getContext('2d');ctx.clearRect(0,0,314,314);if(image.complete&&image.naturalWidth){const col=index%4,row=Math.floor(index/4),x=Math.floor(col*image.width/4),y=Math.floor(row*image.height/4),w=Math.floor((col+1)*image.width/4)-x,h=Math.floor((row+1)*image.height/4)-y;ctx.drawImage(image,x,y,w,h,0,0,314,314);}}
+document.querySelector('#frame').textContent=`Klatka ${index+1} / 16`;requestAnimationFrame(draw);}
+requestAnimationFrame(draw);
+</script></html>

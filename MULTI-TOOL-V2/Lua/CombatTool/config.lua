@@ -1,0 +1,21 @@
+-- All costs are percentage points of the installed source's condition.
+return {
+    identifier = 'combatmultitool', protocol = 'bmt.combat.v1',
+    chargeTime = 0.10, reloadTime = 0.28, shotCost = 1, toolCost = 0.2,
+    lightCost = 0.025, rodMultiplier = 0.25,
+    speed = 1050, lifetime = 3.2, maxDistance = 3200,
+    hitImpulse = 8.625, recoilVelocity = 3,
+    arcChance = 0.15, arcRadius = 90, arcBurn = 1, arcStun = 0.2,
+    arcMaxTargets = 3, arcRetention = 0.75,
+    passiveSkillInterval = 300, passiveSkillAmount = 2,
+    trailLifetime = 0.12, trailPoints = 12,
+    radius = 6, maxRadius = 12, bounceRetention = 0.85, maxStepContacts = 8,
+    burnDamage = 18, bluntDamage = 12,
+    shieldRadius = 80, shieldHalfAngle = math.pi / 3,
+    shieldTextureOpacity = 0.18,
+    shieldIdleCost = 0.1, shieldMinHitCost = 1, shieldMaxHitCost = 4,
+    shieldContactCost = 6, shieldContactInterval = 0.75,
+    shieldCooldown = 3, contactBurn = 1, contactStun = 0.25,
+    snapshotInterval = 0.1, resupplyInterval = 1, resupplyTimeout = 12,
+    maxRings = 128,
+}
