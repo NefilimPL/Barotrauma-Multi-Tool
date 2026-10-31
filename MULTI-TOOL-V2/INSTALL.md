@@ -1,4 +1,4 @@
-# MULTI-TOOL-V2 1.1.6 — Aegis
+# MULTI-TOOL-V2 1.1.7 — Aegis
 
 Wypakuj ten folder do `Barotrauma/LocalMods/` i włącz pakiet w grze.
 Wymagane jest zgodne **Lua for Barotrauma / LuaCs na kliencie i serwerze**.
@@ -18,6 +18,8 @@ Broń zajmuje dwie ręce, a po schowaniu jeden zwykły slot.
 - Obrażenia sojuszników podlegają ustawieniu friendly fire rozgrywki.
 
 Podgląd animacji: [Assets/Combat/preview.html](Assets/Combat/preview.html).
+Wersja 1.1.7 mocuje początek stożka latarki do obracającego się korpusu broni,
+także podczas pionowego celowania i zmiany kierunku patrzenia.
 Balans: `Lua/CombatTool/config.lua`.
 Broń ma przestrzenne dźwięki broni i trafień, impuls odpychający NPC oraz
 pulsujący pierścień ze śladem energii. Wersja 1.1.5 skraca ładowanie do 0,10 s

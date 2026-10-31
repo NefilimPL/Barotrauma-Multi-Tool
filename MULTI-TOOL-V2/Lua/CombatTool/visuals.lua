@@ -13,6 +13,28 @@ function M.install(G,E,root)
     for _,name in ipairs({'shield-active','shield-hit','shield-break','shield-contact'}) do
         assets[name]=E.Sprite(root..'/Assets/Combat/'..name..'.png',E.Vector2(.5,.5))
     end
+    function G.updateFlashlights()
+        for item in pairs(G.states or {}) do
+            if not item.Removed and U.itemId(item)==C.identifier and item.body then
+                local lamp=U.component(item,'LightComponent',2)
+                if lamp and lamp.Light then
+                    local body=item.body
+                    body.UpdateDrawPosition()
+                    local angle=body.DrawRotation
+                    local x=lamp.LightOffset.X*item.Scale*(body.Dir<0 and -1 or 1)
+                    local y=lamp.LightOffset.Y*item.Scale
+                    lamp.Light.ParentBody=body
+                    lamp.Light.OffsetFromBody=E.Vector2(x*math.cos(angle)-y*math.sin(angle),
+                        x*math.sin(angle)+y*math.cos(angle))
+                    lamp.Light.Rotation=angle+(body.Dir<0 and -math.pi or 0)
+                end
+            end
+        end
+    end
+    -- The native light component rotates its offset by the editor rotation,
+    -- while a held weapon turns its physics body. Correct the mount immediately
+    -- before the light map consumes it, using the same interpolated pose.
+    G.patch('flashlight-origin','Barotrauma.Lights.LightManager','RenderLightMap',G.updateFlashlights)
     local effects={}
     function G.onEffect(kind,point,angle,id,endpoint)
         if G.playCombatSound then G.playCombatSound(kind,point) end

@@ -2,6 +2,39 @@ from lua_support import LuaCase
 
 
 class VisualContractTests(LuaCase):
+    def test_flashlight_mount_follows_rendered_body_rotation_and_facing(self):
+        self.lua.execute('''
+            local beforeLightMap
+            local function v(x,y) return {X=x,Y=y} end
+            local env={Sprite=function() return {} end,Vector2=v,
+                LuaUserData={RegisterType=function() end,CreateEnumTable=function() return {} end,CreateStatic=function() return {} end}}
+            local body={DrawRotation=0,Dir=1,UpdateDrawPosition=function() refreshed=true end}
+            local saved={Name='LightComponent',Light={OffsetFromBody=v(11,22)}}
+            local lamp={Name='LightComponent',LightOffset=v(670,-90),Light={}}
+            local gun={Prefab={Identifier={Value='combatmultitool'}},Scale=.068,body=body,Components={saved,lamp}}
+            local G={states={[gun]={}},patch=function(_,class,method,fn,after)
+                if method=='RenderLightMap' then
+                    assert(class=='Barotrauma.Lights.LightManager' and not after)
+                    beforeLightMap=fn
+                end
+            end}
+            require('CombatTool.visuals').install(G,env,'mod')
+            assert(beforeLightMap,'lamp has no render-time mount correction')
+            local cases={{0,1,45.56,-6.12},{math.pi/2,1,6.12,45.56},
+                {-math.pi/2,1,-6.12,-45.56},{0,-1,-45.56,-6.12},
+                {math.pi/2,-1,6.12,-45.56}}
+            for _,c in ipairs(cases) do
+                body.DrawRotation=c[1];body.Dir=c[2];refreshed=false
+                beforeLightMap()
+                local p=lamp.Light.OffsetFromBody
+                assert(math.abs(p.X-c[3])<.001 and math.abs(p.Y-c[4])<.001,'cone origin detached from the rotating lamp')
+                assert(refreshed and lamp.Light.ParentBody==body)
+                local expected=c[1]+(c[2]<0 and -math.pi or 0)
+                assert(math.abs(lamp.Light.Rotation-expected)<.001,'cone direction and origin disagree')
+            end
+            assert(saved.Light.OffsetFromBody.X==11,'manual damage permission light was modified')
+        ''')
+
     def test_impact_is_visible_at_contact_and_arc_reaches_its_destination(self):
         self.lua.execute('''
             local function v(x,y) return {X=x,Y=y} end
@@ -54,7 +87,7 @@ class VisualContractTests(LuaCase):
                     assert(width>=1 and width%1==0,'native GUI line width must be a positive integer')
                 end}}}
             local G={now=0,authoritative=false,remote={received=0,shields={},rings={}},
-                patch=function(_,_,method,fn,after) assert(method=='DrawMap' and after);drawPatch=fn end,
+                patch=function(_,_,method,fn,after) if method=='DrawMap' then assert(after);drawPatch=fn end end,
                 cast=function() return nil end}
             require('CombatTool.visuals').install(G,env,'mod')
             local batch={Begin=function(mode,blend) assert(mode==0 and blend=='straight');balance=(balance or 0)+1 end,End=function() balance=balance-1 end}

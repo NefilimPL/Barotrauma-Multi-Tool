@@ -93,6 +93,10 @@ lub użyj konsolowego `reloadlua` na serwerze i klientach.
 
 ## Sprawdzenia
 
+Wersja 1.1.7 poprawia pozycję latarki podczas obracania broni. Przed narysowaniem
+mapy światła punkt emisji i kierunek korzystają z tej samej interpolowanej
+pozy fizycznego korpusu, z uwzględnieniem kierunku patrzenia.
+
 Wersja 1.1.6 zastępuje nagranie broni palnej własnym wyładowaniem kondensatora
 z basowym impulsem i trzaskiem elektrycznym. Trafienia mają większy rozbłysk,
 iskry i rozchodzący się impuls. Odpychanie postaci wzrosło o 15%.

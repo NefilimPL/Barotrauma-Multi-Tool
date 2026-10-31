@@ -17,6 +17,22 @@ Timer.Wait(function()
         LuaUserData.MakeFieldAccessible(weaponType,'crosshairPointerSprite')
         local gun=Item(ItemPrefab.Prefabs['combatmultitool'],Vector2.Zero,nil)
         local ranged=require('CombatTool.util').component(gun,'RangedWeapon')
+        local lamp=require('CombatTool.util').component(gun,'LightComponent',2)
+        BMTCombat.state(gun)
+        for _,dir in ipairs({1,-1}) do
+            for _,angle in ipairs({0,math.pi/4,math.pi/2,-math.pi/2,math.pi}) do
+                gun.body.Dir=dir
+                gun.body.SetTransform(Vector2.Zero,angle)
+                gun.body.UpdateDrawPosition(false)
+                lamp.SetLightSourceTransform()
+                if BMTCombat.updateFlashlights then BMTCombat.updateFlashlights() end
+                local x,y=lamp.LightOffset.X*gun.Scale*dir,lamp.LightOffset.Y*gun.Scale
+                local ex,ey=x*math.cos(angle)-y*math.sin(angle),x*math.sin(angle)+y*math.cos(angle)
+                local actual=lamp.Light.OffsetFromBody
+                assert(math.abs(actual.X-ex)<.01 and math.abs(actual.Y-ey)<.01,
+                    'native cone mount detached at aim '..angle..' facing '..dir..': '..actual.X..','..actual.Y..' expected '..ex..','..ey)
+            end
+        end
         assert(ranged.DrawHudWhenEquipped,'native weapon HUD is disabled')
         assert(ranged.crosshairSprite and ranged.crosshairPointerSprite,'native crosshair assets did not load')
         batch.Begin(Sort.Deferred,Blend.NonPremultiplied)
@@ -58,6 +74,6 @@ Timer.Wait(function()
         assert(not G.audioError,G.audioError)
     end)
     File.Write('LocalMods/MULTI-TOOL-V2/client-results.txt',
-        ok and 'PASS native GPU: loaded weapon HUD and drew both crosshair sprites; 16 frames, 4 angles, animated rings/trails, 9 effect kinds including impact arcs; 6 native spatial audio channels' or 'FAIL '..tostring(err))
+        ok and 'PASS native flashlight mount: 5 aim angles x 2 facings; GPU crosshair, 16 frames x 4 angles x 9 effects; 6 native spatial audio channels' or 'FAIL '..tostring(err))
     if not ok then print('[BMT CLIENT] '..tostring(err)) end
 end,4000)

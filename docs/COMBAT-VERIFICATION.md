@@ -1,5 +1,33 @@
 # Aegis — weryfikacja wersji 1.1.x
 
+## Poprawka 1.1.7 — obrót punktu emisji latarki
+
+Zgłoszenie: początek stożka pasuje przy celowaniu poziomym, ale przesuwa się
+obok broni przy pionowym. Natywny LightComponent obraca LightOffset według
+statycznego `item.RotationRad`, podczas gdy kierunek stożka pobiera z fizycznego
+`body.DrawRotation`. LightManager dodaje OffsetFromBody do pozycji korpusu
+bez ponownego obrotu. To rozdziela obrót kierunku i początku światła.
+
+Przed RenderLightMap klient aktualizuje pozycję rysowania korpusu i przelicza
+lokalny LightOffset lampy tą samą interpolowaną rotacją oraz skalą i kierunkiem
+patrzenia. Aktualizowana jest wyłącznie druga LightComponent Aegisa, bez zmiany
+światła sterującego checkboxem obrażeń i bez wpływu na inne przedmioty.
+
+Regresja jednostkowa najpierw wykazała brak poprawki. Rzeczywisty klient przed
+zmianą odtworzył błąd przy 45 stopniach: offset (45,56; -6,12) zamiast
+(36,54; 27,89). Po zmianie **69/69 testów** przechodzi; klient potwierdził
+pozycję lampy dla pięciu kątów i obu kierunków (10 przypadków), a także GPU
+celownika/16 klatek/czterech kątów/dziewięciu efektów i sześciu rodzin audio.
+Walidacja: 9 XML i 14 modułów Lua. Zmiana dotyczy wyłącznie renderowania klienta;
+nie zmieniano ani nie ponawiano prób serwerowych obrażeń i AI z wersji 1.1.6.
+
+Odpowiedzi o balansie potwierdzono w kodzie: przeskok 15% na kontakt, również
+przy odbiciu, zasięg 90 i najwyżej jeden na pocisk; 1–4 odbicia według jakości;
+18 burn/12 blunttrauma bezpośrednio, burn 1/stun 0,2 s w przeskoku,
+burn 1/stun 0,25 s przy kontakcie z tarczą. Każde odbicie osłabia obrażenia
+i impuls o 15%. Aegis nie ma pasywnego GiveSkill; mniejszy multitool ma wpisane
+mechanical 1 i electrical 1 co 60 s przy pręcie paliwowym (`reactorfuel`).
+
 ## Poprawka 1.1.6 — energetyczny strzał i przeskok prądu
 
 - Zgłoszenie dotyczy brzmienia broni palnej zamiast energetycznej, słabo
