@@ -1,5 +1,16 @@
 # Aegis — weryfikacja wersji 1.1.x
 
+## Poprawka 1.1.11 — ikona zasilania Aegisa
+
+Slot używał symbolu butli (64,448,64,64). Zmieniono prostokąt na
+128,448,128,64, obejmujący sąsiednie natywne ikony baterii i pręta paliwowego.
+Są to te same symbole, których używają odpowiednio latarka i reaktor.
+Inventory.DrawSlot skaluje ikonę równomiernie do slotu, zachowując proporcje.
+Potwierdzono zakres wycinka w atlasie i obecność obu symboli w kanale alfa.
+Nie zmieniano przyjmowanych źródeł ani ikony mniejszego multitoola, który
+rzeczywiście przyjmuje butle. Walidator pakietu i sprawdzenie ZIP przeszły.
+To wyłącznie zmiana grafiki w XML; nie ponawiano testów walki w silniku.
+
 ## Poprawka 1.1.10 — wybrany rezonator i natywny efekt cewki
 
 Użytkownik wybrał próbkę 3 (rezonator plazmowy) i wskazał istniejący w grze

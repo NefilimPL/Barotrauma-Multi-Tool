@@ -1,4 +1,4 @@
-# MULTI-TOOL-V2 1.1.10 — Aegis
+# MULTI-TOOL-V2 1.1.11 — Aegis
 
 Wypakuj ten folder do `Barotrauma/LocalMods/` i włącz pakiet w grze.
 Wymagane jest zgodne **Lua for Barotrauma / LuaCs na kliencie i serwerze**.
@@ -10,6 +10,7 @@ Broń zajmuje dwie ręce, a po schowaniu jeden zwykły slot.
 
 - Jeden wspólny slot: broń, tarcza, narzędzia i latarka.
 - Zasilanie: jedno ogniwo baterii lub pręt paliwowy.
+- Ikonka slotu Aegisa przedstawia baterię i pręt paliwowy.
 - Gracz włącza checkbox obrażeń, aby zezwolić na strzały i tarczę.
 - U gracza wyłącz obrażenia, aby spawać/ciąć; gaśnica ma pierwszeństwo.
 - Bot sam wybiera funkcję techniczną albo walkę/samoobronę, niezależnie
