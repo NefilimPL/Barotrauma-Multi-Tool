@@ -1,5 +1,20 @@
 # Aegis — weryfikacja wersji 1.1.x
 
+## Wersja 1.1.12 — porządek w folderze moda
+
+Pięć plików dokumentacji i podglądów przeniesiono poza MULTI-TOOL-V2:
+instrukcję do docs/INSTALL.md, prompty i podgląd grafik do docs/combat-assets/,
+a opis i podgląd audio do docs/combat-assets/audio/. Wszystkie względne ścieżki
+podglądów i odnośniki README/instrukcji zostały dostosowane.
+
+Folder instalacyjny zawiera teraz 43 pliki używane przez grę: 9 XML, 15 Lua,
+7 PNG i 12 OGG. Porównanie SHA-256 ze stanem sprzed przenoszenia potwierdza,
+że każdy plik wykonawczy i zasób pozostał identyczny, poza numerem wersji
+w filelist.xml. Walidacja zawartości, 11 odwołań do zasobów w podglądach
+i odnośniki dokumentacji przeszły. Paczka zawiera wyłącznie folder moda
+z tymi 43 plikami; brak dokumentacji i HTML w części instalacyjnej.
+Nie ponawiano prób walki w silniku, ponieważ nie zmieniono jej kodu ani zasobów.
+
 ## Poprawka 1.1.11 — ikona zasilania Aegisa
 
 Slot używał symbolu butli (64,448,64,64). Zmieniono prostokąt na
@@ -320,7 +335,7 @@ Wyniki końcowe:
 
 Próba audio potwierdza dekodowanie, tworzenie kanałów i przestrzenne API;
 subiektywna barwa i głośność pozostają do oceny w rozgrywce. Podgląd HTML
-w `Assets/Combat/Audio/preview.html` pozwala odsłuchać efekty osobno.
+w `docs/combat-assets/audio/preview.html` pozwala odsłuchać efekty osobno.
 
 ## Poprawka 1.1.2 — geometria grafiki i friendly fire
 

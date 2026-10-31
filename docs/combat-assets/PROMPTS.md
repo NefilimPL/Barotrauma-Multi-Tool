@@ -1,5 +1,8 @@
 # Combat assets
 
+Runtime PNGs are stored in `MULTI-TOOL-V2/Assets/Combat/` at the repository root.
+This document and the previews are development material outside the mod package.
+
 Generated using the built-in imagegen tool, 2026-10-30. Alpha was preserved;
 the original PNG outputs were copied into this package without repainting.
 Weapon: 1774 × 887. Animation sheets: 1254 × 1254, 4 × 4 frames.

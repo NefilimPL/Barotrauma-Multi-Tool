@@ -1,6 +1,6 @@
-# MULTI-TOOL-V2 1.1.11 — Aegis
+# MULTI-TOOL-V2 1.1.12 — Aegis
 
-Wypakuj ten folder do `Barotrauma/LocalMods/` i włącz pakiet w grze.
+Skopiuj folder `MULTI-TOOL-V2` do `Barotrauma/LocalMods/` i włącz pakiet w grze.
 Wymagane jest zgodne **Lua for Barotrauma / LuaCs na kliencie i serwerze**.
 Punktem zgodności jest Barotrauma 1.13.5.0 i LuaCs `c6e8829`.
 
@@ -29,12 +29,12 @@ i nie jest mnożony przez premię do nauki z pręta ani przez talenty.
 Licznik zeruje się po zakończeniu rundy lub przeładowaniu Lua; zdobyte punkty
 są zapisywane normalnie przez grę.
 
-Podgląd animacji: [Assets/Combat/preview.html](Assets/Combat/preview.html).
+Podgląd animacji: [grafika i animacje](combat-assets/preview.html).
 Od wersji 1.1.10 wystrzał używa wybranego rezonatora plazmowego (próbka 3),
 a łuk — natywnej animacji Electricity i cząstek ElectricShock z cewki wyładowczej.
 Wersja 1.1.7 mocuje początek stożka latarki do obracającego się korpusu broni,
 także podczas pionowego celowania i zmiany kierunku patrzenia.
-Balans: `Lua/CombatTool/config.lua`.
+Balans: [config.lua](../MULTI-TOOL-V2/Lua/CombatTool/config.lua).
 Broń ma przestrzenne dźwięki broni i trafień, impuls odpychający NPC oraz
 pulsujący pierścień ze śladem energii. Wersja 1.1.5 skraca ładowanie do 0,10 s
 i przerwę po strzale do 0,28 s: około 20% więcej strzałów przy trzymaniu spustu.
@@ -47,7 +47,7 @@ trafiania tych samych postaci. Pierwsze porażenie daje 1 oparzenia i 0,2 s
 ogłuszenia; każde następne jest o 25% słabsze. Friendly fire podlega ustawieniom
 rozgrywki. Serwer rozstrzyga losowanie. Platformy, schody i kolizje naprawcze
 zniszczonych ścian nie odbijają pierścieni; pełne ściany i zamknięte włazy nadal tak.
-Podgląd dźwięków: [Assets/Combat/Audio/preview.html](Assets/Combat/Audio/preview.html).
+Podgląd dźwięków: [odsłuch efektów](combat-assets/audio/preview.html).
 W multiplayer serwer i wszyscy gracze powinni mieć tę samą wersję moda.
 Wersja 1.1.4 zmienia dźwięki na krótkie, cięższe wystrzały i suche wyładowania,
 łączy całe zasilanie w jednym slocie i pozwala botom samodzielnie się bronić.

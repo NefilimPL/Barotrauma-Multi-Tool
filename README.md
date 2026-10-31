@@ -85,7 +85,14 @@ Dekonstrukcja Aegis odzyskuje część materiałów; zawarte źródła są oddaw
 
 Własne grafiki PNG z przezroczystością są w `MULTI-TOOL-V2/Assets/Combat/`.
 Arkusze pracy tarczy, trafienia, rozpadu i porażenia mają po 16 klatek.
-Prompty i wymiary zapisano w `Assets/Combat/PROMPTS.md`.
+Prompty i wymiary: [PROMPTS.md](docs/combat-assets/PROMPTS.md).
+Podglądy: [grafika i animacje](docs/combat-assets/preview.html),
+[dźwięki](docs/combat-assets/audio/preview.html).
+Instrukcja instalacji: [INSTALL.md](docs/INSTALL.md).
+
+Folder `MULTI-TOOL-V2/` zawiera wyłącznie pliki używane przez grę.
+Dokumentacja i podglądy znajdują się w `docs/`, generatory w `tools/`,
+a gotowe paczki i alternatywne próbki dźwięków w `output/`.
 
 Wszystkie koszty, obrażenia, czasy i limity są w
 `MULTI-TOOL-V2/Lua/CombatTool/config.lua`. Po zmianie uruchom ponownie grę

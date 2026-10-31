@@ -9,13 +9,13 @@ figure{margin:0;background:#102632;border:1px solid #294451;border-radius:8px;pa
 canvas{width:100%;aspect-ratio:1;image-rendering:auto}button{padding:10px 18px;background:#54e7ed;color:#062026;border:0;border-radius:4px;cursor:pointer}
 </style><main>
 <h1>Bojowy multitool Aegis</h1><p>Oryginalne PNG z kanałem alfa. Podgląd odtwarza po 16 klatek każdego arkusza; nie symuluje mechaniki gry.</p>
-<img class="weapon" src="weapon.png" alt="Dwuręczny, futurystyczny multitool z dwoma modułami zasilania">
+<img class="weapon" src="../../MULTI-TOOL-V2/Assets/Combat/weapon.png" alt="Dwuręczny, futurystyczny multitool">
 <p><button id="toggle">Zatrzymaj animację</button> <span id="frame"></span></p>
 <div class="grid">
-<figure><canvas data-image="shield-active.png"></canvas><figcaption>Aktywna tarcza</figcaption></figure>
-<figure><canvas data-image="shield-hit.png"></canvas><figcaption>Trafienie w tarczę</figcaption></figure>
-<figure><canvas data-image="shield-break.png"></canvas><figcaption>Przeciążenie i rozpad</figcaption></figure>
-<figure><canvas data-image="shield-contact.png"></canvas><figcaption>Porażenie przy kontakcie</figcaption></figure>
+<figure><canvas data-image="../../MULTI-TOOL-V2/Assets/Combat/shield-active.png"></canvas><figcaption>Aktywna tarcza</figcaption></figure>
+<figure><canvas data-image="../../MULTI-TOOL-V2/Assets/Combat/shield-hit.png"></canvas><figcaption>Trafienie w tarczę</figcaption></figure>
+<figure><canvas data-image="../../MULTI-TOOL-V2/Assets/Combat/shield-break.png"></canvas><figcaption>Przeciążenie i rozpad</figcaption></figure>
+<figure><canvas data-image="../../MULTI-TOOL-V2/Assets/Combat/shield-contact.png"></canvas><figcaption>Porażenie przy kontakcie</figcaption></figure>
 </div></main><script>
 const canvases=[...document.querySelectorAll('canvas')].map(canvas=>{canvas.width=314;canvas.height=314;const image=new Image();image.src=canvas.dataset.image;return{canvas,image};});
 let playing=true,index=0,last=0;
