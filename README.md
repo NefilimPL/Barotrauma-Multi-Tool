@@ -91,6 +91,16 @@ lub użyj konsolowego `reloadlua` na serwerze i klientach.
 
 ## Sprawdzenia
 
+Wersja 1.1.3 dodaje oryginalne przestrzenne efekty audio, osobne dla wystrzału,
+NPC, powierzchni i odbić, oraz krótki sygnał ładowania. Pierścień pulsuje,
+ma obracające się jasne fragmenty i krótki ślad zachowujący trasę odbić.
+Trafienie przekazuje natywny impuls, a broń ma niewielki odrzut.
+Friendly fire wyłączone chroni sojuszników także przed tym impulsem.
+Ładowanie trwa 0,12 s, przerwa po strzale 0,34 s; prędkość lotu wynosi
+1050 zamiast 1400. Obrażenia, koszt pojedynczego strzału i zasięg pozostają
+takie same. Większa częstotliwość zwiększa obrażenia i zużycie energii
+w jednostce czasu. Głośność efektów reguluje standardowa głośność dźwięków gry.
+
 Wersja 1.1.2 zmniejsza broń o 20%, poprawia punkty chwytu i pozycję lampy,
 wyrównuje emitery narzędzi do lufy, zmniejsza i wycisza wizualnie tarczę.
 Tekstura jest przycinana fragmentami przy ścianach. Renderer używa właściwego

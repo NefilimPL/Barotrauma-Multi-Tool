@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<sounds>
+  <aegis_shot identifier="aegis_shot_1" file="%ModDir%/Assets/Combat/Audio/shot-1.ogg" volume="0.9" range="1100" />
+  <aegis_shot identifier="aegis_shot_2" file="%ModDir%/Assets/Combat/Audio/shot-2.ogg" volume="0.9" range="1100" />
+  <aegis_bodyhit identifier="aegis_bodyhit_1" file="%ModDir%/Assets/Combat/Audio/bodyhit-1.ogg" volume="0.85" range="850" />
+  <aegis_bodyhit identifier="aegis_bodyhit_2" file="%ModDir%/Assets/Combat/Audio/bodyhit-2.ogg" volume="0.85" range="850" />
+  <aegis_wallhit identifier="aegis_wallhit_1" file="%ModDir%/Assets/Combat/Audio/wallhit-1.ogg" volume="0.7" range="900" />
+  <aegis_wallhit identifier="aegis_wallhit_2" file="%ModDir%/Assets/Combat/Audio/wallhit-2.ogg" volume="0.7" range="900" />
+  <aegis_bounce identifier="aegis_bounce_1" file="%ModDir%/Assets/Combat/Audio/bounce-1.ogg" volume="0.55" range="800" />
+  <aegis_bounce identifier="aegis_bounce_2" file="%ModDir%/Assets/Combat/Audio/bounce-2.ogg" volume="0.55" range="800" />
+  <aegis_charge identifier="aegis_charge_1" file="%ModDir%/Assets/Combat/Audio/charge-1.ogg" volume="0.22" range="450" />
+</sounds>

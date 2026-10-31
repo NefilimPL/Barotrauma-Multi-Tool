@@ -1,5 +1,57 @@
 # Aegis — weryfikacja wersji 1.1.x
 
+## Poprawka 1.1.3 — odczucie strzału, dźwięk i impuls
+
+Zgłoszenie użytkownika: brak dźwięków strzelania i trafień, zbyt statyczny
+pierścień, słaba reakcja NPC, za długa przerwa między strzałami i za szybki lot.
+Dobór dokładnych wartości i charakteru audio jest decyzją wykonawcy w ramach
+zleconego strojenia istniejącej broni.
+
+- Ładowanie 0,12 s i przerwa 0,34 s dają około 2 strzałów/s przy trzymaniu
+  spustu, wobec około 1/s wcześniej. Lot: 1050 zamiast 1400 jednostek/s.
+  Czas życia podniesiono do 3,2 s, aby zachować zasięg 3200.
+- Dziewięć oryginalnych, proceduralnie syntezowanych plików mono Vorbis
+  tworzy pięć rodzin: wystrzał, ładowanie, NPC, powierzchnia i odbicie.
+  Natywne prefabrykaty dźwięków wybierają warianty. Odtwarzanie następuje
+  raz na zdarzenie serwera/lokalnej symulacji, w pozycji świata, z natywną
+  głośnością, tłumieniem przez ściany i wodę. Błąd audio nie blokuje broni.
+- Naprawiono brak zdarzenia ostatniego uderzenia w ścianę po wyczerpaniu
+  odbić. Zdarzenie `wallhit` ma własny numer; serwer i klienci wymagają
+  tej samej wersji moda.
+- Pierścień pulsuje, ma obracające się gorące fragmenty, poświatę i krótki
+  ślad. Ślad zapisuje faktyczne punkty odbić, ma limit 12 punktów/0,12 s
+  i jest zachowywany przy synchronizacji, o ile korekta nie przecina ściany.
+  Dodano rozbłysk lufy, rozchodzące się impulsy i kierunkowe iskry trafień.
+- Trafienie przekazuje impuls 7,5 pomniejszany po odbiciach. Impuls przechodzi
+  przez `Character.AddDamage`, dzięki czemu wyłączone friendly fire chroni
+  też przed popchnięciem. Nie dodano osobnego ogłuszania omijającego tę
+  ochronę. Dodano umiarkowany natywny odrzut samej broni.
+- Obrażenia pojedynczego trafienia i koszt strzału nie wzrosły. Większa
+  częstotliwość zwiększa obrażenia i zużycie energii w jednostce czasu.
+
+Wyniki końcowe:
+
+- **56/56 testów automatycznych**, w tym nowe regresje dźwięku zdarzeń,
+  końcowego trafienia, impulsu natywnego, ruchomej obręczy, trasy śladu,
+  ciągłości po synchronizacji i kadencji. Przed implementacją nowe testy
+  odtworzyły brak tych zachowań.
+- **Rzeczywisty klient/GPU i audio:** 16 klatek, 4 kąty, animowane pierścienie
+  i ślady, 8 rodzajów efektów; pięć rodzin dźwięków utworzyło rzeczywiste
+  przestrzenne kanały audio bez błędu. Wszystkie 9 plików przeszło też
+  niezależne dekodowanie Vorbis przez ffmpeg.
+- **5/5 natywnych prób pierścienia:** obrażenia przeciwnika, mierzalny
+  ograniczony przyrost prędkości NPC po trafieniu, obrażenia sojusznika
+  przy friendly fire włączonym, brak obrażeń i zmiany prędkości przy
+  friendly fire wyłączonym, zgodność pozycji emiterów.
+- **13/13** prób podstawowych i **5/5** prób AI: 319 dozwolonych użyć
+  spawarki bez strzelania, następnie 6 strzałów w zadaniu walki bez
+  wywołań technicznych; checkbox zatrzymuje broń i tarczę.
+- Ponownie przeszło **5/5** natywnych prób tarczy i kolizji pocisków.
+
+Próba audio potwierdza dekodowanie, tworzenie kanałów i przestrzenne API;
+subiektywna barwa i głośność pozostają do oceny w rozgrywce. Podgląd HTML
+w `Assets/Combat/Audio/preview.html` pozwala odsłuchać efekty osobno.
+
 ## Poprawka 1.1.2 — geometria grafiki i friendly fire
 
 Zgłoszenie użytkownika: zbyt duża broń i tarcza, znikanie tekstury przy

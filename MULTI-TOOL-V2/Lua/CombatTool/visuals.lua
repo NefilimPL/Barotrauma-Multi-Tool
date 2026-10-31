@@ -15,6 +15,7 @@ function M.install(G,E,root)
     end
     local effects={}
     function G.onEffect(kind,point,angle,id)
+        if G.playCombatSound then G.playCombatSound(kind,point) end
         effects[#effects+1]={kind=kind,x=point.x,y=point.y,angle=angle,age=0,id=id}
         if #effects>256 then table.remove(effects,1) end
     end
@@ -65,15 +66,47 @@ function M.install(G,E,root)
     local function line(batch,cam,a,b,color,width)
         gui.DrawLine(batch,cam.WorldToScreen(E.Vector2(a.x,a.y)),cam.WorldToScreen(E.Vector2(b.x,b.y)),color,0,math.max(1,math.floor(width*cam.Zoom+.5)))
     end
-    local function circle(batch,cam,x,y,angle,radius,color,width)
+    local function circle(batch,cam,x,y,angle,radius,color,width,phase,span,squash)
         local previous=nil
         for i=0,24 do
-            local a=i*math.pi/12
-            local ux,uy=math.cos(a)*radius*.45,math.sin(a)*radius
+            local a=(phase or 0)+i*(span or math.pi*2)/24
+            local ux,uy=math.cos(a)*radius*(squash or .45),math.sin(a)*radius
             local p={x=x+ux*math.cos(angle)-uy*math.sin(angle),y=y+ux*math.sin(angle)+uy*math.cos(angle)}
             if previous then line(batch,cam,previous,p,color,width) end
             previous=p
         end
+    end
+    local function drawRing(batch,cam,r)
+        local angle=Core.angle(r.dx,r.dy)
+        local phase=(r.age or 0)*24+(r.id or 0)*1.7
+        local radius=(r.radius+2)*(1+.1*math.sin(phase*.7))
+        local squash=.45+.12*math.sin(phase*.45)
+        local trail=r.trail or {}
+        for i=2,#trail do
+            local a,b=trail[i-1],trail[i]
+            local fade=math.max(0,1-((r.age or 0)-b.age)/C.trailLifetime)
+            if fade>0 then
+                line(batch,cam,a,b,E.Color(20,140,255,math.floor(35*fade)),5)
+                line(batch,cam,a,b,E.Color(90,235,255,math.floor(90*fade)),1)
+            end
+        end
+        circle(batch,cam,r.x,r.y,angle,radius+3,E.Color(10,135,255,35),7,0,nil,squash)
+        circle(batch,cam,r.x,r.y,angle,radius,E.Color(80,230,255,210),2,0,nil,squash)
+        circle(batch,cam,r.x,r.y,angle,radius*1.06,E.Color(225,255,255,245),2,phase,math.pi*.72,squash)
+        circle(batch,cam,r.x,r.y,angle,radius*.72,E.Color(160,245,255,175),1,-phase,math.pi*.95,squash)
+    end
+    local function impactSparks(batch,cam,e)
+        local t=e.age
+        if t>.24 then return end
+        local alpha=math.floor(220*(1-t/.24))
+        for i=0,5 do
+            local angle=e.angle+(i-2.5)*.37+math.sin((e.id or 0)+i)*.18
+            local distance=3+t*(75+i*13)
+            local a={x=e.x+math.cos(angle)*distance,y=e.y+math.sin(angle)*distance-t*t*40}
+            local b={x=e.x+math.cos(angle)*(distance+3),y=e.y+math.sin(angle)*(distance+3)-t*t*40}
+            line(batch,cam,a,b,E.Color(150,245,255,alpha),1)
+        end
+        circle(batch,cam,e.x,e.y,e.angle,4+t*45,E.Color(90,220,255,math.floor(alpha*.45)),1)
     end
     local function drawShield(batch,cam,s)
         local points={}
@@ -124,9 +157,7 @@ function M.install(G,E,root)
         for _,s in ipairs(shields) do drawShield(batch,cam,s) end
         for _,r in ipairs(rings) do
             if r.alive~=false then
-            local angle=Core.angle(r.dx,r.dy)
-            circle(batch,cam,r.x,r.y,angle,r.radius+2,E.Color(0,140,240,100),5)
-            circle(batch,cam,r.x,r.y,angle,r.radius,E.Color(170,255,255,255),2)
+                drawRing(batch,cam,r)
             end
         end
         for _,effect in ipairs(effects) do
@@ -138,8 +169,13 @@ function M.install(G,E,root)
                         effect.angle,C.shieldRadius*.86/314,2*C.shieldRadius*math.sin(C.shieldHalfAngle)/314,.5)
                 elseif effect.kind=='contact' then
                     drawSheet(batch,cam,'shield-contact',f,effect,effect.angle,.18,.18,.55)
-                elseif effect.kind=='shieldhit' or effect.kind=='hit' or effect.kind=='bounce' or effect.kind=='shot' then
+                elseif effect.kind=='shieldhit' or effect.kind=='hit' or effect.kind=='bounce' or effect.kind=='wallhit' then
                     drawSheet(batch,cam,'shield-hit',f,effect,effect.angle,.12,.12,.55)
+                    impactSparks(batch,cam,effect)
+                elseif effect.kind=='shot' and effect.age<.16 then
+                    local fade=1-effect.age/.16
+                    circle(batch,cam,effect.x,effect.y,effect.angle,7+effect.age*90,E.Color(90,225,255,math.floor(150*fade)),4)
+                    circle(batch,cam,effect.x,effect.y,effect.angle,5+effect.age*55,E.Color(230,255,255,math.floor(255*fade)),2)
                 elseif effect.kind=='charge' and effect.age<C.chargeTime then
                     circle(batch,cam,effect.x,effect.y,effect.angle,5+effect.age*35,E.Color(130,255,255,200),2)
                 end

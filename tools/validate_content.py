@@ -21,6 +21,10 @@ def validate(game):
     assert combat.find('Holdable').attrib['slots']=='Any,RightHand+LeftHand'
     assert combat.find('ItemContainer').attrib['capacity']=='2'
     assert len(combat.find('CustomInterface').findall('TickBox'))==3
+    sounds=ET.parse(mod/'combat_sounds.xml').getroot()
+    for entry in sounds:
+        path=mod/entry.attrib['file'].replace('%ModDir%/','')
+        assert path.is_file() and path.read_bytes().startswith(b'OggS'),path
     for texture in combat.iter():
         if 'texture' in texture.attrib and texture.attrib['texture'].startswith('%ModDir%/'):
             path=mod/texture.attrib['texture'].replace('%ModDir%/','')

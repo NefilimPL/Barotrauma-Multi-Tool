@@ -5,7 +5,7 @@ local N={}
 function N.install(G,E)
     local snapshotName=C.protocol..'.snapshot'
     local eventName=C.protocol..'.effect'
-    local eventIDs={charge=1,shot=2,hit=3,bounce=4,shieldhit=5,['break']=6,contact=7}
+    local eventIDs={charge=1,shot=2,hit=3,bounce=4,shieldhit=5,['break']=6,contact=7,wallhit=8}
     G.eventNames={};for name,id in pairs(eventIDs) do G.eventNames[id]=name end
     G.authoritative=E.SERVER or E.Game.IsSingleplayer
     G.remote={shields={},rings={}}
@@ -60,6 +60,17 @@ function N.install(G,E)
             end
             if seq>lastSequence then
                 lastSequence=seq
+                -- Preserve the short visual trail across positional corrections.
+                -- Reset it on reload/teleport or if correction crosses a wall.
+                if G.remote.epoch==incomingEpoch then
+                    local previous={}
+                    for _,r in ipairs(G.remote.rings) do previous[r.id]=r end
+                    for _,r in ipairs(rings) do
+                        local old=previous[r.id]
+                        if old and old.trail and math.abs(old.x-r.x)+math.abs(old.y-r.y)<96
+                            and (not G.cast or not G.cast(old,r,0,nil,true)) then r.trail=old.trail end
+                    end
+                end
                 G.remote={shields=shields,rings=rings,received=G.now,epoch=incomingEpoch}
             end
         end)

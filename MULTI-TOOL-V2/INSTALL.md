@@ -1,4 +1,4 @@
-# MULTI-TOOL-V2 1.1.2 — Aegis
+# MULTI-TOOL-V2 1.1.3 — Aegis
 
 Wypakuj ten folder do `Barotrauma/LocalMods/` i włącz pakiet w grze.
 Wymagane jest zgodne **Lua for Barotrauma / LuaCs na kliencie i serwerze**.
@@ -19,6 +19,11 @@ Broń zajmuje dwie ręce, a po schowaniu jeden zwykły slot.
 
 Podgląd animacji: [Assets/Combat/preview.html](Assets/Combat/preview.html).
 Balans: `Lua/CombatTool/config.lua`.
+Wersja 1.1.3 dodaje przestrzenne dźwięki broni i trafień, impuls odpychający
+NPC oraz pulsujący pierścień ze śladem energii. Odstęp strzałów wynosi około
+0,46 s, a lot jest o 25% wolniejszy przy zachowanym zasięgu.
+Podgląd dźwięków: [Assets/Combat/Audio/preview.html](Assets/Combat/Audio/preview.html).
+W multiplayer serwer i wszyscy gracze powinni mieć tę samą wersję moda.
 
 Po aktualizacji zastąp stary folder moda i uruchom grę ponownie. Samo
 `reloadlua` nie przeładowuje definicji XML latarki.

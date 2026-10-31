@@ -1,9 +1,11 @@
 -- All costs are percentage points of the installed source's condition.
 return {
     identifier = 'combatmultitool', protocol = 'bmt.combat.v1',
-    chargeTime = 0.25, reloadTime = 0.65, shotCost = 1, toolCost = 0.2,
+    chargeTime = 0.12, reloadTime = 0.34, shotCost = 1, toolCost = 0.2,
     lightCost = 0.025, rodMultiplier = 0.25,
-    speed = 1400, lifetime = 2.5, maxDistance = 3200,
+    speed = 1050, lifetime = 3.2, maxDistance = 3200,
+    hitImpulse = 7.5, recoilVelocity = 3,
+    trailLifetime = 0.12, trailPoints = 12,
     radius = 6, maxRadius = 12, bounceRetention = 0.85, maxStepContacts = 8,
     burnDamage = 18, bluntDamage = 12,
     shieldRadius = 80, shieldHalfAngle = math.pi / 3,

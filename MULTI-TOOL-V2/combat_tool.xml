@@ -24,7 +24,7 @@
     <Holdable slots="Any,RightHand+LeftHand" controlpose="true" holdpos="28,-8" aimpos="40,-7"
               handle1="-405,-115" handle2="280,-150" holdangle="-30"
               disablewhenrangedweaponequipped="false" msg="ItemMsgPickUpSelect" />
-    <RangedWeapon barrelpos="825,75" reload="0.65" holdtrigger="true" combatpriority="75" spread="0" unskilledspread="0">
+    <RangedWeapon barrelpos="825,75" reload="0.34" holdtrigger="true" combatpriority="75" spread="0" unskilledspread="0">
       <RequiredItems items="mobilebattery,reactorfuel" type="Contained" msg="ItemMsgAmmoRequired" />
     </RangedWeapon>
     <!-- First RepairTool must be a welder: native leak AI asks for the first. -->

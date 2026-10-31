@@ -73,10 +73,21 @@ function M.ring(position,direction,quality)
         age=0,distance=0,radius=C.radius,bouncesLeft=M.bounces(quality),
         damageMultiplier=1,alive=true}
 end
+local function trailPoint(r,x,y)
+    r.trail=r.trail or {}
+    local last=r.trail[#r.trail]
+    if not last or math.abs(last.x-x)+math.abs(last.y-y)>.01 then
+        r.trail[#r.trail+1]={x=x,y=y,age=r.age}
+    end
+    while #r.trail>C.trailPoints or (#r.trail>1 and r.age-r.trail[1].age>C.trailLifetime) do
+        table.remove(r.trail,1)
+    end
+end
 -- cast(a,b,ring) returns the nearest hit {t,x,y,nx,ny,kind}, or nil.
 -- onHit(hit,ring) is called once per hit. Character/shield contacts terminate.
 function M.advanceRing(r,dt,cast,onHit)
     if not r.alive or dt <= 0 then return end
+    trailPoint(r,r.x,r.y)
     local step = min(dt,max(0,C.lifetime-r.age))
     local remaining = min(r.speed*step,max(0,C.maxDistance-r.distance))
     r.age = r.age+dt
@@ -88,12 +99,14 @@ function M.advanceRing(r,dt,cast,onHit)
         local hit=cast(a,b,r)
         if not hit then
             r.x,r.y=b.x,b.y
+            trailPoint(r,r.x,r.y)
             r.distance=r.distance+remaining
             break
         end
         local t=max(0,min(1,hit.t))
         local traveled=remaining*t
         r.x,r.y=hit.x,hit.y
+        trailPoint(r,r.x,r.y)
         r.distance=r.distance+traveled
         remaining=remaining-traveled
         contacts=contacts+1

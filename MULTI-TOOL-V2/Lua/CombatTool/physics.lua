@@ -64,11 +64,13 @@ function P.install(G,E)
         end
         return nearest
     end
-    function G.damage(target,position,owner,burn,blunt,stun)
+    function G.damage(target,position,owner,burn,blunt,stun,impulse)
         local afflictions={}
         if burn>0 then afflictions[#afflictions+1]=E.AfflictionPrefab.Prefabs['burn'].Instantiate(burn) end
         if blunt>0 then afflictions[#afflictions+1]=E.AfflictionPrefab.Prefabs['blunttrauma'].Instantiate(blunt) end
-        target.AddDamage(E.Vector2(position.x,position.y),afflictions,stun or 0,true,E.Vector2.Zero,owner,1)
+        -- Let native friendly-fire protection gate the impulse with the damage.
+        local kick=impulse and E.Vector2(impulse.x,impulse.y) or E.Vector2.Zero
+        target.AddDamage(E.Vector2(position.x,position.y),afflictions,stun or 0,true,kick,owner,1)
     end
 end
 return P

@@ -41,6 +41,14 @@ check('native ring damages hostile NPC',function()
     fireAt(target)
     assert(target.Vitality<before,'hostile NPC did not lose vitality')
 end)
+local pushed=human(origin+Vector2(180,600),CharacterTeamType.Team2)
+check('native ring gives NPC a bounded forward impulse',function()
+    local before=pushed.AnimController.MainLimb.body.LinearVelocity.X
+    fireAt(pushed)
+    local after=pushed.AnimController.MainLimb.body.LinearVelocity.X
+    assert(after>before+.01,'hit did not impart forward velocity')
+    assert(after<50,'hit imparted excessive velocity')
+end)
 local ally=human(origin+Vector2(180,300),CharacterTeamType.Team1)
 check('native ring damages crew when match friendly fire is enabled',function()
     Game.ServerSettings.AllowFriendlyFire=true
@@ -51,8 +59,10 @@ end)
 check('native match friendly-fire disable protects crew',function()
     Game.ServerSettings.AllowFriendlyFire=false
     local before=ally.Vitality
+    local velocity=ally.AnimController.MainLimb.body.LinearVelocity.X
     fireAt(ally)
     assert(ally.Vitality==before,'crew took damage with friendly fire disabled')
+    assert(ally.AnimController.MainLimb.body.LinearVelocity.X==velocity,'friendly fire off still pushed crew')
 end)
 check('technical emitter and energy muzzle share display position',function()
     local muzzle=G.muzzle(gun)

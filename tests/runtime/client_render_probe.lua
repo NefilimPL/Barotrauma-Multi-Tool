@@ -15,11 +15,22 @@ Timer.Wait(function()
         local G=BMTCombat
         local previous=G.authoritative
         G.authoritative=false
+        local listener=gm.SoundManager.ListenerPosition
+        for _,kind in ipairs({'shot','hit','bounce','wallhit','charge'}) do
+            local channel=G.playCombatSound(kind,{x=listener.X,y=listener.Y})
+            assert(channel,'native sound did not create a spatial channel: '..kind..' '..tostring(G.audioError))
+            channel.Dispose()
+        end
+        local audio=G.playCombatSound
+        G.playCombatSound=nil -- The frame stress test must not emit hundreds of simultaneous sounds.
         for frame=0,15 do
             for _,angle in ipairs({0,math.pi/2,math.pi,-math.pi/2}) do
                 G.now=frame/25
-                G.remote={received=G.now,shields={{x=0,y=0,angle=angle,energy=100}},rings={}}
-                for _,kind in ipairs({'shieldhit','break','contact','hit','bounce','shot','charge'}) do
+                local ring=require('CombatTool.core').ring({x=150,y=0},{x=math.cos(angle),y=math.sin(angle)},1)
+                ring.id=1;ring.age=frame/25
+                ring.trail={{x=120,y=0,age=ring.age-.05},{x=150,y=0,age=ring.age}}
+                G.remote={received=G.now,shields={{x=0,y=0,angle=angle,energy=100}},rings={ring}}
+                for _,kind in ipairs({'shieldhit','break','contact','hit','bounce','wallhit','shot','charge'}) do
                     G.onEffect(kind,{x=0,y=0},angle,0)
                 end
                 G.updateVisuals(.02)
@@ -28,11 +39,13 @@ Timer.Wait(function()
                 batch.End()
             end
         end
+        G.playCombatSound=audio
         G.authoritative=previous
         batch.Dispose();batch=nil
         assert(not G.visualError,G.visualError)
+        assert(not G.audioError,G.audioError)
     end)
     File.Write('LocalMods/MULTI-TOOL-V2/client-results.txt',
-        ok and 'PASS native client GPU rendering: 16 frames, 4 aim angles, 7 effect kinds' or 'FAIL '..tostring(err))
+        ok and 'PASS native GPU: 16 frames, 4 angles, animated rings/trails, 8 effect kinds; 5 native spatial audio channels' or 'FAIL '..tostring(err))
     if not ok then print('[BMT CLIENT] '..tostring(err)) end
 end,4000)

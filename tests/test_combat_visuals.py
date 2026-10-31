@@ -2,6 +2,25 @@ from lua_support import LuaCase
 
 
 class VisualContractTests(LuaCase):
+    def test_ring_animates_in_place_and_drawing_never_repeats_sound(self):
+        self.lua.execute('''
+            local function v(x,y) return {X=x,Y=y} end
+            local E={Sprite=function() return {Draw=function() end} end,Vector2=v,
+                Rectangle=function(x,y,w,h) return {X=x,Y=y,Width=w,Height=h} end,Color=function() return {} end,
+                LuaUserData={RegisterType=function() end,CreateEnumTable=function() return {} end,CreateStatic=function() return {} end},
+                GUI={GUI={DrawLine=function(_,a,b) signature=signature..string.format('%.2f,%.2f;',a.X,b.Y) end}}}
+            local ring={id=1,x=0,y=0,dx=1,dy=0,radius=6,age=0,alive=true}
+            local G={now=0,authoritative=false,remote={received=0,rings={ring},shields={}},patch=function() end,
+                playCombatSound=function() sounds=(sounds or 0)+1 end}
+            require('CombatTool.visuals').install(G,E,'mod')
+            local cam={Zoom=1,WorldToScreen=function(p) return p end}
+            G.onEffect('shot',{x=0,y=0},0,1)
+            signature='';G.draw({},cam);first=signature
+            ring.age=.08;signature='';G.draw({},cam);second=signature
+            assert(first~=second,'projectile loop is static')
+            assert(sounds==1,'sound must play once on event, never on drawing')
+        ''')
+
     def test_frames_draw_in_a_balanced_native_map_draw_pass(self):
         self.lua.execute('''
             local drawPatch

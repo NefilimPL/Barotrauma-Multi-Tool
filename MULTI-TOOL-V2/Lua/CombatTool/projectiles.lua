@@ -14,6 +14,9 @@ function M.install(G,E)
         G.nextRingID=(G.nextRingID%65534)+1
         ring.id=G.nextRingID;ring.owner=ctx.owner;ring.weapon=s.item
         G.rings[#G.rings+1]=ring
+        if s.item.body and s.item.body.Enabled then
+            s.item.body.ApplyLinearImpulse(E.Vector2(-direction.x,-direction.y)*s.item.body.Mass*C.recoilVelocity,4)
+        end
         G.event('shot',s,muzzle)
     end
     function G.cancelRings(item)
@@ -33,7 +36,9 @@ function M.install(G,E)
                 return hit
             end,function(hit,r)
                 if hit.kind=='character' then
-                    G.damage(hit.target,hit,r.owner,C.burnDamage*r.damageMultiplier,C.bluntDamage*r.damageMultiplier,0)
+                    local impulse=C.hitImpulse*r.damageMultiplier
+                    G.damage(hit.target,hit,r.owner,C.burnDamage*r.damageMultiplier,C.bluntDamage*r.damageMultiplier,0,
+                        {x=r.dx*impulse,y=r.dy*impulse})
                     G.event('hit',G.state(r.weapon),hit)
                 elseif hit.kind=='shield' then
                     local blocked=G.blockShield(hit.state,Core.bulletCost(30*r.damageMultiplier),hit)
@@ -41,7 +46,7 @@ function M.install(G,E)
                     if not blocked then
                         r.alive=true;r.x=r.x+r.dx*.05;r.y=r.y+r.dy*.05
                     end
-                elseif r.alive then G.event('bounce',G.state(r.weapon),hit) end
+                elseif hit.kind=='wall' then G.event(r.alive and 'bounce' or 'wallhit',G.state(r.weapon),hit) end
             end)
             if not ring.alive then table.remove(G.rings,i) end
         end
