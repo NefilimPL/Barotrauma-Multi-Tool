@@ -94,7 +94,7 @@ function Module.new(E)
             if G.now<s.nextShot then return false end
             if not s.chargeStarted then
                 s.chargeStarted=G.now
-                if G.event then G.event('charge',s,item.WorldPosition) end
+                if G.event then G.event('charge',s,G.muzzle and G.muzzle(item) or item.WorldPosition) end
                 return false
             end
             if G.now-s.chargeStarted<C.chargeTime then return false end

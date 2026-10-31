@@ -40,7 +40,8 @@ Pierścienie odbijają się od ścian, kadłuba, podłoża i zamkniętych drzwi;
 otwarte drzwi i dziury przepuszczają impuls. Limit odbić wynosi odpowiednio
 **1 / 2 / 3 / 4** dla jakości zwykłej / dobrej / doskonałej / mistrzowskiej.
 Każde odbicie osłabia obrażenia o 15%. Trafienie postaci kończy lot.
-Pierścienie pomijają właściciela i sojuszników oraz nie niszczą kadłuba.
+Pierścienie pomijają strzelca i nie niszczą kadłuba. Trafienia sojuszników
+podlegają natywnemu ustawieniu friendly fire rozgrywki, jak zwykłe pociski.
 
 Tarcza osłania przednią część głowy i tułowia. Przechwytuje standardowe
 pociski fizyczne, hitscan oraz wrogie pierścienie. Kontakt przeciwnika
@@ -89,6 +90,14 @@ Wszystkie koszty, obrażenia, czasy i limity są w
 lub użyj konsolowego `reloadlua` na serwerze i klientach.
 
 ## Sprawdzenia
+
+Wersja 1.1.2 zmniejsza broń o 20%, poprawia punkty chwytu i pozycję lampy,
+wyrównuje emitery narzędzi do lufy, zmniejsza i wycisza wizualnie tarczę.
+Tekstura jest przycinana fragmentami przy ścianach. Renderer używa właściwego
+mieszania alfa, a efekty ładowania i trafień mają poprawione punkty zaczepienia.
+Pierścienie korzystają z natywnego friendly fire zamiast własnej odporności
+sojuszników. Po zmianie definicji XML sprawdź nowo utworzoną broń;
+stare przedmioty mogą zachować zapisaną skalę.
 
 Wersja 1.1.1 poprawia błąd rysowania efektów na kliencie oraz ustawia
 natywne światło kierunkowe z teksturą stożka. Po aktualizacji uruchom grę

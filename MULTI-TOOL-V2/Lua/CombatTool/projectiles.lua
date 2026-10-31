@@ -25,7 +25,9 @@ function M.install(G,E)
             local ring=G.rings[i]
             if ring.weapon.Removed or not G.flags(ring.weapon).damage then ring.alive=false end
             Core.advanceRing(ring,dt,function(a,b,r)
-                local hit=G.cast(a,b,r.radius,r.owner,false)
+                -- Native Character.AddDamage enforces the match's friendly-fire
+                -- setting. Do not make allied crew immune at the ray-cast layer.
+                local hit=G.cast(a,b,r.radius,r.owner,false,true)
                 local shield=G.findShield(a,b,r.owner,ring.weapon)
                 if shield and (not hit or shield.t<hit.t) then return shield end
                 return hit

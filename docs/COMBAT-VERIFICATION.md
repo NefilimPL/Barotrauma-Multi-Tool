@@ -1,4 +1,58 @@
-# Aegis 1.1.0 — weryfikacja
+# Aegis — weryfikacja wersji 1.1.x
+
+## Poprawka 1.1.2 — geometria grafiki i friendly fire
+
+Zgłoszenie użytkownika: zbyt duża broń i tarcza, znikanie tekstury przy
+celowaniu w górę, przesunięte efekty, światło poza lampą, złe punkty chwytu
+oraz brak obrażeń załogi w testerze.
+
+Przyczyny i zmiany:
+
+- Kod pomijał sojuszników już podczas sprawdzania kolizji pierścienia.
+  Teraz wykrywa trafienia postaci poza strzelcem i wywołuje natywne
+  `Character.AddDamage`, które uwzględnia ustawienia friendly fire rozgrywki.
+  Tarcza nadal przechwytuje wrogie ataki i poraża przeciwników.
+- Jeden zasłonięty punkt wyłączał całą teksturę tarczy. Przycinanie odbywa
+  się teraz w 16 pasach z zachowaniem wspólnego punktu obrotu.
+  Promień tarczy zmniejszono z 95 do 80, wysokość grafiki wynosi około
+  139 jednostek, a krycie tekstury około 18% zamiast dotychczasowych 90%.
+- PNG mają zwykły kanał alfa; domyślny `AlphaBlend` oczekuje kolorów
+  pomnożonych przez alfa i nadmiernie rozjaśniał efekty. Renderer używa
+  `NonPremultiplied`. Typ `BlendState` jest jawnie rejestrowany w LuaCs.
+- Skalę broni zmniejszono z 0.085 do 0.068. Uchwyty wskazują dolne chwyty
+  tekstury (poprawiony znak Y), a lampa ma początek na jej soczewce.
+  Emitery `RepairTool` wymagają jednostek świata, w przeciwieństwie
+  do skalowanego `RangedWeapon`; wszystkie trzy mają poprawione pozycje.
+- Ładowanie zaczyna się przy lufie i podąża za nią. Efekty trafienia/odbicia
+  są mniejsze i wykorzystują normalną powierzchni zamiast kierunku broni.
+  Kompresję sprite'a broni wyłączono, ponieważ jego wymiary nie są
+  wielokrotnością czterech. Sam bitmapowy zasób pozostaje bez zmian.
+
+Weryfikacja:
+
+- **49/49 testów automatycznych.** Nowe regresje odtworzyły odmowę trafiania
+  sojusznika, znikanie całej tarczy przy częściowym zasłonięciu,
+  niewłaściwą orientację trafień i niepoprawny układ broni. Testy sprawdzają
+  też stały punkt obrotu pasów tekstury i tryb mieszania alfa.
+- **4/4 nowe próby natywne:** rzeczywisty pierścień odbiera żywotność wrogiemu
+  NPC; odbiera ją załodze przy friendly fire włączonym; nie odbiera jej po
+  wyłączeniu tej opcji; pozycje lufy narzędzia i broni pokrywają się.
+  Scenariusz przechodzi przez produkcyjne `fire/updateRings`, raycasty
+  i natywne obrażenia, a nie bezpośrednie wywołanie testowej funkcji obrażeń.
+- Powtórzono **13/13** prób podstawowych, **5/5** prób tarczy/fizyki i
+  **5/5** prób AI (328 wywołań spawarki, 3 strzały podczas walki,
+  brak równoczesnych funkcji, checkbox skutecznie wyłącza broń/tarczę).
+- **Rzeczywisty klient z GPU:** osobna kopia klienta 1.13.5.0/LuaCs,
+  uruchomiona w ukrytym oknie, w edytorze statku. Produkcyjny renderer
+  narysował 16 klatek dla czterech kątów celowania i siedmiu typów zdarzeń
+  na rzeczywistym `SpriteBatch`, bez błędu. Wynik: `PASS native client GPU
+  rendering: 16 frames, 4 aim angles, 7 effect kinds`.
+  Instalacja gry użytkownika nie była zmieniana.
+
+Próba klienta potwierdza działanie API rysowania; nie zastępuje wizualnej
+oceny dłoni na animowanej postaci ani dłuższej rozgrywki z dwoma klientami.
+Przy sprawdzaniu nowej skali należy utworzyć nowy egzemplarz broni;
+zapisany przedmiot może przechować starą skalę.
 
 ## Poprawka 1.1.1 — zgłoszenie z testera statku
 

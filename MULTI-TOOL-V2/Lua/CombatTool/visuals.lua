@@ -6,6 +6,9 @@ function M.install(G,E,root)
     -- Current LuaCs exposes GUI drawing under GUI.GUI. Sprite.Draw supplies
     -- SpriteEffects.None by default; the optional global enum may be absent.
     local gui=type(E.GUI)=='table' and E.GUI.GUI or E.GUI
+    local sortMode=E.LuaUserData.CreateEnumTable('Microsoft.Xna.Framework.Graphics.SpriteSortMode')
+    E.LuaUserData.RegisterType('Microsoft.Xna.Framework.Graphics.BlendState')
+    local blend=E.LuaUserData.CreateStatic('Microsoft.Xna.Framework.Graphics.BlendState')
     local assets={}
     for _,name in ipairs({'shield-active','shield-hit','shield-break','shield-contact'}) do
         assets[name]=E.Sprite(root..'/Assets/Combat/'..name..'.png',E.Vector2(.5,.5))
@@ -22,8 +25,19 @@ function M.install(G,E,root)
             end
         end
         for i=#effects,1,-1 do
-            effects[i].age=effects[i].age+dt
-            if effects[i].age>.8 then table.remove(effects,i) end
+            local effect=effects[i]
+            effect.age=effect.age+dt
+            if effect.kind=='charge' then
+                for item in pairs(G.states or {}) do
+                    if item.ID==effect.id and not item.Removed then
+                        local p=G.muzzle(item)
+                        effect.x,effect.y=p.x,p.y
+                        local _,angle=G.direction(item);effect.angle=angle
+                        break
+                    end
+                end
+            end
+            if effect.age>.8 then table.remove(effects,i) end
         end
     end
     local function frame(sprite,index)
@@ -34,9 +48,16 @@ function M.install(G,E,root)
         sprite.SourceRect=E.Rectangle(x,y,w,h)
         return E.Vector2(w/2,h/2)
     end
-    local function drawSheet(batch,cam,name,index,point,angle,sx,sy,alpha)
+    local function drawSheet(batch,cam,name,index,point,angle,sx,sy,alpha,band)
         local sprite=assets[name]
         local origin=frame(sprite,index)
+        if band then
+            local rect=sprite.SourceRect
+            local top,bottom=math.floor(rect.Height*band[1]),math.floor(rect.Height*band[2])
+            sprite.SourceRect=E.Rectangle(rect.X,rect.Y+top,rect.Width,bottom-top)
+            -- Keep each cropped strip registered to the same full-frame pivot.
+            origin=E.Vector2(rect.Width/2,rect.Height/2-top)
+        end
         local screen=cam.WorldToScreen(E.Vector2(point.x,point.y))
         sprite.Draw(batch,screen,E.Color(255,255,255,math.floor(255*(alpha or 1))),origin,-angle,
             E.Vector2(sx*cam.Zoom,sy*cam.Zoom))
@@ -55,23 +76,34 @@ function M.install(G,E,root)
         end
     end
     local function drawShield(batch,cam,s)
-        local visible,points=true,{}
+        local points={}
         local emitter={x=s.x+25*math.cos(s.angle),y=s.y+25*math.sin(s.angle)}
         for i=0,24 do
             local a=s.angle-C.shieldHalfAngle+2*C.shieldHalfAngle*i/24
             local p={x=s.x+math.cos(a)*C.shieldRadius,y=s.y+math.sin(a)*C.shieldRadius}
             local blocked=G.cast(emitter,p,0,nil,true)
             points[#points+1]={point=p,visible=blocked==nil}
-            if blocked then visible=false end
         end
         local energy=math.max(.15,math.min(1,(s.energy or 100)/100))
-        if visible then
-            drawSheet(batch,cam,'shield-active',math.floor(G.now*18)%16,
-                {x=s.x+70*math.cos(s.angle),y=s.y+70*math.sin(s.angle)},s.angle,.4,.535,.5+.4*energy)
+        local height=2*C.shieldRadius*math.sin(C.shieldHalfAngle)
+        local center={x=s.x+C.shieldRadius*.75*math.cos(s.angle),y=s.y+C.shieldRadius*.75*math.sin(s.angle)}
+        -- Clip individual texture strips instead of discarding the whole sheet
+        -- when even one edge touches the ceiling or a wall.
+        for strip=0,15 do
+            local y=(.5-(strip+.5)/16)*height
+            local x=math.sqrt(math.max(0,C.shieldRadius*C.shieldRadius-y*y))
+            local p={x=s.x+x*math.cos(s.angle)-y*math.sin(s.angle),
+                y=s.y+x*math.sin(s.angle)+y*math.cos(s.angle)}
+            if not G.cast(emitter,p,0,nil,true) then
+                drawSheet(batch,cam,'shield-active',math.floor(G.now*12)%16,center,s.angle,
+                    C.shieldRadius*.86/314,height/314,
+                    C.shieldTextureOpacity*(.8+.2*energy)*(.95+.05*math.sin(G.now*5)),{strip/16,(strip+1)/16})
+            end
         end
         for i=2,#points do
             if points[i-1].visible and points[i].visible then
-                line(batch,cam,points[i-1].point,points[i].point,E.Color(45,230,255,math.floor(220*energy)),2)
+                line(batch,cam,points[i-1].point,points[i].point,E.Color(45,195,230,math.floor(24*energy)),6)
+                line(batch,cam,points[i-1].point,points[i].point,E.Color(110,235,250,math.floor(95*energy)),1)
             end
         end
     end
@@ -92,7 +124,7 @@ function M.install(G,E,root)
         for _,s in ipairs(shields) do drawShield(batch,cam,s) end
         for _,r in ipairs(rings) do
             if r.alive~=false then
-            local angle=math.atan2 and math.atan2(r.dy,r.dx) or math.atan(r.dy,r.dx)
+            local angle=Core.angle(r.dx,r.dy)
             circle(batch,cam,r.x,r.y,angle,r.radius+2,E.Color(0,140,240,100),5)
             circle(batch,cam,r.x,r.y,angle,r.radius,E.Color(170,255,255,255),2)
             end
@@ -101,11 +133,13 @@ function M.install(G,E,root)
             local f=math.floor(effect.age/.65*16)
             if f<16 then
                 if effect.kind=='break' then
-                    drawSheet(batch,cam,'shield-break',f,{x=effect.x+70*math.cos(effect.angle),y=effect.y+70*math.sin(effect.angle)},effect.angle,.4,.535)
+                    drawSheet(batch,cam,'shield-break',f,
+                        {x=effect.x+C.shieldRadius*.75*math.cos(effect.angle),y=effect.y+C.shieldRadius*.75*math.sin(effect.angle)},
+                        effect.angle,C.shieldRadius*.86/314,2*C.shieldRadius*math.sin(C.shieldHalfAngle)/314,.5)
                 elseif effect.kind=='contact' then
-                    drawSheet(batch,cam,'shield-contact',f,effect,effect.angle,.3,.3)
+                    drawSheet(batch,cam,'shield-contact',f,effect,effect.angle,.18,.18,.55)
                 elseif effect.kind=='shieldhit' or effect.kind=='hit' or effect.kind=='bounce' or effect.kind=='shot' then
-                    drawSheet(batch,cam,'shield-hit',f,effect,effect.angle,.2,.2)
+                    drawSheet(batch,cam,'shield-hit',f,effect,effect.angle,.12,.12,.55)
                 elseif effect.kind=='charge' and effect.age<C.chargeTime then
                     circle(batch,cam,effect.x,effect.y,effect.angle,5+effect.age*35,E.Color(130,255,255,200),2)
                 end
@@ -118,7 +152,9 @@ function M.install(G,E,root)
     G.patch('draw','Barotrauma.GameScreen','DrawMap',function(screen,p)
         if G.visualError then return end
         local batch=p['spriteBatch']
-        batch.Begin()
+        -- The PNGs contain straight alpha. Default AlphaBlend expects
+        -- premultiplied RGB and makes low-opacity energy sheets overbright.
+        batch.Begin(sortMode.Deferred,blend.NonPremultiplied)
         local ok,err=pcall(G.draw,batch,screen.Cam)
         batch.End()
         if not ok then

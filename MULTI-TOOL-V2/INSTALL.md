@@ -1,4 +1,4 @@
-# MULTI-TOOL-V2 1.1.1 — Aegis
+# MULTI-TOOL-V2 1.1.2 — Aegis
 
 Wypakuj ten folder do `Barotrauma/LocalMods/` i włącz pakiet w grze.
 Wymagane jest zgodne **Lua for Barotrauma / LuaCs na kliencie i serwerze**.
@@ -15,6 +15,7 @@ Broń zajmuje dwie ręce, a po schowaniu jeden zwykły slot.
 - U gracza wyłącz obrażenia, aby spawać/ciąć; gaśnica ma pierwszeństwo.
 - Bot sam dobiera funkcję techniczną do zadania, bez włączania obrażeń.
 - Jakość broni daje 1 / 2 / 3 / 4 odbicia pierścieni.
+- Obrażenia sojuszników podlegają ustawieniu friendly fire rozgrywki.
 
 Podgląd animacji: [Assets/Combat/preview.html](Assets/Combat/preview.html).
 Balans: `Lua/CombatTool/config.lua`.

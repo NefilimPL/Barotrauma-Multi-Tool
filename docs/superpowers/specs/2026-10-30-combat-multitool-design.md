@@ -167,8 +167,9 @@ w narożnikach. Obowiązuje limit kontaktów na krok symulacji; po jego
 osiągnięciu pocisk wygasa. Obliczenia uwzględniają układy współrzędnych
 wnętrza/otoczenia i ruch łodzi, również przy przejściu przez wyłom.
 
-Decyzja projektowa: pierścienie pomijają strzelca i sojuszników, także po
-odbiciu. Zapobiega to przypadkowemu ostrzeliwaniu załogi przez boty.
+Aktualizacja użytkownika 2026-10-31: pierścienie pomijają strzelca, a obrażenia
+sojuszników podlegają ustawieniu friendly fire rozgrywki, także po odbiciu.
+Zastępuje to początkową decyzję o pomijaniu sojuszników.
 Nie przechodzą przez wrogie aktywne tarcze. Tarcza własnej broni przepuszcza
 własny impuls; kontakt z tarczą przeciwnika pochłania go, bez rykoszetu.
 Boty celują bezpośrednio; obliczanie celowych strzałów zza rogu nie jest

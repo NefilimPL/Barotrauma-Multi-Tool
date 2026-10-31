@@ -4,6 +4,12 @@ local M = { config = C }
 local sqrt, abs, min, max = math.sqrt, math.abs, math.min, math.max
 local function dot(a, b) return a.x*b.x + a.y*b.y end
 function M.bounces(q) return 1 + max(0, min(3, math.floor(tonumber(q) or 0))) end
+function M.angle(x,y)
+    if math.atan2 then return math.atan2(y,x) end
+    if x>0 then return math.atan(y/x) end
+    if x<0 then return math.atan(y/x)+(y>=0 and math.pi or -math.pi) end
+    return y>0 and math.pi/2 or y<0 and -math.pi/2 or 0
+end
 function M.mode(c)
     if c.bot then
         if c.task == 'combat' then return c.damage and 'combat' or 'idle' end

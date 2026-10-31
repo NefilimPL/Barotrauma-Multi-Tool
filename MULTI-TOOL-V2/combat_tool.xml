@@ -2,7 +2,7 @@
 <Items>
   <Item identifier="combatmultitool" name="Aegis combat multitool" category="Equipment,Weapon"
         tags="tool,weapon,weldingequipment,cuttingequipment,electricalrepairtool,mechanicalrepairtool,screwdriver,wrench,fireextinguisher,crowbaritem,provocative"
-        cargocontaineridentifier="metalcrate" scale="0.085" maxstacksize="1" requireaimtouse="true" impactsoundtag="impact_metal_heavy">
+        cargocontaineridentifier="metalcrate" scale="0.068" maxstacksize="1" requireaimtouse="true" impactsoundtag="impact_metal_heavy">
     <Price baseprice="6500" sold="false" />
     <Fabricate suitablefabricators="fabricator,milfabricator" requiredtime="30">
       <RequiredSkill identifier="mechanical" level="50" />
@@ -18,17 +18,18 @@
       <Item identifier="copper" />
       <Item identifier="plastic" />
     </Deconstruct>
-    <InventoryIcon texture="%ModDir%/Assets/Combat/weapon.png" sourcerect="0,0,1774,887" origin="0.5,0.5" />
-    <Sprite texture="%ModDir%/Assets/Combat/weapon.png" sourcerect="0,0,1774,887" origin="0.5,0.5" depth="0.55" />
-    <Body width="1700" height="560" density="8" />
-    <Holdable slots="Any,RightHand+LeftHand" controlpose="true" holdpos="35,-10" aimpos="55,-10"
-              handle1="-420,170" handle2="280,230" holdangle="-30"
+    <InventoryIcon texture="%ModDir%/Assets/Combat/weapon.png" sourcerect="0,0,1774,887" origin="0.5,0.5" compress="false" />
+    <Sprite texture="%ModDir%/Assets/Combat/weapon.png" sourcerect="0,0,1774,887" origin="0.5,0.5" depth="0.55" compress="false" />
+    <Body width="1700" height="640" density="8" />
+    <Holdable slots="Any,RightHand+LeftHand" controlpose="true" holdpos="28,-8" aimpos="40,-7"
+              handle1="-405,-115" handle2="280,-150" holdangle="-30"
               disablewhenrangedweaponequipped="false" msg="ItemMsgPickUpSelect" />
-    <RangedWeapon barrelpos="810,0" reload="0.65" holdtrigger="true" combatpriority="75" spread="0" unskilledspread="0">
+    <RangedWeapon barrelpos="825,75" reload="0.65" holdtrigger="true" combatpriority="75" spread="0" unskilledspread="0">
       <RequiredItems items="mobilebattery,reactorfuel" type="Contained" msg="ItemMsgAmmoRequired" />
     </RangedWeapon>
     <!-- First RepairTool must be a welder: native leak AI asks for the first. -->
-    <RepairTool usablein="None" characterusable="false" structurefixamount="2.2" firedamage="10" range="200" barrelpos="810,0" particles="weld"
+    <!-- RepairTool offsets are display units; RangedWeapon offsets are scaled by the engine. -->
+    <RepairTool usablein="None" characterusable="false" structurefixamount="2.2" firedamage="10" range="200" barrelpos="56.1,5.1" particles="weld"
                 repairmultiple="true" repairthroughwalls="false" repairthroughholes="true" combatpriority="0" ignorecharacters="true">
       <RequiredItems items="mobilebattery,reactorfuel" type="Contained" />
       <ParticleEmitter particle="weld" particlespersecond="50" copyentityangle="true" scalemin="1.5" scalemax="1.5" colormultiplier="20,180,255,155" />
@@ -38,7 +39,7 @@
       <StatusEffect type="OnSuccess" target="UseTarget" targets="weldable" Stuck="5.5" />
       <Fixable identifier="structure" />
     </RepairTool>
-    <RepairTool usablein="None" characterusable="false" structurefixamount="-0.55" firedamage="10" levelwallfixamount="-5.5" range="200" barrelpos="810,0"
+    <RepairTool usablein="None" characterusable="false" structurefixamount="-0.55" firedamage="10" levelwallfixamount="-5.5" range="200" barrelpos="56.1,5.1"
                 repairmultiple="true" repairthroughwalls="false" repairthroughholes="true" combatpriority="0" ignorecharacters="true">
       <RequiredItems items="mobilebattery,reactorfuel" type="Contained" />
       <ParticleEmitter particle="weld" particlespersecond="50" copyentityangle="true" scalemin="1.5" scalemax="1.5" colormultiplier="20,180,255,155" />
@@ -48,7 +49,7 @@
       <StatusEffect type="OnSuccess" target="UseTarget" Condition="-16.5" />
       <Fixable identifier="structure" />
     </RepairTool>
-    <RepairTool usablein="None" characterusable="false" extinguishamount="60" range="500" barrelpos="810,0" repairmultiple="true"
+    <RepairTool usablein="None" characterusable="false" extinguishamount="60" range="500" barrelpos="56.1,5.1" repairmultiple="true"
                 repairthroughwalls="false" hititems="false" ignorecharacters="true" combatpriority="0">
       <RequiredItems items="mobilebattery,reactorfuel" type="Contained" />
       <ParticleEmitter particle="extinguisher" particlespersecond="100" anglemin="-5" anglemax="5" velocitymin="1000" velocitymax="1650" />
@@ -64,7 +65,7 @@
     <!-- IsOn of the first light is a native saved/networked damage permission. -->
     <LightComponent canbeselected="false" ison="false" range="0" brightness="0" />
     <LightComponent canbeselected="false" ison="false" range="1100" lightcolor="225,245,255,255"
-                    directional="true" lightoffset="810,0" powerconsumption="0" castshadows="true">
+                    directional="true" lightoffset="670,-90" powerconsumption="0" castshadows="true">
       <LightTexture texture="Content/Lights/lightcone.png" origin="0.0,0.5" size="1.0,1.0" />
     </LightComponent>
     <CustomInterface canbeselected="false" drawhudwhenequipped="true" allowuioverlap="false">

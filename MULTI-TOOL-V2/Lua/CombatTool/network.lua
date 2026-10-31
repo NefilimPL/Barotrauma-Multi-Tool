@@ -1,5 +1,6 @@
 local U=require('CombatTool.util')
 local C=require('CombatTool.config')
+local Core=require('CombatTool.core')
 local N={}
 function N.install(G,E)
     local snapshotName=C.protocol..'.snapshot'
@@ -14,6 +15,7 @@ function N.install(G,E)
     function G.event(kind,s,position)
         local point=type(position)=='table' and position or U.point(position)
         local _,angle=G.direction(s.item)
+        if point.nx and point.ny then angle=Core.angle(point.nx,point.ny) end
         if G.onEffect then G.onEffect(kind,point,angle,s.item.ID) end
         if not E.SERVER or not E.Game.Server then return end
         local message=E.Networking.Start(eventName)
