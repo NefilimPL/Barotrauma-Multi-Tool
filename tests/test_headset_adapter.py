@@ -34,6 +34,18 @@ class HeadsetAdapterTests(LuaCase):
         self.assertEqual(self.lua.eval('a.Strength'), 15)
         self.assertEqual(self.lua.eval('battery.Condition'), 97.5)
 
+    def test_healing_records_exact_affliction_behind_power_use(self):
+        self.lua.execute("add('burn',20,false);G.heal(char,item,1)")
+        self.assertEqual(self.lua.eval('G.state(item).debits[1].reason'), 'heal:burn')
+        self.assertEqual(self.lua.eval('G.state(item).debits[1].amount'), 2.5)
+
+    def test_healthy_wearer_never_emits_a_healing_pulse_or_spends_energy(self):
+        self.lua.execute("""
+            local pulses=0;G.emit=function() pulses=pulses+1 end
+            for i=1,60 do G.heal(char,item,.2) end
+            assert(battery.Condition==100 and pulses==0)
+        """)
+
     def test_last_energy_cannot_buy_a_whole_heal(self):
         self.lua.execute("battery.Condition=.5;a=add('burn',20,false);G.heal(char,item,1)")
         self.assertEqual(self.lua.eval('a.Strength'), 19)
@@ -107,6 +119,18 @@ class HeadsetAdapterTests(LuaCase):
             local result=G.intercept(char,params,function() return {} end)
             assert(result.Damage==10 and params.PreventExecution and calls==1 and battery.Condition==0)
             assert(params.afflictions[1]==a,'hook parameters mutated across CLR boundary')
+        """)
+
+    def test_refunded_failed_attack_does_not_report_power_drain_or_shield_flash(self):
+        self.lua.execute("""
+            battery.Condition=5
+            a=add('burn',20,false);a.CreateMultiplied=function(f) return {Strength=20*f,Prefab=a.Prefab} end
+            char.DamageLimb=function() error('native binding failure') end
+            local flashes=0;G.emit=function() flashes=flashes+1 end
+            local p={afflictions={a},stun=0,damageMultiplier=1,attackImpulse=0}
+            G.intercept(char,p,function() return {} end)
+            assert(battery.Condition==5 and not p.PreventExecution)
+            assert(not G.state(item).debits and flashes==0,'refunded power use is still presented as a real debit')
         """)
 
     def test_neurotrauma_open_surgery_closes_as_one_paid_job(self):

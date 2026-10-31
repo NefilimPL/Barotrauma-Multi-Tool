@@ -35,6 +35,12 @@ Timer.Wait(function()
         end
         for _,id in ipairs({'aegisheadset','aegisheadsetmk2'}) do
             local device=Item(ItemPrefab.Prefabs[id],Vector2.Zero,nil)
+            local descriptor=LuaUserData.RegisterType('Barotrauma.Items.Components.Wearable')
+            LuaUserData.MakeFieldAccessible(descriptor,'wearableSprites')
+            local wearable=require('CombatTool.util').component(device,'Wearable')
+            for sprite in wearable.wearableSprites do
+                assert(sprite.Scale*sprite.Sprite.SourceRect.Height<=50,'worn headset is larger than the head')
+            end
             batch.Begin(Sort.Deferred,Blend.NonPremultiplied)
             device.Sprite.Draw(batch,Vector2(300,300),Color.White,0,.04)
             batch.End();device.Remove()
@@ -44,6 +50,6 @@ Timer.Wait(function()
     end)
     if batch then pcall(function() batch.End();batch.Dispose() end) end
     File.Write('LocalMods/MULTI-TOOL-V2/headset-client-results.txt',
-        ok and 'PASS native GPU shield shimmer 4 power levels x 35 frames; both equipment textures; 4 spatial audio channels' or 'FAIL '..tostring(err))
+        ok and 'PASS native GPU filled shield 4 power levels x 35 frames; both head-sized wearable sprites; 4 spatial audio channels' or 'FAIL '..tostring(err))
     print('[HEADSET CLIENT] '..(ok and 'PASS' or tostring(err)))
 end,8000)

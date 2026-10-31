@@ -19,7 +19,7 @@
       </StatusEffect>
     </WifiComponent>
     <Wearable limbtype="Head" slots="Any,Headset" msg="ItemMsgPickUpSelect" displaycontainedstatus="true">
-      <sprite texture="%ModDir%/Assets/Headsets/headset.png" sourcerect="0,0,1254,1254" limb="Head" depth="0.1" hidelimb="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" scale="0.7" hideotherwearables="false" origin="0.34,0.61" compress="false" />
+      <sprite texture="%ModDir%/Assets/Headsets/headset.png" sourcerect="0,0,1254,1254" limb="Head" depth="0.1" hidelimb="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" scale="0.035" hideotherwearables="false" origin="0.34,0.61" compress="false" />
     </Wearable>
     <ItemContainer capacity="1" maxstacksize="1" hideitems="false" keepopenwhenequipped="true">
       <Containable items="mobilebattery" hide="true" containedstateindicatorstyle="battery" />
@@ -44,7 +44,7 @@
       </StatusEffect>
     </WifiComponent>
     <Wearable limbtype="Head" slots="Any,Headset" msg="ItemMsgPickUpSelect" displaycontainedstatus="true">
-      <sprite texture="%ModDir%/Assets/Headsets/headset-mk2.png" sourcerect="0,0,1254,1254" limb="Head" depth="0.1" hidelimb="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" scale="0.7" hideotherwearables="false" origin="0.34,0.61" compress="false" />
+      <sprite texture="%ModDir%/Assets/Headsets/headset-mk2.png" sourcerect="0,0,1254,1254" limb="Head" depth="0.1" hidelimb="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" scale="0.035" hideotherwearables="false" origin="0.34,0.61" compress="false" />
     </Wearable>
     <ItemContainer capacity="1" maxstacksize="1" hideitems="false" keepopenwhenequipped="true">
       <Containable items="mobilebattery" hide="true" containedstateindicatorstyle="battery" />

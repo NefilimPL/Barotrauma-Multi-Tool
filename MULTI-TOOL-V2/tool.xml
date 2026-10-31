@@ -27,8 +27,8 @@
       <RequiredItem identifier="screwdriver" />
       <RequiredItem identifier="copper" />
     </Fabricate>
-    <InventoryIcon texture="%ModDir%/wrench.png" sourcerect="0,0,93,19" />
-    <Sprite texture="%ModDir%/wrench.png" sourcerect="0,0,93,19" depth="0.55" origin="0.5,0.5" />
+    <InventoryIcon texture="%ModDir%/wrench.png" sourcerect="0,0,93,19" compress="false" />
+    <Sprite texture="%ModDir%/wrench.png" sourcerect="0,0,93,19" depth="0.55" origin="0.5,0.5" compress="false" />
     <Body width="80" height="15" density="25" />
     <MeleeWeapon slots="Any,RightHand,LeftHand" aimpos="40,5" handle1="0,0" reload="1.0" range="50" combatpriority="9" msg="ItemMsgPickUpSelect">
       <Attack structuredamage="0" itemdamage="4" targetimpulse="4">

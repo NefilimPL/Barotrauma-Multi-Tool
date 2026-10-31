@@ -7,6 +7,14 @@ MOD = ROOT / 'MULTI-TOOL-V2'
 
 
 class HeadsetContentTests(unittest.TestCase):
+    def test_worn_sprite_is_head_sized_without_multiplying_item_scale(self):
+        for item in ET.parse(MOD / 'regenerative_headsets.xml').getroot().findall('Item'):
+            sprite = item.find('Wearable/sprite')
+            height = int(sprite.get('sourcerect').split(',')[3])
+            native_height = height * float(sprite.get('scale', '1'))
+            self.assertGreaterEqual(native_height, 25)
+            self.assertLessEqual(native_height, 50, 'native wearable scale does not include Item.Scale')
+
     def test_both_items_have_native_unpowered_radio_and_headset_slot(self):
         items = ET.parse(MOD / 'regenerative_headsets.xml').getroot().findall('Item')
         self.assertEqual({i.get('identifier') for i in items}, {'aegisheadset', 'aegisheadsetmk2'})

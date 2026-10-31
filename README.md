@@ -3,7 +3,9 @@
 Mod Barotrauma z kompozytowym multitool'em, dwuręcznym **bojowym multitool'em Aegis**
 oraz **dwoma komunikatorami regeneracyjnymi Aegis**.
 
-Wersja **1.2.0**: komunikatory zajmują slot słuchawek, mieszczą baterię,
+Wersja **1.2.1**: poprawiony rozmiar noszonych słuchawek, wypełnione pole
+osłony i komenda `aegis_headset_status` pokazująca przyczynę poboru energii.
+Komunikatory zajmują slot słuchawek, mieszczą baterię,
 chronią przed ciśnieniem i stopniowo regenerują zdrowie. Mk II dodatkowo
 pochłania trafienia. **Neurotrauma i inne mody medyczne są opcjonalne.**
 [Instrukcja komunikatorów](docs/HEADSETS.md) ·

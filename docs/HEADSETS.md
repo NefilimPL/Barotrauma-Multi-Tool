@@ -1,6 +1,6 @@
 # Komunikatory Aegis
 
-Wersja 1.2.0 dodaje dwa przedmioty do MULTI-TOOL-V2. Wymagany jest LuaCs
+Wersja 1.2.1 zawiera dwa przedmioty dodane w 1.2.0 do MULTI-TOOL-V2. Wymagany jest LuaCs
 na kliencie i serwerze. **Żaden mod medyczny nie jest wymagany.**
 
 | Przedmiot | Identyfikator | Funkcje |
@@ -13,6 +13,26 @@ Pręty paliwowe nie pasują. Natywne radio ma zwykły zasięg 35000 i działa
 bez baterii: kanał, komunikacja głosowa/tekstowa i zakłócenia należą do gry.
 Nie nadpisujemy standardowych słuchawek. Urządzenie działa przy
 nieprzytomności, ale musi być założone; przedmiot w plecaku nie chroni.
+
+## Migotanie po założeniu i diagnostyka
+
+Czerwone pole oznacza zużycie energii na ochronę albo regenerację.
+Samo migotanie nie oznacza otrzymywania obrażeń. Założenie urządzenia
+na wcześniej ranną postać może od razu rozpocząć leczenie, również na
+bezpiecznym okręcie. Zdrowa postać bez zagrożenia nie powinna zużywać baterii.
+
+W konsoli F3 wpisz `aegis_headset_status`. Komenda pokazuje naładowanie
+i ostatnie rzeczywiste koszty, np. `heal:burn`, `pressure`, `hit` lub
+`regenerate:organ:heartremoved`. W multiplayer przyczyny należy odczytać
+na serwerze. Nie zmienia ona zdrowia ani energii.
+
+W 1.2.1 poprawiono błąd rozmiaru grafiki noszonej: silnik nie mnoży jej
+przez `Item.Scale`. Skala 0,7 powiększała arkusz 1254 px do około 878 px;
+nowa skala 0,035 daje około 44 px przed skalą ragdolla. Po podmianie
+pakietu uruchom grę ponownie; do pierwszej próby użyj nowego komunikatora.
+
+[Porównanie wyglądu pola](headsets/field-comparison.html) jest ilustracją
+geometrii renderera na poglądowej sylwetce, nie zrzutem ekranu gry.
 
 ## Zasilanie
 
@@ -95,7 +115,8 @@ Mk II: elektryka 65, 45 s, podstawowy komunikator, FPGA, 2 fulgurium
 i 2 stopy. Ogniwo wkłada się osobno. Ceny bazowe: 3500 / 7000.
 
 Własne grafiki i OGG są w `Assets/Headsets`. Osłona jest rysowana kodem:
-czerwona otoczka śledząca kończyny i migoczące pasma interferencji.
+półprzezroczysta powierzchnia, szeroka poświata, migoczące pasma interferencji
+i silniejszy błysk trafienia. Kilka odbiorników energii dzieli jedno pole.
 Dźwięki: stabilny powyżej 40%, słabnący przy 15–40%, alarmowy poniżej 15%,
 osobny sygnał wyczerpania. Pobór ciągły ma limit częstotliwości sygnałów.
 

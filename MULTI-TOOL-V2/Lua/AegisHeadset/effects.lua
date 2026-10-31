@@ -9,7 +9,14 @@ function M.install(G,E)
     local function receive(character,kind,tier,joint)
         if G.disposed or not character or character.Removed then return end
         if kind=='restore' and not G.authoritative and not character.IsDead then Medical.restoreNative(character,joint) end
-        effects[#effects+1]={character=character,age=0,tier=tier,kind=kind}
+        local active
+        for _,fx in ipairs(effects) do if fx.character==character then active=fx;break end end
+        if active then
+            -- Healing and pressure share a single surface. Do not stack
+            -- several translucent fields or overwrite a fresh impact flash.
+            if kind=='hit' or active.age>.25 then active.kind=kind;active.age=0 end
+            active.tier=tier
+        else effects[#effects+1]={character=character,age=0,tier=tier,kind=kind} end
         if #effects>C.maxEffects then table.remove(effects,1) end
         local nextSound=soundTimes[character] or 0
         if G.now>=nextSound or tier==0 then
@@ -68,28 +75,45 @@ function M.install(G,E)
                     end
                 end)
                 local cx,cy=(xmin+xmax)/2,(ymin+ymax)/2
-                local rx,ry=(xmax-xmin)*.65,(ymax-ymin)*.59
-                local pulse=.6+.4*math.abs(math.sin(fx.age*57+(character.ID or 0)))
+                local rx,ry=math.max(34,(xmax-xmin)*.65),math.max(54,(ymax-ymin)*.59)
+                local pulse=.3+.7*math.abs(math.sin(fx.age*48+(character.ID or 0)))
+                if fx.tier<=1 then pulse=pulse*(.4+.6*math.abs(math.sin(fx.age*73))) end
                 local fade=math.max(0,1-fx.age/.65)*pulse
-                local color=E.Color(255,fx.kind=='heal' and 75 or 28,36,math.floor(175*fade))
-                local previous
-                for i=0,56 do
-                    local angle=i*math.pi*2/56
-                    local jitter=1+.018*math.sin(i*7+fx.age*91)
-                    local p=cam.WorldToScreen(E.Vector2(cx+math.cos(angle)*rx*jitter,cy+math.sin(angle)*ry*jitter))
-                    if previous and (i%7~=0 or fx.tier>=2) then
-                        gui.DrawLine(batch,previous,p,color,0,math.max(1,cam.Zoom*1.5))
-                    end
-                    previous=p
+                local impact=fx.kind=='hit' and math.exp(-fx.age*15) or 0
+                local function stroke(ax,ay,bx,by,color,width)
+                    gui.DrawLine(batch,cam.WorldToScreen(E.Vector2(ax,ay)),cam.WorldToScreen(E.Vector2(bx,by)),
+                        color,0,math.max(1,math.floor(width*cam.Zoom+.5)))
                 end
-                -- Thin moving interference bands: shader-like shimmer without
-                -- an opaque bubble or a copied movie texture.
+                -- A translucent energy surface, not just an outline. Rows
+                -- overlap slightly at every zoom so the field has no gaps.
+                for y=-ry,ry,3 do
+                    local v=y/ry
+                    local half=rx*math.sqrt(math.max(0,1-v*v))
+                    local shimmer=.75+.25*math.sin(y*.23-fx.age*42)
+                    local alpha=math.floor((24+68*impact)*fade*shimmer)
+                    stroke(cx-half,cy+y,cx+half,cy+y,E.Color(255,45+math.floor(55*impact),55,alpha),4)
+                end
+                -- Broad outer bloom and a brighter inner refraction rim.
+                for layer=1,2 do
+                    local previous
+                    local radius=layer==1 and 1.04 or 1
+                    local color=E.Color(255,layer==1 and 20 or 75,45,math.floor((layer==1 and 38 or 150)*fade))
+                    for i=0,64 do
+                        local angle=i*math.pi*2/64
+                        local jitter=1+.012*math.sin(i*7+fx.age*91)
+                        local point={x=cx+math.cos(angle)*rx*jitter*radius,y=cy+math.sin(angle)*ry*jitter*radius}
+                        if previous and (layer==1 or fx.tier>=2 or i%9~=0) then
+                            stroke(previous.x,previous.y,point.x,point.y,color,layer==1 and 9 or 2.5)
+                        end
+                        previous=point
+                    end
+                end
+                -- Moving bands make the transparent surface visibly ripple.
                 for band=1,5 do
                     local v=((band/5+fx.age*1.1)%1)*2-1
                     local width=rx*math.sqrt(math.max(0,1-v*v))
                     local y=cy+v*ry
-                    gui.DrawLine(batch,cam.WorldToScreen(E.Vector2(cx-width,y)),cam.WorldToScreen(E.Vector2(cx+width,y)),
-                        E.Color(255,20,30,math.floor(26*fade)),0,math.max(1,cam.Zoom))
+                    stroke(cx-width,y,cx+width,y,E.Color(255,120,110,math.floor((45+50*impact)*fade)),2.5)
                 end
             end
         end

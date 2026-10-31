@@ -34,9 +34,17 @@ function M.new(E)
         local cell=G.source(item)
         if cell then cell.Condition=math.max(0,value)*cell.MaxCondition/100 end
     end
-    function G.spend(item,cost)
+    function G.recordDebit(item,amount,reason)
+        if amount<=1e-7 then return end
+        local s=G.state(item)
+        s.debits=s.debits or {}
+        s.debits[#s.debits+1]={time=G.now,amount=amount,reason=reason or 'unspecified'}
+        if #s.debits>12 then table.remove(s.debits,1) end
+    end
+    function G.spend(item,cost,reason)
         local left,fraction=Core.debit(G.energy(item),cost)
         G.setEnergy(item,left)
+        if fraction>0 then G.recordDebit(item,cost*fraction,reason) end
         return fraction
     end
     local function emit(character,item,kind,joint)
@@ -49,7 +57,7 @@ function M.new(E)
         local item=G.equipped(character)
         if not item or G.energy(item)<=0 then return false end
         if not G.authoritative then return true end
-        local fraction=G.spend(item,C.pressureCost*dt)
+        local fraction=G.spend(item,C.pressureCost*dt,'pressure')
         if fraction>0 then emit(character,item,'pressure') end
         -- Never grant a whole native simulation step for a tiny remainder.
         return fraction>=1-1e-7
@@ -71,7 +79,7 @@ function M.new(E)
         local actions=T.plan(entries,math.min(C.healRate*dt,G.energy(item)/C.healCost))
         local changed=false
         for _,action in ipairs(actions) do
-            local fraction=G.spend(item,action.amount*C.healCost)
+            local fraction=G.spend(item,action.amount*C.healCost,'heal:'..action.entry.id)
             if fraction>0 then
                 local value=action.entry.strength+(action.value-action.entry.strength)*fraction
                 if action.entry.apply then action.entry.apply(value) else action.entry.ref.Strength=value end
@@ -89,6 +97,7 @@ function M.new(E)
             local before=G.energy(item)
             local left,done=Core.advanceJob(progress,before,dt,cost,seconds)
             G.setEnergy(item,left)
+            G.recordDebit(item,before-left,'regenerate:'..job.key)
             if left<before then changed=true end
             if done then
                 for _,entry in ipairs(job.entries) do
@@ -134,7 +143,7 @@ function M.new(E)
         end
         return damage
     end
-    function G.absorb(character,afflictions,stun,multiplier,attacker,limb,position,penetration)
+    function G.absorb(character,afflictions,stun,multiplier,attacker,limb,position,penetration,deferFeedback)
         local item=G.equipped(character)
         if not G.authoritative or not item or C.identifiers[U.itemId(item)]~=2 or G.energy(item)<=0 then return nil end
         if character.GodMode or (character.CharacterHealth and character.CharacterHealth.Unkillable) then return nil end
@@ -148,7 +157,8 @@ function M.new(E)
             if not a.Prefab.IsBuff then damage=damage+G.blockableStrength(character,a,multiplier,limb,position,penetration) end
         end)
         if damage<=0 then return nil end
-        local left,residual=Core.absorb(G.energy(item),damage)
+        local before=G.energy(item)
+        local left,residual=Core.absorb(before,damage)
         G.setEnergy(item,left)
         local fraction=residual/damage
         local result={};local buffs=false
@@ -156,17 +166,18 @@ function M.new(E)
             if a.Prefab.IsBuff then result[#result+1]=a;buffs=true
             elseif fraction>1e-7 then result[#result+1]=a.CreateMultiplied(fraction,a) end
         end
-        emit(character,item,'hit')
-        return {afflictions=result,fraction=fraction,empty=fraction<=1e-7 and not buffs}
+        if not deferFeedback then G.recordDebit(item,before-left,'hit');emit(character,item,'hit') end
+        return {afflictions=result,fraction=fraction,empty=fraction<=1e-7 and not buffs,cost=before-left}
     end
     function G.intercept(character,p,emptyResult)
         if G.damageScope[character] then return end
         local item=G.equipped(character)
         local previous=G.energy(item)
-        local outcome=G.absorb(character,p['afflictions'],p['stun'],p['damageMultiplier'],p['attacker'],p['hitLimb'],p['worldPosition'],p['penetration'])
+        local outcome=G.absorb(character,p['afflictions'],p['stun'],p['damageMultiplier'],p['attacker'],p['hitLimb'],p['worldPosition'],p['penetration'],true)
         if not outcome then return end
         if outcome.empty then
             if G.attackScopes[character] then G.attackScopes[character].blocked=true end
+            G.recordDebit(item,outcome.cost,'hit');emit(character,item,'hit')
             p.PreventExecution=true;return emptyResult()
         end
         -- LuaCs Hook.Patch assigns parameters through raw CLR casts. Lua
@@ -187,6 +198,7 @@ function M.new(E)
             end
             return -- leave the original attack intact if interop failed
         end
+        G.recordDebit(item,outcome.cost,'hit');emit(character,item,'hit')
         p.PreventExecution=true
         return value
     end
@@ -240,6 +252,28 @@ function M.new(E)
         end
         E.Hook.Add('think','bmt.headsets.update',function() G.update(1/60) end)
         E.Hook.Add('roundEnd','bmt.headsets.reset',G.clear)
+        E.Game.AddCommand('aegis_headset_status','Show headset power and exact recent drain reasons.',G.printStatus)
+        G.commandInstalled=true
+    end
+    function G.printStatus()
+        E.print('[Aegis headsets] authority='..tostring(G.authoritative)..' renderer='..tostring(G.visualError or 'OK'))
+        local count=0
+        U.each(E.Character.CharacterList,function(character)
+            local item=G.equipped(character)
+            if not item or count>=16 then return end
+            count=count+1
+            E.print('[Aegis headsets] '..tostring(character.Name)..' '..U.itemId(item)..' energy='..string.format('%.2f%%',G.energy(item)))
+            local s=G.state(item)
+            if not s.debits or #s.debits==0 then
+                E.print(G.authoritative and '[Aegis headsets] No recorded power use.' or '[Aegis headsets] Run this command on the server for drain reasons.')
+            else
+                for i=math.max(1,#s.debits-5),#s.debits do
+                    local d=s.debits[i]
+                    E.print(string.format('[Aegis headsets] %.1fs ago: %s -%.4f%%',G.now-d.time,d.reason,d.amount))
+                end
+            end
+        end)
+        if count==0 then E.print('[Aegis headsets] No equipped Aegis headset found.') end
     end
     function G.update(dt)
         G.now=G.now+dt
@@ -270,6 +304,7 @@ function M.new(E)
     end
     function G.dispose()
         G.clear()
+        if G.commandInstalled then E.Game.RemoveCommand('aegis_headset_status');G.commandInstalled=false end
         if E.Hook then
             E.Hook.Remove('think','bmt.headsets.update');E.Hook.Remove('roundEnd','bmt.headsets.reset')
             for _,p in ipairs(G.patches) do E.Hook.RemovePatch(p[1],p[2],p[3],p[4]) end
