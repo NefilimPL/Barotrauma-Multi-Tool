@@ -89,6 +89,7 @@ function M.install(G,E)
             end
         end
         if G.authoritative then G.updateRings(dt);G.sendSnapshot() end
+        if G.updatePassiveSkills then G.updatePassiveSkills(dt) end
         if G.updateVisuals then G.updateVisuals(dt) end
     end
     E.Hook.Add('think','bmt.combat.update',function() G.update(1/60) end)

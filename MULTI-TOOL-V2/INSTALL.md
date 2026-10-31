@@ -1,4 +1,4 @@
-# MULTI-TOOL-V2 1.1.7 — Aegis
+# MULTI-TOOL-V2 1.1.8 — Aegis
 
 Wypakuj ten folder do `Barotrauma/LocalMods/` i włącz pakiet w grze.
 Wymagane jest zgodne **Lua for Barotrauma / LuaCs na kliencie i serwerze**.
@@ -16,6 +16,17 @@ Broń zajmuje dwie ręce, a po schowaniu jeden zwykły slot.
   od ręcznego checkboxa gracza. Zapisane ustawienie checkboxa pozostaje bez zmian.
 - Jakość broni daje 1 / 2 / 3 / 4 odbicia pierścieni.
 - Obrażenia sojuszników podlegają ustawieniu friendly fire rozgrywki.
+
+Od wersji 1.1.8 obie wersje multitoola dają dokładnie +2 do sterowania,
+broni, mechaniki, elektryki i medycyny po każdych 5 minutach trzymania.
+Aegis wymaga niewyczerpanego ogniwa lub pręta; mniejszy multitool — pręta.
+Schowanie narzędzia lub brak zasilania zatrzymuje licznik, zachowując postęp
+w tej rundzie. Przełączanie narzędzi zachowuje jeden wspólny licznik postaci;
+dwa multitool’e nie podwajają bonusu. Pierwszy bonus wymaga pełnych 300 sekund.
+Przyrost działa także u botów, wymaga LuaCs, respektuje limity umiejętności
+i nie jest mnożony przez premię do nauki z pręta ani przez talenty.
+Licznik zeruje się po zakończeniu rundy lub przeładowaniu Lua; zdobyte punkty
+są zapisywane normalnie przez grę.
 
 Podgląd animacji: [Assets/Combat/preview.html](Assets/Combat/preview.html).
 Wersja 1.1.7 mocuje początek stożka latarki do obracającego się korpusu broni,

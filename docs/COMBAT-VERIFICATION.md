@@ -1,5 +1,44 @@
 # Aegis — weryfikacja wersji 1.1.x
 
+## Poprawka 1.1.8 — pasywny przyrost wszystkich pięciu umiejętności
+
+Użytkownik potwierdził wszystkie pięć umiejętności i zmianę tempa w obu wersjach:
++2 helm/weapons/mechanical/electrical/medical co 5 minut. Usunięto wcześniejszy
+GiveSkill XML z mniejszego multitoola. Natywny interval przyznaje bonus również
+przy pierwszym użyciu, więc nowy licznik wymaga pełnych 300 sekund przed pierwszą
+nagrodą. Licznik postaci jest wspólny dla narzędzi; kilka egzemplarzy nie sumuje
+czasu. Schowanie lub brak zasilania zatrzymuje naliczanie, zachowując postęp
+w rundzie. Śmierć, koniec rundy i reload Lua zerują licznik; zdobyte poziomy
+są przechowywane normalnie przez grę.
+
+Przyjęty warunek zasilania: mniejszy multitool zachowuje wymaganie pręta;
+Aegis dopuszcza pręt lub ogniwo. Źródło i narzędzie muszą być niewyczerpane,
+postać musi być żywa, przytomna i trzymać narzędzie. Boty podlegają tym samym
+zasadom. Naliczanie odbywa się tylko na serwerze albo w symulacji single player.
+
+Dokładne +2 jest nadawane przez natywne CharacterInfo.SetSkillLevel z natywną
+synchronizacją. Nie przechodzi przez mnożniki SkillGainSpeed ani premię pręta
++40% do tempa nauki mechaniki/elektryki. Zachowane są natywny limit 100 i wyższy
+limit SkillSettings dla postaci z GainSkillPastMaximum; istniejące poziomy
+ponad aktualnym limitem nie są obniżane. Standardowy przyrost z wykonywania
+napraw i premia pręta do napraw pozostają niezależne.
+
+Weryfikacja: **76/76 testów**, w tym siedem nowych najpierw RED (brak modułu),
+potem GREEN: opóźnienie pierwszej nagrody, pięć dokładnych przyrostów, pauza
+i wspólny licznik, źródła, klient multiplayer, limity i reset rundy.
+Natywny serwer przeszedł **5/5** prób: +2 do wszystkich pięciu po progu 300 s,
+schowanie/przełączenie narzędzia, dokładne +2 mimo aktywnej premii pręta,
+brak nauki z pustym źródłem i limit 100, oraz automatyczne przekroczenie progu
+przez rzeczywistą pętlę think. Dla skrócenia próby produkcyjny licznik przyspieszono
+bez zmiany API postaci; w ostatniej próbie podano 299 s, a ostatnią sekundę
+naliczyła sama gra. Nie wykonywano pięciominutowej próby czasu rzeczywistego.
+
+Klient ponownie przeszedł próbę startu, mocowania latarki (5 kątów/2 kierunki),
+GPU celownika, 16 klatek/czterech kątów/dziewięciu efektów i sześciu kanałów
+audio. Walidator potwierdza 9 XML i 15 modułów Lua. Polska i angielska treść
+przedmiotów opisują przyrost. Również pasywny bonus mniejszego multitoola wymaga
+teraz LuaCs. Aktualizacja wymaga restartu gry i serwera, aby usunąć stary efekt XML.
+
 ## Poprawka 1.1.7 — obrót punktu emisji latarki
 
 Zgłoszenie: początek stożka pasuje przy celowaniu poziomym, ale przesuwa się

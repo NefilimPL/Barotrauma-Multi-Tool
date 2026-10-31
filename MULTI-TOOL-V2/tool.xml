@@ -112,11 +112,7 @@
         <RequiredItem items="reactorfuel" type="Contained" />
         <Affliction identifier="multitool_fuelrod_repairboost" amount="1" />
       </StatusEffect>
-      <StatusEffect type="Always" target="Character" interval="60" disabledeltatime="true">
-        <RequiredItem items="reactorfuel" type="Contained" />
-        <GiveSkill skillidentifier="mechanical" amount="1" triggertalents="false" />
-        <GiveSkill skillidentifier="electrical" amount="1" triggertalents="false" />
-      </StatusEffect>
+      <!-- Passive skills are granted by the shared authoritative Lua timer. -->
     </Holdable>
     <ItemComponent characterusable="true">
       <RequiredItems identifier="toolpl" type="Contained" excludebroken="false" excludefullcondition="true" />

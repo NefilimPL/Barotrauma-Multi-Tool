@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <infotexts language="Polish" nowhitespace="false" translatedname="Polski">
   <entityname.combatmultitool>Bojowy multitool Aegis</entityname.combatmultitool>
-  <entitydescription.combatmultitool>Dwuręczny emiter odbijających się pierścieni i tarczy. Wymaga Lua for Barotrauma. Jedno ogniwo lub pręt zasila broń, tarczę, latarkę i narzędzia. Jakość zwiększa liczbę odbić (1/2/3/4). Gracz wyłącza obrażenia, aby spawać lub ciąć. Gaśnica ma pierwszeństwo przed strzelaniem. Boty samodzielnie wybierają walkę albo jedną funkcję techniczną według wykonywanego zadania.</entitydescription.combatmultitool>
+  <entitydescription.combatmultitool>Dwuręczny emiter odbijających się pierścieni i tarczy. Wymaga Lua for Barotrauma. Jedno ogniwo lub pręt zasila broń, tarczę, latarkę i narzędzia. Jakość zwiększa liczbę odbić (1/2/3/4). Gracz wyłącza obrażenia, aby spawać lub ciąć. Gaśnica ma pierwszeństwo przed strzelaniem. Boty samodzielnie wybierają walkę albo jedną funkcję techniczną według wykonywanego zadania. Trzymany i zasilany daje +2 do wszystkich pięciu umiejętności co 5 minut; wspólny licznik z kompozytowym multitoolem.</entitydescription.combatmultitool>
   <label.combatpowerslots>Wspólne zasilanie: broń / tarcza / narzędzia</label.combatpowerslots>
   <entityname.Multi-toolSET>Kompozytowy multitool</entityname.Multi-toolSET>
-  <entitydescription.Multi-toolSET>Kompozytowe narzędzie; przełącza spawarkę i przecinarkę, świeci wbudowaną latarką, dodaje tryb gaśnicy i korzysta ze wspólnej butli tlenowej.</entitydescription.Multi-toolSET>
+  <entitydescription.Multi-toolSET>Kompozytowe narzędzie; przełącza spawarkę i przecinarkę, świeci wbudowaną latarką, dodaje tryb gaśnicy i korzysta ze wspólnej butli tlenowej. Trzymane z niewyczerpanym prętem paliwowym daje +2 do wszystkich pięciu umiejętności co 5 minut. Przyrost wymaga Lua for Barotrauma i ma wspólny licznik z Aegisem.</entitydescription.Multi-toolSET>
   <label.changetool>Włącz tryb przecinarki</label.changetool>
   <label.enableextinguisher>Włącz tryb gaśnicy</label.enableextinguisher>
   <label.enabledamage>Włącz zadawanie obrażeń NPC</label.enabledamage>

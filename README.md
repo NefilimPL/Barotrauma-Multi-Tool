@@ -93,6 +93,14 @@ lub użyj konsolowego `reloadlua` na serwerze i klientach.
 
 ## Sprawdzenia
 
+Wersja 1.1.8 dodaje wspólny pasywny przyrost dla obu multitooli: dokładnie
++2 do wszystkich pięciu umiejętności co 300 sekund trzymania z zasilaniem.
+Aegis przyjmuje ogniwo lub pręt, a mniejszy multitool zachowuje wymóg pręta.
+Licznik postaci nie sumuje się od kilku narzędzi i zatrzymuje się po schowaniu.
+Bonus nalicza serwer albo symulacja single player, również botom; natywne limity
+umiejętności są zachowane. Usunięto poprzedni bonus XML +1/minutę.
+Pasywna nauka mniejszym multitoolem również wymaga teraz LuaCs.
+
 Wersja 1.1.7 poprawia pozycję latarki podczas obracania broni. Przed narysowaniem
 mapy światła punkt emisji i kierunek korzystają z tej samej interpolowanej
 pozy fizycznego korpusu, z uwzględnieniem kierunku patrzenia.

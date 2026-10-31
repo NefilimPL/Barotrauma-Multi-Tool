@@ -142,6 +142,7 @@ function Module.new(E)
         AI.executing={}
         AI.activeCombat={}
         if G.clearProjectiles then G.clearProjectiles() end
+        if G.clearPassiveSkills then G.clearPassiveSkills() end
         if G.clearShieldTracking then G.clearShieldTracking() end
         if G.clearVisuals then G.clearVisuals() end
     end

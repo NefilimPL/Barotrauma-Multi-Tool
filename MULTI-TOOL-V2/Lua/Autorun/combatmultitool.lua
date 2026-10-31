@@ -11,6 +11,7 @@ local ok,err=pcall(function()
     require('CombatTool.physics').install(G,_G)
     require('CombatTool.network').install(G,_G)
     if G.authoritative then
+        require('CombatTool.passive_skills').install(G,_G)
         require('CombatTool.shield').install(G,_G)
         require('CombatTool.projectiles').install(G,_G)
     end
