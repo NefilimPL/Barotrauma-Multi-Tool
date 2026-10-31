@@ -2,6 +2,19 @@ from lua_support import LuaCase
 
 
 class ProjectileRegressionTests(LuaCase):
+    def test_autonomous_ring_ignores_player_preference_but_player_ring_does_not(self):
+        self.lua.execute('''
+            local Core=require('CombatTool.core')
+            local G={flags=function() return {damage=false} end,cast=function() end,findShield=function() end}
+            require('CombatTool.projectiles').install(G,{})
+            local botRing=Core.ring({x=0,y=0},{x=1,y=0},0)
+            local playerRing=Core.ring({x=0,y=0},{x=1,y=0},0)
+            botRing.weapon={};botRing.autonomous=true
+            playerRing.weapon={};G.rings={botRing,playerRing}
+            G.updateRings(.016)
+            assert(#G.rings==1 and G.rings[1]==botRing and botRing.x>0)
+        ''')
+
     def test_rings_delegate_friendly_fire_to_native_damage(self):
         self.lua.execute('''
             local C=require('CombatTool.core')

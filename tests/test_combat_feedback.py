@@ -86,9 +86,9 @@ class CombatFeedbackTests(LuaCase):
                 SoundPlayer={PlaySound=function(tag,position) calls=(calls or 0)+1;soundTag=tag;soundPosition=position end}}
             require('CombatTool.audio').install(G,E)
             G.playCombatSound('shot',{x=12,y=34})
-            assert(soundTag=='aegis_shot' and soundPosition.X==12 and soundPosition.Y==34)
+            assert(soundTag=='aegis_discharge' and soundPosition.X==12 and soundPosition.Y==34)
             G.playCombatSound('wallhit',{x=4,y=8});assert(soundTag=='aegis_wallhit')
             G.playCombatSound('hit',{x=4,y=8});assert(soundTag=='aegis_bodyhit')
             G.playCombatSound('unknown',{x=0,y=0})
         ''')
-        self.assertEqual(self.lua.globals().calls,3)
+        self.assertEqual(self.lua.globals().calls,4)

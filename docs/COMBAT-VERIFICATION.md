@@ -1,5 +1,51 @@
 # Aegis — weryfikacja wersji 1.1.x
 
+## Poprawka 1.1.4 — wspólne zasilanie, samoobrona i dźwięk
+
+Użytkownik zmienił wymagania: jeden slot dla całego zasilania; bot ma sam
+decydować o walce, a nie wymagać ręcznego checkboxa. Te ustalenia zastępują
+pierwotną zasadę dwóch źródeł i blokowania botów checkboxem gracza.
+
+- Kontener ma jeden slot. Broń, narzędzia, latarka, tarcza i jej trafienia
+  obciążają fizyczny slot 0. AI uzupełnia tylko ten slot; podczas walki
+  minimalny zapas wystarcza na pełny strzał. Stan tarczy w sieci i rendererze
+  odczytuje to samo źródło.
+- Odtworzono zgłoszenie na rzeczywistym serwerze: naładowany Aegis schowany
+  w ekwipunku, śrubokręt w ręce, ręczny checkbox wyłączony, zwykłe natywne
+  zadanie Defensive dodane ścieżką kontrolera reakcji na zagrożenie. Przed
+  poprawką bot wybierał śrubokręt i oddawał zero strzałów. Przyczyna: hook
+  wyzerował priorytet Aegisa na podstawie ręcznej preferencji gracza.
+- Po poprawce natywne porównanie uzbrojenia wybiera Aegisa. Efektywne
+  zezwolenie bota pochodzi z wykonywanego zadania walki lub zapamiętanego
+  aktywnego natywnego zadania samoobrony, również równoległego do napraw.
+  Zapisany checkbox gracza nie jest zmieniany; dla gracza nadal jest blokadą.
+  Pocisk wystrzelony przez bota nie znika z powodu wyłączonej preferencji
+  gracza. Zakończenie zagrożenia wyłącza automatyczną tarczę i kolejne strzały.
+- Główna warstwa strzału korzysta z natywnych nagrań Coilgun1/2 przez ścieżki
+  Content, bez kopiowania plików gry do moda. Cichy dodatkowy trzask jest
+  syntetyczny. Usunięto przemiatanie wysokości tonu; wyładowania, odbicia
+  i ładowanie są krótkie i szumowe zamiast melodyjnych.
+
+Weryfikacja: **60/60 testów automatycznych**, **13/13** prób podstawowych
+z jednym slotem, **5/5** prób tarczy, **5/5** prób obrażeń/impulsu oraz
+**3/3** prób naturalnej samoobrony. W tej ostatniej bot sam odłożył
+śrubokręt, wyposażył schowanego Aegisa i oddał **10 strzałów**; nie ustawiano
+mu broni, wymuszonego rozkazu, najwyższego priorytetu, wejścia celowania ani
+checkboxa. Natywne zadanie samoobrony zostało dodane przez kontroler AI,
+nie przez faktyczne zranienie postaci.
+
+Rzeczywisty klient z GPU ponownie narysował 16 klatek/cztery kąty i osiem
+efektów, a pięć rodzin dźwięków utworzyło przestrzenne kanały audio. Barwa
+dźwięku pozostaje subiektywną oceną użytkownika podczas rozgrywki.
+
+Ponowiona próba naprawy/walki przeszła **5/5** sprawdzeń: 312 użyć spawarki
+bez innych funkcji, potem 7 strzałów w walce bez funkcji technicznych.
+Usunięcie rzeczywistego zagrożenia zatrzymało strzelanie i tarczę bota.
+
+Przy aktualizacji należy wyjąć oba źródła ze starszej broni przed zmianą
+definicji kontenera na jeden slot. Do oceny nowego układu najlepiej utworzyć
+nowy egzemplarz po ponownym uruchomieniu gry. Zmiany dotyczą wyłącznie Aegisa.
+
 ## Poprawka 1.1.3 — odczucie strzału, dźwięk i impuls
 
 Zgłoszenie użytkownika: brak dźwięków strzelania i trafień, zbyt statyczny

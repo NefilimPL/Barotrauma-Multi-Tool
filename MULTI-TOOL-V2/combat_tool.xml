@@ -55,10 +55,9 @@
       <ParticleEmitter particle="extinguisher" particlespersecond="100" anglemin="-5" anglemax="5" velocitymin="1000" velocitymax="1650" />
       <sound file="Content/Items/Tools/Extinguisher.ogg" type="OnUse" range="500" loop="true" />
     </RepairTool>
-    <ItemContainer capacity="2" maxstacksize="1" hideitems="false" keepopenwhenequipped="true">
+    <ItemContainer capacity="1" maxstacksize="1" hideitems="false" keepopenwhenequipped="true">
       <Containable items="mobilebattery,reactorfuel" hide="true" containedstateindicatorstyle="battery" />
       <SlotIcon slotindex="0" texture="Content/UI/StatusMonitorUI.png" sourcerect="64,448,64,64" origin="0.5,0.5" />
-      <SlotIcon slotindex="1" texture="Content/UI/StatusMonitorUI.png" sourcerect="64,448,64,64" origin="0.5,0.5" />
     </ItemContainer>
     <Pump canbeselected="false" maxflow="0" powerconsumption="0" ison="false" />
     <Controller canbeselected="false" istoggle="true" state="false" output="" falseoutput="" hidehud="true" />

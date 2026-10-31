@@ -13,6 +13,7 @@ function M.install(G,E)
         local ring=Core.ring(muzzle,direction,s.item.Quality)
         G.nextRingID=(G.nextRingID%65534)+1
         ring.id=G.nextRingID;ring.owner=ctx.owner;ring.weapon=s.item
+        ring.autonomous=ctx.bot or false
         G.rings[#G.rings+1]=ring
         if s.item.body and s.item.body.Enabled then
             s.item.body.ApplyLinearImpulse(E.Vector2(-direction.x,-direction.y)*s.item.body.Mass*C.recoilVelocity,4)
@@ -26,7 +27,7 @@ function M.install(G,E)
     function G.updateRings(dt)
         for i=#G.rings,1,-1 do
             local ring=G.rings[i]
-            if ring.weapon.Removed or not G.flags(ring.weapon).damage then ring.alive=false end
+            if ring.weapon.Removed or (not ring.autonomous and not G.flags(ring.weapon).damage) then ring.alive=false end
             Core.advanceRing(ring,dt,function(a,b,r)
                 -- Native Character.AddDamage enforces the match's friendly-fire
                 -- setting. Do not make allied crew immune at the ray-cast layer.

@@ -38,7 +38,7 @@ function Module.new(E)
         return true
     end
     function G.shieldDebit(item,cost)
-        local source=G.source(item,1)
+        local source=G.source(item,0)
         local blocked,broken=Core.shieldHit(source,cost)
         if source then source.item.Condition=source.condition*source.item.MaxCondition/100 end
         return blocked,broken
@@ -63,6 +63,7 @@ function Module.new(E)
                 U.each(owner.SelectedItem.Repairables,function(r) if r.CurrentFixer==owner then ctx.repairing=true end end)
             end
             ctx.task=ctx.bot and AI.task(owner,item) or nil
+            if ctx.bot then ctx.damage=AI.combatAllowed(owner,item) end
         end
         ctx.mode=Core.mode(ctx)
         return ctx
@@ -75,7 +76,7 @@ function Module.new(E)
         end
         if s.damage and not ctx.damage then
             s.chargeStarted=nil;s.shield=nil
-            if G.cancelRings then G.cancelRings(s.item) end
+            if G.cancelRings and not ctx.bot then G.cancelRings(s.item) end
         end
         s.owner,s.damage=ctx.owner,ctx.damage
         if not passive then s.mode=ctx.mode end
@@ -139,6 +140,7 @@ function Module.new(E)
     function G.cleanup()
         G.states={}
         AI.executing={}
+        AI.activeCombat={}
         if G.clearProjectiles then G.clearProjectiles() end
         if G.clearShieldTracking then G.clearShieldTracking() end
         if G.clearVisuals then G.clearVisuals() end

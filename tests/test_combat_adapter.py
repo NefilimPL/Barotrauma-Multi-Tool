@@ -2,6 +2,32 @@ from lua_support import LuaCase
 
 
 class CombatAdapterTests(LuaCase):
+    def test_shield_and_shot_spend_the_same_physical_source(self):
+        self.lua.execute('insert(0,20,false);insert(1,60,true);G.spend(gun,0,1);G.shieldDebit(gun,4)')
+        self.assertEqual(self.lua.eval('gun.OwnInventory.GetItemAt(0).Condition'),15)
+        self.assertEqual(self.lua.eval('gun.OwnInventory.GetItemAt(1).Condition'),60)
+
+    def test_bot_combat_permission_is_automatic_but_player_checkbox_is_preserved(self):
+        self.lua.execute('''
+            G=require('CombatTool.game').new({InvSlotType={RightHand=1,LeftHand=2},InputType={Aim=1}})
+            local damage={Name='LightComponent',IsOn=false}
+            gun.Components={damage}
+            local combat={Identifier={Value='combat'},Weapon=gun,Enemy={}}
+            bot={IsBot=true,Inventory={GetItemInLimbSlot=function() return gun end},
+                IsKeyDown=function() return true end,AIController={ObjectiveManager={CurrentObjective=combat}}}
+            local ctx=G.context(gun,bot)
+            assert(ctx.damage and ctx.mode=='combat','bot still requires the player checkbox')
+            assert(not damage.IsOn,'bot changed the saved player preference')
+            AI.activeCombat[bot]=combat
+            bot.AIController.ObjectiveManager.CurrentObjective={Identifier={Value='fix leak'}}
+            ctx=G.context(gun,bot)
+            assert(ctx.damage and ctx.mode=='weld','concurrent threat must not turn welding into firing')
+            combat.IsCompleted=true
+            assert(not G.context(gun,bot).damage,'completed combat still authorized shield')
+            bot.IsBot=false
+            assert(not G.context(gun,bot).damage,'player bypassed damage checkbox')
+        ''')
+
     def setUp(self):
         super().setUp()
         self.lua.execute('''

@@ -19,7 +19,7 @@ class CombatDiagnosticTests(LuaCase):
             G.disposeDiagnostics()
         ''')
         self.assertEqual(self.lua.globals().commandName,'aegis_status')
-        self.assertIn('batterycell allowed=true/false',self.lua.globals().output)
+        self.assertIn('batterycell allowed=true',self.lua.globals().output)
         self.assertIn('mode=combat',self.lua.globals().output)
         self.assertIn('slot1=fuelrod:50',self.lua.globals().output)
         self.assertEqual(self.lua.globals().removed,'aegis_status')

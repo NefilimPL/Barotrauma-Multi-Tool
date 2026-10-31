@@ -1,6 +1,16 @@
 local U=require('CombatTool.util')
 local C=require('CombatTool.config')
-local A={executing={}}
+local A={executing={},activeCombat={}}
+function A.combatAllowed(character,item)
+    if A.task(character,item)=='combat' then return true end
+    local active=A.activeCombat[character]
+    return active~=nil and active.Weapon==item and not active.IsCompleted and not active.Abandon
+        and active.Enemy~=nil and not active.Enemy.Removed and not active.Enemy.IsDead
+end
+function A.hasThreat(character)
+    local o=A.activeCombat[character]
+    return o and not o.IsCompleted and not o.Abandon and o.Enemy and not o.Enemy.Removed and not o.Enemy.IsDead
+end
 -- Follow only the selected chain. Queued orders never authorize an action.
 function A.task(character,item)
     local scoped=A.executing[character]
@@ -13,7 +23,7 @@ function A.task(character,item)
         depth=depth+1
         local id=U.id(node)
         if id=='combat' then
-            if node.Weapon~=item or not node.Enemy then return 'idle' end
+            if node.Weapon~=item or not node.Enemy or node.Enemy.Removed or node.Enemy.IsDead then return 'idle' end
             task='combat'
         elseif id=='fix leak' then task='weld'
         elseif id=='repair item' then task='repair'
@@ -69,6 +79,7 @@ function A.install(G,E)
         s.nextResupply=0
     end
     function A.resupply(character,item,slot,parent,minimum)
+        if slot~=0 then return false end
         if not character or not character.IsBot or G.canSpend(item,slot,minimum or 0.000001) or not parent then return false end
         local s=G.state(item)
         local manager=character.AIController.ObjectiveManager
@@ -162,7 +173,13 @@ function A.install(G,E)
     end)
     G.patch('ai-priority','Barotrauma.AIObjectiveCombat','GetWeaponPriority',function(o,p)
         local component=p['weapon']
-        if component and G.isWeapon(component.Item) and not G.flags(component.Item).damage then
+        if not component or not G.isWeapon(component.Item) then return end
+        if o.character.IsBot then
+            -- Evaluating a weapon happens inside the real combat action, not
+            -- just because a fight order is queued. Keep that objective for
+            -- concurrent self-defense while a repair order remains selected.
+            A.activeCombat[o.character]=o
+        elseif not G.flags(component.Item).damage then
             p.PreventExecution=true
             return 0
         end
@@ -170,7 +187,10 @@ function A.install(G,E)
     -- Concurrent combat can execute while a repair order remains selected.
     -- Scope permission to the actual weapon operation, never just the order queue.
     G.patch('ai-combat-enter','Barotrauma.AIObjectiveCombat','UseWeapon',function(o,p)
-        if G.isWeapon(o.Weapon) then A.executing[o.character]={item=o.Weapon,task='combat'} end
+        if G.isWeapon(o.Weapon) then
+            A.activeCombat[o.character]=o
+            A.executing[o.character]={item=o.Weapon,task='combat'}
+        end
     end)
     G.patch('ai-combat-leave','Barotrauma.AIObjectiveCombat','UseWeapon',function(o,p)
         A.executing[o.character]=nil
@@ -181,9 +201,8 @@ function A.install(G,E)
         local parent=manager.CurrentObjective
         if s.resupply and not s.resupply.IsCompleted and
             ((s.resupplyDeadline and G.now>s.resupplyDeadline) or s.resupplyRoot~=parent) then cancelResupply(s) end
-        if not G.canSpend(s.item,0,C.toolCost/60) then A.resupply(ctx.owner,s.item,0,parent,C.toolCost/60)
-        elseif ctx.mode~='combat' and ctx.mode=='idle' and ctx.damage then
-            A.resupply(ctx.owner,s.item,1,parent)
+        local minimum=A.hasThreat(ctx.owner) and C.shotCost or C.toolCost/60
+        if not G.canSpend(s.item,0,minimum) then A.resupply(ctx.owner,s.item,0,parent,minimum)
         end
     end
 end

@@ -19,15 +19,16 @@ Starszy multitool nadal ma własną, dotychczasową definicję XML.
 ## Obsługa Aegis
 
 Broń zajmuje dwie ręce po wyposażeniu i jeden zwykły slot po schowaniu.
-**Slot 1** zasila broń, narzędzia i latarkę; **slot 2** zasila tarczę.
-Oba przyjmują baterie i pręty paliwowe. Każdy system zużywa wyłącznie własne
-źródło. Pusty slot tarczy nie uniemożliwia strzelania.
+Jeden wspólny slot zasila broń, tarczę, narzędzia i latarkę. Przyjmuje ogniwo
+baterii lub pręt paliwowy. Koszty wszystkich funkcji odejmowane są od tego
+samego źródła; jego wyczerpanie zatrzymuje strzelanie, tarczę i narzędzia.
 
 Pozostają trzy checkboxy:
 
 - **Włącz zadawanie obrażeń NPC:** pozwala strzelać pierścieniami i aktywować
   tarczę przy celowaniu. Wyłączenie anuluje ładowanie, wygasza tarczę i własne
-  pierścienie w locie.
+  pierścienie gracza w locie. Bot sam ocenia zgodę na walkę według rzeczywistego
+  zadania; nie nadpisuje ręcznego ustawienia gracza.
 - **Włącz tryb gaśnicy:** u gracza ma pierwszeństwo przed strzelaniem.
 - **Włącz tryb przecinarki:** po wyłączeniu obrażeń przełącza spawarkę na cięcie.
 
@@ -56,14 +57,15 @@ i wybuch obok postaci nie są blokowane.
 Bot wybiera funkcję według faktycznie wykonywanego zadania. Do walki używa
 pierścieni, do wycieków spawarki, do napraw urządzeń standardowego narzędzia,
 a do pożarów gaśnicy. Techniczne checkboxy nie ograniczają doboru funkcji
-przez AI, a ich zapisane ustawienia nie są nadpisywane. Zgoda na obrażenia
-pozostaje nadrzędna: bot sam jej nie włączy i przy wyłączonej zgodzie wybierze
-inną dostępną broń.
+przez AI, a ich zapisane ustawienia nie są nadpisywane. Bot samodzielnie
+zezwala na użycie bojowe przy faktycznym zadaniu walki/samoobrony, również
+przy wyłączonym ręcznym checkboxie gracza. Samo zlecenie oczekujące w kolejce
+nie uruchamia strzelania. W pracy technicznej nadal wykonuje jedną funkcję.
 
-Uzupełnianie ma stałe indeksy slotów, korzysta z natywnych zadań podnoszenia
-i wkładania przedmiotów oraz zachowuje normalne wymagania dostępu i dojścia.
-Slot broni ma pierwszeństwo. Uzupełnienie tarczy może poczekać do bezpiecznej
-przerwy; bot nie musi opuszczać walki wyłącznie z powodu pustej tarczy.
+Uzupełnianie wspólnego slotu korzysta z natywnych zadań podnoszenia i wkładania
+przedmiotów oraz zachowuje wymagania dostępu i dojścia. W walce bot wymienia
+również źródło, w którym pozostała energia niewystarczająca na pełny strzał.
+Przy aktualizacji z wersji dwuslotowej wyjmij oba źródła przed podmianą moda.
 
 ## Wytwarzanie
 
@@ -90,6 +92,11 @@ Wszystkie koszty, obrażenia, czasy i limity są w
 lub użyj konsolowego `reloadlua` na serwerze i klientach.
 
 ## Sprawdzenia
+
+Wersja 1.1.4 wprowadza jeden wspólny slot zasilania i automatyczną zgodę
+na walkę dla botów. Dźwięk wystrzału korzysta z natywnego nagrania broni
+elektromagnetycznej z cichą, krótką warstwą wyładowania. Usunięto tonalne
+przemiatanie z generowanych efektów i skrócono odbicia oraz ładowanie.
 
 Wersja 1.1.3 dodaje oryginalne przestrzenne efekty audio, osobne dla wystrzału,
 NPC, powierzchni i odbić, oraz krótki sygnał ładowania. Pierścień pulsuje,

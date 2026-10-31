@@ -28,11 +28,11 @@ function M.install(G,E)
         return blocked
     end
     function G.updateShield(s,ctx,dt)
-        if not ctx.valid or not ctx.aim or not ctx.damage or G.now<s.brokenUntil or not G.powered(s.item,1) then
+        if not ctx.valid or not ctx.aim or not ctx.damage or G.now<s.brokenUntil or not G.powered(s.item,0) then
             s.shield=nil;return
         end
-        if not G.spend(s.item,1,C.shieldIdleCost*dt) then
-            local source=G.source(s.item,1)
+        if not G.spend(s.item,0,C.shieldIdleCost*dt) then
+            local source=G.source(s.item,0)
             if source then source.item.Condition=0 end
             s.brokenUntil=G.now+C.shieldCooldown
             G.event('break',s,{x=s.item.WorldPosition.X,y=s.item.WorldPosition.Y})

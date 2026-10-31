@@ -6,6 +6,12 @@ ROOT=Path(__file__).resolve().parents[1]
 
 
 class CombatContentTests(unittest.TestCase):
+    def test_one_shared_power_slot(self):
+        item=ET.parse(ROOT/'MULTI-TOOL-V2/combat_tool.xml').getroot().find('Item')
+        container=item.find('ItemContainer')
+        self.assertEqual(container.get('capacity'),'1')
+        self.assertEqual(len(container.findall('SlotIcon')),1)
+
     def test_weapon_rig_matches_lower_grips_and_inset_lamp(self):
         item=ET.parse(ROOT/'MULTI-TOOL-V2/combat_tool.xml').getroot().find('Item')
         self.assertLess(float(item.get('scale')),.075)

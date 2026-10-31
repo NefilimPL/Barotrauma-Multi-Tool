@@ -89,7 +89,7 @@ function N.install(G,E)
         for _,s in ipairs(shields) do
             message.WriteUInt16(s.item.ID)
             message.WriteSingle(s.shield.x);message.WriteSingle(s.shield.y);message.WriteSingle(s.shield.angle)
-            message.WriteSingle(G.source(s.item,1).condition)
+            message.WriteSingle(G.source(s.item,0).condition)
         end
         message.WriteUInt16(#G.rings)
         for _,r in ipairs(G.rings) do

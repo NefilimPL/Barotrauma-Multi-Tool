@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <infotexts language="English" nowhitespace="false" translatedname="English">
   <entityname.combatmultitool>Aegis combat multitool</entityname.combatmultitool>
-  <entitydescription.combatmultitool>Two-handed ricocheting energy-ring emitter and shield. Requires Lua for Barotrauma. Slot 1 powers weapons, light and tools; slot 2 powers the shield. Quality grants 1/2/3/4 bounces. Disable NPC damage to weld/cut. Extinguisher takes priority over firing. Bots select one function for their current task and always respect damage permission.</entitydescription.combatmultitool>
-  <label.combatpowerslots>1: Weapon / tools   2: Shield</label.combatpowerslots>
+  <entitydescription.combatmultitool>Two-handed ricocheting energy-ring emitter and shield. Requires Lua for Barotrauma. One cell or fuel rod powers weapons, shield, light and tools. Quality grants 1/2/3/4 bounces. Players disable NPC damage to weld/cut. Extinguisher takes priority over firing. Bots automatically select combat or one technical function for their actual task.</entitydescription.combatmultitool>
+  <label.combatpowerslots>Shared power: weapon / shield / tools</label.combatpowerslots>
   <entityname.Multi-toolSET>Composite multi-tool</entityname.Multi-toolSET>
   <entitydescription.Multi-toolSET>A composite tool; toggle welder/cutter, shine a built-in flashlight beam, enable extinguisher mode, and use a shared oxygen tank.</entitydescription.Multi-toolSET>
   <label.changetool>Enable cutter mode</label.changetool>

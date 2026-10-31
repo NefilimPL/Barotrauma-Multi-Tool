@@ -1,5 +1,12 @@
 # Dwuręczny multitool bojowy — projekt
 
+Aktualizacja użytkownika 2026-10-31, wersja 1.1.4: jeden wspólny slot
+zasila broń, tarczę, latarkę i narzędzia. Bot samodzielnie dopuszcza użycie
+bojowe przy rzeczywistym zadaniu walki/samoobrony, bez wymogu ręcznego
+checkboxa i bez zmiany zapisanych preferencji gracza. Dla gracza checkbox
+nadal jest blokadą strzelania i tarczy. Te ustalenia zastępują pierwotne
+wymagania dwóch slotów i nadrzędności checkboxa wobec botów opisane dalej.
+
 Data: 2026-10-30. Status: zatwierdzony poleceniem „działaj”; zaimplementowany w wersji 1.1.0. Zakres wykonanych testów: `docs/COMBAT-VERIFICATION.md`.
 
 ## Cel i uzgodnienia

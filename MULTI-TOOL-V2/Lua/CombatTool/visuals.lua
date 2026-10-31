@@ -148,7 +148,7 @@ function M.install(G,E,root)
             for _,state in pairs(G.states) do
                 if state.shield then
                     local s=state.shield
-                    local source=G.source(state.item,1)
+                    local source=G.source(state.item,0)
                     s.energy=source and source.condition or 0
                     shields[#shields+1]=s
                 end

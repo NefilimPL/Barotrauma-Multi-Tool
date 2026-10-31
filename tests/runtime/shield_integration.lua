@@ -31,7 +31,7 @@ local attacker=human(-200,CharacterTeamType.Team2)
 local protected=human(300,CharacterTeamType.Team1)
 local gun=track(Item(ItemPrefab.Prefabs['combatmultitool'],protected.WorldPosition,nil))
 local battery=track(Item(ItemPrefab.Prefabs['batterycell'],protected.WorldPosition,nil))
-assert(gun.OwnInventory.TryPutItem(battery,1,false,false,protected))
+assert(gun.OwnInventory.TryPutItem(battery,0,false,false,protected))
 local state=G.state(gun);state.owner=protected
 local function shield()
     battery.Condition=100

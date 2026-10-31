@@ -14,7 +14,7 @@ function M.install(G,E)
                     ..' aim='..tostring(ctx.aim)..' damage='..tostring(ctx.damage)..' bot='..tostring(ctx.bot)
                     ..' shield='..tostring(s.shield~=nil))
                 local slots={}
-                for slot=0,1 do
+                for slot=0,0 do
                     local source=G.source(item,slot)
                     slots[#slots+1]='slot'..(slot+1)..'='..(source and
                         U.itemId(source.item)..':'..string.format('%.2f',source.condition) or 'empty/unsupported')
@@ -23,8 +23,7 @@ function M.install(G,E)
                 local container=U.component(item,'ItemContainer')
                 local cell=E.ItemPrefab.Prefabs['batterycell']
                 if container and cell then
-                    E.print('[Aegis] batterycell allowed='..tostring(container.CanBeContained(cell,0))
-                        ..'/'..tostring(container.CanBeContained(cell,1)))
+                    E.print('[Aegis] batterycell allowed='..tostring(container.CanBeContained(cell,0)))
                 end
             end
         end

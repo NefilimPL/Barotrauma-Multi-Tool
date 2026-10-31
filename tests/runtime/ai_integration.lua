@@ -25,7 +25,7 @@ bot.TeamID=CharacterTeamType.Team1;bot.GodMode=true
 bot.Enabled=true
 local gun=Item(ItemPrefab.Prefabs['combatmultitool'],bot.WorldPosition,nil)
 assert(bot.Inventory.TryPutItem(gun,bot,{InvSlotType.RightHand+InvSlotType.LeftHand}))
-for slot=0,1 do
+for slot=0,0 do
     local source=Item(ItemPrefab.Prefabs['batterycell'],bot.WorldPosition,nil)
     assert(gun.OwnInventory.TryPutItem(source,slot,false,false,bot))
 end
@@ -74,12 +74,13 @@ Timer.Wait(function()
     Timer.Wait(function()
         report('native combat AI fires charged rings',counts.shot>0,'shots='..counts.shot..', attempts='..rangedAttempts..', weapon='..tostring(combatOrder.Weapon)..', child='..tostring(combatOrder.CurrentSubObjective)..', task='..tostring(manager.CurrentObjective)..', mode='..G.context(gun).mode..', valid='..tostring(G.context(gun).valid)..', aim='..tostring(G.context(gun).aim)..', damage='..tostring(G.context(gun).damage)..', enemyDown='..tostring(target.IsUnconscious)..', speed='..bot.AIController.AimSpeed)
         report('combat AI does not also weld',technicalDuringCombat==0,'technical calls while combat task selected='..technicalDuringCombat)
-        U.component(gun,'LightComponent').IsOn=false
+        manager.ClearForcedOrder()
+        target.Remove()
         local before=counts.shot
         Timer.Wait(function()
-            report('damage checkbox stops autonomous fire and shield',counts.shot==before and not G.state(gun).shield)
+            report('removing actual threat stops autonomous fire and shield',counts.shot==before and not G.state(gun).shield)
             manager.ClearForcedOrder()
-            target.Remove();gap.Remove()
+            gap.Remove()
             G.fire,G.use=originalFire,originalUse
         end,2000)
     end,6000)
