@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Sounds>
+  <aegis_headset_high identifier="aegis_headset_high" file="%ModDir%/Assets/Headsets/Audio/shield-high.ogg" range="800" volume="0.7" />
+  <aegis_headset_low identifier="aegis_headset_low" file="%ModDir%/Assets/Headsets/Audio/shield-low.ogg" range="800" volume="0.7" />
+  <aegis_headset_critical identifier="aegis_headset_critical" file="%ModDir%/Assets/Headsets/Audio/shield-critical.ogg" range="800" volume="0.8" />
+  <aegis_headset_empty identifier="aegis_headset_empty" file="%ModDir%/Assets/Headsets/Audio/shield-empty.ogg" range="800" volume="0.8" />
+</Sounds>

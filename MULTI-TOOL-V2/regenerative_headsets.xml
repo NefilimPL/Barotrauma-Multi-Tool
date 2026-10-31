@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Items>
+  <Item identifier="aegisheadset" name="Aegis regenerative headset" category="Equipment" tags="smallitem,mobileradio,aegisheadset" scale="0.035" maxstacksize="1" cargocontaineridentifier="metalcrate" impactsoundtag="impact_metal_light">
+    <Price baseprice="3500" sold="false" />
+    <Fabricate suitablefabricators="fabricator,milfabricator" requiredtime="30">
+      <RequiredSkill identifier="electrical" level="45" />
+      <RequiredItem identifier="headset" /><RequiredItem identifier="fpgacircuit" />
+      <RequiredItem identifier="fulgurium" /><RequiredItem identifier="copper" amount="2" />
+      <RequiredItem identifier="titaniumaluminiumalloy" />
+    </Fabricate>
+    <Deconstruct time="15"><Item identifier="copper" /><Item identifier="silicon" /><Item identifier="titaniumaluminiumalloy" /></Deconstruct>
+    <InventoryIcon texture="%ModDir%/Assets/Headsets/headset.png" sourcerect="0,0,1254,1254" origin="0.5,0.5" compress="false" />
+    <Sprite texture="%ModDir%/Assets/Headsets/headset.png" sourcerect="0,0,1254,1254" origin="0.5,0.5" depth="0.6" compress="false" />
+    <Body radius="300" height="300" density="15" />
+    <WifiComponent range="35000.0" LinkToChat="true" MinChatMessageInterval="0.0">
+      <StatusEffect type="OnActive" targettype="This">
+        <Conditional JamTimer="gt 0" targetitemcomponent="WifiComponent" />
+        <sound file="Content/Sounds/RadioStatic.ogg" range="500.0" frequencymultiplier="0.7" loop="true" volume="0.5" />
+      </StatusEffect>
+    </WifiComponent>
+    <Wearable limbtype="Head" slots="Any,Headset" msg="ItemMsgPickUpSelect" displaycontainedstatus="true">
+      <sprite texture="%ModDir%/Assets/Headsets/headset.png" sourcerect="0,0,1254,1254" limb="Head" depth="0.1" hidelimb="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" scale="0.7" hideotherwearables="false" origin="0.34,0.61" compress="false" />
+    </Wearable>
+    <ItemContainer capacity="1" maxstacksize="1" hideitems="false" keepopenwhenequipped="true">
+      <Containable items="mobilebattery" hide="true" containedstateindicatorstyle="battery" />
+      <SlotIcon slotindex="0" texture="Content/UI/StatusMonitorUI.png" sourcerect="128,448,64,64" origin="0.5,0.5" />
+    </ItemContainer>
+  </Item>
+  <Item identifier="aegisheadsetmk2" name="Aegis shield headset Mk II" category="Equipment" tags="smallitem,mobileradio,aegisheadset" scale="0.035" maxstacksize="1" cargocontaineridentifier="metalcrate" impactsoundtag="impact_metal_light">
+    <Price baseprice="7000" sold="false" />
+    <Fabricate suitablefabricators="fabricator,milfabricator" requiredtime="45">
+      <RequiredSkill identifier="electrical" level="65" />
+      <RequiredItem identifier="aegisheadset" /><RequiredItem identifier="fpgacircuit" />
+      <RequiredItem identifier="fulgurium" amount="2" /><RequiredItem identifier="titaniumaluminiumalloy" amount="2" />
+    </Fabricate>
+    <Deconstruct time="20"><Item identifier="copper" /><Item identifier="fulgurium" /><Item identifier="titaniumaluminiumalloy" /></Deconstruct>
+    <InventoryIcon texture="%ModDir%/Assets/Headsets/headset-mk2.png" sourcerect="0,0,1254,1254" origin="0.5,0.5" compress="false" />
+    <Sprite texture="%ModDir%/Assets/Headsets/headset-mk2.png" sourcerect="0,0,1254,1254" origin="0.5,0.5" depth="0.6" compress="false" />
+    <Body radius="300" height="300" density="15" />
+    <WifiComponent range="35000.0" LinkToChat="true" MinChatMessageInterval="0.0">
+      <StatusEffect type="OnActive" targettype="This">
+        <Conditional JamTimer="gt 0" targetitemcomponent="WifiComponent" />
+        <sound file="Content/Sounds/RadioStatic.ogg" range="500.0" frequencymultiplier="0.7" loop="true" volume="0.5" />
+      </StatusEffect>
+    </WifiComponent>
+    <Wearable limbtype="Head" slots="Any,Headset" msg="ItemMsgPickUpSelect" displaycontainedstatus="true">
+      <sprite texture="%ModDir%/Assets/Headsets/headset-mk2.png" sourcerect="0,0,1254,1254" limb="Head" depth="0.1" hidelimb="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" scale="0.7" hideotherwearables="false" origin="0.34,0.61" compress="false" />
+    </Wearable>
+    <ItemContainer capacity="1" maxstacksize="1" hideitems="false" keepopenwhenequipped="true">
+      <Containable items="mobilebattery" hide="true" containedstateindicatorstyle="battery" />
+      <SlotIcon slotindex="0" texture="Content/UI/StatusMonitorUI.png" sourcerect="128,448,64,64" origin="0.5,0.5" />
+    </ItemContainer>
+  </Item>
+</Items>

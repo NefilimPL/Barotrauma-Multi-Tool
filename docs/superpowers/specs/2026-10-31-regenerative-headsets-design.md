@@ -1,7 +1,10 @@
 # Komunikatory regeneracyjne Aegis — projekt do zatwierdzenia
 
-Data: 2026-10-31. Status: projekt po niezależnym przeglądzie, do zatwierdzenia,
-bez implementacji. Przegląd wykonawczy: brak istotnych pytań otwartych.
+Data: 2026-10-31. Status: zatwierdzony przez użytkownika („działaj”).
+Przegląd wykonawczy: brak istotnych pytań otwartych.
+Uzupełnienie użytkownika: wszystkie mody medyczne są opcjonalne; dążyć do
+obsługi dowolnych obecnych i przyszłych modów przez wykrywanie efektów
+i rozszerzalne integracje, bez wymagania Neurotraumy do działania urządzeń.
 
 ## Cel i ustalenia użytkownika
 

@@ -1,6 +1,13 @@
 # Barotrauma-Multi-Tool
 
-Mod Barotrauma z kompozytowym multitool'em oraz dwuręcznym **bojowym multitool'em Aegis**.
+Mod Barotrauma z kompozytowym multitool'em, dwuręcznym **bojowym multitool'em Aegis**
+oraz **dwoma komunikatorami regeneracyjnymi Aegis**.
+
+Wersja **1.2.0**: komunikatory zajmują slot słuchawek, mieszczą baterię,
+chronią przed ciśnieniem i stopniowo regenerują zdrowie. Mk II dodatkowo
+pochłania trafienia. **Neurotrauma i inne mody medyczne są opcjonalne.**
+[Instrukcja komunikatorów](docs/HEADSETS.md) ·
+[Grafiki, migotanie i odsłuch](docs/headsets/preview.html)
 
 Wersja Aegis wymaga [Lua for Barotrauma / LuaCs](https://github.com/evilfactory/LuaCsForBarotrauma)
 na kliencie i serwerze. Punktem zgodności jest Barotrauma **1.13.5.0**;
