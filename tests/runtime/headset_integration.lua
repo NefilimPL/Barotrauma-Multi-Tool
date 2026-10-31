@@ -34,10 +34,10 @@ check('native full attack blocked before health damage',function()
     local before=character.Vitality
     character.AddDamage(position,{AfflictionPrefab.Prefabs['burn'].Instantiate(100)},0,false,Vector2.Zero,nil,1)
     assert(not character.IsDead and character.Vitality==before,'attack reached wearer')
-    assert(math.abs(G.energy(item)-50)<.01,'attack not charged exactly once')
+    assert(math.abs(G.energy(item)-87.5)<.01,'attack not charged exactly once')
 end)
 check('native partial battery passes remaining attack damage',function()
-    character.CharacterHealth.SetAllDamage(0,0,0);cell.Condition=5
+    character.CharacterHealth.SetAllDamage(0,0,0);cell.Condition=1.25
     local before=character.Vitality
     character.AddDamage(position,{AfflictionPrefab.Prefabs['burn'].Instantiate(20)},0,false,Vector2.Zero,nil,1)
     assert(cell.Condition==0 and character.Vitality<before)
@@ -73,7 +73,7 @@ check('native pressure consumes at configured rate outside hull',function()
     character.TeleportTo(Vector2(position.X+10000,position.Y))
     assert(character.AnimController.CurrentHull==nil)
     assert(G.pressure(character,1,false))
-    assert(math.abs(G.energy(item)-95)<.01)
+    assert(math.abs(G.energy(item)-97.5)<.01)
 end)
 -- A server with no clients disables distant NPCs. Explicitly run the native
 -- Update method so this tests pressure simulation, not NPC culling.
@@ -82,7 +82,7 @@ check('native update protects exposed wearer before implosion',function()
     LuaUserData.RegisterType('Barotrauma.GameMain')
     local main=LuaUserData.CreateStatic('Barotrauma.GameMain')
     for i=1,30 do character.Enabled=true;character.Update(.1,main.GameScreen.Cam) end
-    assert(not character.IsDead and G.energy(item)<90 and character.PressureTimer<1,
+    assert(not character.IsDead and G.energy(item)<95 and character.PressureTimer<1,
         'dead='..tostring(character.IsDead)..' energy='..G.energy(item)..' pressure='..character.PressureTimer)
 end)
 item.Drop(character)

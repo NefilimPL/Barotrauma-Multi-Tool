@@ -4,7 +4,7 @@ local M={}
 function M.candidate(E,character,item,current,failed,now)
     local best,score=nil,math.huge
     U.each(E.Item.ItemList,function(cell)
-        if cell.Removed or cell==item or not cell.HasTag('mobilebattery') or cell.MaxCondition<=0 then return end
+        if cell.Removed or cell.Illegitimate or cell==item or not cell.HasTag('mobilebattery') or cell.MaxCondition<=0 then return end
         if failed and (failed[cell] or 0)>(now or 0) then return end
         local charge=cell.Condition/cell.MaxCondition*100
         if charge<=math.max(C.botThreshold,current+1) or not cell.HasAccess(character) then return end
@@ -53,33 +53,28 @@ function M.update(G,E,character,item)
         end
         M.cancel(s)
     end
-    if not parent or s.resupply or G.now<(s.nextResupply or 0) or G.energy(item)>=C.botThreshold then return end
+    if s.resupply or G.now<(s.nextResupply or 0) or G.energy(item)>=C.botThreshold then return end
     s.nextResupply=G.now+C.resupplyInterval
     local cell=M.candidate(E,character,item,G.energy(item),s.failedCells,G.now)
     if not cell then return end
-    -- Fetch before touching a still functioning battery. A distant supply is
-    -- never permission to leave the bot unprotected during the journey.
-    if not character.CanInteractWith(cell) then
-        local fetch=E.AIObjectiveGetItem(character,cell,manager,false)
-        fetch.AllowStealing=false
-        parent.AddSubObjective(fetch,true)
-        s.resupply=fetch;s.resupplyRoot=parent;s.deadline=G.now+C.resupplyTimeout
-        s.resupplyCell=cell
+    if character.CanInteractWith(cell) then
+        -- Native swapping is atomic: failure leaves the old cell in place.
+        -- Pick up a floor spare first so the old cell has a destination.
+        if not cell.ParentInventory then
+            if not character.Inventory.TryPutItem(cell,character,{E.InvSlotType.Any}) then return end
+        end
+        if item.OwnInventory.TryPutItem(cell,0,true,false,character) then
+            s.resupplyCell=nil
+        end
         return
     end
-    local container=U.component(item,'ItemContainer')
-    if not container then return end
-    local objective=E.AIObjectiveContainItem(character,cell,container,manager,1)
-    objective.TargetSlot=0;objective.ItemCount=1;objective.RemoveEmpty=false
-    objective.MoveWholeStack=false;objective.AllowStealing=false
-    local previous=G.source(item)
-    if previous and not character.Inventory.TryPutItem(previous,character,{E.InvSlotType.Any}) then previous.Drop(character) end
-    local deadline=G.now+C.resupplyTimeout
-    objective.AbortCondition=function()
-        return item.Removed or cell.Removed or character.IsDead or G.equipped(character)~=item or G.now>deadline
-    end
-    parent.AddSubObjective(objective,true)
-    s.resupply=objective;s.resupplyRoot=parent;s.deadline=deadline
+    if not parent then return end
+    -- Fetch before touching a still functioning battery. A distant supply is
+    -- never permission to leave the bot unprotected during the journey.
+    local fetch=E.AIObjectiveGetItem(character,cell,manager,false)
+    fetch.AllowStealing=false
+    parent.AddSubObjective(fetch,true)
+    s.resupply=fetch;s.resupplyRoot=parent;s.deadline=G.now+C.resupplyTimeout
     s.resupplyCell=cell
 end
 return M

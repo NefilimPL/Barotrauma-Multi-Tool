@@ -1,0 +1,61 @@
+-- Disposable singleplayer client only. Run as its last Autorun script.
+if not CLIENT then return end
+File.Write('LocalMods/MULTI-TOOL-V2/headset-client-actual.txt','WAIT round initialization')
+Timer.Wait(function()
+    local results={}
+    local function check(name,fn)
+        local ok,err=pcall(fn)
+        results[#results+1]=(ok and 'PASS ' or 'FAIL ')..name..(ok and '' or ': '..tostring(err))
+        File.Write('LocalMods/MULTI-TOOL-V2/headset-client-actual.txt',table.concat(results,'\n'))
+    end
+    local G=BMTHeadsets
+    local room
+    for h in Hull.HullList do if h.Submarine==Submarine.MainSub then room=h;break end end
+    assert(room,'no singleplayer submarine')
+    local c=Character.Create('human',room.WorldPosition,'headset-client-actual',nil,0,false,true,true,nil,true,false)
+    c.AIController.Enabled=false
+    local item=Item(ItemPrefab.Prefabs['aegisheadsetmk2'],room.WorldPosition,nil)
+    local cell=Item(ItemPrefab.Prefabs['batterycell'],room.WorldPosition,nil)
+    assert(c.Inventory.TryPutItem(item,c,{InvSlotType.Headset}))
+    assert(item.OwnInventory.TryPutItem(cell,0,false,false,c))
+    check('singleplayer full native attack is absorbed',function()
+        assert(G.authoritative and Game.IsSingleplayer)
+        local before=c.Vitality
+        c.AddDamage(c.WorldPosition,{AfflictionPrefab.Prefabs['burn'].Instantiate(20)},0,false,Vector2.Zero,nil,1)
+        assert(math.abs(c.Vitality-before)<.001,'damage passed through')
+        assert(math.abs(G.energy(item)-97.5)<.001,'wrong impact cost')
+    end)
+    check('singleplayer actual regeneration consumes reduced energy',function()
+        c.CharacterHealth.ApplyAffliction(c.AnimController.MainLimb,AfflictionPrefab.Prefabs['burn'].Instantiate(10))
+        local before=G.energy(item)
+        G.heal(c,item,1)
+        assert(G.energy(item)<before and G.energy(item)>=before-.626)
+    end)
+    Timer.Wait(function()
+        check('native worn headset exposes all three LED positions',function()
+            local leds=require('AegisHeadset.leds').positions(_G,c,item)
+            assert(#leds==3,'no LED geometry on actual worn headset')
+        end)
+        check('native GPU draws actual worn red and blue LEDs',function()
+            LuaUserData.RegisterType('Barotrauma.GameMain')
+            LuaUserData.RegisterType('Microsoft.Xna.Framework.Graphics.GraphicsDevice')
+            local gm=LuaUserData.CreateStatic('Barotrauma.GameMain')
+            local SB=LuaUserData.CreateStatic('Microsoft.Xna.Framework.Graphics.SpriteBatch')
+            local Blend=LuaUserData.CreateStatic('Microsoft.Xna.Framework.Graphics.BlendState')
+            local Sort=LuaUserData.CreateEnumTable('Microsoft.Xna.Framework.Graphics.SpriteSortMode')
+            local batch=SB(gm.Instance.GraphicsDevice)
+            for _,kind in ipairs({'hit','heal'}) do
+                G.updateEffects(1)
+                G.now=G.now+1;G.emit(c,item,kind)
+                batch.Begin(Sort.Deferred,Blend.NonPremultiplied)
+                local ok,err=pcall(G.drawEffects,batch,gm.GameScreen.Cam)
+                batch.End()
+                assert(ok,err)
+            end
+            batch.Dispose()
+            assert(not G.visualError,G.visualError)
+        end)
+        c.Remove()
+        dofile('LocalMods/MULTI-TOOL-V2/Lua/Tests/headset_idle.lua')
+    end,1000)
+end,8000)

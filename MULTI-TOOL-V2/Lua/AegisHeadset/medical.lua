@@ -13,7 +13,6 @@ local ntPreserve={luabotomy=true,luabotomypurger=true,stopcreatureabuse=true,tsh
 function M.entries(E,character)
     local health=character.CharacterHealth
     local entries={}
-    -- Look at runtime globals, not package dependencies or load order. Both
     -- Classic NT exposes a Lua namespace; NT CS is recognized by prefab ownership.
     U.each(health.GetAllAfflictions(),function(a)
         local prefab=a.Prefab
@@ -23,6 +22,7 @@ function M.entries(E,character)
         local harmful=false
         if a.GetVitalityDecrease then harmful=a.GetVitalityDecrease(health)>0 end
         local policy=T.classify({id=name,type=id(prefab.AfflictionType),isBuff=prefab.IsBuff,harmful=harmful})
+        if not T.policies[name] and prefab.ActivationThreshold and a.Strength<prefab.ActivationThreshold then policy=nil end
         if nt and not T.policies[name] then
             if ntPreserve[name] then policy=nil end
             if amputations[name] then policy={target=0,anatomy='limb',part=amputations[name]} end

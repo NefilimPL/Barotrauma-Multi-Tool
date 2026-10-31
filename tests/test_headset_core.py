@@ -12,9 +12,9 @@ class HeadsetCoreTests(LuaCase):
         self.assertEqual(self.lua.eval('function() return H.debit(0,5) end')(), (0, 0))
 
     def test_large_hit_requires_more_power_and_partial_hit_survives(self):
-        self.assertEqual(self.lua.eval('function() return H.absorb(5,20) end')(), (0, 10))
-        self.assertEqual(self.lua.eval('function() return H.absorb(50,20) end')(), (40, 0))
-        self.assertEqual(self.lua.eval('function() return H.absorb(10,.1) end')(), (9, 0))
+        self.assertEqual(self.lua.eval('function() return H.absorb(1.25,20) end')(), (0, 10))
+        self.assertEqual(self.lua.eval('function() return H.absorb(50,20) end')(), (47.5, 0))
+        self.assertEqual(self.lua.eval('function() return H.absorb(10,.1) end')(), (9.75, 0))
 
     def test_zero_damage_does_not_spend_power(self):
         self.assertEqual(self.lua.eval('function() return H.absorb(8,0) end')(), (8, 0))

@@ -32,12 +32,12 @@ class HeadsetAdapterTests(LuaCase):
     def test_unknown_disease_heals_with_proportional_energy(self):
         self.lua.execute("a=add('unknownfuture_disease',20,false);G.heal(char,item,1)")
         self.assertEqual(self.lua.eval('a.Strength'), 15)
-        self.assertEqual(self.lua.eval('battery.Condition'), 97.5)
+        self.assertEqual(self.lua.eval('battery.Condition'), 99.375)
 
     def test_healing_records_exact_affliction_behind_power_use(self):
         self.lua.execute("add('burn',20,false);G.heal(char,item,1)")
         self.assertEqual(self.lua.eval('G.state(item).debits[1].reason'), 'heal:burn')
-        self.assertEqual(self.lua.eval('G.state(item).debits[1].amount'), 2.5)
+        self.assertEqual(self.lua.eval('G.state(item).debits[1].amount'), .625)
 
     def test_healthy_wearer_never_emits_a_healing_pulse_or_spends_energy(self):
         self.lua.execute("""
@@ -47,7 +47,7 @@ class HeadsetAdapterTests(LuaCase):
         """)
 
     def test_last_energy_cannot_buy_a_whole_heal(self):
-        self.lua.execute("battery.Condition=.5;a=add('burn',20,false);G.heal(char,item,1)")
+        self.lua.execute("battery.Condition=.125;a=add('burn',20,false);G.heal(char,item,1)")
         self.assertEqual(self.lua.eval('a.Strength'), 19)
         self.assertEqual(self.lua.eval('battery.Condition'), 0)
 
@@ -66,20 +66,20 @@ class HeadsetAdapterTests(LuaCase):
             for i=1,4 do G.heal(char,item,1);assert(a.Strength==100) end
             G.heal(char,item,1);assert(a.Strength==0)
         """)
-        self.assertEqual(self.lua.eval('battery.Condition'), 85)
+        self.assertEqual(self.lua.eval('battery.Condition'), 92.5)
 
     def test_generic_job_provider_supports_future_mod_anatomy(self):
         self.lua.execute("""
             a=add('alien_missing_gland',100,true)
             G.registerTreatment('alien_missing_gland',{anatomy='organ',target=0})
             for i=1,5 do G.heal(char,item,1) end
-            assert(a.Strength==0 and battery.Condition==85)
+            assert(a.Strength==0 and battery.Condition==92.5)
         """)
 
     def test_paid_progress_does_not_transfer_to_another_character(self):
         self.lua.execute("""
             E.NT={};a=add('heartremoved',100,false)
-            battery.Condition=6;G.heal(char,item,2)
+            battery.Condition=3;G.heal(char,item,2)
             battery.Condition=100;other={CharacterHealth=char.CharacterHealth,AnimController=char.AnimController}
             G.heal(other,item,1);assert(a.Strength==100)
         """)
@@ -90,7 +90,7 @@ class HeadsetAdapterTests(LuaCase):
             assert(not G.pressure(char,.1,false));assert(battery.Condition==100)
             char.AnimController.CurrentHull=nil
             assert(not G.pressure(char,.1,true));assert(battery.Condition==100)
-            assert(G.pressure(char,.1,false));assert(battery.Condition==99.5)
+            assert(G.pressure(char,.1,false));assert(battery.Condition==99.75)
         """)
 
     def test_insufficient_pressure_energy_exhausts_without_free_immunity(self):
@@ -107,7 +107,7 @@ class HeadsetAdapterTests(LuaCase):
 
     def test_partial_attack_reenters_native_method_without_raw_scalar_casts(self):
         self.lua.execute("""
-            battery.Condition=5
+            battery.Condition=1.25
             a=add('burn',20,false);a.CreateMultiplied=function(f) return {Strength=20*f,Prefab=a.Prefab} end
             local params={afflictions={a},stun=0,damageMultiplier=1,attackImpulse=0}
             local calls=0
@@ -123,13 +123,13 @@ class HeadsetAdapterTests(LuaCase):
 
     def test_refunded_failed_attack_does_not_report_power_drain_or_shield_flash(self):
         self.lua.execute("""
-            battery.Condition=5
+            battery.Condition=1.25
             a=add('burn',20,false);a.CreateMultiplied=function(f) return {Strength=20*f,Prefab=a.Prefab} end
             char.DamageLimb=function() error('native binding failure') end
             local flashes=0;G.emit=function() flashes=flashes+1 end
             local p={afflictions={a},stun=0,damageMultiplier=1,attackImpulse=0}
             G.intercept(char,p,function() return {} end)
-            assert(battery.Condition==5 and not p.PreventExecution)
+            assert(battery.Condition==1.25 and not p.PreventExecution)
             assert(not G.state(item).debits and flashes==0,'refunded power use is still presented as a real debit')
         """)
 
@@ -138,7 +138,7 @@ class HeadsetAdapterTests(LuaCase):
             E.NT={};a=add('surgeryincision',100,true);b=add('retractedskin',100,true)
             char.CharacterHealth.GetAfflictionLimb=function() return {HealthIndex=3} end
             for i=1,4 do G.heal(char,item,1);assert(a.Strength==100 and b.Strength==100) end
-            G.heal(char,item,1);assert(a.Strength==0 and b.Strength==0 and battery.Condition==85)
+            G.heal(char,item,1);assert(a.Strength==0 and b.Strength==0 and battery.Condition==92.5)
         """)
 
     def test_provider_can_treat_future_mod_health_outside_afflictions(self):
@@ -148,7 +148,7 @@ class HeadsetAdapterTests(LuaCase):
                 return {{id='custom_organ_failure',strength=external,policy={target=0},
                     apply=function(value) external=value end}}
             end)
-            G.heal(char,item,1);assert(external==15 and battery.Condition==97.5)
+            G.heal(char,item,1);assert(external==15 and battery.Condition==99.375)
         """)
 
     def test_optional_nt_protective_and_mechanical_states_are_preserved(self):
@@ -175,14 +175,14 @@ class HeadsetAdapterTests(LuaCase):
     def test_actual_nt_low_blood_pressure_is_still_treated_with_energy(self):
         self.lua.execute("""
             E.NT={};a=add('bloodpressure',60,true);G.heal(char,item,1)
-            assert(a.Strength==65 and battery.Condition==97.5)
+            assert(a.Strength==65 and battery.Condition==99.375)
         """)
 
     def test_neurotrauma_cs_is_detected_without_legacy_lua_globals(self):
         self.lua.execute("""
             a=add('heartremoved',100,false);a.Prefab.ContentPackage={Name='Neurotrauma CS'}
             for i=1,4 do G.heal(char,item,1);assert(a.Strength==100) end
-            G.heal(char,item,1);assert(a.Strength==0 and battery.Condition==85)
+            G.heal(char,item,1);assert(a.Strength==0 and battery.Condition==92.5)
         """)
 
     def test_zero_probability_and_fully_resisted_hits_do_not_charge(self):

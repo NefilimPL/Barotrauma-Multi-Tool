@@ -68,7 +68,7 @@ class HeadsetVisualTests(LuaCase):
 
     def test_indicator_disappears_soon_after_power_event(self):
         self.lua.execute('''
-            G.emit(char,item,'hit');G.updateEffects(.3);G.drawEffects({},cam)
+            G.emit(char,item,'hit');G.updateEffects(.7);G.drawEffects({},cam)
             assert(#lines==0,'the indicator stays lit passively')
         ''')
 

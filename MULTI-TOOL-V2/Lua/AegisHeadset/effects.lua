@@ -11,10 +11,11 @@ function M.install(G,E)
         if kind=='restore' and not G.authoritative and not character.IsDead then Medical.restoreNative(character,joint) end
         local active
         for _,fx in ipairs(effects) do if fx.character==character then active=fx;break end end
-        if active then
-            if kind=='hit' or active.age>.1 then active.kind=kind;active.age=0 end
-            active.tier=tier
-        else effects[#effects+1]={character=character,age=0,tier=tier,kind=kind} end
+        if not active then
+            active={character=character,channels={}}
+            effects[#effects+1]=active
+        end
+        active.channels[kind]={age=0,tier=tier,kind=kind}
         if #effects>C.maxEffects then table.remove(effects,1) end
         local nextSound=soundTimes[character] or 0
         if (kind=='hit' and G.now>=nextSound) or tier==0 then
@@ -41,8 +42,12 @@ function M.install(G,E)
     end
     function G.updateEffects(dt)
         for i=#effects,1,-1 do
-            effects[i].age=effects[i].age+dt
-            if effects[i].age>C.indicatorDuration or effects[i].character.Removed then table.remove(effects,i) end
+            local active=effects[i]
+            for kind,fx in pairs(active.channels) do
+                fx.age=fx.age+dt
+                if fx.age>C.indicatorDuration then active.channels[kind]=nil end
+            end
+            if not next(active.channels) or active.character.Removed then table.remove(effects,i) end
         end
     end
     function G.clearEffects() effects={};soundTimes={} end
@@ -60,13 +65,16 @@ function M.install(G,E)
     E.LuaUserData.RegisterType('Microsoft.Xna.Framework.Graphics.BlendState')
     local blend=E.LuaUserData.CreateStatic('Microsoft.Xna.Framework.Graphics.BlendState')
     function G.drawEffects(batch,cam)
-        for _,fx in ipairs(effects) do
-            local character=fx.character
+        for _,active in ipairs(effects) do
+            local character=active.character
+            local fx=active.channels.hit or active.channels.heal or active.channels.restore or active.channels.pressure
             if not character.IsDead then
                 local item=G.equipped(character)
-                local pulse=.6+.4*math.abs(math.sin(fx.age*70))
+                local pulse=.3+.7*math.abs(math.cos(fx.age*30))
                 if fx.tier<=1 then pulse=pulse*(.3+.7*math.abs(math.sin(fx.age*100))) end
                 local fade=math.max(0,1-fx.age/C.indicatorDuration)*pulse
+                local healing=fx.kind=='heal' or fx.kind=='restore'
+                local r,g,b=healing and 40 or 255,healing and 145 or 25,healing and 255 or 25
                 for _,led in ipairs(item and Leds.positions(E,character,item) or {}) do
                     local radius=(fx.kind=='hit' and 2.4 or 1.8)*led.scale
                     for row=-2,2 do
@@ -74,12 +82,12 @@ function M.install(G,E)
                         local half=math.sqrt(radius*radius-y*y)
                         gui.DrawLine(batch,cam.WorldToScreen(E.Vector2(led.x-half,led.y+y)),
                             cam.WorldToScreen(E.Vector2(led.x+half,led.y+y)),
-                            E.Color(255,15,20,math.floor(36*fade)),0,math.max(1,math.floor(cam.Zoom*.8+.5)))
+                            E.Color(r,g,b,math.floor(70*fade)),0,math.max(1,math.floor(cam.Zoom*led.scale+.5)))
                     end
                     gui.DrawLine(batch,cam.WorldToScreen(E.Vector2(led.x-.45*led.scale,led.y)),
                         cam.WorldToScreen(E.Vector2(led.x+.45*led.scale,led.y)),
-                        E.Color(255,fx.kind=='hit' and 100 or 30,25,math.floor(210*fade)),0,
-                        math.max(1,math.floor(cam.Zoom*led.scale+.5)))
+                        E.Color(r,g,b,math.floor(255*fade)),0,
+                        math.max(2,math.floor(cam.Zoom*led.scale*1.5+.5)))
                 end
             end
         end

@@ -3,8 +3,10 @@
 Mod Barotrauma z kompozytowym multitool'em, dwuręcznym **bojowym multitool'em Aegis**
 oraz **dwoma komunikatorami regeneracyjnymi Aegis**.
 
-Wersja **1.2.2**: małe czerwone diody zamiast obwódki postaci. Normalna
-odporność i fizjologia NT nie uruchamiają leczenia. Komenda
+Wersja **1.2.3**: poprawione pochłanianie obrażeń w grze solo, czerwone błyski
+przy trafieniach i niebieskie podczas leczenia. Wolniejszy pobór energii
+oraz pewniejsza wymiana baterii przez boty. Normalna fizjologia i nieaktywne
+efekty nie uruchamiają leczenia. Komenda
 `aegis_headset_status` pokazuje przyczynę rzeczywistego poboru energii.
 Komunikatory zajmują slot słuchawek, mieszczą baterię,
 chronią przed ciśnieniem i stopniowo regenerują zdrowie. Mk II dodatkowo

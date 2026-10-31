@@ -79,11 +79,25 @@ function M.new(E)
         local actions=T.plan(entries,math.min(C.healRate*dt,G.energy(item)/C.healCost))
         local changed=false
         for _,action in ipairs(actions) do
-            local fraction=G.spend(item,action.amount*C.healCost,'heal:'..action.entry.id)
+            local before=G.energy(item)
+            local left,fraction=Core.debit(before,action.amount*C.healCost)
+            -- Reserve mathematically; commit only the actual cost once.
+            -- A provisional zero followed by a refund would fire OnBroken.
             if fraction>0 then
                 local value=action.entry.strength+(action.value-action.entry.strength)*fraction
-                if action.entry.apply then action.entry.apply(value) else action.entry.ref.Strength=value end
-                changed=true
+                local ok,err=pcall(function()
+                    if action.entry.apply then action.entry.apply(value) else action.entry.ref.Strength=value end
+                end)
+                local actual=action.entry.ref and math.abs(action.entry.ref.Strength-action.entry.strength) or
+                    (ok and action.amount*fraction or 0)
+                local used=math.min(before-left,actual*C.healCost)
+                G.setEnergy(item,before-used)
+                G.recordDebit(item,used,'heal:'..action.entry.id)
+                if used>1e-7 then changed=true end
+                if not ok and not G.healError then
+                    G.healError=tostring(err)
+                    if E.printerror then E.printerror('[Aegis headsets] Treatment failed: '..G.healError) end
+                end
             end
         end
         local jobs=Medical.jobs(character,entries)
@@ -147,7 +161,8 @@ function M.new(E)
         local item=G.equipped(character)
         if not G.authoritative or not item or C.identifiers[U.itemId(item)]~=2 or G.energy(item)<=0 then return nil end
         if character.GodMode or (character.CharacterHealth and character.CharacterHealth.Unkillable) then return nil end
-        local settings=E.Game.Server and E.Game.Server.ServerSettings
+        -- LuaGame.Server does not exist in the client build (including SP).
+        local settings=E.SERVER and E.Game.Server and E.Game.Server.ServerSettings
         if attacker and attacker~=character and attacker.IsOnPlayerTeam and settings and
             not settings.AllowFriendlyFire and attacker.TeamID==character.TeamID then return nil end
         local damage=math.max(0,stun or 0)

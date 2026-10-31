@@ -34,8 +34,9 @@ Prompt Mk II:
 > Genuine transparent background, no external shadow, grid or border.
 
 W 1.2.2 obwódkę postaci zastępują małe czerwone błyski na soczewkach
-słuchawek. Renderer Lua rysuje kilka krótkich linii GUI na każdą diodę,
-z subtelną poświatą i wygaszaniem po 0,22 s. Pozycje soczewek zmierzono
+słuchawek. Od 1.2.3 trafienia dają czerwone migotanie, a leczenie niebieskie.
+Renderer Lua rysuje kilka krótkich linii GUI na każdą diodę,
+z subtelną poświatą i wygaszaniem po 0,55 s. Pozycje soczewek zmierzono
 w oryginalnych PNG; grafiki pozostają bez przeróbek. Transformacja odwzorowuje
 noszony sprite, obrót głowy i odbicie. Nie wymaga nowej tekstury.
 `python tools/generate_headset_field_preview.py` eksportuje produkcyjne

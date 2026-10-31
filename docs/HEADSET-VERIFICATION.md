@@ -1,4 +1,56 @@
-# Komunikatory Aegis — weryfikacja 1.2.2
+# Komunikatory Aegis — weryfikacja 1.2.3
+
+## Naprawa klienta, kolorów i wymiany ogniw
+
+2026-10-31. Zrzut użytkownika wskazał niedostępne w kliencie LuaGame pole
+`Game.Server` w `G.absorb`. W grze solo wyjątek przerywał blokadę natywnego
+trafienia i emisję błysku. Odczyt ustawień serwera jest teraz osłonięty
+warunkiem `SERVER`; ścisła atrapa klienta najpierw odtworzyła dokładny błąd.
+
+Nieaktywne efekty poniżej `ActivationThreshold` nie uruchamiają regeneracji.
+Aktywne choroby dokładnie na progu nadal są leczone. Zmiany natywnych
+afflictions rozliczane są według faktycznie zmienionej siły; nieudane lub
+ignorowane zapisy nie kosztują energii. Obliczenie dostępnego budżetu nie
+opróżnia tymczasowo baterii, aby zwrot nie wyzwalał nieodwracalnego `OnBroken`.
+Nie odtworzono pełnego zestawu modów i stanu postaci użytkownika, więc nie
+przypisujemy całego jego ciągłego poboru jednej niepotwierdzonej przyczynie.
+
+Diody migoczą na czerwono przy trafieniach, na niebiesko przy leczeniu.
+Osobne czasy zdarzeń chronią czerwony błysk przed nadpisaniem przez
+równoczesną regenerację. Błysk trwa 0,55 s; wielkość pozostaje lokalna przy uchu.
+Bot używa natywnej atomowej zamiany zamiast wyjmować starą baterię przed
+odroczonym zadaniem wkładania nowej. Lokalny zapas wkłada także bez bieżącego
+zadania. Przerwany marsz nie opróżnia słuchawek; cudze ogniwa posterunku
+oznaczone `Illegitimate` są pomijane.
+
+Bilans: leczenie i trafienia kosztują 4 razy mniej, procesy anatomiczne
+2 razy mniej, a samo ciśnienie 2,5%/s zamiast 5%/s (40 s pełnego ogniwa).
+Bot szuka zapasu co 1 s poniżej 30%. Mody medyczne nadal są opcjonalne.
+
+Końcowe dowody:
+
+- **151/151** testów jednostkowych i regresyjnych.
+- Prywatny klient Barotrauma/LuaCs: rzeczywista postać, wyposażone Mk II,
+  pochłonięcie natywnego trafienia, płatne leczenie, trzy pozycje diod
+  z prawdziwego noszonego sprite'a i rysowanie przez natywny SpriteBatch:
+  **4/4 PASS**, bez NT i z NT CS. Dodatkowa próba obejmuje oba sprite'y,
+  cztery poziomy baterii i cztery kanały dźwięku.
+- Po końcowych zmianach klient z NT CS: **30 s bezczynności, energia 100%,
+  witalność 100, bezpieczny kadłub, NeedsAir=true, Removed=false**.
+- Prywatny serwer po świeżym starcie: **9/9** mechaniki oraz **8/8** NT CS.
+  Trzy dodatkowe próby botów: pusty slot/zapas w ekwipunku, słaba bateria/zapas
+  w ekwipunku, słaba bateria/zapas na podłodze — **3/3 PASS**.
+- Końcowa próba bezczynności serwera z NT CS: **30 s, energia i witalność 100**.
+
+Klient jest uruchamiany z prywatnej kopii `.runtime/client`. Lokalny hak
+startowy omija oczekiwanie ekranu ładowania na klawisz i włącza próbną rundę;
+nie wchodzi do paczki moda. Podgląd PNG nadal jest ilustracją z przeglądarki,
+nie zrzutem z gry. Sesja dwóch klientów pozostaje niezweryfikowana.
+Jedna próba narzędziowa zakończyła serwer, gdy polecenia Lua wysłano jeszcze
+w trakcie asynchronicznego `reloadlua`; końcowe próby wykonano w świeżym procesie.
+Instalacja Steam użytkownika nie była modyfikowana.
+
+## Historia 1.2.2
 
 ## Małe diody i brak kosztu normalnej fizjologii
 

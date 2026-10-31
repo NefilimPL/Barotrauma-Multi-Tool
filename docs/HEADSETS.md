@@ -1,6 +1,6 @@
 # Komunikatory Aegis
 
-Wersja 1.2.2 zawiera dwa przedmioty dodane w 1.2.0 do MULTI-TOOL-V2. Wymagany jest LuaCs
+Wersja 1.2.3 zawiera dwa przedmioty dodane w 1.2.0 do MULTI-TOOL-V2. Wymagany jest LuaCs
 na kliencie i serwerze. **Żaden mod medyczny nie jest wymagany.**
 
 | Przedmiot | Identyfikator | Funkcje |
@@ -16,7 +16,8 @@ nieprzytomności, ale musi być założone; przedmiot w plecaku nie chroni.
 
 ## Migotanie po założeniu i diagnostyka
 
-Krótki błysk małych czerwonych diod oznacza zużycie energii na ochronę albo regenerację.
+Czerwone diody migoczą przy pochłanianiu trafień i ochronie przed ciśnieniem;
+niebieskie oznaczają regenerację. Błysk trafienia ma pierwszeństwo przed leczeniem.
 Samo migotanie nie oznacza otrzymywania obrażeń. Założenie urządzenia
 na wcześniej ranną postać może od razu rozpocząć leczenie, również na
 bezpiecznym okręcie. Zdrowa postać bez zagrożenia nie powinna zużywać baterii.
@@ -25,6 +26,8 @@ Samo noszenie nie kosztuje energii. W 1.2.2 usunięto podbijanie odporności NT
 do 100 oraz ciągłe korygowanie prawidłowego ciśnienia i ilości krwi.
 Odporność pozostaje bez zmian; wartości krwi i ciśnienia od 90 do 110
 nie uruchamiają leczenia. Rzeczywiste niedociśnienie nadal wymaga regeneracji.
+Od 1.2.3 pomijane są także efekty poniżej ich natywnego progu aktywacji.
+Nieudana próba zmiany efektu nie pobiera energii ani nie daje błysku.
 
 W konsoli F3 wpisz `aegis_headset_status`. Komenda pokazuje naładowanie
 i ostatnie rzeczywiste koszty, np. `heal:burn`, `pressure`, `hit` lub
@@ -41,12 +44,12 @@ z geometrią produkcyjnego renderera. To ilustracja, nie zrzut ekranu gry.
 
 ## Zasilanie
 
-- Ciśnienie: 5% standardowego ogniwa/s, około 20 s samej ochrony.
-- Leczenie: wspólny limit 5 jednostek siły/s, 0,5% ogniwa/jednostkę.
-- Organ: 15% i co najmniej 5 s opłacanej regeneracji.
-- Kończyna: 25% i co najmniej 10 s opłacanej regeneracji.
-- Zamknięcie operacji NT: 15% i co najmniej 5 s na daną część ciała.
-- Mk II: co najmniej 1% za trafienie, dalej 0,5% za jednostkę przyjmowanej
+- Ciśnienie: 2,5% standardowego ogniwa/s, około 40 s samej ochrony.
+- Leczenie: wspólny limit 5 jednostek siły/s, 0,125% ogniwa/jednostkę.
+- Organ: 7,5% i co najmniej 5 s opłacanej regeneracji.
+- Kończyna: 12,5% i co najmniej 10 s opłacanej regeneracji.
+- Zamknięcie operacji NT: 7,5% i co najmniej 5 s na daną część ciała.
+- Mk II: co najmniej 0,25% za trafienie, dalej 0,125% za jednostkę przyjmowanej
   siły. Na pewno nieskuteczne efekty (np. prawdopodobieństwo zero, pełna
   odporność, pełne pokrycie pancerzem) nie są opłacane jako obrażenia.
 
@@ -98,18 +101,20 @@ end)
 `priority` ma domyślnie 0, wyższa wartość jest leczona wcześniej.
 `anatomy='organ'`, `'limb'` lub `'surgery'` oznacza opłacany proces atomowy;
 opcjonalne `part` grupuje kilka znaczników jednej części.
-Provider zwraca bieżące wpisy; jego `apply` jest wykonywane tylko po pobraniu
-energii. Integracja musi rzeczywiście przywrócić zewnętrzny stan, a nie
+Provider zwraca bieżące wpisy; jego `apply` jest wykonywane tylko wtedy,
+gdy dostępna energia pokrywa zaplanowany krok. Integracja musi rzeczywiście przywrócić zewnętrzny stan, a nie
 tylko usunąć ikonę. Przechwytywanie Mk II obejmuje natywną ścieżkę ataków;
 obcy skrypt zabijający postać bezpośrednio wymaga osobnej integracji.
 
 ## Boty
 
-Poniżej 20% bot szuka dostępnego ogniwa o wyższym naładowaniu. Najpierw
+Poniżej 30% bot co sekundę szuka dostępnego ogniwa o wyższym naładowaniu. Najpierw
 korzysta z własnego ekwipunku, później ze zwykłych magazynów. Nie wyjmuje
 baterii z cudzych ekwipunków, broni, sonarów ani innych rozpoznanych
-urządzeń. Używa natywnego dojścia/pobrania/włożenia. Działająca bateria
-pozostaje w słuchawkach do czasu dotarcia do zamiennika. Nieosiągalne
+urządzeń ani nie bierze ogniw oznaczonych jako cudza własność na posterunku.
+Po zdobyciu zapasu dokonuje natywnej, atomowej zamiany; dotyczy to też
+pustego slotu i bota bez bieżącego zadania. Działająca bateria pozostaje
+w słuchawkach przy nieudanej podmianie lub przerwanym dojściu. Nieosiągalne
 ogniwo jest pomijane przez 60 s; brak zapasów nie blokuje pracy.
 
 ## Wytwarzanie i zasoby
@@ -123,7 +128,9 @@ Własne grafiki i OGG są w `Assets/Headsets`. Zamiast obwódki postaci renderer
 rysuje krótkie, małe światło w miejscach istniejących soczewek: jedną diodę
 w podstawowym modelu, trzy w Mk II. Światło podąża za głową, jej obrotem
 i odbiciem grafiki; znika pod hełmem zasłaniającym słuchawki.
-Błysk wygasa po 0,22 s od ostatniego użycia energii.
+Błysk wygasa po 0,55 s od ostatniego zdarzenia; kolejne kroki leczenia
+podtrzymują niebieskie światło. Trafienie nie jest natychmiast nadpisywane
+przez równoczesną regenerację.
 Dźwięki: stabilny powyżej 40%, słabnący przy 15–40%, alarmowy poniżej 15%,
 osobny sygnał wyczerpania. Sygnał trafienia ma limit częstotliwości;
 regeneracja i ciśnienie są ciche, poza sygnałem wyczerpania.

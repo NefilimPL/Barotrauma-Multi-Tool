@@ -1,8 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="480" height="420" viewBox="0 0 480 420"><g>
-<line x1="151.03" y1="238.59" x2="167.13" y2="238.59" stroke="rgb(255,15,20)" stroke-opacity="0.0941" stroke-width="10"/>
-<line x1="148.90" y1="234.99" x2="169.26" y2="234.99" stroke="rgb(255,15,20)" stroke-opacity="0.0941" stroke-width="10"/>
-<line x1="148.28" y1="231.39" x2="169.88" y2="231.39" stroke="rgb(255,15,20)" stroke-opacity="0.0941" stroke-width="10"/>
-<line x1="148.90" y1="227.79" x2="169.26" y2="227.79" stroke="rgb(255,15,20)" stroke-opacity="0.0941" stroke-width="10"/>
-<line x1="151.03" y1="224.19" x2="167.13" y2="224.19" stroke="rgb(255,15,20)" stroke-opacity="0.0941" stroke-width="10"/>
-<line x1="156.38" y1="231.39" x2="161.78" y2="231.39" stroke="rgb(255,30,25)" stroke-opacity="0.5647" stroke-width="6"/>
+<line x1="151.03" y1="238.59" x2="167.13" y2="238.59" stroke="rgb(40,145,255)" stroke-opacity="0.1098" stroke-width="6"/>
+<line x1="148.90" y1="234.99" x2="169.26" y2="234.99" stroke="rgb(40,145,255)" stroke-opacity="0.1098" stroke-width="6"/>
+<line x1="148.28" y1="231.39" x2="169.88" y2="231.39" stroke="rgb(40,145,255)" stroke-opacity="0.1098" stroke-width="6"/>
+<line x1="148.90" y1="227.79" x2="169.26" y2="227.79" stroke="rgb(40,145,255)" stroke-opacity="0.1098" stroke-width="6"/>
+<line x1="151.03" y1="224.19" x2="167.13" y2="224.19" stroke="rgb(40,145,255)" stroke-opacity="0.1098" stroke-width="6"/>
+<line x1="156.38" y1="231.39" x2="161.78" y2="231.39" stroke="rgb(40,145,255)" stroke-opacity="0.4078" stroke-width="9"/>
 </g></svg>

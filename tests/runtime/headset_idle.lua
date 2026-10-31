@@ -32,7 +32,8 @@ Timer.Wait(function()
     end
     Timer.Wait(function()
         local idle=math.abs(G.energy(item)-100)<.0001 and math.abs(c.Vitality-100)<.0001
-        records[#records+1]=(idle and 'PASS ' or 'FAIL ')..'healthy idle energy='..G.energy(item)..' vitality='..c.Vitality..' hull='..tostring(c.CurrentHull)..' pressure='..tostring(c.CurrentHull and c.CurrentHull.LethalPressure)
+        local hull=c.AnimController.CurrentHull
+        records[#records+1]=(idle and 'PASS ' or 'FAIL ')..'healthy idle energy='..G.energy(item)..' vitality='..c.Vitality..' hull='..tostring(hull)..' pressure='..tostring(hull and hull.LethalPressure)..' needsAir='..tostring(c.NeedsAir)..' removed='..tostring(c.Removed)
         print('[HEADSET IDLE] '..records[#records])
         File.Write('LocalMods/MULTI-TOOL-V2/headset-idle-results.txt',table.concat(records,'\n'))
         G.heal=original
