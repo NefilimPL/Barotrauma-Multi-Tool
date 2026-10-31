@@ -77,7 +77,10 @@ class ReviewRegressionTests(LuaCase):
 
     def test_world_cast_uses_submarine_position_not_hidden_body_position(self):
         self.lua.execute('''
-            env={LuaUserData={IsTargetType=function() return false end},Submarine={Loaded={{Position=vec(100,0),WorldPosition=vec(10100,0)}}},
+            env={LuaUserData={IsTargetType=function() return false end,RegisterType=function() end,
+                    CreateStatic=function() return {CollisionNone=0,CollisionCharacter=1,CollisionWall=2,CollisionLevel=4,CollisionItemBlocking=8,
+                        CollisionProjectile=16,CollisionLagCompensationBody=32} end,CreateEnumTable=function() return {None=0} end},
+                Submarine={Loaded={{Position=vec(100,0),WorldPosition=vec(10100,0)}}},
                 Vector2=setmetatable(Vector,{__call=function(_,x,y) return vec(x,y) end}),
                 ConvertUnits={ToSimUnits=function(v) return v end},Game={World={RayCast=function(_,a,b) lastRayStart=a end}}}
             require('CombatTool.physics').install(G,env)

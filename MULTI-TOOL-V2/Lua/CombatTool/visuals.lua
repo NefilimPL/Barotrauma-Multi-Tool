@@ -36,8 +36,30 @@ function M.install(G,E,root)
     -- before the light map consumes it, using the same interpolated pose.
     G.patch('flashlight-origin','Barotrauma.Lights.LightManager','RenderLightMap',G.updateFlashlights)
     local effects={}
+    local electricity,particleManager
+    local function emitNativeArc(point,endpoint)
+        local dx,dy=endpoint.x-point.x,endpoint.y-point.y
+        local length=math.sqrt(dx*dx+dy*dy)
+        if length<.01 then return end
+        if not electricity then
+            E.LuaUserData.RegisterType('Barotrauma.SpriteSheet')
+            E.LuaUserData.RegisterType('Barotrauma.GameMain')
+            local sheet=E.LuaUserData.CreateStatic('Barotrauma.SpriteSheet')
+            electricity=sheet('Content/Lights/Electricity.png',4,4,E.Vector2(.5,0))
+            particleManager=E.LuaUserData.CreateStatic('Barotrauma.GameMain').ParticleManager
+        end
+        local function spark(x,y)
+            local particle=particleManager.CreateParticle('ElectricShock',E.Vector2(x,y),E.Vector2(0,0))
+            if particle then particle.Size=particle.Size*.3 end
+        end
+        -- Same native particles and spacing as ElectricalDischarger, with a
+        -- final spark at the contacted character. Emit once per network event.
+        for distance=0,length,50 do spark(point.x+dx*distance/length,point.y+dy*distance/length) end
+        spark(endpoint.x,endpoint.y)
+    end
     function G.onEffect(kind,point,angle,id,endpoint)
         if G.playCombatSound then G.playCombatSound(kind,point) end
+        if kind=='arc' and endpoint then emitNativeArc(point,endpoint) end
         effects[#effects+1]={kind=kind,x=point.x,y=point.y,angle=angle,age=0,id=id,endpoint=endpoint}
         if #effects>256 then table.remove(effects,1) end
     end
@@ -137,22 +159,16 @@ function M.install(G,E,root)
         circle(batch,cam,e.x,e.y,0,6+t*100,E.Color(90,220,255,math.floor(alpha*.6)),2,0,nil,1)
     end
     local function drawArc(batch,cam,e)
-        if not e.endpoint or e.age>.22 then return end
+        if not electricity or not e.endpoint or e.age>.22 then return end
         local dx,dy=e.endpoint.x-e.x,e.endpoint.y-e.y
         local length=math.sqrt(dx*dx+dy*dy)
         if length<.01 then return end
         local alpha=math.floor(255*(1-e.age/.22))
-        local previous={x=e.x,y=e.y}
-        local phase=math.floor(e.age*45)+(e.id or 0)
-        for i=1,10 do
-            local u=i/10
-            local jitter=i<10 and math.sin(i*12.7+phase*2.9)*7*math.sin(u*math.pi) or 0
-            local p={x=e.x+dx*u-dy/length*jitter,y=e.y+dy*u+dx/length*jitter}
-            line(batch,cam,previous,p,E.Color(20,130,255,math.floor(alpha*.35)),7)
-            line(batch,cam,previous,p,E.Color(205,255,255,alpha),2)
-            previous=p
-        end
-        circle(batch,cam,e.endpoint.x,e.endpoint.y,0,9+e.age*45,E.Color(110,240,255,alpha),2,0,nil,1)
+        local frame=(math.floor(e.age*60)+(e.id or 0))%electricity.FrameCount
+        local width=math.min(length/electricity.FrameSize.X,1)*(.7+.3*math.abs(math.sin(e.age*90)))
+        electricity.Draw(batch,frame,cam.WorldToScreen(E.Vector2(e.x,e.y)),E.Color(190,235,255,alpha),
+            electricity.Origin,-Core.angle(dx,dy)-math.pi/2,
+            E.Vector2(width*cam.Zoom,length/electricity.FrameSize.Y*cam.Zoom))
     end
     local function drawShield(batch,cam,s)
         local points={}

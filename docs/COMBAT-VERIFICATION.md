@@ -1,5 +1,79 @@
 # Aegis — weryfikacja wersji 1.1.x
 
+## Poprawka 1.1.10 — wybrany rezonator i natywny efekt cewki
+
+Użytkownik wybrał próbkę 3 (rezonator plazmowy) i wskazał istniejący w grze
+efekt przeskoku elektrycznego. Oba produkcyjne pliki shot-1/2 są teraz identyczną
+kopią zaakceptowanego pojedynczego wystrzału 3-plasma.ogg, bez dodatkowych zmian
+barwy czy głośności. Generator deleguje syntezę strzału do tego samego profilu
+z czasem 0,46 s i jakością Vorbis 6; odbudowa daje identyczne zdekodowane PCM.
+
+Natywna cewka ElectricalDischarger korzysta z SpriteSheet Electricity.png (4×4)
+i cząstek ElectricShock. Wizualizacja każdego odcinka arc używa teraz tej samej
+animacji silnika i cząstek, rozmieszczonych co 50 jednostek oraz przy trafionym
+celu. Zastępuje poprzednią wizualizację łamaną z odcinków GUI. Cząstki emitowane
+są raz na zdarzenie; rysowanie tylko animuje arkusz. Limit graficzny cząstek
+może zwrócić null i jest obsłużony. Nie kopiowano plików gry do moda.
+
+Dobór celów i obrażenia pozostają w dotychczasowej symulacji serwera. Nie
+uruchamiano obszarowego ataku ElectricalDischarger, który ma własny zasięg
+i przewodzenie po ścianach. Zachowane są trzy cele, osobne odcinki, kontrola
+ścian, tłumienie siły i natywne friendly fire. Zmiany nie dotyczą protokołu
+ani logiki trafień i AI sprawdzonej w wersji 1.1.9.
+
+Regresja efektu najpierw RED (brak natywnych iskier), potem GREEN. **82/82 testy**
+przechodzą. Natywny klient potwierdził rzeczywisty przyrost liczby cząstek po
+zdarzeniu ElectricShock i rysowanie Electricity na GPU w 16 klatkach/czterech
+kątach/trzech odcinkach łańcucha. Przeszły też celownik, mocowanie latarki
+i sześć rodzin kanałów audio. Obydwa pliki strzału porównano bajt po bajcie
+z zaakceptowaną próbką. Walidacja: 9 XML i 15 Lua. Nie powtarzano prób serwera,
+ponieważ ta poprawka zmienia audio oraz wizualizację klienta.
+
+## Poprawka 1.1.9 — otwarte przejścia, łańcuch prądu i odsłuchy
+
+Zgłoszenie: fałszywe odbicia w otwartych poziomych przejściach, potrzeba
+przeskoku łuku na kilka celów oraz kilku alternatywnych próbek wystrzału.
+
+Natywny Projectile.DoRayCast używa maski kategorii pocisków. Poprzedni G.cast
+pytał o wszystkie kategorie i uznawał każde Structure za ścianę, w tym platformy,
+schody oraz ciało CollisionRepairableWall obecne również w pełnej dziurze.
+G.cast stosuje teraz maskę natywnego pocisku i pomija wyłączone kolizje.
+Maska jest inicjalizowana raz, przez natywne stałe Physics. Zmiana obejmuje
+także przewidywanie lotu na kliencie i test widoczności przeskoków prądu.
+
+Natywna próba porównawcza załadowała poprzedni moduł wyłącznie jako lokalny
+baseline w testowym serwerze. Stary raycast trafił platformę i kolizję naprawczą
+w zniszczonej ścianie; nowy przeszedł. Pozostałe próby potwierdzają, że pełna
+ściana i zamknięty poziomy właz blokują, a w pełni otwarty właz przepuszcza.
+
+Łuk nadal ma 15% szansy uruchomienia i jeden łańcuch na pocisk. Teraz może
+przejść przez trzy różne postacie, z promieniem 90 jednostek od poprzedniego
+punktu i osobnym raycastem ścian dla każdego odcinka. Strzelec, bezpośrednia
+ofiara pierścienia i odwiedzone postacie są pomijani. Każdy kolejny przeskok
+zachowuje 75% siły poprzedniego: bazowe oparzenia 1 / 0,75 / 0,5625 i ogłuszenie
+0,2 / 0,15 / 0,1125 s. Friendly fire pozostaje natywne. Każdy odcinek wysyła
+istniejące zdarzenie arc z oboma końcami; format wiadomości nie zmienił się.
+
+Próbki tworzy tools/generate_audio_alternatives.py: impuls jonowy, wyładowanie
+Tesli, rezonator plazmowy i pierścień magnetyczny. Każdy ma pojedynczy wystrzał
+oraz serię pięciu przy nominalnym odstępie 0,38 s. Samodzielny HTML zawiera
+osadzony dźwięk i dotychczasowy strzał jako odniesienie; ZIP zawiera HTML i osiem
+plików OGG. Wszystkie są oryginalną syntezą. Produkcyjne audio pozostało bez zmian,
+aby użytkownik mógł najpierw wybrać wariant.
+
+Weryfikacja: **81/81 testów**, w tym cztery nowe regresje najpierw RED
+(trzy dotyczące kolizji i jedna wielu celów) oraz osobna próba blokady kolejnego
+przeskoku przez ścianę. Natywny serwer: **4/4** prób przejść, **5/5** łuku
+(w tym trzy rzeczywiste ofiary i nietknięty czwarty cel), **5/5** pierścienia
+i friendly fire, **5/5** tarczy. AI: **5/5**, 334 użycia spawarki bez strzelania,
+potem 7 strzałów bez funkcji technicznych i zatrzymanie po ustaniu zagrożenia.
+Klient: GPU 16 klatek/cztery kąty/dziewięć efektów, w tym trzy odcinki łańcucha,
+celownik, mocowanie latarki oraz sześć rodzin audio — PASS.
+
+Osiem próbek poprawnie dekoduje się, cztery wystrzały mają różne zawartości,
+dziewięć osadzonych odtwarzaczy zawiera poprawne OGG, ZIP odsłuchów ma poprawne
+CRC. Barwa pozostaje wyborem użytkownika. Walidator: 9 XML i 15 Lua.
+
 ## Poprawka 1.1.8 — pasywny przyrost wszystkich pięciu umiejętności
 
 Użytkownik potwierdził wszystkie pięć umiejętności i zmianę tempa w obu wersjach:

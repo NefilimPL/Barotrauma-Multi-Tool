@@ -35,7 +35,7 @@ class VisualContractTests(LuaCase):
             assert(saved.Light.OffsetFromBody.X==11,'manual damage permission light was modified')
         ''')
 
-    def test_impact_is_visible_at_contact_and_arc_reaches_its_destination(self):
+    def test_impact_is_visible_at_contact(self):
         self.lua.execute('''
             local function v(x,y) return {X=x,Y=y} end
             local E={Sprite=function() return {Draw=function(_,_,_,_,_,scale) sheetSize=scale.X end} end,
@@ -44,7 +44,6 @@ class VisualContractTests(LuaCase):
                 Color=function(r,g,b,a) return {A=a} end,
                 GUI={GUI={DrawLine=function(_,a,b,color,_,width)
                     if width>=3 and color.A>=180 then brightLines=(brightLines or 0)+1 end
-                    if math.abs(b.X-80)<.01 and math.abs(b.Y-30)<.01 then reached=true end
                 end}}}
             local G={now=0,authoritative=false,remote={received=0,rings={},shields={}},patch=function() end}
             require('CombatTool.visuals').install(G,E,'mod')
@@ -52,8 +51,41 @@ class VisualContractTests(LuaCase):
             G.onEffect('wallhit',{x=0,y=0},0,1);G.draw({},camera)
             assert(sheetSize>=.22,'impact sheet is too small to read in combat')
             assert(brightLines and brightLines>0,'impact has no bright substantial flash')
-            G.onEffect('arc',{x=0,y=0},0,1,{x=80,y=30});G.draw({},camera)
-            assert(reached,'electrical bolt did not reach the affected character')
+        ''')
+
+    def test_arc_uses_native_coil_animation_and_spawns_sparks_once_per_event(self):
+        self.lua.execute('''
+            local function v(x,y) return {X=x,Y=y} end
+            local draws={};sparks=0
+            local E={Sprite=function() return {} end,Vector2=v,Color=function() return {} end,
+                LuaUserData={RegisterType=function() end,CreateEnumTable=function() return {} end,
+                    CreateStatic=function(name)
+                        if name=='Barotrauma.SpriteSheet' then return function(path,cols,rows,origin)
+                            assert(path=='Content/Lights/Electricity.png' and cols==4 and rows==4)
+                            return {FrameCount=16,FrameSize=v(32,32),Origin=origin,
+                                Draw=function(_,frame,pos,color,pivot,rotation,scale)
+                                    draws[#draws+1]={frame=frame,scale=scale,rotation=rotation,pos=pos}
+                                end}
+                        end end
+                        if name=='Barotrauma.GameMain' then return {ParticleManager={CreateParticle=function(name,pos,velocity)
+                            assert(name=='ElectricShock');sparks=sparks+1
+                            assert(velocity.X==0 and velocity.Y==0)
+                            return {Size=1}
+                        end}} end
+                        return {}
+                    end},GUI={GUI={DrawLine=function() error('arc must use the native discharge sprite') end}}}
+            local G={now=0,remote={received=0,rings={},shields={}},patch=function() end}
+            require('CombatTool.visuals').install(G,E,'mod')
+            G.onEffect('arc',{x=10,y=20},0,0,{x=90,y=50})
+            local count=sparks
+            assert(count==3,'native sparks should cover the endpoints and intermediate span')
+            local cam={Zoom=1,WorldToScreen=function(p) return p end}
+            G.draw({},cam);G.updateVisuals(.05);G.draw({},cam)
+            assert(#draws==2 and draws[1].frame~=draws[2].frame,'native discharge animation did not advance')
+            assert(draws[1].pos.X==10 and draws[1].pos.Y==20)
+            assert(math.abs(draws[1].scale.Y*32-85.440037453)<.001,'native bolt does not span the selected endpoints')
+            assert(math.abs(draws[1].rotation+1.929566997)<.001,'native bolt points away from its destination')
+            assert(sparks==count,'drawing repeated the native spark emission')
         ''')
 
     def test_ring_animates_in_place_and_drawing_never_repeats_sound(self):

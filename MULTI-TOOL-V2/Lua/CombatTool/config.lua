@@ -6,6 +6,7 @@ return {
     speed = 1050, lifetime = 3.2, maxDistance = 3200,
     hitImpulse = 8.625, recoilVelocity = 3,
     arcChance = 0.15, arcRadius = 90, arcBurn = 1, arcStun = 0.2,
+    arcMaxTargets = 3, arcRetention = 0.75,
     passiveSkillInterval = 300, passiveSkillAmount = 2,
     trailLifetime = 0.12, trailPoints = 12,
     radius = 6, maxRadius = 12, bounceRetention = 0.85, maxStepContacts = 8,

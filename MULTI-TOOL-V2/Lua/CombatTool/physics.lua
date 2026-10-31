@@ -2,6 +2,7 @@ local U=require('CombatTool.util')
 local P={}
 function P.install(G,E)
     local function is(value,name) return value and E.LuaUserData.IsTargetType(value,'Barotrauma.'..name) end
+    local collisionMask,collisionNone
     function G.friendly(a,b) return a and b and (a==b or a.IsFriendly(b)) or false end
     function G.direction(item)
         local angle=item.body.TransformedRotation
@@ -15,6 +16,15 @@ function P.install(G,E)
     -- Ray-cast each submarine coordinate space and outside space, admitting
     -- only fixtures that belong to that space. All public positions are world units.
     function G.cast(a,b,radius,owner,wallsOnly,allCharacters)
+        if not collisionMask then
+            E.LuaUserData.RegisterType('Barotrauma.Physics')
+            local physics=E.LuaUserData.CreateStatic('Barotrauma.Physics')
+            -- Match native projectile categories: platforms, stairs and the
+            -- repair-only body spanning a breached wall are not bullet walls.
+            collisionMask=physics.CollisionCharacter+physics.CollisionWall+physics.CollisionLevel+
+                physics.CollisionItemBlocking+physics.CollisionProjectile+physics.CollisionLagCompensationBody
+            collisionNone=physics.CollisionNone
+        end
         local nearest=nil
         local dx,dy=b.x-a.x,b.y-a.y
         local length=math.sqrt(dx*dx+dy*dy)
@@ -33,7 +43,7 @@ function P.install(G,E)
                 local va=E.ConvertUnits.ToSimUnits(E.Vector2(a.x+rx,a.y+ry)-offset)
                 local vb=E.ConvertUnits.ToSimUnits(E.Vector2(b.x+rx,b.y+ry)-offset)
                 E.Game.World.RayCast(function(fixture,point,normal,fraction)
-                    if fixture.IsSensor then return -1 end
+                    if fixture.IsSensor or fixture.CollidesWith==collisionNone then return -1 end
                     local data=fixture.Body.UserData
                     local kind,target=nil,nil
                     if is(data,'Limb') then
@@ -59,7 +69,7 @@ function P.install(G,E)
                         nearest={t=fraction,x=world.X-rx,y=world.Y-ry,nx=normal.X,ny=normal.Y,kind=kind,target=target}
                     end
                     return 1
-                end,va,vb)
+                end,va,vb,collisionMask)
             end
         end
         return nearest

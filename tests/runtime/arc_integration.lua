@@ -56,6 +56,19 @@ check('same real ring cannot shock twice after ricochets',function()
     G.tryArc(ring,{x=origin.X,y=origin.Y,kind='wall'})
     assert(enemy.Vitality==vitality,'same ring applied a second shock')
 end)
+check('one impact chains through three nearby native enemies once each',function()
+    local a=human(origin+Vector2(35,1200),CharacterTeamType.Team2)
+    local b=human(origin+Vector2(105,1200),CharacterTeamType.Team2)
+    local c=human(origin+Vector2(175,1200),CharacterTeamType.Team2)
+    local d=human(origin+Vector2(245,1200),CharacterTeamType.Team2)
+    local before={a.Vitality,b.Vitality,c.Vitality,d.Vitality}
+    local r=discharge(a)
+    assert(a.Vitality<before[1] and b.Vitality<before[2] and c.Vitality<before[3],'chain did not reach three enemies')
+    assert(d.Vitality==before[4],'chain exceeded its three-target cap')
+    local after={a.Vitality,b.Vitality,c.Vitality}
+    G.tryArc(r,{x=origin.X,y=origin.Y+1200,kind='wall'})
+    assert(a.Vitality==after[1] and b.Vitality==after[2] and c.Vitality==after[3],'one ring repeated the chain')
+end)
 math.random=random
 Game.ServerSettings.AllowFriendlyFire=friendlyFire
 for i=#created,1,-1 do if not created[i].Removed then created[i].Remove() end end

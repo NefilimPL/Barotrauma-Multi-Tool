@@ -51,6 +51,11 @@ Timer.Wait(function()
         end
         local audio=G.playCombatSound
         G.playCombatSound=nil -- The frame stress test must not emit hundreds of simultaneous sounds.
+        local view=cam.WorldView
+        local center={x=view.X+view.Width/2,y=view.Y-view.Height/2}
+        local beforeParticles=gm.ParticleManager.ParticleCount
+        G.onEffect('arc',center,0,0,{x=center.x+70,y=center.y})
+        assert(gm.ParticleManager.ParticleCount>=beforeParticles+3,'native ElectricShock particles were not created')
         for frame=0,15 do
             for _,angle in ipairs({0,math.pi/2,math.pi,-math.pi/2}) do
                 G.now=frame/25
@@ -59,7 +64,12 @@ Timer.Wait(function()
                 ring.trail={{x=120,y=0,age=ring.age-.05},{x=150,y=0,age=ring.age}}
                 G.remote={received=G.now,shields={{x=0,y=0,angle=angle,energy=100}},rings={ring}}
                 for _,kind in ipairs({'shieldhit','break','contact','hit','bounce','wallhit','shot','charge','arc'}) do
-                    G.onEffect(kind,{x=0,y=0},angle,0,{x=70*math.cos(angle),y=70*math.sin(angle)})
+                    if kind=='arc' then
+                        for hop=0,2 do
+                            G.onEffect(kind,{x=70*hop*math.cos(angle),y=70*hop*math.sin(angle)},angle,0,
+                                {x=70*(hop+1)*math.cos(angle),y=70*(hop+1)*math.sin(angle)})
+                        end
+                    else G.onEffect(kind,{x=0,y=0},angle,0) end
                 end
                 G.updateVisuals(.02)
                 batch.Begin(Sort.Deferred,Blend.NonPremultiplied)
@@ -74,6 +84,6 @@ Timer.Wait(function()
         assert(not G.audioError,G.audioError)
     end)
     File.Write('LocalMods/MULTI-TOOL-V2/client-results.txt',
-        ok and 'PASS native flashlight mount: 5 aim angles x 2 facings; GPU crosshair, 16 frames x 4 angles x 9 effects; 6 native spatial audio channels' or 'FAIL '..tostring(err))
+        ok and 'PASS native Electricity animation and ElectricShock particles; flashlight 5 angles x 2 facings; GPU crosshair, 16 frames x 4 angles x 9 effects including 3-segment chains; 6 spatial audio channels' or 'FAIL '..tostring(err))
     if not ok then print('[BMT CLIENT] '..tostring(err)) end
 end,4000)

@@ -44,6 +44,31 @@ class ImpactArcTests(LuaCase):
             G.tryArc(ring,hit);assert(#shocks==0,'shock reached beyond the small radius or through a wall')
         ''')
 
+    def test_arc_chains_to_three_distinct_targets_with_weaker_later_hops(self):
+        self.lua.execute('''
+            near.WorldPosition.X=40;far.WorldPosition.X=100
+            local third={WorldPosition={X=170,Y=0}}
+            local fourth={WorldPosition={X=230,Y=0}}
+            local E={Character={CharacterList={owner,direct,near,far,third,fourth}}}
+            require('CombatTool.projectiles').install(G,E)
+            G.tryArc(ring,hit);G.tryArc(ring,hit)
+            assert(#shocks==3,'arc must visit three targets once, without repeating a chain')
+            assert(shocks[1].target==near and shocks[2].target==far and shocks[3].target==third)
+            assert(math.abs(shocks[2].burn-.75)<.0001 and math.abs(shocks[3].burn-.5625)<.0001)
+            assert(math.abs(shocks[2].stun-.15)<.0001,'later hops did not lose strength')
+            assert(events[2][2].x==40 and events[2][3].x==100,'second bolt did not start at the previous victim')
+        ''')
+
+    def test_each_chain_hop_requires_its_own_clear_path(self):
+        self.lua.execute('''
+            far.WorldPosition.X=100
+            G.cast=function(a,b,_,_,walls)
+                if walls and (b.y==10 or (a.x<80 and b.x>80)) then return {kind='wall'} end
+            end
+            G.tryArc(ring,hit)
+            assert(#shocks==1 and shocks[1].target==near,'secondary hop crossed a closed wall')
+        ''')
+
     def test_wall_collision_invokes_secondary_arc(self):
         self.lua.execute('''
             local Core=require('CombatTool.core')
@@ -53,7 +78,7 @@ class ImpactArcTests(LuaCase):
             local r=Core.ring({x=-5,y=0},{x=1,y=0},0)
             r.weapon=gun;r.owner=owner;r.bouncesLeft=0;G.rings={r}
             G.updateRings(.02)
-            assert(#shocks==1,'wall collision failed to produce an eligible secondary shock')
+            assert(shocks[1] and shocks[1].target==direct,'wall collision failed to shock its nearest eligible bystander')
         ''')
 
     def test_network_preserves_both_arc_endpoints(self):

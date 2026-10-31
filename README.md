@@ -93,6 +93,22 @@ lub użyj konsolowego `reloadlua` na serwerze i klientach.
 
 ## Sprawdzenia
 
+Wersja 1.1.10 włącza wybraną próbkę 3 — rezonator plazmowy — jako wystrzał.
+Łuk rysowany jest natywną animacją Electricity i cząstkami ElectricShock,
+których używa cewka wyładowcza gry. Każdy odcinek łańcucha korzysta z tego
+efektu; zasady wybierania celów i obrażeń pozostają w symulacji serwera.
+
+Wersja 1.1.9 stosuje filtr kolizji natywnych pocisków, pomijając platformy,
+schody i kolizje naprawcze zniszczonych ścian. Usuwa to fałszywe rykoszety
+w otwartych przejściach. Łuk może teraz trafić trzy różne postacie: 90 jednostek
+na przeskok, każda kolejna ofiara otrzymuje o 25% słabsze porażenie. Nadal
+obowiązuje 15% szansy na uruchomienie jednego łańcucha na pocisk i kontrola ścian.
+
+Cztery oryginalne alternatywy wystrzału (pojedynczo i w serii) generuje
+`python tools/generate_audio_alternatives.py`. Wyniki to samodzielny odtwarzacz
+`output/AEGIS-sound-alternatives.html` i ZIP z plikami OGG. Próbki nie zmieniają
+bieżącego wystrzału w modzie.
+
 Wersja 1.1.8 dodaje wspólny pasywny przyrost dla obu multitooli: dokładnie
 +2 do wszystkich pięciu umiejętności co 300 sekund trzymania z zasilaniem.
 Aegis przyjmuje ogniwo lub pręt, a mniejszy multitool zachowuje wymóg pręta.
