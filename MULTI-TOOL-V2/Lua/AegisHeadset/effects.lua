@@ -1,6 +1,6 @@
-local U=require('CombatTool.util')
 local C=require('AegisHeadset.config')
 local Medical=require('AegisHeadset.medical')
+local Leds=require('AegisHeadset.leds')
 local M={}
 function M.install(G,E)
     local kinds={pressure=1,heal=2,hit=3,restore=4}
@@ -12,14 +12,12 @@ function M.install(G,E)
         local active
         for _,fx in ipairs(effects) do if fx.character==character then active=fx;break end end
         if active then
-            -- Healing and pressure share a single surface. Do not stack
-            -- several translucent fields or overwrite a fresh impact flash.
-            if kind=='hit' or active.age>.25 then active.kind=kind;active.age=0 end
+            if kind=='hit' or active.age>.1 then active.kind=kind;active.age=0 end
             active.tier=tier
         else effects[#effects+1]={character=character,age=0,tier=tier,kind=kind} end
         if #effects>C.maxEffects then table.remove(effects,1) end
         local nextSound=soundTimes[character] or 0
-        if G.now>=nextSound or tier==0 then
+        if (kind=='hit' and G.now>=nextSound) or tier==0 then
             soundTimes[character]=G.now+C.soundInterval
             local tags={[0]='empty',[1]='critical',[2]='low',[3]='high'}
             E.SoundPlayer.PlaySound('aegis_headset_'..tags[tier],character.WorldPosition)
@@ -44,7 +42,7 @@ function M.install(G,E)
     function G.updateEffects(dt)
         for i=#effects,1,-1 do
             effects[i].age=effects[i].age+dt
-            if effects[i].age>.65 or effects[i].character.Removed then table.remove(effects,i) end
+            if effects[i].age>C.indicatorDuration or effects[i].character.Removed then table.remove(effects,i) end
         end
     end
     function G.clearEffects() effects={};soundTimes={} end
@@ -65,55 +63,23 @@ function M.install(G,E)
         for _,fx in ipairs(effects) do
             local character=fx.character
             if not character.IsDead then
-                local pos=character.WorldPosition
-                local xmin,xmax,ymin,ymax=pos.X-18,pos.X+18,pos.Y-35,pos.Y+35
-                U.each(character.AnimController.Limbs,function(limb)
-                    if not limb.IsSevered then
-                        local p=limb.WorldPosition
-                        xmin=math.min(xmin,p.X-12);xmax=math.max(xmax,p.X+12)
-                        ymin=math.min(ymin,p.Y-12);ymax=math.max(ymax,p.Y+12)
+                local item=G.equipped(character)
+                local pulse=.6+.4*math.abs(math.sin(fx.age*70))
+                if fx.tier<=1 then pulse=pulse*(.3+.7*math.abs(math.sin(fx.age*100))) end
+                local fade=math.max(0,1-fx.age/C.indicatorDuration)*pulse
+                for _,led in ipairs(item and Leds.positions(E,character,item) or {}) do
+                    local radius=(fx.kind=='hit' and 2.4 or 1.8)*led.scale
+                    for row=-2,2 do
+                        local y=radius*row/3
+                        local half=math.sqrt(radius*radius-y*y)
+                        gui.DrawLine(batch,cam.WorldToScreen(E.Vector2(led.x-half,led.y+y)),
+                            cam.WorldToScreen(E.Vector2(led.x+half,led.y+y)),
+                            E.Color(255,15,20,math.floor(36*fade)),0,math.max(1,math.floor(cam.Zoom*.8+.5)))
                     end
-                end)
-                local cx,cy=(xmin+xmax)/2,(ymin+ymax)/2
-                local rx,ry=math.max(34,(xmax-xmin)*.65),math.max(54,(ymax-ymin)*.59)
-                local pulse=.3+.7*math.abs(math.sin(fx.age*48+(character.ID or 0)))
-                if fx.tier<=1 then pulse=pulse*(.4+.6*math.abs(math.sin(fx.age*73))) end
-                local fade=math.max(0,1-fx.age/.65)*pulse
-                local impact=fx.kind=='hit' and math.exp(-fx.age*15) or 0
-                local function stroke(ax,ay,bx,by,color,width)
-                    gui.DrawLine(batch,cam.WorldToScreen(E.Vector2(ax,ay)),cam.WorldToScreen(E.Vector2(bx,by)),
-                        color,0,math.max(1,math.floor(width*cam.Zoom+.5)))
-                end
-                -- A translucent energy surface, not just an outline. Rows
-                -- overlap slightly at every zoom so the field has no gaps.
-                for y=-ry,ry,3 do
-                    local v=y/ry
-                    local half=rx*math.sqrt(math.max(0,1-v*v))
-                    local shimmer=.75+.25*math.sin(y*.23-fx.age*42)
-                    local alpha=math.floor((24+68*impact)*fade*shimmer)
-                    stroke(cx-half,cy+y,cx+half,cy+y,E.Color(255,45+math.floor(55*impact),55,alpha),4)
-                end
-                -- Broad outer bloom and a brighter inner refraction rim.
-                for layer=1,2 do
-                    local previous
-                    local radius=layer==1 and 1.04 or 1
-                    local color=E.Color(255,layer==1 and 20 or 75,45,math.floor((layer==1 and 38 or 150)*fade))
-                    for i=0,64 do
-                        local angle=i*math.pi*2/64
-                        local jitter=1+.012*math.sin(i*7+fx.age*91)
-                        local point={x=cx+math.cos(angle)*rx*jitter*radius,y=cy+math.sin(angle)*ry*jitter*radius}
-                        if previous and (layer==1 or fx.tier>=2 or i%9~=0) then
-                            stroke(previous.x,previous.y,point.x,point.y,color,layer==1 and 9 or 2.5)
-                        end
-                        previous=point
-                    end
-                end
-                -- Moving bands make the transparent surface visibly ripple.
-                for band=1,5 do
-                    local v=((band/5+fx.age*1.1)%1)*2-1
-                    local width=rx*math.sqrt(math.max(0,1-v*v))
-                    local y=cy+v*ry
-                    stroke(cx-width,y,cx+width,y,E.Color(255,120,110,math.floor((45+50*impact)*fade)),2.5)
+                    gui.DrawLine(batch,cam.WorldToScreen(E.Vector2(led.x-.45*led.scale,led.y)),
+                        cam.WorldToScreen(E.Vector2(led.x+.45*led.scale,led.y)),
+                        E.Color(255,fx.kind=='hit' and 100 or 30,25,math.floor(210*fade)),0,
+                        math.max(1,math.floor(cam.Zoom*led.scale+.5)))
                 end
             end
         end

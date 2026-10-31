@@ -7,5 +7,6 @@ return {
     botThreshold=20,resupplyInterval=3,resupplyTimeout=25,
     failedSupplyCooldown=60,
     healInterval=.2,effectInterval=.35,soundInterval=.45,
+    indicatorDuration=.22,
     protocol='bmt.headsets.v1',maxEffects=128,
 }

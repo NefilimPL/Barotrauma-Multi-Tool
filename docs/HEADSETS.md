@@ -1,6 +1,6 @@
 # Komunikatory Aegis
 
-Wersja 1.2.1 zawiera dwa przedmioty dodane w 1.2.0 do MULTI-TOOL-V2. Wymagany jest LuaCs
+Wersja 1.2.2 zawiera dwa przedmioty dodane w 1.2.0 do MULTI-TOOL-V2. Wymagany jest LuaCs
 na kliencie i serwerze. **Żaden mod medyczny nie jest wymagany.**
 
 | Przedmiot | Identyfikator | Funkcje |
@@ -16,10 +16,15 @@ nieprzytomności, ale musi być założone; przedmiot w plecaku nie chroni.
 
 ## Migotanie po założeniu i diagnostyka
 
-Czerwone pole oznacza zużycie energii na ochronę albo regenerację.
+Krótki błysk małych czerwonych diod oznacza zużycie energii na ochronę albo regenerację.
 Samo migotanie nie oznacza otrzymywania obrażeń. Założenie urządzenia
 na wcześniej ranną postać może od razu rozpocząć leczenie, również na
 bezpiecznym okręcie. Zdrowa postać bez zagrożenia nie powinna zużywać baterii.
+
+Samo noszenie nie kosztuje energii. W 1.2.2 usunięto podbijanie odporności NT
+do 100 oraz ciągłe korygowanie prawidłowego ciśnienia i ilości krwi.
+Odporność pozostaje bez zmian; wartości krwi i ciśnienia od 90 do 110
+nie uruchamiają leczenia. Rzeczywiste niedociśnienie nadal wymaga regeneracji.
 
 W konsoli F3 wpisz `aegis_headset_status`. Komenda pokazuje naładowanie
 i ostatnie rzeczywiste koszty, np. `heal:burn`, `pressure`, `hit` lub
@@ -31,8 +36,8 @@ przez `Item.Scale`. Skala 0,7 powiększała arkusz 1254 px do około 878 px;
 nowa skala 0,035 daje około 44 px przed skalą ragdolla. Po podmianie
 pakietu uruchom grę ponownie; do pierwszej próby użyj nowego komunikatora.
 
-[Porównanie wyglądu pola](headsets/field-comparison.html) jest ilustracją
-geometrii renderera na poglądowej sylwetce, nie zrzutem ekranu gry.
+[Podgląd diod](headsets/field-comparison.html) pokazuje powiększone słuchawki
+z geometrią produkcyjnego renderera. To ilustracja, nie zrzut ekranu gry.
 
 ## Zasilanie
 
@@ -114,11 +119,14 @@ zwykłe słuchawki, FPGA, fulgurium, 2 miedzi, stop tytanowo-aluminiowy.
 Mk II: elektryka 65, 45 s, podstawowy komunikator, FPGA, 2 fulgurium
 i 2 stopy. Ogniwo wkłada się osobno. Ceny bazowe: 3500 / 7000.
 
-Własne grafiki i OGG są w `Assets/Headsets`. Osłona jest rysowana kodem:
-półprzezroczysta powierzchnia, szeroka poświata, migoczące pasma interferencji
-i silniejszy błysk trafienia. Kilka odbiorników energii dzieli jedno pole.
+Własne grafiki i OGG są w `Assets/Headsets`. Zamiast obwódki postaci renderer
+rysuje krótkie, małe światło w miejscach istniejących soczewek: jedną diodę
+w podstawowym modelu, trzy w Mk II. Światło podąża za głową, jej obrotem
+i odbiciem grafiki; znika pod hełmem zasłaniającym słuchawki.
+Błysk wygasa po 0,22 s od ostatniego użycia energii.
 Dźwięki: stabilny powyżej 40%, słabnący przy 15–40%, alarmowy poniżej 15%,
-osobny sygnał wyczerpania. Pobór ciągły ma limit częstotliwości sygnałów.
+osobny sygnał wyczerpania. Sygnał trafienia ma limit częstotliwości;
+regeneracja i ciśnienie są ciche, poza sygnałem wyczerpania.
 
 [Podgląd i odsłuch](headsets/preview.html) · [Prompty](headsets/PROMPTS.md)
 · [Weryfikacja](HEADSET-VERIFICATION.md)

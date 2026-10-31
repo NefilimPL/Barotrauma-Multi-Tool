@@ -19,7 +19,9 @@ function M.plan(entries,budget)
     for _,entry in ipairs(entries) do
         local p=entry.policy
         if p and not p.preserve and not p.anatomy then
-            local deficit=math.abs((p.target or 0)-entry.strength)
+            local healthy=p.healthyMin and p.healthyMax and
+                entry.strength>=p.healthyMin and entry.strength<=p.healthyMax
+            local deficit=healthy and 0 or math.abs((p.target or 0)-entry.strength)
             if deficit>1e-6 then
                 local priority=p.priority or 0
                 if not groups[priority] then groups[priority]={total=0,entries={}};prioritiesList[#prioritiesList+1]=priority end

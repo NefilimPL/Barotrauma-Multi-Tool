@@ -9,12 +9,12 @@ local organs={'heartremoved','lungsremoved','liverremoved','kidneysremoved','bra
 local surgical={surgeryincision=true,clampedbleeding=true,drilledbones=true,retractedskin=true,
     sawedbones=true,suturedi=true,caviclean=true}
 local ntPreserve={luabotomy=true,luabotomypurger=true,stopcreatureabuse=true,tshocktimeout=true,
-    onwheelchair=true,stasisbagoverlay=true,bodybagoverlay=true,afstreptokinase=true}
+    onwheelchair=true,stasisbagoverlay=true,bodybagoverlay=true,afstreptokinase=true,immunity=true}
 function M.entries(E,character)
     local health=character.CharacterHealth
     local entries={}
     -- Look at runtime globals, not package dependencies or load order. Both
-    -- classic Lua NT and NT CS expose this optional compatibility namespace.
+    -- Classic NT exposes a Lua namespace; NT CS is recognized by prefab ownership.
     U.each(health.GetAllAfflictions(),function(a)
         local prefab=a.Prefab
         local packageName=prefab.ContentPackage and tostring(prefab.ContentPackage.Name):lower() or ''
@@ -31,9 +31,9 @@ function M.entries(E,character)
             end
             -- NT labels physiology and surgical state as buffs. Preserve
             -- blood types/implants, but restore actual healthy physiology.
-            if name=='bloodpressure' then policy={target=100,priority=100} end
-            if name=='bloodamount' then policy={target=100,priority=100} end
-            if name=='immunity' then policy={target=100,priority=10} end
+            if name=='bloodpressure' or name=='bloodamount' then
+                policy={target=100,healthyMin=90,healthyMax=110,priority=100}
+            end
             if name=='acidosis' or name=='alkalosis' then policy={target=0,priority=95} end
             if surgical[name] then
                 local limb=health.GetAfflictionLimb(a)

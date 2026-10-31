@@ -1,4 +1,41 @@
-# Komunikatory Aegis — weryfikacja 1.2.1
+# Komunikatory Aegis — weryfikacja 1.2.2
+
+## Małe diody i brak kosztu normalnej fizjologii
+
+2026-10-31. Zgodnie z nowym wymaganiem usunięto całe pole wokół postaci.
+Renderer daje jedynie krótkie czerwone błyski na istniejących soczewkach
+grafiki: jedną diodę w modelu podstawowym, trzy w Mk II. Transformacja
+odwzorowuje natywny noszony sprite, obrót głowy i odbicie. Hełm ukrywający
+słuchawki ukrywa też światło. Regeneracja i ciśnienie nie odtwarzają dźwięku
+trafienia; wyczerpanie zachowuje osobny sygnał.
+
+Poprzedni adapter mógł opłacać zwiększanie normalnej odporności NT do 100
+oraz wyrównywanie drobnych odchyleń krwi i ciśnienia do idealnej wartości.
+Nowe regresje odtwarzają ten niepotrzebny koszt. Odporność jest teraz
+zachowywana, a krew i ciśnienie w zakresie 90–110 nie wymagają leczenia.
+Rzeczywiste urazy, regeneracja organów/kończyn, pochłanianie trafień
+i ochrona przed ciśnieniem nadal kosztują energię. Samo noszenie nie kosztuje.
+
+Wyniki po poprawce:
+
+- `python tools/run_tests.py`: **138/138 PASS**.
+- Walidator: **11 XML, 24 moduły Lua 5.2**, zasoby i receptury poprawne.
+- Prywatny natywny serwer: **9/9** prób mechaniki oraz **8/8** prób NT CS,
+  w tym zerowy pobór dla normalnej odporności/fizjologii oraz płatne leczenie
+  rzeczywistego niedociśnienia.
+- Natywna próba bezczynności po poprawce: **30 s, energia 100%, witalność 100**.
+  Wcześniejsza próba porównawcza trwała 120 s i także nie wykazała kosztu
+  w domyślnym zdrowym stanie. Nie odtwarzano pełnego zestawu modów użytkownika.
+- Regresje renderera sprawdzają pozycję, rozmiar i liczbę diod, obrót,
+  odbicie, wygaszenie, ukrycie pod hełmem i brak dźwięku trafienia przy leczeniu.
+
+Podgląd PNG pochodzi z poleceń produkcyjnego Lua nałożonych na oryginalną
+grafikę w przeglądarce. Nie jest zrzutem z gry. Natywne GPU klienta i sesja
+dwóch klientów pozostają niezweryfikowane. Poprawiono próbę klienta tak,
+aby wymagała rzeczywistego wyposażenia i niezerowej liczby diod zamiast
+pozornie zaliczać puste rysowanie. Mody medyczne pozostają opcjonalne.
+
+## Historia 1.2.1
 
 ## Poprawka po zgłoszeniu wyglądu i poboru energii
 

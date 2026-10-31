@@ -33,10 +33,11 @@ Prompt Mk II:
 > logos. Centered square canvas, transparent margin, crisp 48px silhouette.
 > Genuine transparent background, no external shadow, grid or border.
 
-Migotanie tarczy rysuje renderer Lua natywnymi liniami GUI: wypełniona
-półprzezroczysta powierzchnia, szeroka poświata, pięć pasm interferencji,
-czerwony puls i przerwy przy niskiej baterii.
-Nie wymaga tekstury ani zasobów filmowych.
+W 1.2.2 obwódkę postaci zastępują małe czerwone błyski na soczewkach
+słuchawek. Renderer Lua rysuje kilka krótkich linii GUI na każdą diodę,
+z subtelną poświatą i wygaszaniem po 0,22 s. Pozycje soczewek zmierzono
+w oryginalnych PNG; grafiki pozostają bez przeróbek. Transformacja odwzorowuje
+noszony sprite, obrót głowy i odbicie. Nie wymaga nowej tekstury.
 `python tools/generate_headset_field_preview.py` eksportuje produkcyjne
 polecenia rysowania do poglądowych SVG. Nie zastępuje próby GPU gry.
 

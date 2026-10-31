@@ -161,6 +161,23 @@ class HeadsetAdapterTests(LuaCase):
             assert(battery.Condition==100)
         """)
 
+    def test_normal_nt_physiology_does_not_trigger_passive_power_use(self):
+        self.lua.execute("""
+            E.NT={}
+            local immunity=add('immunity',45,true)
+            local pressure=add('bloodpressure',98.5,true)
+            local blood=add('bloodamount',99.5,true)
+            for i=1,300 do G.heal(char,item,.2) end
+            assert(battery.Condition==100,'normal physiology is being charged as regeneration')
+            assert(immunity.Strength==45 and pressure.Strength==98.5 and blood.Strength==99.5)
+        """)
+
+    def test_actual_nt_low_blood_pressure_is_still_treated_with_energy(self):
+        self.lua.execute("""
+            E.NT={};a=add('bloodpressure',60,true);G.heal(char,item,1)
+            assert(a.Strength==65 and battery.Condition==97.5)
+        """)
+
     def test_neurotrauma_cs_is_detected_without_legacy_lua_globals(self):
         self.lua.execute("""
             a=add('heartremoved',100,false);a.Prefab.ContentPackage={Name='Neurotrauma CS'}
