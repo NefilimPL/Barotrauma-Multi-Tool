@@ -1,4 +1,63 @@
-# Komunikatory Aegis — weryfikacja 1.2.3
+# Komunikatory Aegis — weryfikacja 1.2.4
+
+## Rezerwacja ogniwa, Real Sonar i słyszalne alarmy
+
+2026-11-01. Raport użytkownika z `aegis_headset_status` jednoznacznie
+wskazuje `heal:serversidelua -0.1250%`. Ten sam powtarzający się koszt
+odtworzono w prywatnym kliencie z kopiami wszystkich 13 aktywnych pakietów.
+Real Sonar deklaruje ten efekt jako nie-buff o maksymalnej sile 1 i stale
+utrzymuje go w Lua. To znacznik wyboru obsługi Lua/XML, nie uraz.
+Leczenie zachowuje go bez kosztu i bez włączania alternatywnej ścieżki XML.
+
+Drugą potwierdzoną ścieżką był wybór baterii słuchawek przez osobny moduł
+bojowego multitoola. Zablokowano go oraz natywne wyszukiwanie, pobieranie,
+przekładanie i opróżnianie przez AI. Własna atomowa podmiana przy <=10%
+nadal działa. Ręczne działania gracza pozostają dostępne.
+
+Próby natywne końcowej wersji:
+
+- Klient z pełnym zestawem XML/Lua: **4/4** rzeczywista blokada trafienia,
+  leczenie, pozycje trzech diod i GPU; dodatkowo oba sprite'y, cztery stany
+  energii i **7 natywnych kanałów audio**.
+- Klient z Real Sonar: **4/4** ochrona ogniwa 80% przed TakeItem, przed
+  opróżnianiem, zachowanie 80% i wymiana przy dokładnie 10%, zachowanie
+  prawdziwego znacznika Real Sonar na 1 bez kosztu podczas 100 kroków leczenia.
+- Serwer: te same trzy próby AI **3/3**; próba Real Sonar oznaczona SKIP,
+  bo pakiet nie jest tam włączony. Ponadto **9/9** mechaniki, **8/8** NT CS
+  i **3/3** automatycznego wkładania baterii.
+- Końcowa bezczynność klienta z pełnym zestawem: **30 s, energia 100%,
+  witalność 100, bezpieczny kadłub, NeedsAir=true, Removed=false**.
+- Natywny sterownik odtworzył trzy alarmy przy 20%, 10% i 0% bez zużycia
+  energii; komplet siedmiu plików otwiera natywne kanały audio.
+- **164/164** testów regresyjnych. Obejmują też alarm wysyłany przez serwer
+  i odebrany przez klienta bez kosztu i bez pasywnego błysku.
+
+Zapisano faktyczne końcowe klatki gry:
+[czerwone diody](headsets/in-game-red.png) i [niebieskie diody](headsets/in-game-blue.png).
+Widziana postać ma założony komunikator; klatki demonstracyjne wywołują
+rodzaj zdarzenia kontrolowanie, z ochroną postaci przed losowymi potworami.
+W próbie pikseli obok soczewek czerwony kadr miał 13 mocnych czerwonych
+pikseli, a niebieski 3 niebieskie. Rozmiar rdzenia to minimum 3 piksele.
+Nie są to ilustracje przeglądarkowe ani grafiki wygenerowane przez AI.
+
+Wcześniejsze próby podawały ścieżki opcjonalnych pakietów poza katalogiem
+wykrywania LocalMods klienta, więc sam wpis w konfiguracji nie dowodził
+ich uruchomienia. Poprawiono to przez fizyczne kopie w LocalMods oraz zapis
+faktycznej listy EnabledPackages, z kolejnością z konfiguracji użytkownika.
+W prywatnym kliencie log wskazuje CSharp disabled: próba pełnego zestawu
+dotyczy aktywnych XML/Lua; integrację C# Neurotraumy weryfikuje serwer.
+Sesja połączonych klientów multiplayer pozostaje niezweryfikowana.
+
+Natywna próba ujawniła też niejednoznaczne przeciążenie
+`AIController.UnequipContainedItems`. Wybrano jawny podpis z niekwalifikowanym
+``System.Func`2[Barotrauma.Item,System.Boolean]``, który działa w obu assembly.
+Pierwsza próba rezerwacji błędnie wyłączała AI, przez co aktor nie był IsBot;
+końcowe wyniki pochodzą od bota z włączonym AI. Zmieniono sprzątanie nowej
+próby na opóźnione, aby oczekujące callbacki tworzenia NT nie trafiały na
+usunięty ragdoll. Wszystkie zmiany i testy są w repozytorium/prywatnych kopiach;
+instalacji Steam użytkownika nie modyfikowano.
+
+## Historia 1.2.3
 
 ## Naprawa klienta, kolorów i wymiany ogniw
 

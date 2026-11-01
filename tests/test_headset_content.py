@@ -7,6 +7,10 @@ MOD = ROOT / 'MULTI-TOOL-V2'
 
 
 class HeadsetContentTests(unittest.TestCase):
+    def test_external_headset_emitters_are_not_hidden_by_headgear(self):
+        for item in ET.parse(MOD / 'regenerative_headsets.xml').getroot().findall('Item'):
+            self.assertEqual(item.find('Wearable/sprite').get('canbehiddenbyotherwearables'), 'false')
+
     def test_worn_sprite_is_head_sized_without_multiplying_item_scale(self):
         for item in ET.parse(MOD / 'regenerative_headsets.xml').getroot().findall('Item'):
             sprite = item.find('Wearable/sprite')
@@ -45,7 +49,8 @@ class HeadsetContentTests(unittest.TestCase):
     def test_three_power_tiers_and_poweroff_have_real_ogg_files(self):
         sounds = ET.parse(MOD / 'headset_sounds.xml').getroot()
         self.assertEqual({s.get('identifier') for s in sounds},
-                         {'aegis_headset_high', 'aegis_headset_low', 'aegis_headset_critical', 'aegis_headset_empty'})
+                         {'aegis_headset_high', 'aegis_headset_low', 'aegis_headset_critical', 'aegis_headset_empty',
+                          'aegis_headset_warning_low', 'aegis_headset_warning_critical', 'aegis_headset_warning_empty'})
         for sound in sounds:
             self.assertEqual(sound.tag, sound.get('identifier'), 'SoundPlayer uses the XML element name as its tag')
             file = MOD / sound.get('file').replace('%ModDir%/', '')

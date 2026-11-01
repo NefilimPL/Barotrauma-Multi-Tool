@@ -19,10 +19,24 @@ def load_tests(loader, tests, pattern):
         HeadsetClientBoundaryTests('test_active_disease_at_exact_threshold_is_treated'),
         HeadsetClientBoundaryTests('test_no_op_does_not_temporarily_exhaust_battery'),
         HeadsetBotInsertionTests('test_bot_does_not_take_illegitimate_outpost_cell'),
+        HeadsetBotInsertionTests('test_replacement_starts_at_ten_percent_and_leaves_eleven_alone'),
+        HeadsetClientBoundaryTests('test_real_sonar_server_flag_is_never_healed_or_charged'),
+        HeadsetColorTests('test_low_power_alarms_do_not_require_hits_or_consume_energy'),
+        HeadsetColorTests('test_successive_hits_emit_distinct_impact_sounds'),
+        HeadsetColorTests('test_own_headset_audio_is_not_muted_by_a_distant_test_camera'),
+        HeadsetColorTests('test_multiplayer_warning_packet_plays_alarm_without_led_or_debit'),
     ])
 
 
 class HeadsetClientBoundaryTests(HeadsetAdapterTests):
+    def test_real_sonar_server_flag_is_never_healed_or_charged(self):
+        self.lua.execute('''
+            a=add('serversidelua',1,false)
+            a.Prefab.MaxStrength=1;a.GetVitalityDecrease=function() return 0 end
+            for i=1,300 do a.Strength=1;G.heal(char,item,.2);assert(a.Strength==1) end
+            assert(battery.Condition==100,'Real Sonar control flag was paid as regeneration')
+        ''')
+
     def test_active_disease_at_exact_threshold_is_treated(self):
         self.lua.execute('''
             a=add('futuremod_binary_disease',1,false);a.Prefab.ActivationThreshold=1
@@ -49,7 +63,7 @@ class HeadsetClientBoundaryTests(HeadsetAdapterTests):
         self.lua.execute('''
             local C=require('AegisHeadset.config')
             assert(C.pressureCost==2.5 and C.healCost==.125)
-            assert(C.hitMinimum==.25 and C.hitMultiplier==.125)
+            assert(C.hitMinimum==1 and C.hitMultiplier==.5)
             assert(C.organCost==7.5 and C.limbCost==12.5 and C.surgeryCost==7.5)
         ''')
     def test_inactive_oxygen_trace_does_not_cost_power(self):
@@ -87,6 +101,53 @@ class HeadsetClientBoundaryTests(HeadsetAdapterTests):
 
 
 class HeadsetColorTests(HeadsetVisualTests):
+    def test_multiplayer_warning_packet_plays_alarm_without_led_or_debit(self):
+        self.lua.execute('''
+            E.Game.IsSingleplayer=false
+            E.Networking.Receive=function(protocol,callback) receive=callback end
+            E.Entity={FindEntityByID=function(id) assert(id==42);return char end}
+            E.LuaUserData.IsTargetType=function() return true end
+            G=require('AegisHeadset.game').new(E);G.patch=function() end
+            require('AegisHeadset.effects').install(G,E)
+            local tags={};E.SoundPlayer.PlaySound=function(tag) tags[#tags+1]=tag end
+            local bytes={5,2};local ids={42,0}
+            receive({ReadUInt16=function() return table.remove(ids,1) end,
+                ReadByte=function() return table.remove(bytes,1) end})
+            assert(tags[1]=='aegis_headset_warning_low' and cell.Condition==100)
+            G.drawEffects({},cam);assert(#lines==0)
+        ''')
+
+    def test_own_headset_audio_is_not_muted_by_a_distant_test_camera(self):
+        self.lua.execute('''
+            E.Character={Controlled=char}
+            E.SoundPlayer.PlaySound=function(tag,arg)
+                assert(type(arg)=='number','own headset audio incorrectly uses world distance')
+                sounds=sounds+1
+            end
+            G.emit(char,item,'hit');assert(sounds==1)
+        ''')
+
+    def test_low_power_alarms_do_not_require_hits_or_consume_energy(self):
+        self.lua.execute('''
+            local tags={};E.SoundPlayer.PlaySound=function(tag) tags[#tags+1]=tag end
+            cell.Condition=25;G.checkPower(char,item);assert(#tags==0)
+            cell.Condition=20;G.checkPower(char,item)
+            assert(#tags==1 and tags[1]=='aegis_headset_warning_low')
+            G.now=1;G.checkPower(char,item);assert(#tags==1,'alarm spam')
+            cell.Condition=10;G.checkPower(char,item)
+            assert(#tags==2 and tags[2]=='aegis_headset_warning_critical')
+            cell.Condition=0;G.checkPower(char,item)
+            assert(#tags==3 and tags[3]=='aegis_headset_warning_empty')
+            G.drawEffects({},cam);assert(#lines==0,'battery alarms create passive LED flashes')
+            assert(cell.Condition==0)
+        ''')
+
+    def test_successive_hits_emit_distinct_impact_sounds(self):
+        self.lua.execute('''
+            G.emit(char,item,'hit');G.now=.15;G.emit(char,item,'hit')
+            assert(sounds==2,'second impact was suppressed by healing/pressure throttle')
+        ''')
+
     def test_hit_flash_remains_red_when_healing_arrives_during_blink(self):
         self.lua.execute('''
             G.emit(char,item,'hit');G.updateEffects(.2);G.now=.2
@@ -109,6 +170,14 @@ class HeadsetColorTests(HeadsetVisualTests):
 
 
 class HeadsetBotInsertionTests(LuaCase):
+    def test_replacement_starts_at_ten_percent_and_leaves_eleven_alone(self):
+        self.lua.execute('''
+            assert(require('AegisHeadset.config').botThreshold==10)
+            old.Condition=80;AI.update(G,E,char,item);assert(current==old)
+            old.Condition=11;G.now=2;AI.update(G,E,char,item);assert(current==old)
+            old.Condition=10;G.now=4;AI.update(G,E,char,item);assert(current==spare)
+        ''')
+
     def test_bot_does_not_take_illegitimate_outpost_cell(self):
         self.lua.execute('''
             spare.Illegitimate=true

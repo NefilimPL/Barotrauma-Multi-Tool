@@ -1,6 +1,29 @@
 local U=require('CombatTool.util')
 local C=require('AegisHeadset.config')
 local M={}
+function M.install(G,E)
+    E.LuaUserData.MakeFieldAccessible(E.LuaUserData.RegisterType('Barotrauma.AIObjectiveContainItem'),'item')
+    local function reserve(_,p)
+        if U.reservedHeadsetCell(E,p['item']) then p.PreventExecution=true;return false end
+    end
+    G.patch('reserve-search','Barotrauma.AIObjectiveGetItem','CheckItem',reserve)
+    G.patch('reserve-contain-search','Barotrauma.AIObjectiveContainItem','CheckItem',reserve)
+    G.patch('reserve-take','Barotrauma.AIController','TakeItem',function(controller,p)
+        if controller.Character.IsBot then return reserve(controller,p) end
+    end)
+    G.patch('reserve-contain','Barotrauma.AIObjectiveContainItem','Act',function(objective,p)
+        if U.reservedHeadsetCell(E,objective.item) then
+            objective.Abandon=true;p.PreventExecution=true
+        end
+    end)
+    G.patch('reserve-unload','Barotrauma.AIController','UnequipContainedItems',function(controller,p)
+        local character=controller and controller.Character or p['character']
+        local item=p['parentItem']
+        if character and character.IsBot and item and item.HasTag('aegisheadset') then p.PreventExecution=true end
+    end,false,{'Barotrauma.Character','Barotrauma.Item',
+        'System.Func`2[Barotrauma.Item,System.Boolean]',
+        'System.Boolean','System.Boolean','System.Nullable`1[System.Int32]'})
+end
 function M.candidate(E,character,item,current,failed,now)
     local best,score=nil,math.huge
     U.each(E.Item.ItemList,function(cell)
@@ -53,7 +76,7 @@ function M.update(G,E,character,item)
         end
         M.cancel(s)
     end
-    if s.resupply or G.now<(s.nextResupply or 0) or G.energy(item)>=C.botThreshold then return end
+    if s.resupply or G.now<(s.nextResupply or 0) or G.energy(item)>C.botThreshold then return end
     s.nextResupply=G.now+C.resupplyInterval
     local cell=M.candidate(E,character,item,G.energy(item),s.failedCells,G.now)
     if not cell then return end

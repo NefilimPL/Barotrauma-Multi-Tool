@@ -12,6 +12,10 @@ end
 function U.itemId(item)
     return item and item.Prefab and tostring(item.Prefab.Identifier.Value):lower() or ''
 end
+function U.reservedHeadsetCell(E,cell)
+    local owner=cell and cell.ParentInventory and cell.ParentInventory.Owner
+    return owner and E.LuaUserData.IsTargetType(owner,'Barotrauma.Item') and owner.HasTag('aegisheadset') or false
+end
 function U.component(item,name,index)
     local result,n=nil,0
     U.each(item and item.Components,function(c)

@@ -12,7 +12,7 @@ Timer.Wait(function()
         local Blend=LuaUserData.CreateStatic('Microsoft.Xna.Framework.Graphics.BlendState')
         local Sort=LuaUserData.CreateEnumTable('Microsoft.Xna.Framework.Graphics.SpriteSortMode')
         batch=SB(gm.Instance.GraphicsDevice)
-        for _,tag in ipairs({'high','low','critical','empty'}) do
+        for _,tag in ipairs({'high','low','critical','empty','warning_low','warning_critical','warning_empty'}) do
             local p=gm.SoundManager.ListenerPosition
             local channel=SoundPlayer.PlaySound('aegis_headset_'..tag,Vector2(p.X,p.Y))
             assert(channel,'missing native audio tag '..tag);channel.Dispose()
@@ -38,7 +38,7 @@ Timer.Wait(function()
                 local char={ID=65000,WorldPosition=Vector2(x,y),Inventory={GetItemInLimbSlot=function() return item end},
                     AnimController={RagdollParams={LimbScale=1},Limbs={head}}}
                 assert(#require('AegisHeadset.leds').positions(_G,char,item)>0,'GPU test has no equipped LED geometry')
-                for _,energy in ipairs({100,30,10,0}) do
+                for _,energy in ipairs({100,20,10,0}) do
                     G.now=G.now+1;cell.Condition=energy;G.emit(char,item,'hit')
                     for frame=1,15 do
                         batch.Begin(Sort.Deferred,Blend.NonPremultiplied)
@@ -57,6 +57,6 @@ Timer.Wait(function()
     end)
     if batch then pcall(function() batch.End();batch.Dispose() end) end
     File.Write('LocalMods/MULTI-TOOL-V2/headset-client-results.txt',
-        ok and 'PASS native GPU LED flashes, equipped sprite-derived geometry, 4 power tiers, both wearable sprites, 4 audio channels' or 'FAIL '..tostring(err))
+        ok and 'PASS native GPU LED flashes, equipped sprite-derived geometry, 4 power tiers, both wearable sprites, 7 audio channels' or 'FAIL '..tostring(err))
     print('[HEADSET CLIENT] '..(ok and 'PASS' or tostring(err)))
 end,8000)

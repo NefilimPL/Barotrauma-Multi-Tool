@@ -107,7 +107,7 @@ class HeadsetAdapterTests(LuaCase):
 
     def test_partial_attack_reenters_native_method_without_raw_scalar_casts(self):
         self.lua.execute("""
-            battery.Condition=1.25
+            battery.Condition=5
             a=add('burn',20,false);a.CreateMultiplied=function(f) return {Strength=20*f,Prefab=a.Prefab} end
             local params={afflictions={a},stun=0,damageMultiplier=1,attackImpulse=0}
             local calls=0
@@ -123,13 +123,13 @@ class HeadsetAdapterTests(LuaCase):
 
     def test_refunded_failed_attack_does_not_report_power_drain_or_shield_flash(self):
         self.lua.execute("""
-            battery.Condition=1.25
+            battery.Condition=5
             a=add('burn',20,false);a.CreateMultiplied=function(f) return {Strength=20*f,Prefab=a.Prefab} end
             char.DamageLimb=function() error('native binding failure') end
             local flashes=0;G.emit=function() flashes=flashes+1 end
             local p={afflictions={a},stun=0,damageMultiplier=1,attackImpulse=0}
             G.intercept(char,p,function() return {} end)
-            assert(battery.Condition==1.25 and not p.PreventExecution)
+            assert(battery.Condition==5 and not p.PreventExecution)
             assert(not G.state(item).debits and flashes==0,'refunded power use is still presented as a real debit')
         """)
 

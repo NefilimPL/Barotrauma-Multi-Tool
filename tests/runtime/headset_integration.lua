@@ -34,10 +34,10 @@ check('native full attack blocked before health damage',function()
     local before=character.Vitality
     character.AddDamage(position,{AfflictionPrefab.Prefabs['burn'].Instantiate(100)},0,false,Vector2.Zero,nil,1)
     assert(not character.IsDead and character.Vitality==before,'attack reached wearer')
-    assert(math.abs(G.energy(item)-87.5)<.01,'attack not charged exactly once')
+    assert(math.abs(G.energy(item)-50)<.01,'attack not charged exactly once')
 end)
 check('native partial battery passes remaining attack damage',function()
-    character.CharacterHealth.SetAllDamage(0,0,0);cell.Condition=1.25
+    character.CharacterHealth.SetAllDamage(0,0,0);cell.Condition=5
     local before=character.Vitality
     character.AddDamage(position,{AfflictionPrefab.Prefabs['burn'].Instantiate(20)},0,false,Vector2.Zero,nil,1)
     assert(cell.Condition==0 and character.Vitality<before)

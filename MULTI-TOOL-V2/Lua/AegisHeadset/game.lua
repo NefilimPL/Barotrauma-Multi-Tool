@@ -227,11 +227,12 @@ function M.new(E)
     function G.shouldBlockSever(character)
         return G.attackScopes[character] and G.attackScopes[character].blocked or false
     end
-    function G.patch(name,class,method,fn,after)
+    function G.patch(name,class,method,fn,after,signature)
         local phase=after and E.Hook.HookMethodType.After or E.Hook.HookMethodType.Before
         local key='bmt.headsets.'..name
-        E.Hook.Patch(key,class,method,fn,phase)
-        G.patches[#G.patches+1]={key,class,method,phase}
+        if signature then E.Hook.Patch(key,class,method,signature,fn,phase)
+        else E.Hook.Patch(key,class,method,fn,phase) end
+        G.patches[#G.patches+1]={key,class,method,phase,signature}
     end
     function G.install()
         E.LuaUserData.RegisterType('Barotrauma.AttackResult')
@@ -254,6 +255,7 @@ function M.new(E)
             if context.protected then return true end
         end,true)
         if G.authoritative then
+            AI.install(G,E)
             G.patch('attack-enter','Barotrauma.Character','ApplyAttack',function(character) G.beginAttack(character) end)
             G.patch('attack-leave','Barotrauma.Character','ApplyAttack',function(character) G.endAttack(character) end,true)
             G.patch('block-sever','Barotrauma.Character','TrySeverLimbJoints',function(character,p)
@@ -298,7 +300,10 @@ function M.new(E)
                 local elapsed=G.healTime;G.healTime=0
                 U.each(E.Character.CharacterList,function(character)
                     local item=G.equipped(character)
-                    if item then G.heal(character,item,elapsed);AI.update(G,E,character,item) end
+                    if item then
+                        G.heal(character,item,elapsed);AI.update(G,E,character,item)
+                        if G.checkPower then G.checkPower(character,item) end
+                    end
                 end)
                 for character in pairs(G.patients) do
                     if character.Removed or character.IsDead or not G.equipped(character) then G.patients[character]=nil end
@@ -322,7 +327,10 @@ function M.new(E)
         if G.commandInstalled then E.Game.RemoveCommand('aegis_headset_status');G.commandInstalled=false end
         if E.Hook then
             E.Hook.Remove('think','bmt.headsets.update');E.Hook.Remove('roundEnd','bmt.headsets.reset')
-            for _,p in ipairs(G.patches) do E.Hook.RemovePatch(p[1],p[2],p[3],p[4]) end
+            for _,p in ipairs(G.patches) do
+                if p[5] then E.Hook.RemovePatch(p[1],p[2],p[3],p[5],p[4])
+                else E.Hook.RemovePatch(p[1],p[2],p[3],p[4]) end
+            end
         end
         if G.disposeEffects then G.disposeEffects() end
         G.patches={}

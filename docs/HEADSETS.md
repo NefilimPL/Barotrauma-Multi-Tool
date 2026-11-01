@@ -1,6 +1,6 @@
 # Komunikatory Aegis
 
-Wersja 1.2.3 zawiera dwa przedmioty dodane w 1.2.0 do MULTI-TOOL-V2. Wymagany jest LuaCs
+Wersja 1.2.4 zawiera dwa przedmioty dodane w 1.2.0 do MULTI-TOOL-V2. Wymagany jest LuaCs
 na kliencie i serwerze. **Żaden mod medyczny nie jest wymagany.**
 
 | Przedmiot | Identyfikator | Funkcje |
@@ -28,6 +28,9 @@ Odporność pozostaje bez zmian; wartości krwi i ciśnienia od 90 do 110
 nie uruchamiają leczenia. Rzeczywiste niedociśnienie nadal wymaga regeneracji.
 Od 1.2.3 pomijane są także efekty poniżej ich natywnego progu aktywacji.
 Nieudana próba zmiany efektu nie pobiera energii ani nie daje błysku.
+Od 1.2.4 zachowywany jest także `serversidelua`, znacznik Real Sonar stale
+odtwarzany przez ten mod. Jego usuwanie było rzeczywistą przyczyną zgłoszonego
+pasywnego kosztu oraz mogło włączać zastępcze efekty XML sonaru.
 
 W konsoli F3 wpisz `aegis_headset_status`. Komenda pokazuje naładowanie
 i ostatnie rzeczywiste koszty, np. `heal:burn`, `pressure`, `hit` lub
@@ -49,7 +52,7 @@ z geometrią produkcyjnego renderera. To ilustracja, nie zrzut ekranu gry.
 - Organ: 7,5% i co najmniej 5 s opłacanej regeneracji.
 - Kończyna: 12,5% i co najmniej 10 s opłacanej regeneracji.
 - Zamknięcie operacji NT: 7,5% i co najmniej 5 s na daną część ciała.
-- Mk II: co najmniej 0,25% za trafienie, dalej 0,125% za jednostkę przyjmowanej
+- Mk II: co najmniej 1% za trafienie, dalej 0,5% za jednostkę przyjmowanej
   siły. Na pewno nieskuteczne efekty (np. prawdopodobieństwo zero, pełna
   odporność, pełne pokrycie pancerzem) nie są opłacane jako obrażenia.
 
@@ -108,7 +111,7 @@ obcy skrypt zabijający postać bezpośrednio wymaga osobnej integracji.
 
 ## Boty
 
-Poniżej 30% bot co sekundę szuka dostępnego ogniwa o wyższym naładowaniu. Najpierw
+Przy 10% lub mniej bot co sekundę szuka dostępnego ogniwa o wyższym naładowaniu. Najpierw
 korzysta z własnego ekwipunku, później ze zwykłych magazynów. Nie wyjmuje
 baterii z cudzych ekwipunków, broni, sonarów ani innych rozpoznanych
 urządzeń ani nie bierze ogniw oznaczonych jako cudza własność na posterunku.
@@ -116,6 +119,10 @@ Po zdobyciu zapasu dokonuje natywnej, atomowej zamiany; dotyczy to też
 pustego slotu i bota bez bieżącego zadania. Działająca bateria pozostaje
 w słuchawkach przy nieudanej podmianie lub przerwanym dojściu. Nieosiągalne
 ogniwo jest pomijane przez 60 s; brak zapasów nie blokuje pracy.
+
+Ogniwo w słuchawkach jest zarezerwowane: inne zadania botów oraz bojowy
+multitool nie wybierają go jako zapasu, nie pobierają i nie opróżniają
+pojemnika. Ręczne przenoszenie przez gracza pozostaje dostępne.
 
 ## Wytwarzanie i zasoby
 
@@ -127,13 +134,32 @@ i 2 stopy. Ogniwo wkłada się osobno. Ceny bazowe: 3500 / 7000.
 Własne grafiki i OGG są w `Assets/Headsets`. Zamiast obwódki postaci renderer
 rysuje krótkie, małe światło w miejscach istniejących soczewek: jedną diodę
 w podstawowym modelu, trzy w Mk II. Światło podąża za głową, jej obrotem
-i odbiciem grafiki; znika pod hełmem zasłaniającym słuchawki.
+i odbiciem grafiki. Zewnętrzne emitery pozostają widoczne przy nakryciu głowy.
 Błysk wygasa po 0,55 s od ostatniego zdarzenia; kolejne kroki leczenia
 podtrzymują niebieskie światło. Trafienie nie jest natychmiast nadpisywane
 przez równoczesną regenerację.
-Dźwięki: stabilny powyżej 40%, słabnący przy 15–40%, alarmowy poniżej 15%,
-osobny sygnał wyczerpania. Sygnał trafienia ma limit częstotliwości;
-regeneracja i ciśnienie są ciche, poza sygnałem wyczerpania.
+Dźwięki trafienia: stabilny powyżej 20%, słabnący przy 10–20%, krytyczny
+przy 10% lub mniej, osobny impuls wyczerpania. Rezonujące, elektroniczne
+uderzenia powstały z własnej syntezy; nie używają nagrań filmu.
+Trafienia mogą odtwarzać dźwięk co 0,1 s, niezależnie od wolniejszego
+odświeżania leczenia. Alarmy są osobne: przy 20% co 10 s, przy 10% co 5 s,
+przy 0% jednokrotnie. Nie wymagają trafienia, nie pobierają energii i nie
+wywołują pasywnego błysku. Dźwięk własnych słuchawek nie zależy od odległości
+kamery; inni słyszą go przestrzennie.
+
+## Szybkie tworzenie w testerze
+
+F3, następnie:
+
+```text
+enablecheats
+spawnitem aegisheadsetmk2 inventory
+spawnitem batterycell inventory 3
+```
+
+Słabsza wersja: `spawnitem aegisheadset inventory`. Włóż ogniwo do
+komunikatora, a komunikator do slotu słuchawek. W razie nieoczekiwanego
+kosztu `aegis_headset_status` pokazuje konkretny leczony identyfikator.
 
 [Podgląd i odsłuch](headsets/preview.html) · [Prompty](headsets/PROMPTS.md)
 · [Weryfikacja](HEADSET-VERIFICATION.md)

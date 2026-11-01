@@ -42,7 +42,9 @@ noszony sprite, obrót głowy i odbicie. Nie wymaga nowej tekstury.
 `python tools/generate_headset_field_preview.py` eksportuje produkcyjne
 polecenia rysowania do poglądowych SVG. Nie zastępuje próby GPU gry.
 
-Cztery oryginalne dźwięki syntetyzuje `python tools/generate_headset_audio.py`:
-impuls, impuls z trzaskiem, przerywany alarm oraz sygnał wyczerpania.
+Siedem oryginalnych dźwięków syntetyzuje `python tools/generate_headset_audio.py`:
+cztery poziomy rezonującego, metalicznego impulsu osłony oraz trzy osobne
+alarmy niskiej, krytycznej i wyczerpanej baterii. Brzmienie łączy nieharmoniczne
+rezonanse, opadający elektroniczny ton i krótki szum. To własna synteza.
 Mono Vorbis, 44100 Hz; nie wykorzystano nagrań gry ani filmu.
 Podgląd i odsłuch: [preview.html](preview.html).

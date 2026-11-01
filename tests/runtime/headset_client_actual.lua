@@ -23,7 +23,7 @@ Timer.Wait(function()
         local before=c.Vitality
         c.AddDamage(c.WorldPosition,{AfflictionPrefab.Prefabs['burn'].Instantiate(20)},0,false,Vector2.Zero,nil,1)
         assert(math.abs(c.Vitality-before)<.001,'damage passed through')
-        assert(math.abs(G.energy(item)-97.5)<.001,'wrong impact cost')
+        assert(math.abs(G.energy(item)-90)<.001,'wrong impact cost')
     end)
     check('singleplayer actual regeneration consumes reduced energy',function()
         c.CharacterHealth.ApplyAffliction(c.AnimController.MainLimb,AfflictionPrefab.Prefabs['burn'].Instantiate(10))

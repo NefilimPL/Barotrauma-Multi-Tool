@@ -1,6 +1,9 @@
 -- Public, data-driven compatibility API. No dependency on NT or game globals.
 local M={policies={}}
 local preserveTypes={talentbuff=true,geneticmaterialbuff=true,geneticmaterial=true}
+-- Real Sonar maintains this non-buff control flag. Clearing it enables its
+-- XML fallback while Lua is running and is not medical regeneration.
+local technical={serversidelua=true}
 local priorities={bleeding=100,bloodloss=100,oxygenlow=100,stun=90,
     cardiacarrest=100,respiratoryarrest=100,hypoxemia=100,neurotrauma=95}
 function M.register(identifier,policy)
@@ -11,6 +14,7 @@ function M.classify(prefab)
     local id=(prefab.id or ''):lower()
     local override=M.policies[id]
     if override then return not override.preserve and override or nil end
+    if technical[id] then return nil end
     if preserveTypes[(prefab.type or ''):lower()] or (prefab.isBuff and not prefab.harmful) then return nil end
     return {target=0,priority=priorities[id] or 0}
 end

@@ -3,11 +3,20 @@ local Medical=require('AegisHeadset.medical')
 local Leds=require('AegisHeadset.leds')
 local M={}
 function M.install(G,E)
-    local kinds={pressure=1,heal=2,hit=3,restore=4}
-    local names={'pressure','heal','hit','restore'}
+    local kinds={pressure=1,heal=2,hit=3,restore=4,warning=5}
+    local names={'pressure','heal','hit','restore','warning'}
     local effects,soundTimes={},{}
+    local function play(tag,character)
+        if E.Character and E.Character.Controlled==character then E.SoundPlayer.PlaySound(tag,1)
+        else E.SoundPlayer.PlaySound(tag,character.WorldPosition) end
+    end
     local function receive(character,kind,tier,joint)
         if G.disposed or not character or character.Removed then return end
+        if kind=='warning' then
+            local tags={[0]='empty',[1]='critical',[2]='low'}
+            if tags[tier] then play('aegis_headset_warning_'..tags[tier],character) end
+            return
+        end
         if kind=='restore' and not G.authoritative and not character.IsDead then Medical.restoreNative(character,joint) end
         local active
         for _,fx in ipairs(effects) do if fx.character==character then active=fx;break end end
@@ -21,24 +30,36 @@ function M.install(G,E)
         if (kind=='hit' and G.now>=nextSound) or tier==0 then
             soundTimes[character]=G.now+C.soundInterval
             local tags={[0]='empty',[1]='critical',[2]='low',[3]='high'}
-            E.SoundPlayer.PlaySound('aegis_headset_'..tags[tier],character.WorldPosition)
+            play('aegis_headset_'..tags[tier],character)
         end
     end
     function G.emit(character,item,kind,joint)
         local s=G.state(item)
         local energy=G.energy(item)
-        local tier=energy<=0 and 0 or energy<15 and 1 or energy<40 and 2 or 3
+        local tier=energy<=0 and 0 or energy<=C.criticalEnergy and 1 or energy<=C.lowEnergy and 2 or 3
         s.effectTimes=s.effectTimes or {}
-        if kind~='restore' and G.now<(s.effectTimes[kind] or 0) and not (tier==0 and not s.emptySignaled) then return end
-        if kind~='restore' and tier==0 and s.emptySignaled then return end
-        s.emptySignaled=tier==0
-        s.effectTimes[kind]=G.now+C.effectInterval
+        if kind~='restore' and kind~='warning' and G.now<(s.effectTimes[kind] or 0) and not (tier==0 and not s.emptySignaled) then return end
+        if kind~='restore' and kind~='warning' and tier==0 and s.emptySignaled then return end
+        if kind~='warning' then s.emptySignaled=tier==0 end
+        s.effectTimes[kind]=G.now+(kind=='hit' and C.hitInterval or C.effectInterval)
         if E.CLIENT then receive(character,kind,tier,joint) end
         if E.SERVER and E.Game.Server then
             local msg=E.Networking.Start(C.protocol)
             msg.WriteUInt16(character.ID);msg.WriteByte(kinds[kind]);msg.WriteByte(tier);msg.WriteUInt16(joint or 0)
             E.Networking.Send(msg)
         end
+    end
+    function G.checkPower(character,item)
+        local state=G.state(item)
+        local energy=G.energy(item)
+        local tier=energy<=0 and 0 or energy<=C.criticalEnergy and 1 or energy<=C.lowEnergy and 2 or 3
+        local cell=G.source(item)
+        if state.warningCell~=cell then state.warningCell=cell;state.warningTier=nil;state.nextWarning=0 end
+        if tier<3 and (state.warningTier~=tier or (tier>0 and G.now>=(state.nextWarning or 0))) then
+            G.emit(character,item,'warning')
+            state.nextWarning=G.now+(tier==1 and C.criticalAlarmInterval or C.lowAlarmInterval)
+        end
+        state.warningTier=tier
     end
     function G.updateEffects(dt)
         for i=#effects,1,-1 do
@@ -87,7 +108,7 @@ function M.install(G,E)
                     gui.DrawLine(batch,cam.WorldToScreen(E.Vector2(led.x-.45*led.scale,led.y)),
                         cam.WorldToScreen(E.Vector2(led.x+.45*led.scale,led.y)),
                         E.Color(r,g,b,math.floor(255*fade)),0,
-                        math.max(2,math.floor(cam.Zoom*led.scale*1.5+.5)))
+                        math.max(3,math.floor(cam.Zoom*led.scale*1.5+.5)))
                 end
             end
         end

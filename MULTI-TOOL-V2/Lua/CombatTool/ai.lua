@@ -46,7 +46,7 @@ function A.install(G,E)
     local function candidate(character,item)
         local best,score=nil,math.huge
         U.each(E.Item.ItemList,function(source)
-            if source~=item and (source.HasTag('mobilebattery') or source.HasTag('reactorfuel')) and source.ConditionPercentage>=1 then
+            if source~=item and not U.reservedHeadsetCell(E,source) and (source.HasTag('mobilebattery') or source.HasTag('reactorfuel')) and source.ConditionPercentage>=1 then
                 local parent=source.ParentInventory and source.ParentInventory.Owner
                 local allowed,depth=true,0
                 -- Check the entire ownership chain, including bags in another

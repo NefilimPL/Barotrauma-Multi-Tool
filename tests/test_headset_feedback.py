@@ -2,6 +2,13 @@ from lua_support import LuaCase
 
 
 class HeadsetFeedbackTests(LuaCase):
+    def test_server_warning_has_distinct_wire_kind_and_no_power_cost(self):
+        self.lua.execute('''
+            cell.Condition=20;G.checkPower(char,item)
+            assert(#sent==1 and sent[1].bytes[1]==5 and sent[1].bytes[2]==2)
+            assert(cell.Condition==20)
+        ''')
+
     def setUp(self):
         super().setUp()
         self.lua.execute('''
@@ -23,7 +30,7 @@ class HeadsetFeedbackTests(LuaCase):
 
     def test_power_levels_are_sent_for_distinct_audio_tiers(self):
         self.lua.execute('''
-            for _,charge in ipairs({100,30,10,0}) do
+            for _,charge in ipairs({100,20,10,0}) do
                 G.now=G.now+1;cell.Condition=charge;G.emit(char,item,'hit')
             end
             assert(#sent==4)
