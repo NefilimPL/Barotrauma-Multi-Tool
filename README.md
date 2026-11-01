@@ -39,29 +39,90 @@ enablecheats
 
 Następnie użyj wybranej komendy. `inventory` tworzy przedmiot w ekwipunku
 kontrolowanej postaci. Na serwerze potrzebujesz uprawnień do tych komend.
+Komendy kopiuj przyciskiem kopiowania bloku kodu. Dostępne są też w
+[zwykłym pliku tekstowym](docs/spawn-commands.txt).
 
-| Przedmiot moda | Komenda |
-|---|---|
-| Komunikator regeneracyjny Aegis | `spawnitem aegisheadset inventory` |
-| Komunikator osłonowy Aegis Mk II | `spawnitem aegisheadsetmk2 inventory` |
-| Bojowy multitool Aegis | `spawnitem combatmultitool inventory` |
-| Kompozytowy multitool | `spawnitem Multi-toolSET inventory` |
-| Klucz-śrubokręt 2 w 1 | `spawnitem wrenchscrewdrivertwoinoneSET inventory` |
+Komunikator regeneracyjny Aegis:
+
+```text
+spawnitem aegisheadset inventory 1
+```
+
+Komunikator osłonowy Aegis Mk II:
+
+```text
+spawnitem aegisheadsetmk2 inventory 1
+```
+
+Bojowy multitool Aegis:
+
+```text
+spawnitem combatmultitool inventory 1
+```
+
+Kompozytowy multitool:
+
+```text
+spawnitem Multi-toolSET inventory 1
+```
+
+Klucz-śrubokręt 2 w 1:
+
+```text
+spawnitem wrenchscrewdrivertwoinoneSET inventory 1
+```
 
 Zasilanie i butle do testowania narzędzi:
 
-| Przedmiot | Komenda |
-|---|---|
-| Zwykła bateria — 3 sztuki | `spawnitem batterycell inventory 3` |
-| Bateria fulgurium — 3 sztuki | `spawnitem fulguriumbatterycell inventory 3` |
-| Pręt paliwowy | `spawnitem fuelrod inventory` |
-| Pręt torowy | `spawnitem thoriumfuelrod inventory` |
-| Pręt fulgurium | `spawnitem fulguriumfuelrod inventory` |
-| Butla z tlenem | `spawnitem oxygentank inventory` |
-| Butla z tlenitem | `spawnitem oxygenitetank inventory` |
+Zwykłe baterie — 3 sztuki:
+
+```text
+spawnitem batterycell inventory 3
+```
+
+Baterie fulgurium — 3 sztuki:
+
+```text
+spawnitem fulguriumbatterycell inventory 3
+```
+
+Pręt paliwowy:
+
+```text
+spawnitem fuelrod inventory 1
+```
+
+Pręt torowy:
+
+```text
+spawnitem thoriumfuelrod inventory 1
+```
+
+Pręt fulgurium:
+
+```text
+spawnitem fulguriumfuelrod inventory 1
+```
+
+Butla z tlenem:
+
+```text
+spawnitem oxygentank inventory 1
+```
+
+Butla z tlenitem:
+
+```text
+spawnitem oxygenitetank inventory 1
+```
 
 Liczba po `inventory` oznacza ilość. Aby utworzyć przedmiot pod kursorem,
-zamień `inventory` na `cursor`, np. `spawnitem aegisheadsetmk2 cursor`.
+zamień `inventory` na `cursor`:
+
+```text
+spawnitem aegisheadsetmk2 cursor 1
+```
+
 Po utworzeniu włóż baterię lub pręt do odpowiedniego urządzenia; komunikatory
 przyjmują baterie, a kompozytowy multitool wymaga pręta do pasywnej nauki.
 
