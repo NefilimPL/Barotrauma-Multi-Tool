@@ -3,7 +3,10 @@
 Mod Barotrauma z kompozytowym multitool'em, dwuręcznym **bojowym multitool'em Aegis**
 oraz **dwoma komunikatorami regeneracyjnymi Aegis**.
 
-Wersja **1.2.6**: Mk II leczy efekty urazów i chorób z wydajnością
+Wersja **1.2.7** naprawia leczenie nokautu: słuchawki najpierw leczą
+przyczynę obezwładnienia, zamiast zużywać całą energię na ogłuszenie
+stale odtwarzane przez grę. Dotyczy to również paraliżu i nieprzytomności NT.
+Od **1.2.6** Mk II leczy efekty urazów i chorób z wydajnością
 **20 jednostek/s**, cztery razy większą niż model podstawowy (5/s),
 przy tym samym koszcie jednostkowym. Odtwarzanie anatomii nadal jest
 o 50% szybsze niż w podstawowym. Zachowano poprawkę 1.2.5: skutki amputacji

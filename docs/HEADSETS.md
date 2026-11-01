@@ -1,6 +1,6 @@
 # Komunikatory Aegis
 
-Wersja 1.2.6 zawiera dwa przedmioty dodane w 1.2.0 do MULTI-TOOL-V2. Wymagany jest LuaCs
+Wersja 1.2.7 zawiera dwa przedmioty dodane w 1.2.0 do MULTI-TOOL-V2. Wymagany jest LuaCs
 na kliencie i serwerze. **Żaden mod medyczny nie jest wymagany.**
 
 | Przedmiot | Identyfikator | Funkcje |
@@ -87,6 +87,16 @@ regeneracji. Odtworzenie kończyny nie usuwa bezpłatnie pozostałych urazów;
 ich leczenie kontynuuje pobór energii.
 
 Parametry: `MULTI-TOOL-V2/Lua/AegisHeadset/config.lua`.
+
+## Nokaut i nieprzytomność
+
+Od 1.2.7 ogłuszenie jest leczone po pozostałych urazach. Gra stale podnosi
+je do 5 u obezwładnionej postaci; wcześniejszy wysoki priorytet ogłuszenia
+potrafił pochłaniać całą pulę leczenia i uniemożliwiać leczenie przyczyny.
+Efekty typu `paralysis` mają priorytet przed zwykłymi objawami. Obejmuje to
+NT `givein`, który powoduje natywny paraliż przy widocznej nieprzytomności.
+Leczenie działa również u nieprzytomnego użytkownika. Nadal wymaga
+założonego urządzenia, energii i żywej postaci; nie wskrzesza zmarłych.
 
 ## Mody medyczne i przyszłe rozszerzenia
 

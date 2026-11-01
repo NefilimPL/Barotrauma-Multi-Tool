@@ -4,8 +4,11 @@ local preserveTypes={talentbuff=true,geneticmaterialbuff=true,geneticmaterial=tr
 -- Real Sonar maintains this non-buff control flag. Clearing it enables its
 -- XML fallback while Lua is running and is not medical regeneration.
 local technical={serversidelua=true}
-local priorities={bleeding=100,bloodloss=100,oxygenlow=100,stun=90,
+-- Character.Update restores stun>=5 every frame while incapacitated. Treat
+-- its cause first: otherwise repeated stun consumes the entire medical budget.
+local priorities={bleeding=100,bloodloss=100,oxygenlow=100,stun=-10,
     cardiacarrest=100,respiratoryarrest=100,hypoxemia=100,neurotrauma=95}
+local typePriorities={paralysis=95}
 function M.register(identifier,policy)
     assert(type(identifier)=='string' and type(policy)=='table','identifier and policy required')
     M.policies[identifier:lower()]=policy
@@ -16,7 +19,7 @@ function M.classify(prefab)
     if override then return not override.preserve and override or nil end
     if technical[id] then return nil end
     if preserveTypes[(prefab.type or ''):lower()] or (prefab.isBuff and not prefab.harmful) then return nil end
-    return {target=0,priority=priorities[id] or 0}
+    return {target=0,priority=priorities[id] or typePriorities[(prefab.type or ''):lower()] or 0}
 end
 function M.plan(entries,budget)
     local groups,prioritiesList={},{}

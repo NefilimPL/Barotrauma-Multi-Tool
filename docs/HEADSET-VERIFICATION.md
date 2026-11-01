@@ -1,4 +1,63 @@
-# Komunikatory Aegis — weryfikacja 1.2.6
+# Komunikatory Aegis — weryfikacja 1.2.7
+
+## Wybudzanie po nokaucie i korekta zakresu wcześniejszych prób NT
+
+2026-11-02. Odtworzono zgłoszenie na prywatnym serwerze 1.13.5.0/LuaCs
+c6e8829 z zainstalowaną Neurotraumą CS (pakiet 2.0.7, DLL 2.0.5).
+W natywnym `Character.Update` postać obezwładniona dostaje co klatkę
+`Stun = Math.Max(5, Stun)`. NT dodaje przy nieprzytomności `givein`,
+efekt typu paralysis o maksymalnej sile 1. Przy starym priorytecie stun=90
+cały budżet Mk II szedł na stale odtwarzane ogłuszenie. `givein` i sama
+nieprzytomność miały priorytet 0, więc nie docierało do nich leczenie.
+Ten sam błąd mógł dotyczyć zwykłego urazu obniżającego witalność poniżej 0.
+
+Izolowany pomiar przed poprawką: pacjent utrzymywany w bezpiecznym kadłubie,
+po 15 s wciąż stun=5, givein=1 i unconsciousness=78,67, witalność 100,
+energia 62,625%. Log poboru zawiera stale `heal:stun`. Licznik potwierdza
+8 rzeczywistych wywołań `NTHuman.PostHook`; sam objaw nie znikał.
+
+Zmiana jest ogólna: zwykłe urazy są leczone przed ogłuszeniem (stun=-10),
+a szkodliwe efekty typu paralysis mają priorytet 95. Zachowano priorytet
+ratowania oddechu/krążenia, ceny, szybkość obu modeli i brak zależności NT.
+Nie zmieniano globalnego kończenia rundy ani nie dodawano wskrzeszania.
+
+Końcowy test `tests/runtime/headset_knockout.lua`: **8/8 PASS**, po 20 s
+każdy pacjent miał **11 rzeczywistych cykli NT**:
+
+- Sama nieprzytomność NT: odzyskana sprawność w próbie po 8 s; na końcu
+  witalność 100, energia **86,6084%**, brak nokautu. Najdłuższy ciągły
+  stan `IsIncapacitated` trwał 0,133 s.
+- Śpiączka 60 wraz z nieprzytomnością: wyleczone do próby po 15 s;
+  na końcu witalność 100, energia 78,9146%, brak nokautu.
+- Żywa postać z oparzeniem 125 i ujemną witalnością: odzyskała sprawność
+  do próby po 15 s, na końcu witalność 100, energia 59,5815%.
+- Prawdziwy atak szczęki mudraptora przy kroku 1/60 s: Mk II pochłonął
+  go za 10,1%, z witalnością 100 i bez ogłuszenia. Podstawowy model
+  otrzymał atak i później wyleczył urazy.
+- Puste ogniwo: brak darmowego wybudzenia, postać nadal obezwładniona.
+- Zdrowa postać z działającą fizjologią NT: **20 s, bateria 100%,
+  witalność 100, brak kosztów bezczynności**.
+
+**178/178** testów regresyjnych. Nowe testy najpierw odtworzyły
+zagłodzenie leczenia nieznanego krytycznego urazu i paraliżu NT przez
+odtwarzane ogłuszenie. Walidacja 11 XML i 24 Lua z recepturami gry: PASS.
+
+Korekta wcześniejszych krótkich prób 1.2.5/1.2.6: samo załadowanie DLL
+i opóźniony efekt XML nie dowodziły pełnej aktualizacji fizjologii NT.
+Zainstalowany scheduler NT przez dzielenie całkowite opóźnia ostatnie dwie
+postacie listy o 120 s. W nowych testach za pacjentami są dwa dodatkowe
+stworzenia, a licznik `PostHook` jest obowiązkową asercją. Wyniki dawnych
+krótkich prób dotyczą natywnych zmian/XML, nie pełnej fizjologii C#.
+Test zbiorczy początkowo utrzymywał stałe współrzędne świata, podczas gdy
+okręt się poruszał; dawało to prawdziwy koszt ciśnienia. Końcowa próba
+śledzi poruszający się kadłub i potwierdza, że wszystkie postacie są w nim.
+
+Wykorzystano lokalne źródła silnika i odczyt faktycznej DLL. Do porównania
+dostępny jest również [publiczny kod NT CS](https://github.com/LukakoE00/Neurotrauma-CS).
+Próby odbyły się na kopii serwera. Instalacja Steam bez zmian; połączonej
+sesji klientów ani klienta graficznego w tej iteracji nie uruchamiano.
+
+## Historia 1.2.6
 
 ## Większa wydajność leczenia efektów modowych w Mk II
 

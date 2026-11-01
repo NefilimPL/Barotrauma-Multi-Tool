@@ -131,3 +131,28 @@ class MedicalOriginsTests(HeadsetAdapterTests):
             for i=1,7 do G.heal(char,item,1) end
             assert(a.Strength==0 and battery.Condition==87.5 and restored,'native limb charged twice')
         ''')
+
+    def test_continuously_reset_stun_cannot_starve_unknown_critical_injury(self):
+        self.lua.execute('''
+            local wound=add('unknown_critical_mod_injury',100,false)
+            local stun=add('stun',5,false,'stun')
+            for i=1,25 do
+                stun.Strength=5 -- Native Character.Update while incapacitated.
+                G.heal(char,item,.2)
+            end
+            assert(wound.Strength<.0001,'stun consumes all healing before the actual injury')
+            assert(math.abs(battery.Condition-87.5)<.0001)
+            G.heal(char,item,1)
+            assert(stun.Strength==0)
+        ''')
+
+    def test_nt_givein_paralysis_is_reduced_before_recreated_stun(self):
+        self.lua.execute('''
+            local marker=add('unconsciousness',100,false)
+            local paralysis=add('givein',1,false,'paralysis')
+            local stun=add('stun',5,false,'stun')
+            G.heal(char,item,.2)
+            assert(paralysis.Strength==0,'NT paralysis keeps native stun at5 forever')
+            assert(marker.Strength<100,'cause must receive remaining medical budget')
+            assert(math.abs(battery.Condition-99.5)<.0001)
+        ''')
