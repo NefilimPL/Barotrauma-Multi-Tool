@@ -23,9 +23,24 @@ for _,id in ipairs({'aegisheadset','aegisheadsetmk2'}) do
         c.CharacterHealth.ApplyAffliction(limb,AfflictionPrefab.Prefabs['burn'].Instantiate(30),false,true)
         local a=c.CharacterHealth.GetAffliction('burn',limb)
         G.heal(c,item,1)
-        local amount=id=='aegisheadset' and 5 or 7.5
+        local amount=id=='aegisheadset' and 5 or 20
         assert(math.abs(a.Strength-(30-amount))<.001,'healing amount '..a.Strength)
         assert(math.abs(G.energy(item)-(100-amount*.125))<.001,'unit price '..G.energy(item))
+    end)
+    check(id..' two actual NT injuries heal at shared rate and fixed total price',function()
+        c.CharacterHealth.SetAllDamage(0,0,0);cell.Condition=100
+        local limb=c.AnimController.GetLimb(LimbType.LeftLeg)
+        c.CharacterHealth.ApplyAffliction(limb,AfflictionPrefab.Prefabs['fracturedextremity'].Instantiate(100),false,true)
+        c.CharacterHealth.ApplyAffliction(limb,AfflictionPrefab.Prefabs['arterialcut'].Instantiate(100),false,true)
+        local fracture=c.CharacterHealth.GetAffliction('fracturedextremity',limb)
+        local artery=c.CharacterHealth.GetAffliction('arterialcut',limb)
+        local steps=id=='aegisheadset' and 40 or 10
+        for i=1,steps-1 do G.heal(c,item,1) end
+        local remaining=id=='aegisheadset' and 5 or 20
+        assert(math.abs(fracture.Strength+artery.Strength-remaining)<.001,'wrong shared rate')
+        G.heal(c,item,1)
+        assert(fracture.Strength<.001 and artery.Strength<.001,'NT effects not cured')
+        assert(math.abs(G.energy(item)-75)<.001,'different total price '..G.energy(item))
     end)
     check(id..' NT and native limb share one paid restoration',function()
         c.CharacterHealth.SetAllDamage(0,0,0);cell.Condition=100

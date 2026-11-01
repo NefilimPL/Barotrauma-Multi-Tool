@@ -1,4 +1,39 @@
-# Komunikatory Aegis — weryfikacja 1.2.5
+# Komunikatory Aegis — weryfikacja 1.2.6
+
+## Większa wydajność leczenia efektów modowych w Mk II
+
+2026-11-01. Zgłoszenie dotyczyło nadal powolnego usuwania efektów NT.
+Dotychczasowe 7,5 jednostki/s było wspólną pulą dla wszystkich urazów;
+zwiększono ją do 20/s (4 razy model podstawowy, około 2,67 razy 1.2.5).
+Odtwarzanie anatomii zachowuje osobny mnożnik 1,5 i dotychczasową cenę.
+Koszt zwykłego leczenia pozostaje 0,125% za jednostkę. Nie zmieniono
+klasyfikacji efektów ani opcjonalności Neurotraumy.
+
+Weryfikacja na świeżo uruchomionym prywatnym serwerze 1.13.5.0/LuaCs
+c6e8829 z aktywną Neurotraumą C#:
+
+- **6/6 natywnych porównań**: oba modele, cena i tempo leczenia,
+  rzeczywiste `fracturedextremity 100` wraz z `arterialcut 100`, wspólna
+  regeneracja znacznika NT i fizycznego stawu. Usunięcie 200 jednostek
+  trwa 10 kroków po 1 s w Mk II, 40 w podstawowym; w obu kosztuje 25%.
+- **Rzeczywista opóźniona amputacja `gate_ta_ll`, 16 s symulacji**:
+  PASS, brak kosztów fałszywych trafień, noga odtworzona za 12,5%,
+  złamanie i uszkodzenie tętnicy całkowicie wyleczone, postać żyje,
+  witalność 100, bateria 58,60%. W 1.2.5 po tym samym czasie urazy
+  nadal wymagały leczenia. Większy wydatek w tych 16 s odpowiada większej
+  ilości wykonanego leczenia, a nie podniesieniu ceny jednostkowej.
+- **176/176** testów regresyjnych, w tym jednoczesne leczenie nieznanej
+  choroby z moda i uszkodzenia tętnicy, stały koszt za cały uraz, brak
+  kosztu po wyleczeniu oraz zachowanie czasu odtwarzania kończyn.
+- **30 s bezczynności z NT C#**: bateria 100%, witalność 100, bezpieczny
+  kadłub. Następnie zadane oparzenie uruchomiło płatne leczenie.
+
+Scenariusze: `tests/runtime/headset_medical_profiles.lua`,
+`tests/runtime/headset_nt_amputation_trace.lua`. Kod medyczny w prywatnej
+kopii jest zgodny z kodem paczki. W tej iteracji nie uruchamiano klienta
+graficznego ani połączonych klientów multiplayer. Instalacja Steam bez zmian.
+
+## Historia 1.2.5
 
 ## Amputacja NT i szybszy Mk II
 

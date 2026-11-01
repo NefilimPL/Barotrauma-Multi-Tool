@@ -134,7 +134,8 @@ function M.new(E)
             local cost=job.kind=='organ' and C.organCost or job.kind=='surgery' and C.surgeryCost or C.limbCost
             local seconds=job.kind=='organ' and C.organSeconds or job.kind=='surgery' and C.surgerySeconds or C.limbSeconds
             local before=G.energy(item)
-            local left,done=Core.advanceJob(progress,before,dt*speed,cost,seconds)
+            local regenSpeed=C.identifiers[U.itemId(item)]==2 and C.mk2RegenMultiplier or 1
+            local left,done=Core.advanceJob(progress,before,dt*regenSpeed,cost,seconds)
             G.setEnergy(item,left)
             G.recordDebit(item,before-left,'regenerate:'..job.key)
             if left<before then changed=true end

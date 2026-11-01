@@ -1,12 +1,12 @@
 # Komunikatory Aegis
 
-Wersja 1.2.5 zawiera dwa przedmioty dodane w 1.2.0 do MULTI-TOOL-V2. Wymagany jest LuaCs
+Wersja 1.2.6 zawiera dwa przedmioty dodane w 1.2.0 do MULTI-TOOL-V2. Wymagany jest LuaCs
 na kliencie i serwerze. **Żaden mod medyczny nie jest wymagany.**
 
 | Przedmiot | Identyfikator | Funkcje |
 |---|---|---|
 | Komunikator regeneracyjny Aegis | `aegisheadset` | Radio, ochrona przed ciśnieniem, regeneracja |
-| Komunikator osłonowy Aegis Mk II | `aegisheadsetmk2` | To samo, leczenie o 50% szybsze oraz pochłanianie natywnych ataków |
+| Komunikator osłonowy Aegis Mk II | `aegisheadsetmk2` | To samo, leczenie 4 razy szybsze, odtwarzanie anatomii o 50% szybsze, pochłanianie natywnych ataków |
 
 Oba zajmują slot słuchawek i mają jeden slot na ogniwo `mobilebattery`.
 Pręty paliwowe nie pasują. Natywne radio ma zwykły zasięg 35000 i działa
@@ -48,7 +48,7 @@ z geometrią produkcyjnego renderera. To ilustracja, nie zrzut ekranu gry.
 ## Zasilanie
 
 - Ciśnienie: 2,5% standardowego ogniwa/s, około 40 s samej ochrony.
-- Leczenie: wspólny limit 5 jednostek siły/s w podstawowym, 7,5 w Mk II;
+- Leczenie: wspólny limit 5 jednostek siły/s w podstawowym, 20 w Mk II;
   cena w obu wynosi 0,125% ogniwa/jednostkę.
 - Organ: 7,5% i co najmniej 5 s w podstawowym, około 3,3 s w Mk II.
 - Kończyna: 12,5% i co najmniej 10 s w podstawowym, około 6,7 s w Mk II.
@@ -66,6 +66,16 @@ Ostatnia resztka niewystarczająca na krok ochrony ciśnieniowej przepada;
 nie kupuje całego kroku odporności. Sprawny skafander i bezpieczne wnętrze
 nie zużywają energii na ciśnienie. Zdejmowanie i zakładanie nie daje
 darmowej odporności ani odtwarzania baterii. Martwe postacie nie odżywają.
+
+Od 1.2.6 Mk II ma większą pulę leczenia zwykłych efektów, także modowych:
+20 zamiast 7,5 jednostki/s. Pula jest wspólna dla wszystkich urazów.
+Przykładowe dwa efekty po 100 jednostek wymagają około 10 s samego leczenia
+w Mk II, zamiast około 26,7 s w 1.2.5 lub 40 s w modelu podstawowym.
+Trwająca choroba i kolejne obrażenia mogą wydłużyć ten czas. Usunięcie tych
+samych 200 jednostek nadal kosztuje 25% baterii. Przy aktywnym leczeniu
+energia może spadać szybciej na sekundę, ponieważ urządzenie usuwa więcej
+urazów; po wyleczeniu pobór ustaje. Czasy odtwarzania organów i kończyn
+pozostają jak w 1.2.5.
 
 Od 1.2.5 skutki fizjologiczne generowane przez własne efekty postaci nie
 są naliczane jako kolejne trafienia w tarczę. Nadal wymagają płatnego leczenia.
