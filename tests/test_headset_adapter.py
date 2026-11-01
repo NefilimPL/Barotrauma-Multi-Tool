@@ -8,7 +8,7 @@ class HeadsetAdapterTests(LuaCase):
             E={InvSlotType={Headset=4,Any=0},SERVER=true,Game={IsSingleplayer=false}}
             G=require('AegisHeadset.game').new(E)
             battery={Condition=100,MaxCondition=100,HasTag=function(t) return t=='mobilebattery' end}
-            item={Prefab={Identifier={Value='aegisheadsetmk2'}},Condition=100,
+            item={Prefab={Identifier={Value='aegisheadset'}},Condition=100,
                 OwnInventory={GetItemAt=function() return battery end}}
             equipped=item
             char={ID=1,Inventory={GetItemInLimbSlot=function(slot) if slot==4 then return equipped end end},
@@ -106,6 +106,7 @@ class HeadsetAdapterTests(LuaCase):
         """)
 
     def test_partial_attack_reenters_native_method_without_raw_scalar_casts(self):
+        self.lua.execute("item.Prefab.Identifier.Value='aegisheadsetmk2'")
         self.lua.execute("""
             battery.Condition=5
             a=add('burn',20,false);a.CreateMultiplied=function(f) return {Strength=20*f,Prefab=a.Prefab} end
@@ -122,6 +123,7 @@ class HeadsetAdapterTests(LuaCase):
         """)
 
     def test_refunded_failed_attack_does_not_report_power_drain_or_shield_flash(self):
+        self.lua.execute("item.Prefab.Identifier.Value='aegisheadsetmk2'")
         self.lua.execute("""
             battery.Condition=5
             a=add('burn',20,false);a.CreateMultiplied=function(f) return {Strength=20*f,Prefab=a.Prefab} end
@@ -186,6 +188,7 @@ class HeadsetAdapterTests(LuaCase):
         """)
 
     def test_zero_probability_and_fully_resisted_hits_do_not_charge(self):
+        self.lua.execute("item.Prefab.Identifier.Value='aegisheadsetmk2'")
         self.lua.execute("""
             a=add('burn',20,false);a.Probability=0
             assert(G.absorb(char,{a},0,1)==nil and battery.Condition==100)
@@ -194,6 +197,7 @@ class HeadsetAdapterTests(LuaCase):
         """)
 
     def test_fully_protective_armor_does_not_charge(self):
+        self.lua.execute("item.Prefab.Identifier.Value='aegisheadsetmk2'")
         self.lua.execute("""
             a=add('burn',20,false)
             local armor={DamageMultiplier=0,MatchesAffliction=function() return true end}
@@ -226,6 +230,7 @@ class HeadsetAdapterTests(LuaCase):
         """)
 
     def test_full_block_suppresses_severance_only_inside_its_attack(self):
+        self.lua.execute("item.Prefab.Identifier.Value='aegisheadsetmk2'")
         self.lua.execute("""
             a=add('burn',20,false);G.beginAttack(char)
             local p={afflictions={a},stun=0,damageMultiplier=1}

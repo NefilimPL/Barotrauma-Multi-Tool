@@ -1,4 +1,58 @@
-# Komunikatory Aegis — weryfikacja 1.2.4
+# Komunikatory Aegis — weryfikacja 1.2.5
+
+## Amputacja NT i szybszy Mk II
+
+2026-11-01. W prywatnym serwerze Barotrauma 1.13.5.0/LuaCs c6e8829,
+z włączonym C# Neurotraumy CS (pakiet 2.0.7, DLL zgłasza 2.0.5), odtworzono
+rzeczywistą amputację nogi przez `gate_ta_ll`. Pozwolono grze wykonać
+opóźnione efekty oraz 16 sekund symulacji; wcześniejsze synchroniczne próby
+samych znaczników amputacji nie obejmowały tej kaskady.
+
+Przed poprawką `severepain 100` i `fracturedextremity 99999` wygenerowane
+przez samą postać były rozliczane jako dwa trafienia po 50% w jednym kroku.
+Bateria spadała ze 100% do zera. Rejestrowany natywny wynik
+`StatusEffect.GetMultipliedAffliction` ma teraz pochodzenie źródło/cel.
+Własne konsekwencje fizjologiczne omijają koszt tarczy, ale nadal wymagają
+rzeczywistego, płatnego leczenia. Zewnętrzny atak bez wskazanego napastnika
+nadal podlega pochłanianiu. Brak napastnika sam w sobie nie jest wyjątkiem.
+
+Końcowy test opóźnionej amputacji: **PASS**, zero kosztów `hit`, dokładnie
+**12,5% za odtworzenie nogi**, po 16 s pozostało **72,67%**, postać żyła
+z witalnością 100, znacznik amputacji był usunięty. Pozostałe złamanie
+i uszkodzenie tętnicy nadal wymagały leczenia; wynik nie oznacza końca
+wszystkich kosztów regeneracji. Scenariusz:
+`tests/runtime/headset_nt_amputation_trace.lua`.
+
+Dalsze próby końcowej wersji:
+
+- **4/4 natywne porównania**: podstawowy leczy 5 jednostek/s za 0,625%,
+  Mk II 7,5 za 0,9375%; amputacja NT wraz z fizycznie zerwanym stawem
+  tworzy jeden proces i odtwarza oba stany za 12,5%. Podstawowy kończy
+  w 10 krokach po 1 s, Mk II w 7 (dokładna konfiguracja: 10 / 1,5 s).
+- **9/9** natywnej mechaniki: pełna i częściowa blokada ataku, zwykłe
+  obrażenia modelu podstawowego, odtwarzanie stawów i ochrona ciśnieniowa.
+- **8/8** natywnej integracji NT CS: organy, amputacje, operacje,
+  zachowanie grupy krwi, implantów i prawidłowej fizjologii.
+- **30 s rzeczywistej bezczynności** z NT CS: energia 100%, witalność 100,
+  bezpieczny kadłub, NeedsAir=true. Późniejsze zadane oparzenie uruchomiło
+  płatne leczenie, więc kontrola nie korzystała z wyłączonego urządzenia.
+- **175/175** testów regresyjnych, w tym pochodzenie efektów, ponowne użycie
+  tego samego affliction, wygaszanie pochodzenia, mieszane źródła obrażeń,
+  różnica tempa i te same ceny leczenia.
+
+Przegląd kodu ujawnił, że jeden wynik natywnego mnożenia affliction może
+trafić w wiele kończyn. Pochodzenie pozostaje ważne dla wszystkich takich
+aplikacji w tym kroku, zamiast znikać po pierwszej. Test natywny wykrył też,
+że LuaCs zwraca liczbowe wartości `LimbType`; grupowanie stawów porównuje
+teraz prawdziwe enumy, a nie ich nazwy tekstowe. Obie regresje odtworzono
+testem przed poprawką.
+
+Próby odbywały się na kopii serwera, bez zmian w instalacji Steam. W tej
+iteracji nie uruchamiano klienta graficznego ani połączonej sesji multiplayer.
+Neurotrauma nadal jest opcjonalna; ogólna obsługa pochodzenia efektów nie
+odwołuje się do jej DLL ani nie wymaga jej znaczników.
+
+## Historia 1.2.4
 
 ## Rezerwacja ogniwa, Real Sonar i słyszalne alarmy
 

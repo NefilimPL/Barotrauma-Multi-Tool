@@ -6,7 +6,7 @@ local Medical=require('AegisHeadset.medical')
 local AI=require('AegisHeadset.ai')
 local M={}
 function M.new(E)
-    local G={env=E,now=0,states={},patients={},patches={},contexts={},damageScope={},attackScopes={},providers={}}
+    local G={env=E,now=0,states={},patients={},patches={},contexts={},damageScope={},attackScopes={},providers={},effectOrigins={}}
     G.authoritative=E.SERVER or E.Game.IsSingleplayer
     G.registerTreatment=T.register
     function G.registerProvider(name,provider)
@@ -50,6 +50,30 @@ function M.new(E)
     local function emit(character,item,kind,joint)
         if G.emit then G.emit(character,item,kind,joint) end
     end
+    function G.effectOrigin(source,character,affliction)
+        if not affliction then return end
+        -- StatusEffect may reuse an Affliction object. Replace its provenance
+        -- before every application, including applications from external items.
+        for i=#G.effectOrigins,1,-1 do
+            if G.effectOrigins[i].affliction==affliction then table.remove(G.effectOrigins,i) end
+        end
+        if source==character then
+            G.effectOrigins[#G.effectOrigins+1]={character=character,affliction=affliction}
+            if #G.effectOrigins>128 then table.remove(G.effectOrigins,1) end
+        end
+    end
+    local function ownEffect(character,affliction)
+        for i=#G.effectOrigins,1,-1 do
+            local origin=G.effectOrigins[i]
+            if origin.character==character and origin.affliction==affliction then
+                -- One native application may fan out to several limbs using
+                -- this exact Affliction instance. Keep its provenance until
+                -- the next source assignment or frame, not just the first hit.
+                return true
+            end
+        end
+        return false
+    end
     function G.pressure(character,dt,nativeProtected)
         if nativeProtected or not character.NeedsAir then return false end
         local hull=character.AnimController and character.AnimController.CurrentHull
@@ -64,6 +88,7 @@ function M.new(E)
     end
     function G.heal(character,item,dt)
         if not G.authoritative or character.IsDead or not character.CharacterHealth then return end
+        local speed=C.identifiers[U.itemId(item)]==2 and C.mk2HealMultiplier or 1
         local entries=Medical.entries(E,character)
         for name,provider in pairs(G.providers) do
             local ok,extra=pcall(provider,character)
@@ -76,7 +101,7 @@ function M.new(E)
         end
         local patient=G.patients[character] or {jobs={}}
         G.patients[character]=patient
-        local actions=T.plan(entries,math.min(C.healRate*dt,G.energy(item)/C.healCost))
+        local actions=T.plan(entries,math.min(C.healRate*speed*dt,G.energy(item)/C.healCost))
         local changed=false
         for _,action in ipairs(actions) do
             local before=G.energy(item)
@@ -100,7 +125,7 @@ function M.new(E)
                 end
             end
         end
-        local jobs=Medical.jobs(character,entries)
+        local jobs=Medical.jobs(character,entries,E.LimbType)
         for key in pairs(patient.jobs) do if not jobs[key] then patient.jobs[key]=nil end end
         local keys={};for key in pairs(jobs) do keys[#keys+1]=key end;table.sort(keys)
         if #keys>0 then
@@ -109,7 +134,7 @@ function M.new(E)
             local cost=job.kind=='organ' and C.organCost or job.kind=='surgery' and C.surgeryCost or C.limbCost
             local seconds=job.kind=='organ' and C.organSeconds or job.kind=='surgery' and C.surgerySeconds or C.limbSeconds
             local before=G.energy(item)
-            local left,done=Core.advanceJob(progress,before,dt,cost,seconds)
+            local left,done=Core.advanceJob(progress,before,dt*speed,cost,seconds)
             G.setEnergy(item,left)
             G.recordDebit(item,before-left,'regenerate:'..job.key)
             if left<before then changed=true end
@@ -118,6 +143,9 @@ function M.new(E)
                     if entry.apply then entry.apply(entry.policy.target or 0) else entry.ref.Strength=entry.policy.target or 0 end
                 end
                 if job.jointIndex then Medical.restoreNative(character,job.jointIndex);emit(character,item,'restore',job.jointIndex) end
+                for _,index in ipairs(job.jointIndices or {}) do
+                    Medical.restoreNative(character,index);emit(character,item,'restore',index)
+                end
                 patient.jobs[job.key]=nil
             end
         end
@@ -166,10 +194,11 @@ function M.new(E)
         if attacker and attacker~=character and attacker.IsOnPlayerTeam and settings and
             not settings.AllowFriendlyFire and attacker.TeamID==character.TeamID then return nil end
         local damage=math.max(0,stun or 0)
-        local incoming={}
+        local incoming,passthrough={},{}
         U.each(afflictions,function(a)
             incoming[#incoming+1]=a
-            if not a.Prefab.IsBuff then damage=damage+G.blockableStrength(character,a,multiplier,limb,position,penetration) end
+            passthrough[#incoming]=ownEffect(character,a) or a.Prefab.IsBuff
+            if not passthrough[#incoming] then damage=damage+G.blockableStrength(character,a,multiplier,limb,position,penetration) end
         end)
         if damage<=0 then return nil end
         local before=G.energy(item)
@@ -177,8 +206,8 @@ function M.new(E)
         G.setEnergy(item,left)
         local fraction=residual/damage
         local result={};local buffs=false
-        for _,a in ipairs(incoming) do
-            if a.Prefab.IsBuff then result[#result+1]=a;buffs=true
+        for i,a in ipairs(incoming) do
+            if passthrough[i] then result[#result+1]=a;buffs=true
             elseif fraction>1e-7 then result[#result+1]=a.CreateMultiplied(fraction,a) end
         end
         if not deferFeedback then G.recordDebit(item,before-left,'hit');emit(character,item,'hit') end
@@ -256,6 +285,9 @@ function M.new(E)
         end,true)
         if G.authoritative then
             AI.install(G,E)
+            G.patch('effect-origin','Barotrauma.StatusEffect','GetMultipliedAffliction',function(effect,p)
+                G.effectOrigin(p['entity'],p['targetCharacter'],p.ReturnValue)
+            end,true)
             G.patch('attack-enter','Barotrauma.Character','ApplyAttack',function(character) G.beginAttack(character) end)
             G.patch('attack-leave','Barotrauma.Character','ApplyAttack',function(character) G.endAttack(character) end,true)
             G.patch('block-sever','Barotrauma.Character','TrySeverLimbJoints',function(character,p)
@@ -294,6 +326,7 @@ function M.new(E)
     end
     function G.update(dt)
         G.now=G.now+dt
+        G.effectOrigins={}
         if G.authoritative then
             G.healTime=(G.healTime or 0)+dt
             if G.healTime>=C.healInterval then
@@ -319,7 +352,7 @@ function M.new(E)
     end
     function G.clear()
         for _,s in pairs(G.states) do AI.cancel(s) end
-        G.states={};G.patients={};G.contexts={};G.damageScope={};G.attackScopes={};G.healTime=0
+        G.states={};G.patients={};G.contexts={};G.damageScope={};G.attackScopes={};G.effectOrigins={};G.healTime=0
         if G.clearEffects then G.clearEffects() end
     end
     function G.dispose()

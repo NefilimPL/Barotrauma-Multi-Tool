@@ -59,22 +59,43 @@ function M.restoreNative(character,jointIndex)
     local joints={};U.each(ragdoll.LimbJoints,function(joint) joints[#joints+1]=joint end)
     for _,i in ipairs(remaining) do if joints[i] then ragdoll.SeverLimbJoint(joints[i]) end end
 end
-function M.jobs(character,entries)
-    local jobs={}
+function M.jobs(character,entries,types)
+    types=types or {}
+    local jobs,limbJobs={},{}
     for _,entry in ipairs(entries) do
         local p=entry.policy
         if p and p.anatomy and entry.strength>(p.target or 0)+1e-6 then
             local key=(p.anatomy=='surgery' and '0' or '')..p.anatomy..':'..(p.part or entry.id)
             local job=jobs[key] or {key=key,kind=p.anatomy,entries={}}
             job.entries[#job.entries+1]=entry;jobs[key]=job
+            if p.anatomy=='limb' and p.part then limbJobs[p.part]=job end
         end
     end
     local i=0
+    local function part(limb)
+        if not limb then return end
+        -- LuaCs exposes enum values as numbers, not their C# member names.
+        for _,side in ipairs({'Left','Right'}) do
+            for _,suffix in ipairs({'Leg','Thigh','Foot','Arm','Forearm','Hand'}) do
+                local name=side..suffix
+                if limb.type==(types[name] or name) then
+                    return side..((suffix=='Leg' or suffix=='Thigh' or suffix=='Foot') and 'Leg' or 'Arm')
+                end
+            end
+        end
+        if limb.type==(types.Head or 'Head') then return 'Head' end
+    end
     U.each(character.AnimController and character.AnimController.LimbJoints,function(joint)
         i=i+1
         if joint.IsSevered then
-            local key='native:'..i
-            jobs[key]={key=key,kind='limb',jointIndex=i,entries={}}
+            local existing=limbJobs[part(joint.LimbA)] or limbJobs[part(joint.LimbB)]
+            if existing then
+                existing.jointIndices=existing.jointIndices or {}
+                existing.jointIndices[#existing.jointIndices+1]=i
+            else
+                local key='native:'..i
+                jobs[key]={key=key,kind='limb',jointIndex=i,entries={}}
+            end
         end
     end)
     return jobs

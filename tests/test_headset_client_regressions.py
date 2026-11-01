@@ -87,6 +87,7 @@ class HeadsetClientBoundaryTests(HeadsetAdapterTests):
         ''')
 
     def test_singleplayer_hit_never_reads_server_only_luagame_field(self):
+        self.lua.execute("item.Prefab.Identifier.Value='aegisheadsetmk2'")
         self.lua.execute('''
             E.SERVER=false;E.CLIENT=true
             E.Game=setmetatable({IsSingleplayer=true},{__index=function(_,key)

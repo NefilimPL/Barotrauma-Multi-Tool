@@ -3,7 +3,10 @@
 Mod Barotrauma z kompozytowym multitool'em, dwuręcznym **bojowym multitool'em Aegis**
 oraz **dwoma komunikatorami regeneracyjnymi Aegis**.
 
-Wersja **1.2.4**: usunięty pobór za techniczny znacznik Real Sonar;
+Wersja **1.2.5**: skutki amputacji NT nie opróżniają już baterii jak trafienia
+w tarczę. Mk II leczy i regeneruje anatomię **50% szybciej**, przy takim samym
+koszcie jednostkowym. Neurotrauma pozostaje opcjonalna.
+Zachowano poprawki 1.2.4: usunięty pobór za techniczny znacznik Real Sonar;
 ogniwo słuchawek jest chronione przed pobieraniem przez inne zadania AI.
 Bot wymienia je przy **10% lub mniej**. Czerwone diody sygnalizują trafienie,
 niebieskie leczenie; nowe rezonujące uderzenia i osobne alarmy 20%/10%/0%.

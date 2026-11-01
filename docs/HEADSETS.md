@@ -1,12 +1,12 @@
 # Komunikatory Aegis
 
-Wersja 1.2.4 zawiera dwa przedmioty dodane w 1.2.0 do MULTI-TOOL-V2. Wymagany jest LuaCs
+Wersja 1.2.5 zawiera dwa przedmioty dodane w 1.2.0 do MULTI-TOOL-V2. Wymagany jest LuaCs
 na kliencie i serwerze. **Żaden mod medyczny nie jest wymagany.**
 
 | Przedmiot | Identyfikator | Funkcje |
 |---|---|---|
 | Komunikator regeneracyjny Aegis | `aegisheadset` | Radio, ochrona przed ciśnieniem, regeneracja |
-| Komunikator osłonowy Aegis Mk II | `aegisheadsetmk2` | To samo oraz pochłanianie natywnych ataków |
+| Komunikator osłonowy Aegis Mk II | `aegisheadsetmk2` | To samo, leczenie o 50% szybsze oraz pochłanianie natywnych ataków |
 
 Oba zajmują slot słuchawek i mają jeden slot na ogniwo `mobilebattery`.
 Pręty paliwowe nie pasują. Natywne radio ma zwykły zasięg 35000 i działa
@@ -48,10 +48,12 @@ z geometrią produkcyjnego renderera. To ilustracja, nie zrzut ekranu gry.
 ## Zasilanie
 
 - Ciśnienie: 2,5% standardowego ogniwa/s, około 40 s samej ochrony.
-- Leczenie: wspólny limit 5 jednostek siły/s, 0,125% ogniwa/jednostkę.
-- Organ: 7,5% i co najmniej 5 s opłacanej regeneracji.
-- Kończyna: 12,5% i co najmniej 10 s opłacanej regeneracji.
-- Zamknięcie operacji NT: 7,5% i co najmniej 5 s na daną część ciała.
+- Leczenie: wspólny limit 5 jednostek siły/s w podstawowym, 7,5 w Mk II;
+  cena w obu wynosi 0,125% ogniwa/jednostkę.
+- Organ: 7,5% i co najmniej 5 s w podstawowym, około 3,3 s w Mk II.
+- Kończyna: 12,5% i co najmniej 10 s w podstawowym, około 6,7 s w Mk II.
+- Zamknięcie operacji NT: 7,5% na daną część ciała; co najmniej 5 s
+  w podstawowym, około 3,3 s w Mk II.
 - Mk II: co najmniej 1% za trafienie, dalej 0,5% za jednostkę przyjmowanej
   siły. Na pewno nieskuteczne efekty (np. prawdopodobieństwo zero, pełna
   odporność, pełne pokrycie pancerzem) nie są opłacane jako obrażenia.
@@ -64,6 +66,15 @@ Ostatnia resztka niewystarczająca na krok ochrony ciśnieniowej przepada;
 nie kupuje całego kroku odporności. Sprawny skafander i bezpieczne wnętrze
 nie zużywają energii na ciśnienie. Zdejmowanie i zakładanie nie daje
 darmowej odporności ani odtwarzania baterii. Martwe postacie nie odżywają.
+
+Od 1.2.5 skutki fizjologiczne generowane przez własne efekty postaci nie
+są naliczane jako kolejne trafienia w tarczę. Nadal wymagają płatnego leczenia.
+Dotyczy to m.in. bólu, złamania i uszkodzenia tętnicy przy amputacji NT,
+które wcześniej potrafiły wyczerpać całe ogniwo w jednym kroku.
+Zewnętrzne ataki i zagrożenia nadal zużywają energię tarczy.
+Znacznik amputacji NT i zerwane stawy tej samej kończyny tworzą jeden proces
+regeneracji. Odtworzenie kończyny nie usuwa bezpłatnie pozostałych urazów;
+ich leczenie kontynuuje pobór energii.
 
 Parametry: `MULTI-TOOL-V2/Lua/AegisHeadset/config.lua`.
 
