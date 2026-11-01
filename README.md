@@ -29,6 +29,46 @@ Starszy multitool nadal ma własną, dotychczasową definicję XML.
    dwóch kopii tego samego pakietu ze Workshop i LocalMods.
 4. W fabrykatorze szukaj **Bojowy multitool Aegis**, identyfikator `combatmultitool`.
 
+## Komendy tworzenia przedmiotów (F3)
+
+W trakcie rozgrywki lub w testerze edytora otwórz konsolę **F3** i wpisz:
+
+```text
+enablecheats
+```
+
+Następnie użyj wybranej komendy. `inventory` tworzy przedmiot w ekwipunku
+kontrolowanej postaci. Na serwerze potrzebujesz uprawnień do tych komend.
+
+| Przedmiot moda | Komenda |
+|---|---|
+| Komunikator regeneracyjny Aegis | `spawnitem aegisheadset inventory` |
+| Komunikator osłonowy Aegis Mk II | `spawnitem aegisheadsetmk2 inventory` |
+| Bojowy multitool Aegis | `spawnitem combatmultitool inventory` |
+| Kompozytowy multitool | `spawnitem Multi-toolSET inventory` |
+| Klucz-śrubokręt 2 w 1 | `spawnitem wrenchscrewdrivertwoinoneSET inventory` |
+
+Zasilanie i butle do testowania narzędzi:
+
+| Przedmiot | Komenda |
+|---|---|
+| Zwykła bateria — 3 sztuki | `spawnitem batterycell inventory 3` |
+| Bateria fulgurium — 3 sztuki | `spawnitem fulguriumbatterycell inventory 3` |
+| Pręt paliwowy | `spawnitem fuelrod inventory` |
+| Pręt torowy | `spawnitem thoriumfuelrod inventory` |
+| Pręt fulgurium | `spawnitem fulguriumfuelrod inventory` |
+| Butla z tlenem | `spawnitem oxygentank inventory` |
+| Butla z tlenitem | `spawnitem oxygenitetank inventory` |
+
+Liczba po `inventory` oznacza ilość. Aby utworzyć przedmiot pod kursorem,
+zamień `inventory` na `cursor`, np. `spawnitem aegisheadsetmk2 cursor`.
+Po utworzeniu włóż baterię lub pręt do odpowiedniego urządzenia; komunikatory
+przyjmują baterie, a kompozytowy multitool wymaga pręta do pasywnej nauki.
+
+Stan i ostatnie koszty energii sprawdzisz komendami `aegis_headset_status`
+(komunikatory) oraz `aegis_status` (bojowy multitool). W multiplayer koszty
+odczytuj z konsoli serwera.
+
 ## Obsługa Aegis
 
 Broń zajmuje dwie ręce po wyposażeniu i jeden zwykły slot po schowaniu.
