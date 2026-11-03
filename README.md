@@ -3,6 +3,14 @@
 Mod Barotrauma z kompozytowym multitool'em, dwuręcznym **bojowym multitool'em Aegis**
 oraz **dwoma komunikatorami regeneracyjnymi Aegis**.
 
+Wersja **1.2.10** poprawia przechwytywanie pocisków mieszkańców wrogiej frakcji:
+przynależność NPC do drużyny `FriendlyNPC` nie pozwala już omijać tarczy
+przy wyłączonym friendly fire załogi. Zachowano poprawkę **1.2.9**:
+obraz tarczy podąża płynnie za bronią między pakietami serwera, a ostrzał
+członków załogi jest blokowany przy włączonym friendly fire.
+Serwer nadal rozstrzyga aktywność tarczy, trafienia i zużycie energii.
+Zaktualizuj mod na serwerze i wszystkich klientach.
+
 Wersja **1.2.8** włącza zakup wszystkich pięciu przedmiotów moda.
 Ceny bazowe: bojowy Aegis 2000 mk, zwykłe słuchawki 500 mk, Mk II 1000 mk.
 Mk II zużywa **o 60% mniej energii** na leczenie, odtwarzanie anatomii,

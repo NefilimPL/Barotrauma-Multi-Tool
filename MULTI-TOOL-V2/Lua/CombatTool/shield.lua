@@ -4,10 +4,23 @@ local C=Core.config
 local M={}
 function M.install(G,E)
     local physical,consumed,scans={},{},{}
-    function G.findShield(a,b,attacker,weapon)
+    local function blocksAttacker(owner,attacker,friendlyFire)
+        if owner and owner==attacker then return false end
+        if friendlyFire==false and G.friendly(owner,attacker) then return false end
+        -- Match native DamageLimb: server friendly-fire protection applies
+        -- only to player-team attackers hitting their own team. Faction NPCs
+        -- can be hostile while Character.IsFriendly still reports true.
+        if owner and attacker and attacker.IsOnPlayerTeam and owner.TeamID==attacker.TeamID
+            and E.Game and not E.Game.IsSingleplayer then
+            local settings=E.Game.ServerSettings
+            return settings and settings.AllowFriendlyFire or false
+        end
+        return true
+    end
+    function G.findShield(a,b,attacker,weapon,friendlyFire)
         local nearest=nil
         for _,s in pairs(G.states) do
-            if s.shield and s.item~=weapon and not G.friendly(s.owner,attacker) then
+            if s.shield and s.item~=weapon and blocksAttacker(s.owner,attacker,friendlyFire) then
                 local t,point=Core.segmentArc(a,b,s.shield)
                 local emitter=U.point(s.item.WorldPosition)
                 if t and (not nearest or t<nearest.t) and not G.cast(emitter,point,0,s.owner,true) then
@@ -73,7 +86,7 @@ function M.install(G,E)
     end
     local function intercept(projectile,a,b,includeCharacters)
         if consumed[projectile] then return true end
-        local hit=G.findShield(a,b,projectile.User or projectile.Attacker,projectile.Launcher)
+        local hit=G.findShield(a,b,projectile.User or projectile.Attacker,projectile.Launcher,projectile.FriendlyFire)
         if not hit then return false end
         local obstacle=G.cast(a,b,0,projectile.User or projectile.Attacker,not includeCharacters,projectile.FriendlyFire)
         if obstacle and obstacle.t<hit.t then return false end

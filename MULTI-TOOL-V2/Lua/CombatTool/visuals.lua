@@ -202,6 +202,20 @@ function M.install(G,E,root)
             end
         end
     end
+    local function shieldVisual(s,item,energy)
+        if item and not item.Removed and U.itemId(item)==C.identifier and item.body then
+            local body=item.body
+            body.UpdateDrawPosition()
+            local angle=body.DrawRotation+(body.Dir<0 and -math.pi or 0)
+            local pos=body.DrawPosition
+            -- DrawPosition already includes the interpolated submarine offset.
+            -- Follow the displayed weapon every frame; snapshots still decide
+            -- whether the shield exists and how much energy it has.
+            return {x=pos.X-25*math.cos(angle),y=pos.Y-25*math.sin(angle),
+                angle=angle,energy=energy or s.energy}
+        end
+        return {x=s.x,y=s.y,angle=s.angle,energy=energy or s.energy}
+    end
     function G.draw(batch,cam)
         if not cam then return end
         local rings,shields={},{}
@@ -211,12 +225,14 @@ function M.install(G,E,root)
                 if state.shield then
                     local s=state.shield
                     local source=G.source(state.item,0)
-                    s.energy=source and source.condition or 0
-                    shields[#shields+1]=s
+                    shields[#shields+1]=shieldVisual(s,state.item,source and source.condition or 0)
                 end
             end
         elseif G.now-(G.remote.received or -100)<.5 then rings=G.remote.rings;shields=G.remote.shields end
-        for _,s in ipairs(shields) do drawShield(batch,cam,s) end
+        for _,s in ipairs(shields) do
+            local item=not G.authoritative and s.id and E.Entity and E.Entity.FindEntityByID(s.id)
+            drawShield(batch,cam,item and shieldVisual(s,item) or s)
+        end
         for _,r in ipairs(rings) do
             if r.alive~=false then
                 drawRing(batch,cam,r)
