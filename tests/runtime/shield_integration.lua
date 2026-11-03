@@ -56,6 +56,33 @@ check('native hitscan is intercepted before protected character damage',function
     assert(battery.Condition<100,'shield did not consume energy for native hitscan')
     assert(protected.Vitality==health,'protected character took hitscan damage')
 end)
+local friendlyFire=Game.ServerSettings.AllowFriendlyFire
+attacker.TeamID=CharacterTeamType.Team1
+check('crew hitscan is intercepted with server friendly fire enabled',function()
+    Game.ServerSettings.AllowFriendlyFire=true
+    shield()
+    local health=protected.Vitality
+    shoot(projectile(true))
+    assert(battery.Condition<100,'crew hitscan bypassed the shield')
+    assert(protected.Vitality==health,'protected crewmate took hitscan damage')
+end)
+check('disabled friendly fire does not drain shield energy',function()
+    Game.ServerSettings.AllowFriendlyFire=false
+    shield()
+    local health=protected.Vitality
+    shoot(projectile(true))
+    assert(battery.Condition==100,'harmless crew hitscan drained the shield')
+    assert(protected.Vitality==health,'disabled friendly fire damaged crewmate')
+end)
+check('native projectile friendly fire opt-out is respected',function()
+    Game.ServerSettings.AllowFriendlyFire=true
+    shield()
+    local p=projectile(true);p.FriendlyFire=false
+    shoot(p)
+    assert(battery.Condition==100,'opted-out crew hitscan drained the shield')
+end)
+Game.ServerSettings.AllowFriendlyFire=friendlyFire
+attacker.TeamID=CharacterTeamType.Team2
 local nearer=human(100,CharacterTeamType.Team1)
 check('nearer unshielded character still takes native hitscan damage',function()
     shield()
@@ -64,7 +91,8 @@ check('nearer unshielded character still takes native hitscan damage',function()
     assert(nearer.Vitality<health,'native earlier target was canceled by a farther shield')
     assert(battery.Condition==100,'farther shield consumed energy for a stopped shot')
 end)
-nearer.Remove()
+-- Keep the character alive until NT's delayed spawn initialization has run.
+nearer.TeleportTo(origin+Vector2(5000,0))
 check('fast physical projectile is intercepted across its traveled segment',function()
     shield()
     local p=projectile(false)
@@ -81,9 +109,52 @@ check('contact shock uses native character damage and higher energy cost',functi
     G.updateShield(state,{valid=true,aim=true,damage=true,owner=protected},.016)
     assert(battery.Condition<95,'contact did not use the six-point shock debit')
 end)
-for i=#created,1,-1 do
-    local entity=created[i]
-    if not entity.Removed and not Entity.Spawner.IsInRemoveQueue(entity) then entity.Remove() end
-end
-G.states[gun]=nil
+check('server activates shield from remote player native aim input',function()
+    local descriptor=LuaUserData.RegisterType('Barotrauma.Character')
+    LuaUserData.MakeFieldAccessible(descriptor,'dequeuedInput')
+    local flags=LuaUserData.CreateEnumTable('Barotrauma.Character+InputNetFlags')
+    assert(protected.Inventory.TryPutItem(gun,protected,{InvSlotType.RightHand+InvSlotType.LeftHand}))
+    protected.IsRemotePlayer=true
+    protected.dequeuedInput=flags.Aim
+    U.component(gun,'LightComponent').IsOn=true
+    battery.Condition=100;state.brokenUntil=0
+    local ctx=G.context(gun)
+    assert(ctx.valid and ctx.aim and ctx.damage and not ctx.bot,'remote native aim was not recognized')
+    G.transition(state,ctx)
+    G.updateShield(state,ctx,.016)
+    assert(state.shield and battery.Condition<100,'remote player shield did not activate on server')
+end)
+check('remote player shield blocks faction NPC revolver with crew friendly fire disabled',function()
+    Game.ServerSettings.AllowFriendlyFire=false
+    attacker.TeamID=CharacterTeamType.FriendlyNPC
+    attacker.TeleportTo(protected.WorldPosition-Vector2(400,0))
+    assert(protected.IsFriendly(attacker),'fixture no longer represents the faction NPC team filter')
+    gun.body.Dir=1
+    gun.body.SetTransform(ConvertUnits.ToSimUnits(protected.Position),math.pi)
+    battery.Condition=100;state.brokenUntil=0
+    local ctx=G.context(gun)
+    G.transition(state,ctx);G.updateShield(state,ctx,.016)
+    assert(state.shield,'remote player shield did not activate')
+    local before=battery.Condition
+    local health=protected.Vitality
+    local p=projectile(true)
+    assert(p.FriendlyFire,'native revolver does not allow NPC hits')
+    local start={x=origin.X,y=protected.AnimController.MainLimb.WorldPosition.Y}
+    local finish=U.point(protected.WorldPosition)
+    local preview=G.findShield(start,finish,attacker,nil,p.FriendlyFire)
+    assert(preview and preview.state==state,'faction NPC was incorrectly filtered out before native hitscan')
+    shoot(p)
+    assert(battery.Condition<before,'faction NPC revolver bypassed the remote shield')
+    assert(protected.Vitality==health,'faction NPC revolver damaged the remote shield bearer')
+end)
+Game.ServerSettings.AllowFriendlyFire=friendlyFire
+-- NT initializes blood type one second after spawn, without a Removed guard.
+-- Defer fixture cleanup so that callback cannot touch a disposed ragdoll.
+Timer.Wait(function()
+    for i=#created,1,-1 do
+        local entity=created[i]
+        if not entity.Removed and not Entity.Spawner.IsInRemoveQueue(entity) then entity.Remove() end
+    end
+    G.states[gun]=nil
+end,1500)
 File.Write('LocalMods/MULTI-TOOL-V2/shield-results.txt',table.concat(results,'\n'))

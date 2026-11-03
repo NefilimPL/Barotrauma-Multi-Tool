@@ -1,4 +1,76 @@
-# Aegis — weryfikacja wersji 1.1.x
+# Aegis — weryfikacja
+
+## Poprawka 1.2.10 — rewolwer NPC wrogiej placówki (2026-11-03)
+
+Użytkownik doprecyzował, że strzelał mieszkaniec wrogiej placówki z rewolweru.
+`Character.IsFriendly` sprawdza drużynę i gatunek, ale nie wrogość frakcji.
+`HumanAIController.IsFriendly` dodatkowo rozpoznaje wrogą frakcję w kampanii.
+Mieszkaniec może więc nadal mieć drużynę `FriendlyNPC`, a zarazem atakować
+załogę. Filtr z 1.2.9 nadal przepuszczał jego strzał przy wyłączonym
+serwerowym friendly fire.
+
+Filtr przechwytywania odpowiada teraz natywnemu `Character.DamageLimb`:
+ochrona wynikająca z `AllowFriendlyFire=false` dotyczy tylko strzelca
+`IsOnPlayerTeam` i celu o takim samym `TeamID`. Osobno zachowano filtr
+`Projectile.FriendlyFire=false` z natywnego pocisku. Tarcza zatrzymuje
+zatem szkodliwe pociski NPC niezależnie od ustawienia friendly fire załogi.
+
+Nowe regresje obejmują pocisk i pierścień NPC `FriendlyNPC` przy wyłączonym
+friendly fire. Natywny scenariusz łączy `IsRemotePlayer`, wejście celowania,
+trzymanego Aegisa, produkcyjne wyliczenie tarczy oraz rzeczywisty `revolverround`.
+Przed poprawką pocisk omijał tarczę i odbierał zdrowie; wcześniejszy test
+aktywacji zdalnej postaci i test ręcznie ustawionej tarczy nie obejmowały
+tej kombinacji.
+
+Po poprawce: **192/192 testy automatyczne** i **10/10 prób natywnego serwera**,
+w tym zatrzymanie rewolweru `FriendlyNPC` przed obrażeniami zdalnej postaci.
+Odczyt skryptów LuaCs był cache'owany podczas ponawiania `dofile`; wynik
+poprawki potwierdzono po pełnym restarcie serwera testowego. Walidacja moda
+i receptur oraz `git diff --check` przeszły. Kod renderera pozostaje taki jak
+w sprawdzonej próbie GPU 1.2.9. Nadal nie wykonano pełnej sesji dwóch klientów.
+
+## Poprawka 1.2.9 — tarcza w multiplayerze (2026-11-03)
+
+Klient rysował tarczę bezpośrednio z pozycji przesyłanych co 0,1 s.
+Teraz identyfikator aktywnej tarczy wskazuje broń, a renderer korzysta
+z jej natywnej interpolowanej `body.DrawPosition` i `DrawRotation`,
+uwzględniając kierunek postaci. `DrawPosition` zawiera już przesunięcie łodzi.
+Tę samą metodę stosuje lokalna symulacja. Dane kolizji pozostają oddzielne;
+klient nie tworzy tarczy bez potwierdzenia serwera, a po 0,5 s bez pakietów
+przestaje ją rysować. Przy braku lokalnego przedmiotu używa pozycji z pakietu.
+
+Filtr tarczy pomijał wszystkie pociski przyjaznych postaci, również gdy
+mogły zadawać obrażenia. Teraz blokuje ostrzał załogi przy włączonym
+`AllowFriendlyFire`. Wyłączone friendly fire oraz `Projectile.FriendlyFire=false`
+nadal chronią przed poborem za nieszkodliwy ostrzał. Własne pociski
+przechodzą; porażenie kontaktowe nadal dotyczy przeciwników.
+
+Weryfikacja:
+
+- **190/190 testów automatycznych**, w tym 9 nowych regresji. Przed poprawką
+  cztery nowe testy wykazały brak przechwycenia pocisku/pierścienia załogi
+  oraz rysowanie tarczy w starej pozycji u klienta i w lokalnej symulacji.
+- **9/9 prób na osobnym Dedicated Server 1.13.5.0/LuaCs `c6e8829`**, z opcjonalnym
+  Neurotrauma: rzeczywisty hitscan wroga i załogi, friendly fire wyłączone,
+  pocisk z wyłączonym friendly fire, bliższy niechroniony cel, szybki pocisk
+  fizyczny, kontakt z tarczą oraz aktywacja przez natywne wejście zdalnej postaci.
+  Ta ostatnia próba ustawia `IsRemotePlayer` i `dequeuedInput.Aim` w testowej
+  postaci; nie jest sesją sieciową z podłączonym graczem.
+- Walidacja XML/Lua, zasobów i receptur oraz `git diff --check` przeszły.
+- **Rzeczywisty klient/GPU:** wyszukiwanie przedmiotu przez
+  `Entity.FindEntityByID` i rysowanie tarczy dla czterech kątów oraz obu
+  kierunków postaci. Osiem prób potwierdziło użycie pozycji rysowanej broni
+  mimo celowo nieaktualnych współrzędnych w pakiecie. Pierwsze uruchomienie
+  skryptu testowego wymagało dodania rejestracji `GraphicsDevice`; ponowione
+  przeszło bez zmiany kodu moda.
+
+Pierwsza próba serwera ujawniła błąd sprzątania fixture: natychmiastowe
+usunięcie postaci wywoływało `NTBloodTypes.InitializeBloodHooks` /
+`Ragdoll.GetLimb` po zniszczeniu postaci. Skrypt odracza teraz sprzątanie
+o 1,5 s, aby inicjalizacja NT zdążyła się zakończyć.
+
+Pełna rozgrywka z dwoma klientami i opóźnieniami pozostaje do sprawdzenia.
+Nie zmieniano instalacji Steam ani uruchomionej gry użytkownika.
 
 ## Wersja 1.1.12 — porządek w folderze moda
 
