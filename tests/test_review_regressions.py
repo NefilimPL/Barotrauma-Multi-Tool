@@ -26,6 +26,14 @@ class ReviewRegressionTests(LuaCase):
         self.lua.execute('assert(A.resupply(bot,gun,0,currentParent))')
         self.assertEqual(self.lua.globals().fetchCalls,1)
 
+    def test_multitool_never_uses_reserved_headset_battery(self):
+        self.lua.execute('''
+            local headset={kind='Barotrauma.Item',HasTag=function(t) return t=='aegisheadset' end}
+            source.ParentInventory={Owner=headset}
+            assert(not A.resupply(bot,gun,0,currentParent),'multitool selected the headset battery')
+            assert(not added and not fetching)
+        ''')
+
     def test_partial_source_replacement_is_limited_to_requested_slot(self):
         self.lua.execute('''
             old={MaxCondition=100,Condition=.4,HasTag=function(t) return t=='mobilebattery' end}

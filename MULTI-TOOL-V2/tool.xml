@@ -8,13 +8,15 @@
     <PreferredContainer primary="wreckreactorcab,abandonedreactorcab,piratereactorcab" amount="1" spawnprobability="0.05" />
     <PreferredContainer secondary="outpostcrewcabinet" amount="1" spawnprobability="0.03" />
     <PreferredContainer secondary="outposttrashcan" amount="1" spawnprobability="0.01" />
-    <Price baseprice="57" minavailable="10">
+    <Price baseprice="57" sold="true" minavailable="10" maxavailable="10">
       <Price storeidentifier="merchantoutpost" />
       <Price storeidentifier="merchantcity" minavailable="5" />
       <Price storeidentifier="merchantresearch" multiplier="1.25" />
       <Price storeidentifier="merchantmilitary" multiplier="1.25" />
       <Price storeidentifier="merchantmine" />
       <Price storeidentifier="merchantengineering" minavailable="10" multiplier="0.9" />
+      <Price storeidentifier="merchantmedical" />
+      <Price storeidentifier="merchantarmory" />
     </Price>
     <Deconstruct time="5">
       <Item identifier="wrench" />
@@ -27,8 +29,8 @@
       <RequiredItem identifier="screwdriver" />
       <RequiredItem identifier="copper" />
     </Fabricate>
-    <InventoryIcon texture="%ModDir%/wrench.png" sourcerect="0,0,93,19" />
-    <Sprite texture="%ModDir%/wrench.png" sourcerect="0,0,93,19" depth="0.55" origin="0.5,0.5" />
+    <InventoryIcon texture="%ModDir%/wrench.png" sourcerect="0,0,93,19" compress="false" />
+    <Sprite texture="%ModDir%/wrench.png" sourcerect="0,0,93,19" depth="0.55" origin="0.5,0.5" compress="false" />
     <Body width="80" height="15" density="25" />
     <MeleeWeapon slots="Any,RightHand,LeftHand" aimpos="40,5" handle1="0,0" reload="1.0" range="50" combatpriority="9" msg="ItemMsgPickUpSelect">
       <Attack structuredamage="0" itemdamage="4" targetimpulse="4">
@@ -85,12 +87,15 @@
   <Item identifier="Multi-toolSET" category="Equipment" Tags="smallitem,tool,cuttingequipment,electricalrepairtool,mechanicalrepairtool,provocative,screwdriver,wrench,weldingequipment,crowbaritem" cargocontaineridentifier="metalcrate" Scale="0.4" impactsoundtag="impact_metal_light">
     <PreferredContainer primary="storagecab" spawnprobability="0.05" />
     <PreferredContainer secondary="wreckstoragecab" spawnprobability="0.02" />
-    <Price baseprice="1300" sold="true">
+    <Price baseprice="1300" sold="true" minavailable="1" maxavailable="2">
       <Price storeidentifier="merchantoutpost" multiplier="1.0" />
       <Price storeidentifier="merchantcity" multiplier="1.0" />
       <Price storeidentifier="merchantresearch" multiplier="1.0" />
       <Price storeidentifier="merchantmilitary" multiplier="1.0" />
       <Price storeidentifier="merchantmine" multiplier="1.0" />
+      <Price storeidentifier="merchantengineering" multiplier="1.0" />
+      <Price storeidentifier="merchantmedical" multiplier="1.0" />
+      <Price storeidentifier="merchantarmory" multiplier="1.0" />
     </Price>
     <Fabricate suitablefabricators="fabricator,milfabricator" requiredtime="10">
       <RequiredSkill identifier="mechanical" level="20" />

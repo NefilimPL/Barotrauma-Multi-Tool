@@ -1,11 +1,53 @@
 # Barotrauma-Multi-Tool
 
-Mod Barotrauma z kompozytowym multitool'em oraz dwuręcznym **bojowym multitool'em Aegis**.
+Mod Barotrauma z kompozytowym multitool'em, dwuręcznym **bojowym multitool'em Aegis**
+oraz **dwoma komunikatorami regeneracyjnymi Aegis**.
+
+Wersja **1.2.8** włącza zakup wszystkich pięciu przedmiotów moda.
+Ceny bazowe: bojowy Aegis 2000 mk, zwykłe słuchawki 500 mk, Mk II 1000 mk.
+Mk II zużywa **o 60% mniej energii** na leczenie, odtwarzanie anatomii,
+trafienia i ciśnienie, przy zachowanym leczeniu 20 jednostek/s.
+Poprawka **1.2.7** naprawia leczenie nokautu: słuchawki najpierw leczą
+przyczynę obezwładnienia, zamiast zużywać całą energię na ogłuszenie
+stale odtwarzane przez grę. Dotyczy to również paraliżu i nieprzytomności NT.
+Od **1.2.6** Mk II leczy efekty urazów i chorób z wydajnością
+**20 jednostek/s**, cztery razy większą niż model podstawowy (5/s),
+od 1.2.8 dodatkowo taniej na jednostkę niż model podstawowy.
+Odtwarzanie anatomii nadal jest
+o 50% szybsze niż w podstawowym. Zachowano poprawkę 1.2.5: skutki amputacji
+NT nie opróżniają baterii jak trafienia w tarczę. Neurotrauma jest opcjonalna.
+Zachowano poprawki 1.2.4: usunięty pobór za techniczny znacznik Real Sonar;
+ogniwo słuchawek jest chronione przed pobieraniem przez inne zadania AI.
+Bot wymienia je przy **10% lub mniej**. Czerwone diody sygnalizują trafienie,
+niebieskie leczenie; nowe rezonujące uderzenia i osobne alarmy 20%/10%/0%.
+Komenda
+`aegis_headset_status` pokazuje przyczynę rzeczywistego poboru energii.
+Komunikatory zajmują slot słuchawek, mieszczą baterię,
+chronią przed ciśnieniem i stopniowo regenerują zdrowie. Mk II dodatkowo
+pochłania trafienia. **Neurotrauma i inne mody medyczne są opcjonalne.**
+[Instrukcja komunikatorów](docs/HEADSETS.md) ·
+[Grafiki, migotanie i odsłuch](docs/headsets/preview.html)
 
 Wersja Aegis wymaga [Lua for Barotrauma / LuaCs](https://github.com/evilfactory/LuaCsForBarotrauma)
 na kliencie i serwerze. Punktem zgodności jest Barotrauma **1.13.5.0**;
 testowy serwer używa wydania LuaCs z 27.10.2026, commit `c6e8829`.
 Starszy multitool nadal ma własną, dotychczasową definicję XML.
+
+## Zakup w sklepach
+
+W zwykłych sklepach kampanii dostępne są wszystkie przedmioty moda:
+
+| Przedmiot | Cena bazowa |
+|---|---:|
+| Klucz-śrubokręt 2 w 1 | 57 mk |
+| Kompozytowy multitool | 1300 mk |
+| Bojowy multitool Aegis | 2000 mk |
+| Komunikator Aegis | 500 mk |
+| Komunikator Aegis Mk II | 1000 mk |
+
+Oferty mają co najmniej jedną sztukę (klucz 5–10). Ceny bazowe podlegają
+zwykłym modyfikatorom kampanii, reputacji i promocji. Zapas istniejącego
+sklepu może wymagać odświeżenia przy przejściu do nowej lokacji.
 
 ## Instalacja
 
@@ -15,6 +57,107 @@ Starszy multitool nadal ma własną, dotychczasową definicję XML.
 3. Włącz pakiet `MULTI-TOOL-V2` i uruchom grę ponownie. Nie włączaj jednocześnie
    dwóch kopii tego samego pakietu ze Workshop i LocalMods.
 4. W fabrykatorze szukaj **Bojowy multitool Aegis**, identyfikator `combatmultitool`.
+
+## Komendy tworzenia przedmiotów (F3)
+
+W trakcie rozgrywki lub w testerze edytora otwórz konsolę **F3** i wpisz:
+
+```text
+enablecheats
+```
+
+Następnie użyj wybranej komendy. `inventory` tworzy przedmiot w ekwipunku
+kontrolowanej postaci. Na serwerze potrzebujesz uprawnień do tych komend.
+Komendy kopiuj przyciskiem kopiowania bloku kodu. Dostępne są też w
+[zwykłym pliku tekstowym](docs/spawn-commands.txt).
+
+Komunikator regeneracyjny Aegis:
+
+```text
+spawnitem aegisheadset inventory 1
+```
+
+Komunikator osłonowy Aegis Mk II:
+
+```text
+spawnitem aegisheadsetmk2 inventory 1
+```
+
+Bojowy multitool Aegis:
+
+```text
+spawnitem combatmultitool inventory 1
+```
+
+Kompozytowy multitool:
+
+```text
+spawnitem Multi-toolSET inventory 1
+```
+
+Klucz-śrubokręt 2 w 1:
+
+```text
+spawnitem wrenchscrewdrivertwoinoneSET inventory 1
+```
+
+Zasilanie i butle do testowania narzędzi:
+
+Zwykłe baterie — 3 sztuki:
+
+```text
+spawnitem batterycell inventory 3
+```
+
+Baterie fulgurium — 3 sztuki:
+
+```text
+spawnitem fulguriumbatterycell inventory 3
+```
+
+Pręt paliwowy:
+
+```text
+spawnitem fuelrod inventory 1
+```
+
+Pręt torowy:
+
+```text
+spawnitem thoriumfuelrod inventory 1
+```
+
+Pręt fulgurium:
+
+```text
+spawnitem fulguriumfuelrod inventory 1
+```
+
+Butla z tlenem:
+
+```text
+spawnitem oxygentank inventory 1
+```
+
+Butla z tlenitem:
+
+```text
+spawnitem oxygenitetank inventory 1
+```
+
+Liczba po `inventory` oznacza ilość. Aby utworzyć przedmiot pod kursorem,
+zamień `inventory` na `cursor`:
+
+```text
+spawnitem aegisheadsetmk2 cursor 1
+```
+
+Po utworzeniu włóż baterię lub pręt do odpowiedniego urządzenia; komunikatory
+przyjmują baterie, a kompozytowy multitool wymaga pręta do pasywnej nauki.
+
+Stan i ostatnie koszty energii sprawdzisz komendami `aegis_headset_status`
+(komunikatory) oraz `aegis_status` (bojowy multitool). W multiplayer koszty
+odczytuj z konsoli serwera.
 
 ## Obsługa Aegis
 

@@ -1,0 +1,13 @@
+enablecheats
+spawnitem aegisheadset inventory 1
+spawnitem aegisheadsetmk2 inventory 1
+spawnitem combatmultitool inventory 1
+spawnitem Multi-toolSET inventory 1
+spawnitem wrenchscrewdrivertwoinoneSET inventory 1
+spawnitem batterycell inventory 3
+spawnitem fulguriumbatterycell inventory 3
+spawnitem fuelrod inventory 1
+spawnitem thoriumfuelrod inventory 1
+spawnitem fulguriumfuelrod inventory 1
+spawnitem oxygentank inventory 1
+spawnitem oxygenitetank inventory 1

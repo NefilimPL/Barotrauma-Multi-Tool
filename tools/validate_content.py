@@ -16,6 +16,24 @@ def validate(game):
     manifest=ET.parse(mod/'filelist.xml').getroot()
     for entry in manifest:
         assert (mod/entry.attrib['file'].replace('%ModDir%/','')).is_file(),entry.attrib
+    # Validate every packaged XML asset, not just the original combat tool.
+    for file in files:
+        for node in ET.parse(file).getroot().iter():
+            for attribute in ('file','texture'):
+                ref=node.get(attribute,'')
+                if not ref.startswith('%ModDir%/'):continue
+                asset=mod/ref.removeprefix('%ModDir%/')
+                assert asset.is_file(),(file,ref)
+                if attribute=='texture':
+                    with Image.open(asset) as image:
+                        if node.get('sourcerect'):
+                            x,y,w,h=map(int,node.get('sourcerect').split(','))
+                            assert x>=0 and y>=0 and x+w<=image.width and y+h<=image.height,(file,ref)
+                elif asset.suffix.lower()=='.ogg':
+                    assert asset.read_bytes().startswith(b'OggS'),asset
+    for file in (mod/'Assets/Headsets').glob('*.png'):
+        with Image.open(file) as image:
+            assert image.mode=='RGBA' and image.getchannel('A').getextrema()[0]==0,file
     combat=ET.parse(mod/'combat_tool.xml').getroot().find('Item')
     assert combat.attrib['identifier']=='combatmultitool'
     assert combat.find('Holdable').attrib['slots']=='Any,RightHand+LeftHand'
@@ -48,9 +66,12 @@ def validate(game):
             try: root=ET.parse(path).getroot()
             except ET.ParseError:continue
             known.update(i.get('identifier','').lower() for i in root.iter('Item'))
-        known.update(i.get('identifier','').lower() for i in ET.parse(mod/'tool.xml').getroot().iter('Item'))
-        for entry in combat.find('Fabricate').findall('RequiredItem'):
-            assert entry.attrib['identifier'].lower() in known,entry.attrib
+        for path in files:
+            known.update(i.get('identifier','').lower() for i in ET.parse(path).getroot().iter('Item'))
+        for path in files:
+            for recipe in ET.parse(path).getroot().iter('Fabricate'):
+                for entry in recipe.findall('RequiredItem'):
+                    assert entry.attrib['identifier'].lower() in known,(path,entry.attrib)
     print(f'Content valid: {len(files)} XML, {len(scripts)} Lua 5.2 modules, alpha PNGs and frame rectangles; recipe identifiers checked={bool(game)}')
 
 if __name__=='__main__':
