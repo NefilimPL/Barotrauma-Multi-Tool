@@ -1,5 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <infotexts language="Polish" nowhitespace="false" translatedname="Polski">
+  <entityname.aegisvacuum>Odkurzacz zbierający Aegis</entityname.aegisvacuum>
+  <entitydescription.aegisvacuum>Dwuręczna ssawka z wymienną baterią. Wymaga plecaka zbierającego Aegis we własnym ekwipunku i LuaCs. Celuj i przytrzymaj użycie, aby zbierać. Klawisz F otwiera magazyn. Bateria odkurzacza zasila także rozbiórkę.</entitydescription.aegisvacuum>
+  <entityname.aegisvacuumpack>Plecak zbierający Aegis</entityname.aegisvacuumpack>
+  <entitydescription.aegisvacuumpack>Magazyn odkurzacza Aegis: 100 grup po maksymalnie 100 przedmiotów. Zachowuje zawartość skrzynek i stan wyposażenia. Plecak i odkurzacz wytwarza się osobno. Zasilanie znajduje się w odkurzaczu.</entitydescription.aegisvacuumpack>
+  <entityname.aegisvacuumpage>Wewnętrzny magazyn Aegis</entityname.aegisvacuumpage>
+  <vacuum.title>Magazyn odkurzacza Aegis</vacuum.title>
+  <vacuum.salvage>Rozłóż całą zawartość</vacuum.salvage>
+  <vacuum.search>Szukaj przedmiotu…</vacuum.search>
+  <vacuum.take>Wyjmij</vacuum.take>
+  <vacuum.drop>Odłóż</vacuum.drop>
+  <vacuum.groups>Grupy</vacuum.groups>
+  <vacuum.pack>Plecak</vacuum.pack>
+  <vacuum.power>Bateria odkurzacza</vacuum.power>
+  <vacuum.help>F — magazyn • celowanie + użycie — zasysanie</vacuum.help>
+  <vacuum.busy>Rozbiórka w toku</vacuum.busy>
+  <vacuum.close>Zamknij</vacuum.close>
   <entityname.combatmultitool>Bojowy multitool Aegis</entityname.combatmultitool>
   <entitydescription.combatmultitool>Dwuręczny emiter odbijających się pierścieni i tarczy. Wymaga Lua for Barotrauma. Jedno ogniwo lub pręt zasila broń, tarczę, latarkę i narzędzia. Jakość zwiększa liczbę odbić (1/2/3/4). Gracz wyłącza obrażenia, aby spawać lub ciąć. Gaśnica ma pierwszeństwo przed strzelaniem. Boty samodzielnie wybierają walkę albo jedną funkcję techniczną według wykonywanego zadania. Trzymany i zasilany daje +2 do wszystkich pięciu umiejętności co 5 minut; wspólny licznik z kompozytowym multitoolem.</entitydescription.combatmultitool>
   <label.combatpowerslots>Wspólne zasilanie: broń / tarcza / narzędzia</label.combatpowerslots>

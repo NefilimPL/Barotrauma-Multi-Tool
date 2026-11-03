@@ -1,4 +1,6 @@
 enablecheats
+spawnitem aegisvacuumpack inventory 1
+spawnitem aegisvacuum inventory 1
 spawnitem aegisheadset inventory 1
 spawnitem aegisheadsetmk2 inventory 1
 spawnitem combatmultitool inventory 1

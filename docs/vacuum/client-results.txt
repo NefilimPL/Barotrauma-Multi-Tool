@@ -1,0 +1,3 @@
+PASS client bootstrap and battery placement
+PASS real GUI panel, localized rows and search
+PASS GPU draws backpack, hose and all 16 suction frames

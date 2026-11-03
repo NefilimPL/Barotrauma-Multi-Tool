@@ -1,5 +1,21 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <infotexts language="English" nowhitespace="false" translatedname="English">
+  <entityname.aegisvacuum>Aegis salvage vacuum</entityname.aegisvacuum>
+  <entitydescription.aegisvacuum>Two-handed suction tool with a replaceable battery. Requires an Aegis salvage backpack in your inventory and LuaCs. Aim and hold use to collect. Press F to open storage. The vacuum battery also powers salvage.</entitydescription.aegisvacuum>
+  <entityname.aegisvacuumpack>Aegis salvage backpack</entityname.aegisvacuumpack>
+  <entitydescription.aegisvacuumpack>Storage for the Aegis vacuum: 100 groups of up to 100 actual items. Preserves loaded crates and equipment condition. Craft backpack and vacuum separately. The battery belongs in the vacuum.</entitydescription.aegisvacuumpack>
+  <entityname.aegisvacuumpage>Aegis internal storage</entityname.aegisvacuumpage>
+  <vacuum.title>Aegis vacuum storage</vacuum.title>
+  <vacuum.salvage>Salvage all contents</vacuum.salvage>
+  <vacuum.search>Search items…</vacuum.search>
+  <vacuum.take>Take out</vacuum.take>
+  <vacuum.drop>Drop</vacuum.drop>
+  <vacuum.groups>Groups</vacuum.groups>
+  <vacuum.pack>Backpack</vacuum.pack>
+  <vacuum.power>Vacuum battery</vacuum.power>
+  <vacuum.help>F — storage • aim + use — collect</vacuum.help>
+  <vacuum.busy>Salvaging contents</vacuum.busy>
+  <vacuum.close>Close</vacuum.close>
   <entityname.combatmultitool>Aegis combat multitool</entityname.combatmultitool>
   <entitydescription.combatmultitool>Two-handed ricocheting energy-ring emitter and shield. Requires Lua for Barotrauma. One cell or fuel rod powers weapons, shield, light and tools. Quality grants 1/2/3/4 bounces. Players disable NPC damage to weld/cut. Extinguisher takes priority over firing. Bots automatically select combat or one technical function for their actual task. While held and powered, grants +2 to all five skills every 5 minutes; shared progress with the composite multi-tool.</entitydescription.combatmultitool>
   <label.combatpowerslots>Shared power: weapon / shield / tools</label.combatpowerslots>

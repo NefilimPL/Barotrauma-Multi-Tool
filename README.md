@@ -1,5 +1,14 @@
 # Barotrauma-Multi-Tool
 
+Wersja **1.3.0** dodaje **plecak zbierający i dwuręczny odkurzacz Aegis**.
+Obie części wytwarza się osobno. Bateria znajduje się w odkurzaczu i zasila
+zasysanie oraz rozbiórkę całej zawartości jednym przyciskiem. Przedmioty bez
+receptury pozostają nietknięte. Panel magazynu (**F**) grupuje rzeczy po 100,
+zachowując stan i zawartość skrzynek. **Odłóż** pozwala wyjąć także skrzynki
+i kombinezony na ziemię. [Instrukcja](docs/VACUUM.md) ·
+[Grafiki i animacja](docs/vacuum/preview.html) ·
+[Wyniki i ograniczenia testów](docs/VACUUM-VERIFICATION.md).
+
 Mod Barotrauma z kompozytowym multitool'em, dwuręcznym **bojowym multitool'em Aegis**
 oraz **dwoma komunikatorami regeneracyjnymi Aegis**.
 
@@ -52,6 +61,8 @@ W zwykłych sklepach kampanii dostępne są wszystkie przedmioty moda:
 | Bojowy multitool Aegis | 2000 mk |
 | Komunikator Aegis | 500 mk |
 | Komunikator Aegis Mk II | 1000 mk |
+| Odkurzacz zbierający Aegis | 1800 mk |
+| Plecak zbierający Aegis | 1400 mk |
 
 Oferty mają co najmniej jedną sztukę (klucz 5–10). Ceny bazowe podlegają
 zwykłym modyfikatorom kampanii, reputacji i promocji. Zapas istniejącego

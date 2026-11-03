@@ -1,0 +1,23 @@
+<!doctype html><html lang="pl"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Aegis — plecak i odkurzacz</title>
+<style>
+:root{color-scheme:dark;font:16px system-ui;background:#111a23;color:#e5eef2}body{max-width:1100px;margin:40px auto;padding:0 24px}h1{font-size:32px}p{color:#9fb3bd;line-height:1.6}.assets{display:grid;grid-template-columns:1fr 1.5fr;gap:20px}.card{background:#1a2732;border:1px solid #344958;border-radius:14px;padding:24px}.card img{width:100%;height:320px;object-fit:contain}.accent{color:#f6a64b}canvas{display:block;width:100%;background:radial-gradient(ellipse,#1c3445,#0c1720);border-radius:10px}label{display:inline-block;margin:15px 25px 15px 0}a{color:#8be3ef}button{padding:8px 18px;background:#263e4c;color:white;border:1px solid #698a9a;border-radius:6px;cursor:pointer}@media(max-width:650px){.assets{grid-template-columns:1fr}.card img{height:230px}}
+</style>
+<h1>Aegis <span class="accent">/</span> plecak i odkurzacz</h1>
+<p>Dwa osobno wytwarzane przedmioty. Bateria znajduje się w odkurzaczu. Oryginalne grafiki PNG z przezroczystością.</p>
+<div class="assets"><article class="card"><h2>Plecak zbierający</h2><img src="../../MULTI-TOOL-V2/Assets/Vacuum/backpack.png" alt="Plecak z zasobnikiem i gniazdem przewodu"><p>Magazyn łupu, bez baterii.</p></article>
+<article class="card"><h2>Odkurzacz dwuręczny</h2><img src="../../MULTI-TOOL-V2/Assets/Vacuum/vacuum.png" alt="Dwuręczny odkurzacz z modułem baterii"><p>Wymienne ogniwo zasila zasysanie i rozbiórkę.</p></article></div>
+<article class="card" style="margin-top:20px"><h2>Animacja zasysania</h2><canvas id="preview" width="1000" height="260"></canvas>
+<label>Tempo <input id="speed" type="range" min="4" max="32" value="16"> <span id="fps">16</span> kl./s</label><button id="pause">Pauza</button>
+<p>Podgląd oryginalnego arkusza 16 klatek. W grze strumień obraca się wraz ze ssawką, a drobiny wskazują drogę pobieranego przedmiotu.</p></article>
+<p><a href="../VACUUM.md">Instrukcja urządzenia</a> · <a href="PROMPTS.md">Prompty i wymiary grafik</a></p>
+<script>
+const sheet=new Image(),vacuum=new Image(),canvas=document.getElementById('preview'),ctx=canvas.getContext('2d');
+sheet.src='../../MULTI-TOOL-V2/Assets/Vacuum/suction.png';vacuum.src='../../MULTI-TOOL-V2/Assets/Vacuum/vacuum.png';
+let paused=false,time=0,last=performance.now();document.getElementById('pause').onclick=()=>{paused=!paused;document.getElementById('pause').textContent=paused?'Wznów':'Pauza'};
+const speed=document.getElementById('speed');speed.oninput=()=>document.getElementById('fps').textContent=speed.value;
+function draw(now){if(!paused)time+=(now-last)/1000;last=now;ctx.clearRect(0,0,1000,260);
+if(sheet.complete&&sheet.naturalWidth){const f=Math.floor(time*+speed.value)%16,c=f%4,r=Math.floor(f/4),x=Math.floor(c*sheet.width/4),y=Math.floor(r*sheet.height/4),w=Math.floor((c+1)*sheet.width/4)-x,h=Math.floor((r+1)*sheet.height/4)-y;ctx.globalAlpha=.7;ctx.drawImage(sheet,x,y,w,h,10,35,550,190);ctx.globalAlpha=1;}
+if(vacuum.complete&&vacuum.naturalWidth){ctx.save();ctx.translate(1000,0);ctx.scale(-1,1);ctx.drawImage(vacuum,0,45,440,220);ctx.restore();}
+requestAnimationFrame(draw)}requestAnimationFrame(draw);
+</script></html>
