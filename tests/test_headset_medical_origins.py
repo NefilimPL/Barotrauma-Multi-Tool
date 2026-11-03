@@ -13,11 +13,39 @@ class MedicalOriginsTests(HeadsetAdapterTests):
         super().setUp()
         self.lua.execute("item.Prefab.Identifier.Value='aegisheadsetmk2'")
 
+    def test_mk2_last_energy_buys_healing_at_its_discounted_unit_price(self):
+        self.lua.execute('''
+            battery.Condition=.025
+            local a=add('unknown_mod_disease',10,false)
+            G.heal(char,item,1)
+            assert(math.abs(a.Strength-9.5)<.00001 and battery.Condition==0)
+        ''')
+
+    def test_mk2_partial_shield_uses_discounted_cost_for_damage_fraction(self):
+        self.lua.execute('''
+            battery.Condition=1
+            local a=add('burn',20,false)
+            a.CreateMultiplied=function(f) return {Strength=20*f,Prefab=a.Prefab} end
+            local result=G.absorb(char,{a},0,1)
+            assert(battery.Condition==0 and math.abs(result.afflictions[1].Strength-15)<.00001)
+            assert(math.abs(result.fraction-.75)<.00001)
+        ''')
+
+    def test_mk2_pressure_cost_is_lower_without_discounting_basic_model(self):
+        self.lua.execute('''
+            char.NeedsAir=true;char.AnimController.CurrentHull=nil
+            G.pressure(char,1,false)
+            assert(battery.Condition==99)
+            battery.Condition=100;item.Prefab.Identifier.Value='aegisheadset'
+            G.pressure(char,1,false)
+            assert(battery.Condition==97.5)
+        ''')
+
     def test_unused_origin_expires_before_a_later_frame(self):
         self.lua.execute('''
             local a=add('burn',20,false)
             G.effectOrigin(char,char,a);G.update(.01)
-            assert(G.absorb(char,{a},0,1).empty and battery.Condition==90)
+            assert(G.absorb(char,{a},0,1).empty and battery.Condition==96)
         ''')
 
     def test_own_medical_consequences_are_not_shield_hits(self):
@@ -40,9 +68,9 @@ class MedicalOriginsTests(HeadsetAdapterTests):
         self.lua.execute('''
             local a=add('burn',20,false)
             G.effectOrigin({},char,a)
-            assert(G.absorb(char,{a},0,1).empty and battery.Condition==90)
+            assert(G.absorb(char,{a},0,1).empty and battery.Condition==96)
             battery.Condition=100
-            assert(G.absorb(char,{a},0,1).empty and battery.Condition==90)
+            assert(G.absorb(char,{a},0,1).empty and battery.Condition==96)
         ''')
 
     def test_mixed_hit_preserves_internal_effect_and_blocks_external_wound(self):
@@ -51,7 +79,7 @@ class MedicalOriginsTests(HeadsetAdapterTests):
             local bullet=add('gunshotwound',20,false)
             G.effectOrigin(char,char,injury)
             local result=G.absorb(char,{injury,bullet},0,1)
-            assert(battery.Condition==90 and not result.empty)
+            assert(battery.Condition==96 and not result.empty)
             assert(#result.afflictions==1 and result.afflictions[1]==injury)
         ''')
 
@@ -59,20 +87,20 @@ class MedicalOriginsTests(HeadsetAdapterTests):
         self.lua.execute('''
             local a=add('burn',20,false)
             G.effectOrigin(char,char,a);G.effectOrigin({},char,a)
-            assert(G.absorb(char,{a},0,1).empty and battery.Condition==90)
+            assert(G.absorb(char,{a},0,1).empty and battery.Condition==96)
         ''')
 
-    def test_mk2_heals_four_times_faster_with_same_unit_price(self):
+    def test_mk2_heals_four_times_faster_with_lower_unit_price(self):
         self.lua.execute('''
             local a=add('unknown_disease',30,false)
             item.Prefab.Identifier.Value='aegisheadset';G.heal(char,item,1)
             assert(a.Strength==25 and battery.Condition==99.375)
             a.Strength=30;battery.Condition=100;item.Prefab.Identifier.Value='aegisheadsetmk2'
             G.heal(char,item,1)
-            assert(a.Strength==10 and battery.Condition==97.5)
+            assert(a.Strength==10 and battery.Condition==99)
         ''')
 
-    def test_mk2_cures_multiple_mod_effects_with_same_total_energy_cost(self):
+    def test_mk2_cures_multiple_mod_effects_with_lower_total_energy_cost(self):
         self.lua.execute('''
             local unknown=add('unknown_mod_disease',100,false)
             local artery=add('arterialcut',100,false)
@@ -80,18 +108,18 @@ class MedicalOriginsTests(HeadsetAdapterTests):
             assert(math.abs(unknown.Strength+artery.Strength-20)<.0001)
             G.heal(char,item,1)
             assert(unknown.Strength<.0001 and artery.Strength<.0001)
-            assert(math.abs(battery.Condition-75)<.0001)
+            assert(math.abs(battery.Condition-90)<.0001)
             G.heal(char,item,1)
-            assert(math.abs(battery.Condition-75)<.0001,'healed wearer must be idle')
+            assert(math.abs(battery.Condition-90)<.0001,'healed wearer must be idle')
         ''')
 
-    def test_mk2_limb_job_is_faster_without_changing_total_price(self):
+    def test_mk2_limb_job_is_faster_and_more_efficient(self):
         self.lua.execute('''
             E.NT={};local a=add('tll_amputation',1,true)
             item.Prefab.Identifier.Value='aegisheadsetmk2'
             for i=1,6 do G.heal(char,item,1);assert(a.Strength==1) end
             G.heal(char,item,1)
-            assert(a.Strength==0 and math.abs(battery.Condition-87.5)<.00001)
+            assert(a.Strength==0 and math.abs(battery.Condition-95)<.00001)
         ''')
 
     def test_nt_flag_and_native_joint_share_one_regeneration_job(self):
@@ -116,7 +144,7 @@ class MedicalOriginsTests(HeadsetAdapterTests):
                 restored[#restored+1]=index;c.AnimController.LimbJoints[index].IsSevered=false
             end
             for i=1,7 do G.heal(char,item,1) end
-            assert(a.Strength==0 and #restored==2 and battery.Condition==87.5)
+            assert(a.Strength==0 and #restored==2 and battery.Condition==95)
             assert(char.AnimController.LimbJoints[3].IsSevered)
         ''')
 
@@ -129,7 +157,7 @@ class MedicalOriginsTests(HeadsetAdapterTests):
             local restored=false
             require('AegisHeadset.medical').restoreNative=function(c,index) restored=index==1 end
             for i=1,7 do G.heal(char,item,1) end
-            assert(a.Strength==0 and battery.Condition==87.5 and restored,'native limb charged twice')
+            assert(a.Strength==0 and battery.Condition==95 and restored,'native limb charged twice')
         ''')
 
     def test_continuously_reset_stun_cannot_starve_unknown_critical_injury(self):
@@ -141,7 +169,7 @@ class MedicalOriginsTests(HeadsetAdapterTests):
                 G.heal(char,item,.2)
             end
             assert(wound.Strength<.0001,'stun consumes all healing before the actual injury')
-            assert(math.abs(battery.Condition-87.5)<.0001)
+            assert(math.abs(battery.Condition-95)<.0001)
             G.heal(char,item,1)
             assert(stun.Strength==0)
         ''')
@@ -154,5 +182,5 @@ class MedicalOriginsTests(HeadsetAdapterTests):
             G.heal(char,item,.2)
             assert(paralysis.Strength==0,'NT paralysis keeps native stun at5 forever')
             assert(marker.Strength<100,'cause must receive remaining medical budget')
-            assert(math.abs(battery.Condition-99.5)<.0001)
+            assert(math.abs(battery.Condition-99.8)<.0001)
         ''')

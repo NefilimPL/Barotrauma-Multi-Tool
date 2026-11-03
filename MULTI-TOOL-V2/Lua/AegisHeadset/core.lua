@@ -7,9 +7,9 @@ function M.debit(energy,cost)
     local paid=math.min(energy,cost)
     return math.max(0,energy-paid),paid/cost
 end
-function M.absorb(energy,damage)
+function M.absorb(energy,damage,costMultiplier)
     if not finite(damage) or damage<=0 then return energy,0 end
-    local remaining,fraction=M.debit(energy,math.max(C.hitMinimum,damage*C.hitMultiplier))
+    local remaining,fraction=M.debit(energy,math.max(C.hitMinimum,damage*C.hitMultiplier)*(costMultiplier or 1))
     return remaining,damage*(1-fraction)
 end
 function M.advanceJob(job,energy,dt,cost,seconds)

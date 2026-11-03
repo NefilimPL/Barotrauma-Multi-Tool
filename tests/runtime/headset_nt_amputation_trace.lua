@@ -35,7 +35,7 @@ Timer.Wait(function()
     Timer.Wait(function()
         local marker=c.CharacterHealth.GetAffliction('tll_amputation')
         local passed=not c.IsDead and G.energy(item)>50 and hitCost==0 and
-            math.abs(limbCost-12.5)<.001 and (not marker or marker.Strength==0)
+            math.abs(limbCost-5)<.001 and (not marker or marker.Strength==0)
         rows[#rows+1]=(passed and 'PASS ' or 'FAIL ')..'delayed NT amputation: hitCost='..hitCost..' limbCost='..limbCost
         rows[#rows+1]='FINAL energy='..G.energy(item)..' dead='..tostring(c.IsDead)..' vitality='..c.Vitality
         for a in c.CharacterHealth.GetAllAfflictions() do if a.Strength>0 then rows[#rows+1]='state '..tostring(a.Prefab.Identifier)..' '..a.Strength end end

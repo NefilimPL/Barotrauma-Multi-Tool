@@ -3,7 +3,16 @@
   <Item identifier="combatmultitool" name="Aegis combat multitool" category="Equipment,Weapon"
         tags="tool,weapon,weldingequipment,cuttingequipment,electricalrepairtool,mechanicalrepairtool,screwdriver,wrench,fireextinguisher,crowbaritem,provocative"
         cargocontaineridentifier="metalcrate" scale="0.068" maxstacksize="1" requireaimtouse="true" impactsoundtag="impact_metal_heavy">
-    <Price baseprice="6500" sold="false" />
+    <Price baseprice="2000" sold="true" minavailable="1" maxavailable="2">
+      <Price storeidentifier="merchantoutpost" multiplier="1.0" />
+      <Price storeidentifier="merchantcity" multiplier="1.0" />
+      <Price storeidentifier="merchantresearch" multiplier="1.0" />
+      <Price storeidentifier="merchantmilitary" multiplier="1.0" />
+      <Price storeidentifier="merchantmine" multiplier="1.0" />
+      <Price storeidentifier="merchantengineering" multiplier="1.0" />
+      <Price storeidentifier="merchantmedical" multiplier="1.0" />
+      <Price storeidentifier="merchantarmory" multiplier="1.0" />
+    </Price>
     <Fabricate suitablefabricators="fabricator,milfabricator" requiredtime="30">
       <RequiredSkill identifier="mechanical" level="50" />
       <RequiredSkill identifier="electrical" level="40" />

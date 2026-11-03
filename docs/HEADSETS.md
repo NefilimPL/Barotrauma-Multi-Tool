@@ -1,6 +1,6 @@
 # Komunikatory Aegis
 
-Wersja 1.2.7 zawiera dwa przedmioty dodane w 1.2.0 do MULTI-TOOL-V2. Wymagany jest LuaCs
+Wersja 1.2.8 zawiera dwa przedmioty dodane w 1.2.0 do MULTI-TOOL-V2. Wymagany jest LuaCs
 na kliencie i serwerze. **Żaden mod medyczny nie jest wymagany.**
 
 | Przedmiot | Identyfikator | Funkcje |
@@ -47,14 +47,15 @@ z geometrią produkcyjnego renderera. To ilustracja, nie zrzut ekranu gry.
 
 ## Zasilanie
 
-- Ciśnienie: 2,5% standardowego ogniwa/s, około 40 s samej ochrony.
+- Ciśnienie: podstawowy 2,5% standardowego ogniwa/s (około 40 s);
+  Mk II 1%/s (około 100 s samej ochrony).
 - Leczenie: wspólny limit 5 jednostek siły/s w podstawowym, 20 w Mk II;
-  cena w obu wynosi 0,125% ogniwa/jednostkę.
-- Organ: 7,5% i co najmniej 5 s w podstawowym, około 3,3 s w Mk II.
-- Kończyna: 12,5% i co najmniej 10 s w podstawowym, około 6,7 s w Mk II.
-- Zamknięcie operacji NT: 7,5% na daną część ciała; co najmniej 5 s
-  w podstawowym, około 3,3 s w Mk II.
-- Mk II: co najmniej 1% za trafienie, dalej 0,5% za jednostkę przyjmowanej
+  cena wynosi 0,125% ogniwa/jednostkę w podstawowym, 0,05% w Mk II.
+- Organ: podstawowy 7,5% i co najmniej 5 s; Mk II 3% i około 3,3 s.
+- Kończyna: podstawowy 12,5% i co najmniej 10 s; Mk II 5% i około 6,7 s.
+- Zamknięcie operacji NT: podstawowy 7,5% i co najmniej 5 s na część ciała;
+  Mk II 3% i około 3,3 s.
+- Mk II: co najmniej 0,4% za trafienie, dalej 0,2% za jednostkę przyjmowanej
   siły. Na pewno nieskuteczne efekty (np. prawdopodobieństwo zero, pełna
   odporność, pełne pokrycie pancerzem) nie są opłacane jako obrażenia.
 
@@ -72,7 +73,8 @@ Od 1.2.6 Mk II ma większą pulę leczenia zwykłych efektów, także modowych:
 Przykładowe dwa efekty po 100 jednostek wymagają około 10 s samego leczenia
 w Mk II, zamiast około 26,7 s w 1.2.5 lub 40 s w modelu podstawowym.
 Trwająca choroba i kolejne obrażenia mogą wydłużyć ten czas. Usunięcie tych
-samych 200 jednostek nadal kosztuje 25% baterii. Przy aktywnym leczeniu
+samych 200 jednostek od 1.2.8 kosztuje 10% baterii w Mk II (25% w podstawowym).
+Wszystkie koszty Mk II są o 60% niższe niż w 1.2.7. Przy aktywnym leczeniu
 energia może spadać szybciej na sekundę, ponieważ urządzenie usuwa więcej
 urazów; po wyleczeniu pobór ustaje. Czasy odtwarzania organów i kończyn
 pozostają jak w 1.2.5.
@@ -160,7 +162,8 @@ pojemnika. Ręczne przenoszenie przez gracza pozostaje dostępne.
 Fabrykator lub fabrykator wojskowy. Podstawowy: elektryka 45, 30 s,
 zwykłe słuchawki, FPGA, fulgurium, 2 miedzi, stop tytanowo-aluminiowy.
 Mk II: elektryka 65, 45 s, podstawowy komunikator, FPGA, 2 fulgurium
-i 2 stopy. Ogniwo wkłada się osobno. Ceny bazowe: 3500 / 7000.
+i 2 stopy. Ogniwo wkłada się osobno. Ceny bazowe w sklepach: 500 / 1000 mk.
+Oba modele można kupić w zwykłych sklepach kampanii, z zapasem 1–2 sztuk.
 
 Własne grafiki i OGG są w `Assets/Headsets`. Zamiast obwódki postaci renderer
 rysuje krótkie, małe światło w miejscach istniejących soczewek: jedną diodę

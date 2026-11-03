@@ -25,7 +25,7 @@ for _,id in ipairs({'aegisheadset','aegisheadsetmk2'}) do
         G.heal(c,item,1)
         local amount=id=='aegisheadset' and 5 or 20
         assert(math.abs(a.Strength-(30-amount))<.001,'healing amount '..a.Strength)
-        assert(math.abs(G.energy(item)-(100-amount*.125))<.001,'unit price '..G.energy(item))
+        assert(math.abs(G.energy(item)-(100-amount*(id=='aegisheadset' and .125 or .05)))<.001,'unit price '..G.energy(item))
     end)
     check(id..' two actual NT injuries heal at shared rate and fixed total price',function()
         c.CharacterHealth.SetAllDamage(0,0,0);cell.Condition=100
@@ -40,7 +40,7 @@ for _,id in ipairs({'aegisheadset','aegisheadsetmk2'}) do
         assert(math.abs(fracture.Strength+artery.Strength-remaining)<.001,'wrong shared rate')
         G.heal(c,item,1)
         assert(fracture.Strength<.001 and artery.Strength<.001,'NT effects not cured')
-        assert(math.abs(G.energy(item)-75)<.001,'different total price '..G.energy(item))
+        assert(math.abs(G.energy(item)-(id=='aegisheadset' and 75 or 90))<.001,'different total price '..G.energy(item))
     end)
     check(id..' NT and native limb share one paid restoration',function()
         c.CharacterHealth.SetAllDamage(0,0,0);cell.Condition=100
@@ -63,7 +63,7 @@ for _,id in ipairs({'aegisheadset','aegisheadsetmk2'}) do
         local steps=id=='aegisheadset' and 10 or 7
         for i=1,steps-1 do G.heal(c,item,1);assert(a.Strength>0,'premature restoration') end
         G.heal(c,item,1)
-        assert(a.Strength==0 and math.abs(G.energy(item)-87.5)<.001,'price '..G.energy(item))
+        assert(a.Strength==0 and math.abs(G.energy(item)-(id=='aegisheadset' and 87.5 or 95))<.001,'price '..G.energy(item))
         index=0
         for joint in c.AnimController.LimbJoints do
             index=index+1

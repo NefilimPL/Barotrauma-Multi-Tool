@@ -41,7 +41,11 @@ function M.new(E)
         s.debits[#s.debits+1]={time=G.now,amount=amount,reason=reason or 'unspecified'}
         if #s.debits>12 then table.remove(s.debits,1) end
     end
+    function G.powerCost(item,cost)
+        return cost*(C.identifiers[U.itemId(item)]==2 and C.mk2EnergyMultiplier or 1)
+    end
     function G.spend(item,cost,reason)
+        cost=G.powerCost(item,cost)
         local left,fraction=Core.debit(G.energy(item),cost)
         G.setEnergy(item,left)
         if fraction>0 then G.recordDebit(item,cost*fraction,reason) end
@@ -89,6 +93,7 @@ function M.new(E)
     function G.heal(character,item,dt)
         if not G.authoritative or character.IsDead or not character.CharacterHealth then return end
         local speed=C.identifiers[U.itemId(item)]==2 and C.mk2HealMultiplier or 1
+        local healCost=G.powerCost(item,C.healCost)
         local entries=Medical.entries(E,character)
         for name,provider in pairs(G.providers) do
             local ok,extra=pcall(provider,character)
@@ -101,11 +106,11 @@ function M.new(E)
         end
         local patient=G.patients[character] or {jobs={}}
         G.patients[character]=patient
-        local actions=T.plan(entries,math.min(C.healRate*speed*dt,G.energy(item)/C.healCost))
+        local actions=T.plan(entries,math.min(C.healRate*speed*dt,G.energy(item)/healCost))
         local changed=false
         for _,action in ipairs(actions) do
             local before=G.energy(item)
-            local left,fraction=Core.debit(before,action.amount*C.healCost)
+            local left,fraction=Core.debit(before,action.amount*healCost)
             -- Reserve mathematically; commit only the actual cost once.
             -- A provisional zero followed by a refund would fire OnBroken.
             if fraction>0 then
@@ -115,7 +120,7 @@ function M.new(E)
                 end)
                 local actual=action.entry.ref and math.abs(action.entry.ref.Strength-action.entry.strength) or
                     (ok and action.amount*fraction or 0)
-                local used=math.min(before-left,actual*C.healCost)
+                local used=math.min(before-left,actual*healCost)
                 G.setEnergy(item,before-used)
                 G.recordDebit(item,used,'heal:'..action.entry.id)
                 if used>1e-7 then changed=true end
@@ -132,6 +137,7 @@ function M.new(E)
             local job=jobs[keys[1]]
             local progress=patient.jobs[job.key] or {paid=0};patient.jobs[job.key]=progress
             local cost=job.kind=='organ' and C.organCost or job.kind=='surgery' and C.surgeryCost or C.limbCost
+            cost=G.powerCost(item,cost)
             local seconds=job.kind=='organ' and C.organSeconds or job.kind=='surgery' and C.surgerySeconds or C.limbSeconds
             local before=G.energy(item)
             local regenSpeed=C.identifiers[U.itemId(item)]==2 and C.mk2RegenMultiplier or 1
@@ -203,7 +209,7 @@ function M.new(E)
         end)
         if damage<=0 then return nil end
         local before=G.energy(item)
-        local left,residual=Core.absorb(before,damage)
+        local left,residual=Core.absorb(before,damage,G.powerCost(item,1))
         G.setEnergy(item,left)
         local fraction=residual/damage
         local result={};local buffs=false

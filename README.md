@@ -3,12 +3,17 @@
 Mod Barotrauma z kompozytowym multitool'em, dwuręcznym **bojowym multitool'em Aegis**
 oraz **dwoma komunikatorami regeneracyjnymi Aegis**.
 
-Wersja **1.2.7** naprawia leczenie nokautu: słuchawki najpierw leczą
+Wersja **1.2.8** włącza zakup wszystkich pięciu przedmiotów moda.
+Ceny bazowe: bojowy Aegis 2000 mk, zwykłe słuchawki 500 mk, Mk II 1000 mk.
+Mk II zużywa **o 60% mniej energii** na leczenie, odtwarzanie anatomii,
+trafienia i ciśnienie, przy zachowanym leczeniu 20 jednostek/s.
+Poprawka **1.2.7** naprawia leczenie nokautu: słuchawki najpierw leczą
 przyczynę obezwładnienia, zamiast zużywać całą energię na ogłuszenie
 stale odtwarzane przez grę. Dotyczy to również paraliżu i nieprzytomności NT.
 Od **1.2.6** Mk II leczy efekty urazów i chorób z wydajnością
 **20 jednostek/s**, cztery razy większą niż model podstawowy (5/s),
-przy tym samym koszcie jednostkowym. Odtwarzanie anatomii nadal jest
+od 1.2.8 dodatkowo taniej na jednostkę niż model podstawowy.
+Odtwarzanie anatomii nadal jest
 o 50% szybsze niż w podstawowym. Zachowano poprawkę 1.2.5: skutki amputacji
 NT nie opróżniają baterii jak trafienia w tarczę. Neurotrauma jest opcjonalna.
 Zachowano poprawki 1.2.4: usunięty pobór za techniczny znacznik Real Sonar;
@@ -27,6 +32,22 @@ Wersja Aegis wymaga [Lua for Barotrauma / LuaCs](https://github.com/evilfactory/
 na kliencie i serwerze. Punktem zgodności jest Barotrauma **1.13.5.0**;
 testowy serwer używa wydania LuaCs z 27.10.2026, commit `c6e8829`.
 Starszy multitool nadal ma własną, dotychczasową definicję XML.
+
+## Zakup w sklepach
+
+W zwykłych sklepach kampanii dostępne są wszystkie przedmioty moda:
+
+| Przedmiot | Cena bazowa |
+|---|---:|
+| Klucz-śrubokręt 2 w 1 | 57 mk |
+| Kompozytowy multitool | 1300 mk |
+| Bojowy multitool Aegis | 2000 mk |
+| Komunikator Aegis | 500 mk |
+| Komunikator Aegis Mk II | 1000 mk |
+
+Oferty mają co najmniej jedną sztukę (klucz 5–10). Ceny bazowe podlegają
+zwykłym modyfikatorom kampanii, reputacji i promocji. Zapas istniejącego
+sklepu może wymagać odświeżenia przy przejściu do nowej lokacji.
 
 ## Instalacja
 

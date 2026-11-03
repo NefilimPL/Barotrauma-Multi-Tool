@@ -1,7 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Items>
   <Item identifier="aegisheadset" name="Aegis regenerative headset" category="Equipment" tags="smallitem,mobileradio,aegisheadset" scale="0.035" maxstacksize="1" cargocontaineridentifier="metalcrate" impactsoundtag="impact_metal_light">
-    <Price baseprice="3500" sold="false" />
+    <Price baseprice="500" sold="true" minavailable="1" maxavailable="2">
+      <Price storeidentifier="merchantoutpost" multiplier="1.0" />
+      <Price storeidentifier="merchantcity" multiplier="1.0" />
+      <Price storeidentifier="merchantresearch" multiplier="1.0" />
+      <Price storeidentifier="merchantmilitary" multiplier="1.0" />
+      <Price storeidentifier="merchantmine" multiplier="1.0" />
+      <Price storeidentifier="merchantengineering" multiplier="1.0" />
+      <Price storeidentifier="merchantmedical" multiplier="1.0" />
+      <Price storeidentifier="merchantarmory" multiplier="1.0" />
+    </Price>
     <Fabricate suitablefabricators="fabricator,milfabricator" requiredtime="30">
       <RequiredSkill identifier="electrical" level="45" />
       <RequiredItem identifier="headset" /><RequiredItem identifier="fpgacircuit" />
@@ -27,7 +36,16 @@
     </ItemContainer>
   </Item>
   <Item identifier="aegisheadsetmk2" name="Aegis shield headset Mk II" category="Equipment" tags="smallitem,mobileradio,aegisheadset" scale="0.035" maxstacksize="1" cargocontaineridentifier="metalcrate" impactsoundtag="impact_metal_light">
-    <Price baseprice="7000" sold="false" />
+    <Price baseprice="1000" sold="true" minavailable="1" maxavailable="2">
+      <Price storeidentifier="merchantoutpost" multiplier="1.0" />
+      <Price storeidentifier="merchantcity" multiplier="1.0" />
+      <Price storeidentifier="merchantresearch" multiplier="1.0" />
+      <Price storeidentifier="merchantmilitary" multiplier="1.0" />
+      <Price storeidentifier="merchantmine" multiplier="1.0" />
+      <Price storeidentifier="merchantengineering" multiplier="1.0" />
+      <Price storeidentifier="merchantmedical" multiplier="1.0" />
+      <Price storeidentifier="merchantarmory" multiplier="1.0" />
+    </Price>
     <Fabricate suitablefabricators="fabricator,milfabricator" requiredtime="45">
       <RequiredSkill identifier="electrical" level="65" />
       <RequiredItem identifier="aegisheadset" /><RequiredItem identifier="fpgacircuit" />

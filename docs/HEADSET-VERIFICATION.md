@@ -1,4 +1,45 @@
-# Komunikatory Aegis — weryfikacja 1.2.7
+# Komunikatory Aegis — weryfikacja 1.2.8
+
+## Zakup przedmiotów i wydajniejsze zasilanie Mk II
+
+2026-11-03. Wszystkie pięć przedmiotów moda ma włączony zakup i dodatni
+minimalny zapas w ośmiu standardowych typach sklepów. Natywny odczyt
+`ItemPrefab.GetBuyPricesUnder(0)` potwierdził **5/5** definicji i łącznie
+**40 ofert** z dodatnim zapasem. Ceny bazowe: klucz 57, kompozytowy
+multitool 1300, bojowy Aegis 2000, słuchawki 500, Mk II 1000 mk.
+Pozostają natywne modyfikatory ceny kampanii, reputacji i promocji;
+nie dodano globalnego limitu do końcowej ceny transakcji.
+Scenariusz: `tests/runtime/shop_availability.lua`. To odczyt załadowanych
+cen/zapasów silnika, bez dokonywania transakcji w istniejącej kampanii.
+
+Mk II ma mnożnik kosztu 0,4 dla leczenia, procesów anatomicznych,
+absorpcji i ciśnienia. Mnożnik jest stosowany przed ustaleniem ilości
+leczenia możliwej do opłacenia oraz przed obliczeniem części ataku
+przepuszczanej przez pustą baterię. Nie zmieniono 20 jednostek/s,
+czasów regeneracji ani kosztów modelu podstawowego.
+
+Końcowe kontrole:
+
+- **181/181** regresji. Nowe przypadki: ostatnie 0,025% ogniwa kupuje
+  0,5 jednostki leczenia Mk II; 1% pokrywa 5 z 20 jednostek ataku;
+  ciśnienie kosztuje 1%/s w Mk II, 2,5%/s w podstawowym.
+- **6/6 natywnych porównań**: Mk II leczy 20 jednostek za 1%, dwa
+  rzeczywiste urazy NT o sumie 200 za 10% i kończynę za 5%. Model
+  podstawowy zachowuje 5/s, 25% za 200 jednostek i 12,5% za kończynę.
+- **9/9 natywnej mechaniki**: pełna/częściowa blokada, leczenie, stawy,
+  ciśnienie. 100 siły trafienia kosztuje Mk II 20%; 3 s ciśnienia 3%.
+- **8/8 natywnego nokautu z aktywną fizjologią NT**: 11 cykli `PostHook`
+  na pacjenta, wybudzenie samej nieprzytomności do próby po 8 s,
+  na końcu energia **94,7258%**, witalność 100, brak nokautu.
+  Śpiączka i krytyczny uraz także wyleczone; puste ogniwo nie wybudza.
+  Rzeczywiste ugryzienie mudraptora kosztuje Mk II **4,04%**.
+  Zdrowy pacjent po **20 s** zachowuje **100% baterii** i witalność 100.
+
+Weryfikacja: prywatny serwer 1.13.5.0/LuaCs c6e8829, NT CS DLL 2.0.5
+(pakiet 2.0.7). Nie zmieniano instalacji Steam ani zapisów kampanii.
+Klienta graficznego i połączonej sesji klientów w tej iteracji nie uruchamiano.
+
+## Historia 1.2.7
 
 ## Wybudzanie po nokaucie i korekta zakresu wcześniejszych prób NT
 
