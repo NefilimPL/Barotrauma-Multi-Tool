@@ -81,3 +81,26 @@ class VacuumPickupTests(LuaCase):
             item.children={child};assert(G.pickupTarget(item,ctx)==nil)
             child.ParentInventory.Locked=false;assert(G.pickupTarget(item,ctx)==item)
         """)
+
+    def test_spare_pack_pages_are_audited_without_treating_them_as_loot(self):
+        self.lua.execute("""
+            local tool={id='wrench',Components={pick},AllowedSlots={'Any'},HasAccess=item.HasAccess}
+            local page={id='aegisvacuumpage',Components={},children={tool},HasAccess=item.HasAccess}
+            item.id='aegisvacuumpack';item.children={page}
+            assert(G.pickupTarget(item,ctx)==item)
+            tool.Components={pick,{Name='Door'}};assert(G.pickupTarget(item,ctx)==nil)
+            tool.Components={pick,{Name='Wire',Connections={[0]={}},GetNodes=function() return {} end}}
+            assert(G.pickupTarget(item,ctx)==nil)
+            tool.Components={pick};page.OwnInventory={Locked=true};assert(G.pickupTarget(item,ctx)==nil)
+            page.OwnInventory=nil;item.id='metalcrate';assert(G.pickupTarget(item,ctx)==nil)
+        """)
+
+    def test_locked_second_container_and_oversized_or_cyclic_trees_are_rejected(self):
+        self.lua.execute("""
+            item.Components={pick,{Name='ItemContainer',Inventory={Locked=true}}}
+            assert(G.pickupTarget(item,ctx)==nil)
+            item.Components={pick};item.children={}
+            for i=1,256 do item.children[i]={id='iron',Components={pick},AllowedSlots={'Any'},HasAccess=item.HasAccess} end
+            assert(G.pickupTarget(item,ctx)==nil)
+            item.children={item};assert(G.pickupTarget(item,ctx)==nil)
+        """)

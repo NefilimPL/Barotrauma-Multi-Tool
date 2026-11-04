@@ -3,7 +3,7 @@
   <entityname.aegisvacuum>Aegis salvage vacuum</entityname.aegisvacuum>
   <entitydescription.aegisvacuum>Two-handed suction tool with a replaceable battery. Requires an Aegis salvage backpack in your inventory and LuaCs. Aim and hold use to collect. Press F to open storage. The vacuum battery also powers salvage.</entitydescription.aegisvacuum>
   <entityname.aegisvacuumpack>Aegis salvage backpack</entityname.aegisvacuumpack>
-  <entitydescription.aegisvacuumpack>Storage for the Aegis vacuum: 100 groups of up to 100 actual items. Preserves loaded crates and equipment condition. Craft backpack and vacuum separately. The battery belongs in the vacuum.</entitydescription.aegisvacuumpack>
+  <entitydescription.aegisvacuumpack>Equip in the belt bag slot. Open contents with Backpack storage [F], the F key or right-clicking the backpack icon. Holds 100 groups of up to 100 actual items and preserves loaded crates. Craft backpack and vacuum separately. The battery belongs in the vacuum.</entitydescription.aegisvacuumpack>
   <entityname.aegisvacuumpage>Aegis internal storage</entityname.aegisvacuumpage>
   <vacuum.title>Aegis vacuum storage</vacuum.title>
   <vacuum.salvage>Salvage all contents</vacuum.salvage>

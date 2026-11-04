@@ -30,7 +30,8 @@ class VacuumClientTests(LuaCase):
             G={now=0,is=function(i,k) return i and i.kind==k end,
                 packs=function() return owned end,
                 context=function(i,c)
-                    return {valid=c==owner and (i==pack or (i==vacuum and handsValid)),pack=pack,owner=owner}
+                    local own=false;for _,p in ipairs(owned) do if i==p then own=true end end
+                    return {valid=c==owner and (own or (i==vacuum and handsValid)),pack=own and i or pack,owner=owner}
                 end,
                 request=function(a,i,t,v) requests[#requests+1]={action=a,item=i,target=t} end,
                 patch=function(n,c,m,fn) patches[n]=fn end}
@@ -65,6 +66,12 @@ class VacuumClientTests(LuaCase):
             assert(requests[#requests].item==pack)
         """)
 
+    def test_right_click_on_current_pack_uses_held_nozzle_for_salvage(self):
+        self.lua.execute("""
+            held=vacuum;E.Inventory.SelectedSlot={Item=pack};rightClick=true;G.updateClient()
+            assert(requests[#requests].item==vacuum)
+        """)
+
     def test_typing_does_not_trigger_storage_shortcuts(self):
         self.lua.execute("""
             E.GUI.GUI.KeyboardDispatcher.Subscriber={};hitF=true
@@ -80,4 +87,27 @@ class VacuumClientTests(LuaCase):
         self.lua.execute("""
             G.updateClient();local b=button('vacuum.open');b.OnClicked()
             G.disposeClient();assert(not b.Visible and not b.queued and b.RectTransform.Parent==nil)
+        """)
+
+    def test_ending_round_hides_launcher_and_closes_window_with_old_character_remaining(self):
+        self.lua.execute("""
+            E.Game={RoundStarted=true};G.updateClient();button('vacuum.open').OnClicked()
+            G.onSnapshot({vacuum=pack.ID,pack=pack.ID,charge=0,groups=0,count=0,
+                busy=false,page=0,pages=1,packs={pack.ID},rows={}})
+            E.Game.RoundStarted=false;G.updateClient()
+            assert(not button('vacuum.open').Visible)
+            for _,w in ipairs(widgets) do if w.kind=='frame' and w.RectTransform.Parent==E.GUI.GUI.Canvas then
+                assert(not w.Visible)
+            end end
+        """)
+
+    def test_pack_window_switches_to_another_owned_backpack_without_nozzle(self):
+        self.lua.execute("""
+            local second={ID=20,kind='aegisvacuumpack'};owned={pack,second}
+            E.Entity={FindEntityByID=function(id) if id==20 then return second end end}
+            G.openPanel(pack)
+            G.onSnapshot({vacuum=pack.ID,pack=pack.ID,charge=0,groups=0,count=0,
+                busy=false,page=0,pages=1,packs={pack.ID,second.ID},rows={}})
+            button('vacuum.pack #2 >').OnClicked()
+            assert(requests[#requests].action=='open' and requests[#requests].item==second)
         """)

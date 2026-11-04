@@ -32,14 +32,19 @@ function M.install(G,E)
         return pick and pick.CanBePicked and not pick.IsAttached
             and pick.PickingTime<2147483647
     end
-    local function safeContents(item,ctx,seen,budget)
+    local function safeContents(item,ctx,seen,budget,pageAllowed)
         if seen[item] or budget.count>=C.pickupTreeLimit then return false end
         seen[item]=true;budget.count=budget.count+1
-        if not G.portable(item) or not item.HasAccess(ctx.owner) or item==ctx.pack or item==ctx.vacuum
+        local internalPage=pageAllowed and G.is(item,C.page)
+        local locked=false
+        U.each(item.Components,function(component)
+            if tostring(component.Name):lower()=='itemcontainer' and component.Inventory and component.Inventory.Locked then locked=true end
+        end)
+        if (not internalPage and not G.portable(item)) or not item.HasAccess(ctx.owner) or item==ctx.pack or item==ctx.vacuum or locked
             or (item.ParentInventory and item.ParentInventory.Locked)
             or (item.OwnInventory and item.OwnInventory.Locked) then return false end
         for _,child in ipairs(G.children(item)) do
-            if not safeContents(child,ctx,seen,budget) then return false end
+            if not safeContents(child,ctx,seen,budget,G.is(item,C.pack)) then return false end
         end
         return true
     end

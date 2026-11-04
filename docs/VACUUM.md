@@ -1,16 +1,17 @@
 # Odkurzacz i plecak zbierający Aegis
 
-Wersja 1.3.1 zawiera dwa osobno wytwarzane przedmioty. Wymaga LuaCs na
+Wersja 1.3.2 zawiera dwa osobno wytwarzane przedmioty. Wymaga LuaCs na
 kliencie i serwerze, tak jak pozostałe urządzenia Aegis.
 
 ## Przygotowanie
 
 1. Wytwórz **Plecak zbierający Aegis** i **Odkurzacz zbierający Aegis**.
-2. Włóż plecak do swojego ekwipunku.
+2. Załóż plecak do **slotu torby na pasie (Bag)**, tak jak pas narzędziowy.
+   Widać go na plecach także bez odkurzacza. Slot kombinezonu pozostaje wolny.
 3. Włóż naładowane ogniwo do jedynego slotu **odkurzacza**. Zwykła bateria
    i bateria fulgurium są obsługiwane. Plecak nie ma slotu baterii.
-4. Weź odkurzacz w obie ręce. Plecak będzie widoczny na plecach wraz
-   z przewodem prowadzącym do ssawki; slot skafandra pozostaje dostępny.
+4. Weź odkurzacz w obie ręce. Przewód połączy ssawkę z plecakiem.
+   Sam plecak można przenosić w obu rękach, gdy slot torby jest zajęty.
 
 Celowanie i przytrzymanie strzału uruchamia zasysanie w stożku o zasięgu
 350 jednostek gry. Pobierane są przenośne rzeczy z ziemi, szaf, skrytek,
@@ -20,10 +21,18 @@ w całości, razem z amunicją. Można zdjąć kombinezon z martwej postaci.
 inwentarze i niedostępne zamknięcia są pomijane. Ściany i zamknięte drzwi
 blokują zasysanie. Obowiązują natywne zasady własności i kradzieży.
 
+Reguła przedmiotów ekwipunkowych odpowiada FastLoot: wymagany jest rzeczywisty
+slot przedmiotu. Drzwi i włazy, urządzenia bez slotów oraz przewody podłączone
+choćby jednym końcem lub rozłożone w ścianie są wykluczone. Luźny przewód,
+skrzynka z amunicją i kombinezon nadal mogą zostać pobrane. Kontrola obejmuje
+zawartość pojemników, aby nie przenosić w nich niedozwolonych elementów.
+Cały pojemnik przekraczający 256 sprawdzanych encji jest pomijany.
+
 ## Magazyn
 
-**F** otwiera panel. Działa również przy samym plecaku we własnym
-ekwipunku, bez odkurzacza i bez prądu. Panel pokazuje do 100 grup,
+Kliknij widoczny przycisk **Magazyn plecaka [F]**, naciśnij **F** lub kliknij
+**prawym przyciskiem ikonę plecaka**. Okno działa również bez odkurzacza
+i bez prądu. Panel pokazuje do 100 grup,
 każda po maksymalnie 100 rzeczywistych przedmiotów tego samego typu.
 Teoretyczny limit to 10 000 przedmiotów na plecak; zagnieżdżone skrzynki
 zachowują własną zawartość. Licznik nie zastępuje przedmiotów — stan,
@@ -35,8 +44,8 @@ jakość, baterie, butle i zawartość pozostają przy konkretnych egzemplarzach
 - **Wyjmij** przenosi jedną sztukę do zwykłego slotu ekwipunku, jeśli pasuje.
 - **Odłóż** odkłada konkretną sztukę na ziemię obok postaci. Użyj tego dla
   skrzynek i kombinezonów, których gra nie pozwala schować do zwykłego slotu.
-- Przycisk plecaka przełącza aktywny magazyn, jeśli masz więcej niż jeden
-  plecak i używasz panelu odkurzacza.
+- Przycisk plecaka przełącza magazyn, jeśli masz więcej niż jeden plecak.
+  Bez ręcznego wyboru pierwszeństwo ma plecak założony w slocie Bag.
 
 Stosy po 100 są prezentacją w panelu. Zaplecze używa zapisywanych przez grę
 stron po 100 pojedynczych rzeczy, mieszczących się w natywnym protokole.

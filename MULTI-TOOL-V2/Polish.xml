@@ -3,7 +3,7 @@
   <entityname.aegisvacuum>Odkurzacz zbierający Aegis</entityname.aegisvacuum>
   <entitydescription.aegisvacuum>Dwuręczna ssawka z wymienną baterią. Wymaga plecaka zbierającego Aegis we własnym ekwipunku i LuaCs. Celuj i przytrzymaj użycie, aby zbierać. Klawisz F otwiera magazyn. Bateria odkurzacza zasila także rozbiórkę.</entitydescription.aegisvacuum>
   <entityname.aegisvacuumpack>Plecak zbierający Aegis</entityname.aegisvacuumpack>
-  <entitydescription.aegisvacuumpack>Magazyn odkurzacza Aegis: 100 grup po maksymalnie 100 przedmiotów. Zachowuje zawartość skrzynek i stan wyposażenia. Plecak i odkurzacz wytwarza się osobno. Zasilanie znajduje się w odkurzaczu.</entitydescription.aegisvacuumpack>
+  <entitydescription.aegisvacuumpack>Załóż w slocie torby na pasie. Otwórz zawartość przyciskiem Magazyn plecaka [F], klawiszem F lub prawym kliknięciem ikony plecaka. Mieści 100 grup po maksymalnie 100 przedmiotów i zachowuje zawartość skrzynek. Plecak i odkurzacz wytwarza się osobno. Bateria znajduje się w odkurzaczu.</entitydescription.aegisvacuumpack>
   <entityname.aegisvacuumpage>Wewnętrzny magazyn Aegis</entityname.aegisvacuumpage>
   <vacuum.title>Magazyn odkurzacza Aegis</vacuum.title>
   <vacuum.salvage>Rozłóż całą zawartość</vacuum.salvage>

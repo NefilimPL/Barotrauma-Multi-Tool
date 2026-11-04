@@ -62,7 +62,14 @@ function M.install(G,E)
         packButton=button(panel.RectTransform,.70,.18,.26,.065,text('pack'),function()
             if snapshot and #snapshot.packs>1 then
                 for i,id in ipairs(snapshot.packs) do
-                    if id==snapshot.pack then request('select',snapshot.packs[i%#snapshot.packs+1]);break end
+                    if id==snapshot.pack then
+                        local target=snapshot.packs[i%#snapshot.packs+1]
+                        if G.is(vacuum,C.pack) then
+                            local pack=E.Entity.FindEntityByID(target)
+                            if G.is(pack,C.pack) and G.context(pack,E.Character.Controlled).valid then G.openPanel(pack) end
+                        else request('select',target) end
+                        break
+                    end
                 end
             end
         end)
@@ -87,7 +94,7 @@ function M.install(G,E)
         end
     end
     local launcher=UI.Button(UI.RectTransform(E.Vector2(.20,.045),UI.GUI.Canvas,UI.Anchor.BottomCenter),text('open'))
-    launcher.RectTransform.RelativeOffset=E.Vector2(0,-.13)
+    launcher.RectTransform.RelativeOffset=E.Vector2(0,.20)
     launcher.Visible=false;launcher.ToolTip=text('openhelp')
     launcher.OnClicked=function()
         local device=deviceFor(E.Character.Controlled)
@@ -100,8 +107,9 @@ function M.install(G,E)
     end
     function G.updateClient()
         local character=E.Character.Controlled
-        local device=(not E.Game or E.Game.RoundStarted) and deviceFor(character)
-        if panel and vacuum and G.context(vacuum,character).valid then device=vacuum end
+        local inRound=not E.Game or E.Game.RoundStarted
+        local device=inRound and deviceFor(character) or nil
+        if inRound and panel and vacuum and G.context(vacuum,character).valid then device=vacuum end
         local ctx=device and G.context(device,character)
         if panel and (not ctx or not ctx.valid or device~=vacuum) then G.closePanel() end
         -- Text inputs retain F; opening storage never steals typing from chat.
@@ -113,7 +121,10 @@ function M.install(G,E)
         local selected=E.Inventory and E.Inventory.SelectedSlot
         if not typing and selected and G.is(selected.Item,C.pack)
             and G.context(selected.Item,character).valid and E.PlayerInput.SecondaryMouseButtonClicked() then
-            if panel and vacuum==selected.Item then G.closePanel() else G.openPanel(selected.Item) end
+            local target=selected.Item
+            local held=deviceFor(character)
+            if held and G.is(held,C.vacuum) and G.context(held,character).pack==target then target=held end
+            if panel and vacuum==target then G.closePanel() else G.openPanel(target) end
         end
         if panel and G.now>=nextRefresh then request() end
         -- Queue the panel during think, after the native screen rebuilds its list.

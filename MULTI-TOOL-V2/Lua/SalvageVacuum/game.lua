@@ -78,6 +78,7 @@ function M.new(E)
         G.patches[#G.patches+1]={id,class,method,phase}
     end
     function G.reset()
+        if G.closePanel then G.closePanel() end
         for _,tx in pairs(G.pending) do tx.cancelled=true end
         G.states={};G.jobs={};G.selected={};G.reserved={};G.lastRequest={}
         if G.clearStorageCache then G.clearStorageCache() end

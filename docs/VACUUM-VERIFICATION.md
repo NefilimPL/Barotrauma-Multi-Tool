@@ -1,10 +1,49 @@
-# Odkurzacz Aegis 1.3.1 — weryfikacja
+# Odkurzacz Aegis 1.3.2 — weryfikacja
 
 Aktualizacja: 2026-11-04. Barotrauma 1.13.5.0; LuaCs/Luatrauma c6e8829.
 Osobny serwer dedykowany i dwa rzeczywiste klienty w `.runtime`.
 Instalacja Steam i prywatne zapisy gracza pozostały nienaruszone.
 
-## Testy automatyczne
+## Poprawka slotu, okna i filtrów — 1.3.2
+
+- Pełny zestaw: **275 testów, OK**. Dodano regresje dla braku slotu przedmiotu,
+  drzwi, obu końców i węzłów przewodu, zawartości pojemników, stron plecaka,
+  blokad dodatkowych kontenerów, limitu i cykli drzewa. Testy GUI obejmują
+  widoczny przycisk, F, prawy klik, dostęp bez ssawki, przełączanie plecaków,
+  pierwszeństwo slotu Bag oraz zamknięcie okna przy końcu rundy.
+- **7 natywnych prób klienta — PASS** (`tests/runtime/vacuum_bag.lua`):
+  wyposażenie Bag jednocześnie z oburęczną ssawką, narzędzia i pełne skrzynki
+  oraz kombinezony, odrzucenie włazu i skrzynki elektrycznej, luźny i faktycznie
+  podłączony przewód, zapasowy plecak ze stroną i próbą przeniesienia włazu,
+  widoczność przycisku na ekranie oraz otwarcie wypełnionego okna samym plecakiem.
+- Ponowiono także **13 natywnych regresji zbierania i rozbiórki — PASS**,
+  z plecakiem zakładanym w slocie Bag (`bag-integration-results.txt`). Obejmują
+  one kombinezon z ciała, pełne skrzynki, blokady, zasysanie w pętli produkcyjnej
+  i zakończenie rozbiórki z zachowaniem nierozbieralnej zawartości.
+- Filtr porównano z `Barotrauma fast loot/FastLoot/Lua/safety.lua`.
+  Przeniesiono regułę rodzaju przedmiotu: musi mieć slot ekwipunku; drzwi
+  i włazy oraz przewody z połączeniem lub węzłami nie są łupem. Cała zawartość
+  przenoszonego pojemnika jest sprawdzana, z limitem 256 encji.
+- Plecak używa natywnego `Wearable` w slocie `Bag`, z grafiką na tułowiu.
+  Własny rysunek nie dubluje grafiki założonego plecaka. Slot kombinezonu jest wolny.
+- Natywna próba wykryła przycisk poza ekranem przy ujemnym RelativeOffset
+  z kotwicą BottomCenter. Zmieniono go na dodatni odstęp od dołu i ponowiono
+  kontrolę rzeczywistego prostokąta oraz zrzutu w 960×540.
+  [Okno z zawartością](vacuum/bag-window.png) pokazuje rzeczywistą listę trzech
+  przedmiotów, ich stan, jakość oraz przyciski wyjmowania i odkładania.
+- Przy poprawianiu skryptu testowego użyto enumeracji pinów ConnectionPanel,
+  wolnego slotu do próby z włazem i `OnClicked.Invoke` po rejestracji typu
+  delegata. Te wcześniejsze problemy dotyczyły narzędzi prób. Końcowy dziennik
+  `docs/vacuum/bag-client-results.txt` zawiera siedem PASS.
+- Mechanizm przechwytywania obrazu i wykonywania poleceń pozostaje tylko
+  w testach. Uruchomienie poleceń przed `GameMain.HasLoaded` powodowało awarię
+  piaskownicy; narzędzie czeka teraz na zakończenie ładowania.
+
+Poniższe wyniki kampanii, 10 000 przedmiotów i dwóch klientów dotyczą 1.3.1.
+Nie powtarzano całego długiego cyklu kampanii dla 1.3.2; sprawdzono zmienione
+elementy na rzeczywistym kliencie i uruchomiono pełny zestaw regresji.
+
+## Testy automatyczne 1.3.1
 
 - `python tools/run_tests.py`: **254 testy, OK**.
 - `python tools/validate_content.py --game .runtime/server`: **OK**:
@@ -125,4 +164,4 @@ Limit 10 000 nadal podlega limitom encji silnika. Rozłączenie klienta nie ozna
 zatrzymania partii, jeżeli jego postać wciąż trzyma sprawne urządzenie.
 
 Skrypty `tests/runtime/` i sterowanie klientami nie trafiają do moda.
-Paczka: `output/MULTI-TOOL-V2-1.3.1.zip`.
+Paczka: `output/MULTI-TOOL-V2-1.3.2.zip`.

@@ -1,0 +1,7 @@
+PASS native backpack equips in Bag while vacuum occupies both hands
+PASS real portable tools, loaded ammunition crates and suits remain loot
+PASS native hatch and stationary junction box are never loot
+PASS loose wire is loot, an actually connected wire is protected
+PASS spare backpack audits its native storage pages and rejects structural contents
+PASS visible native storage button works with backpack only
+PASS native button opens populated window without a held vacuum
