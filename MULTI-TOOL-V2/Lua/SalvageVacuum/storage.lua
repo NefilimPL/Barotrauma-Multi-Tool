@@ -13,17 +13,86 @@ function M.install(G,E)
         table.sort(out,function(a,b) return a.ID<b.ID end)
         return out
     end
+    local indexes,records,listIndexes={},{},{}
+    local function record(item)
+        local id=item.ID
+        local r=records[id]
+        if not r or r.item~=item then r={kind=G.id(item),item=item,id=id};records[id]=r end
+        return r
+    end
+    local function add(index,item)
+        local id=item.ID
+        if not item.Removed and not index.positions[id] then
+            index.items[#index.items+1]=item;index.positions[id]=#index.items
+            index.records[#index.records+1]=record(item)
+            index.view=nil
+        end
+    end
+    local function remove(index,item)
+        local id=item.ID
+        local position=index.positions[id]
+        if not position then return end
+        local last=index.items[#index.items]
+        index.items[position]=last;index.positions[last.ID]=position
+        index.records[position]=index.records[#index.records]
+        index.items[#index.items]=nil;index.records[#index.records]=nil;index.positions[id]=nil
+        records[id]=nil;index.view=nil
+    end
+    local function indexFor(pack)
+        if not indexes[pack] then
+            local index={items={},positions={},records={}};indexes[pack]=index;listIndexes[index.items]=index
+            for _,page in ipairs(G.pages(pack)) do U.each(page.OwnInventory.AllItems,function(item) add(index,item) end) end
+        end
+        return indexes[pack]
+    end
     function G.contents(pack)
-        local out={}
-        for _,page in ipairs(G.pages(pack)) do U.each(page.OwnInventory.AllItems,function(item)
-            if not item.Removed and not G.reserved[item] then out[#out+1]=item end
-        end) end
-        return out
+        local items=indexFor(pack).items
+        if not G.pending[pack] then return items end
+        local available={}
+        for _,item in ipairs(items) do if not G.reserved[item] then available[#available+1]=item end end
+        return available
     end
     function G.records(items)
         local out={}
-        for _,item in ipairs(items) do out[#out+1]={kind=G.id(item),item=item,id=item.ID} end
+        local index=listIndexes[items]
+        if index then
+            for i,r in ipairs(index.records) do out[i]=r end
+        else
+            for _,item in ipairs(items) do out[#out+1]=record(item) end
+        end
         return out
+    end
+    function G.storageView(pack)
+        if G.pending[pack] then return nil end
+        local index=indexFor(pack)
+        if not index.view then
+            local sorted=G.records(index.items)
+            table.sort(sorted,function(a,b) return a.kind==b.kind and a.id<b.id or a.kind<b.kind end)
+            index.view={groups=Core.groups(sorted),count=#index.items}
+        end
+        return index.view
+    end
+    function G.clearStorageCache() indexes={};records={};listIndexes={} end
+    local function changed(container,p,inserted)
+        local parent,item=container.Item,p['containedItem']
+        if not parent or not item then return end
+        if G.is(parent,C.pack) then
+            local index=indexes[parent]
+            if index and item.OwnInventory then U.each(item.OwnInventory.AllItems,function(child)
+                if inserted then add(index,child) else remove(index,child) end
+            end) end
+        elseif G.is(parent,C.page) then
+            local inv=parent.ParentInventory
+            local pack=inv and inv.Owner
+            if pack and E.LuaUserData.IsTargetType(pack,'Barotrauma.Item') and G.is(pack,C.pack) then
+                local index=indexFor(pack)
+                if inserted then add(index,item) else remove(index,item) end
+            end
+        end
+    end
+    if G.patch then
+        G.patch('stored-add','Barotrauma.Items.Components.ItemContainer','OnItemContained',function(container,p) changed(container,p,true) end,true)
+        G.patch('stored-remove','Barotrauma.Items.Components.ItemContainer','OnItemRemoved',function(container,p) changed(container,p,false) end,true)
     end
     function G.has(pack,item)
         local seen={}
@@ -36,16 +105,22 @@ function M.install(G,E)
         end
         return false
     end
-    function G.freeSlots(pack)
+    function G.freeSlots(pack,limit)
         local out={}
         for _,page in ipairs(G.pages(pack)) do
             local inv=page.OwnInventory
-            for i=0,inv.Capacity-1 do if not inv.GetItemAt(i) then out[#out+1]={inv=inv,slot=i} end end
+            if not inv.IsFull(false) then
+                for i=0,inv.Capacity-1 do if not inv.GetItemAt(i) then
+                    out[#out+1]={inv=inv,slot=i}
+                    if limit and #out>=limit then return out end
+                end end
+            end
         end
         return out
     end
     function G.ensureSpace(pack,count)
-        if #G.freeSlots(pack)>=count then return true end
+        local pages=G.pages(pack)
+        if #pages*C.pageSize-#indexFor(pack).items>=count then return true end
         if not G.authoritative or pack.Removed or G.pageSpawning and G.pageSpawning[pack] then return false end
         if #G.pages(pack)>=C.pages then return false end
         G.pageSpawning=G.pageSpawning or {};G.pageSpawning[pack]=true
@@ -61,8 +136,8 @@ function M.install(G,E)
         if G.has(item,pack) then return false end
         if not Core.canAccept(G.records(G.contents(pack)),{kind=G.id(item)}) then return false end
         if not G.ensureSpace(pack,1) then return false end
-        for _,s in ipairs(G.freeSlots(pack)) do
-            if s.inv.TryPutItem(item,s.slot,false,false,user,true,true,false) then return true end
+        for _,s in ipairs(G.freeSlots(pack,1)) do
+            if s.inv.TryPutItem(item,s.slot,false,false,user,true,true,false) then add(indexFor(pack),item);return true end
         end
         return false
     end

@@ -5,6 +5,10 @@ local M={}
 function M.install(G,E)
     local items,vacuums={},{}
     local refreshAt,scanAt,salvageAt=0,0,0
+    function G.resetRuntime()
+        items,vacuums={},{}
+        refreshAt,scanAt,salvageAt=0,0,0
+    end
     function G.portable(item)
         local pick
         U.each(item.Components,function(component)
@@ -48,13 +52,19 @@ function M.install(G,E)
         G.now=G.now+math.min(dt,.1)
         if G.now>=refreshAt then
             refreshAt=G.now+C.refreshInterval;items={};vacuums={}
+            local storageRoots={}
             U.each(E.Item.ItemList,function(item)
                 -- Native cached root avoids scanning 10,000 stored items as nearby loot.
                 local root=item.RootContainer
-                if not G.is(item,C.page) and not (root and G.is(root,C.pack)) then items[#items+1]=item end
-                if G.is(item,C.vacuum) then
-                    vacuums[#vacuums+1]=item
-                    G.states[item]=G.states[item] or {cursor=1}
+                local stored=root and storageRoots[root]
+                if root and stored==nil then stored=G.is(root,C.pack);storageRoots[root]=stored end
+                if not stored then
+                    local id=G.id(item)
+                    if id~=C.page then items[#items+1]=item end
+                    if id==C.vacuum then
+                        vacuums[#vacuums+1]=item
+                        G.states[item]=G.states[item] or {cursor=1}
+                    end
                 end
             end)
             for item in pairs(G.states) do if item.Removed then G.states[item]=nil;G.selected[item.ID]=nil end end
@@ -62,7 +72,8 @@ function M.install(G,E)
         if G.authoritative and G.now>=scanAt then
             scanAt=G.now+C.scanInterval
             for _,vacuum in ipairs(vacuums) do
-                local state=G.states[vacuum]
+                local state=G.states[vacuum] or {cursor=1}
+                G.states[vacuum]=state
                 local ctx=G.context(vacuum)
                 state.active=ctx.valid and ctx.aim and G.now-(state.usedAt or -100)<.15
                     and G.charge(vacuum)>0 and not G.jobs[ctx.pack] and not G.pending[ctx.pack]

@@ -1,6 +1,6 @@
 # Barotrauma-Multi-Tool
 
-Wersja **1.3.0** dodaje **plecak zbierający i dwuręczny odkurzacz Aegis**.
+Wersja **1.3.1** zawiera **plecak zbierający i dwuręczny odkurzacz Aegis**.
 Obie części wytwarza się osobno. Bateria znajduje się w odkurzaczu i zasila
 zasysanie oraz rozbiórkę całej zawartości jednym przyciskiem. Przedmioty bez
 receptury pozostają nietknięte. Panel magazynu (**F**) grupuje rzeczy po 100,
@@ -8,6 +8,10 @@ zachowując stan i zawartość skrzynek. **Odłóż** pozwala wyjąć także skr
 i kombinezony na ziemię. [Instrukcja](docs/VACUUM.md) ·
 [Grafiki i animacja](docs/vacuum/preview.html) ·
 [Wyniki i ograniczenia testów](docs/VACUUM-VERIFICATION.md).
+
+Poprawka 1.3.1 przyspiesza panel pełnego magazynu i czyści stan zasysania
+przy zmianie rundy. Sprawdzono pełny zapis i odczyt kampanii, dwóch klientów,
+rozłączenie podczas rozbiórki oraz przejście poziomu z 10 000 przedmiotów.
 
 Mod Barotrauma z kompozytowym multitool'em, dwuręcznym **bojowym multitool'em Aegis**
 oraz **dwoma komunikatorami regeneracyjnymi Aegis**.

@@ -1,0 +1,6 @@
+PASS real client is multiplayer and has authoritative vacuum adapter disabled
+PASS native campaign synchronization preserves mixed contents
+PASS server reply for 10000-item backpack is paged and bounded
+PASS native inventory deltas match server after owner withdrawal
+PASS level transition client B mixed loot
+PASS third level client B preserves nested contents

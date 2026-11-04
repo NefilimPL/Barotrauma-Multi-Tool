@@ -29,9 +29,14 @@ function M.install(G,E)
     end
     function G.snapshot(ctx,view)
         view=G.normalizeView(view)
-        local records=G.records(G.contents(ctx.pack))
-        table.sort(records,function(a,b) return a.kind==b.kind and a.id<b.id or a.kind<b.kind end)
-        local groups=Core.groups(records)
+        local cached=G.storageView and G.storageView(ctx.pack)
+        local records,groups,count
+        if cached then groups,count=cached.groups,cached.count
+        else
+            records=G.records(G.contents(ctx.pack))
+            table.sort(records,function(a,b) return a.kind==b.kind and a.id<b.id or a.kind<b.kind end)
+            groups=Core.groups(records);count=#records
+        end
         local rows={}
         if view.group>0 and groups[view.group] then
             for _,record in ipairs(groups[view.group].items) do
@@ -54,7 +59,7 @@ function M.install(G,E)
         for i=page*8+1,math.min(#rows,page*8+8) do selected[#selected+1]=rows[i] end
         local packs={};for _,pack in ipairs(G.packs(ctx.owner)) do packs[#packs+1]=pack.ID end
         return {vacuum=ctx.vacuum.ID,pack=ctx.pack.ID,packs=packs,charge=G.charge(ctx.vacuum),
-            busy=G.jobs[ctx.pack]~=nil or G.pending[ctx.pack]~=nil,count=#records,groups=#groups,
+            busy=G.jobs[ctx.pack]~=nil or G.pending[ctx.pack]~=nil,count=count,groups=#groups,
             page=page,pages=math.max(1,math.ceil(#rows/8)),rows=selected,group=view.group}
     end
     local function sendSnapshot(client,vacuum,view)

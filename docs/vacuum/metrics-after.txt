@@ -1,0 +1,10 @@
+optimized contents 10000: n=10 min=0ms median=0ms max=0ms mean=0.00ms
+optimized grouping 10000: n=10 min=1057ms median=1251ms max=1494ms mean=1272.20ms
+optimized snapshot 10000: n=10 min=1153ms median=1252ms max=1623ms mean=1341.30ms
+optimized update 10000: n=20 min=0ms median=0ms max=28ms mean=4.90ms
+records only warm: n=5 min=1156ms median=1193ms max=1224ms mean=1195.00ms
+groups only Lua records: n=5 min=26ms median=58ms max=77ms mean=50.80ms
+final cached records 10000: n=10 min=2ms median=7ms max=19ms mean=9.10ms
+final panel snapshot 10000: n=10 min=0ms median=0ms max=5ms mean=0.60ms
+final cold snapshot from native inventories 10000: n=1 min=1175ms median=1175ms max=1175ms mean=1175.00ms
+final warm snapshot after level transition 10000: n=10 min=0ms median=0ms max=0ms mean=0.00ms

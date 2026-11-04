@@ -75,6 +75,8 @@ function M.new(E)
     function G.reset()
         for _,tx in pairs(G.pending) do tx.cancelled=true end
         G.states={};G.jobs={};G.selected={};G.reserved={};G.lastRequest={}
+        if G.clearStorageCache then G.clearStorageCache() end
+        if G.resetRuntime then G.resetRuntime() end
     end
     function G.dispose()
         G.alive=false;G.reset()

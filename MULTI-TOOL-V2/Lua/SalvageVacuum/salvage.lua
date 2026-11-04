@@ -57,7 +57,7 @@ function M.install(G,E)
         for _,child in ipairs(children) do
             if not G.insert(ctx.pack,child,ctx.owner,true) then job.index=job.index+1;job.skipped=job.skipped+1;return end
         end
-        local slots=G.freeSlots(ctx.pack)
+        local slots=G.freeSlots(ctx.pack,#plan)
         local battery=G.source(ctx.vacuum)
         local before=battery.Condition
         if not G.spend(ctx.vacuum,C.salvageCost) then return end
