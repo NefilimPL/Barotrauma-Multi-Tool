@@ -16,7 +16,12 @@ function M.new(E)
         if owner and owner.Inventory then U.each(owner.Inventory.AllItems,function(i)
             if G.is(i,C.pack) then out[#out+1]=i end
         end) end
-        table.sort(out,function(a,b) return a.ID<b.ID end)
+        local worn=owner and owner.Inventory and E.InvSlotType.Bag
+            and owner.Inventory.GetItemInLimbSlot(E.InvSlotType.Bag)
+        table.sort(out,function(a,b)
+            if a==worn or b==worn then return a==worn end
+            return a.ID<b.ID
+        end)
         return out
     end
     function G.context(vacuum,character)
@@ -80,7 +85,7 @@ function M.new(E)
     end
     function G.dispose()
         G.alive=false;G.reset()
-        if G.closePanel then G.closePanel() end
+        if G.disposeClient then G.disposeClient() elseif G.closePanel then G.closePanel() end
         if G.disposeVisuals then G.disposeVisuals() end
         for _,event in ipairs({'think','roundEnd','stop','draw','keyUpdate','GUI.AddToGUIUpdateList'}) do
             E.Hook.Remove(event,'bmt.vacuum.'..event)

@@ -31,7 +31,10 @@ function M.install(G,E,root)
                     local facing=torso.body.Dir<0 and -1 or 1
                     local angle=-torso.body.DrawRotation
                     local mount={x=pos.X-facing*16*math.cos(angle),y=pos.Y+facing*16*math.sin(angle)-3}
-                    backpack.Draw(batch,screen(cam,mount),E.Color.White,backpack.Origin,angle,E.Vector2(.041*facing*cam.Zoom,.041*cam.Zoom))
+                    -- Equipped packs use their native Wearable sprite, including without the nozzle.
+                    if ctx.owner.Inventory.GetItemInLimbSlot(E.InvSlotType.Bag)~=ctx.pack then
+                        backpack.Draw(batch,screen(cam,mount),E.Color.White,backpack.Origin,angle,E.Vector2(.041*facing*cam.Zoom,.041*cam.Zoom))
+                    end
                     local rear=U.point(item.body.DrawPosition)
                     local origin=G.muzzle(item)
                     local mid={x=(mount.x+rear.x)*.5,y=math.min(mount.y,rear.y)-22}

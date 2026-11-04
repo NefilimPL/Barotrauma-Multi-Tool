@@ -18,7 +18,7 @@ local function create(id) return Item(ItemPrefab.Prefabs[id],position,nil) end
 local pack=create('aegisvacuumpack')
 local vacuum=create('aegisvacuum')
 local battery=create('batterycell')
-assert(bot.Inventory.TryPutItem(pack,bot,{InvSlotType.Any}))
+assert(bot.Inventory.TryPutItem(pack,bot,{InvSlotType.Bag}))
 assert(bot.Inventory.TryPutItem(vacuum,bot,{InvSlotType.RightHand+InvSlotType.LeftHand}))
 assert(vacuum.OwnInventory.TryPutItem(battery,0,false,false,bot))
 local page=create('aegisvacuumpage')

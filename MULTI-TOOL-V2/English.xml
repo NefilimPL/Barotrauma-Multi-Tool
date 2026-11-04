@@ -16,6 +16,9 @@
   <vacuum.help>F — storage • aim + use — collect</vacuum.help>
   <vacuum.busy>Salvaging contents</vacuum.busy>
   <vacuum.close>Close</vacuum.close>
+  <vacuum.open>Backpack storage [F]</vacuum.open>
+  <vacuum.openhelp>Open backpack contents. You can also right-click the backpack icon in the belt slot.</vacuum.openhelp>
+  <vacuum.salvagehelp>Salvage requires a vacuum held in both hands, a charged battery inside the vacuum and the selected backpack.</vacuum.salvagehelp>
   <entityname.combatmultitool>Aegis combat multitool</entityname.combatmultitool>
   <entitydescription.combatmultitool>Two-handed ricocheting energy-ring emitter and shield. Requires Lua for Barotrauma. One cell or fuel rod powers weapons, shield, light and tools. Quality grants 1/2/3/4 bounces. Players disable NPC damage to weld/cut. Extinguisher takes priority over firing. Bots automatically select combat or one technical function for their actual task. While held and powered, grants +2 to all five skills every 5 minutes; shared progress with the composite multi-tool.</entitydescription.combatmultitool>
   <label.combatpowerslots>Shared power: weapon / shield / tools</label.combatpowerslots>

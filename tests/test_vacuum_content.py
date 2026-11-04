@@ -4,6 +4,13 @@ from lua_support import LuaCase, ROOT
 
 
 class VacuumContentTests(LuaCase):
+    def test_pack_uses_native_bag_slot_and_has_worn_torso_sprite(self):
+        pack=ET.parse(ROOT/'MULTI-TOOL-V2/vacuum.xml').getroot().find("Item[@identifier='aegisvacuumpack']")
+        self.assertIsNotNone(pack.find('Wearable'))
+        self.assertEqual(pack.find('Wearable').get('slots'),'Bag')
+        self.assertEqual(pack.find('Wearable/sprite').get('limb'),'Torso')
+        self.assertNotIn('Any',pack.find('Holdable').get('slots').split(','))
+
     def test_separate_craftable_parts_and_vacuum_owned_battery(self):
         items={i.get('identifier'):i for i in ET.parse(ROOT/'MULTI-TOOL-V2/vacuum.xml').getroot()}
         vacuum=items['aegisvacuum'];pack=items['aegisvacuumpack'];page=items['aegisvacuumpage']

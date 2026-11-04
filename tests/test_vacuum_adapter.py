@@ -60,6 +60,15 @@ class VacuumAdapterTests(LuaCase):
             assert(G.source(pack)==nil)
         """)
 
+    def test_equipped_bag_is_preferred_to_an_old_pack_in_a_pocket(self):
+        self.lua.execute("""
+            local worn={ID=20,Prefab={Identifier='aegisvacuumpack'},Condition=100,Removed=false}
+            env.InvSlotType.Bag='bag';owner.hands.bag=worn
+            owner.Inventory.AllItems={pack,worn,vacuum};worn.ParentInventory=owner.Inventory
+            assert(G.context(vacuum).pack==worn)
+            G.selected[vacuum.ID]=pack.ID;assert(G.context(vacuum).pack==pack)
+        """)
+
     def test_stunned_or_hands_locked_character_cannot_operate(self):
         self.lua.execute("owner.CanInteract=false;assert(not G.context(vacuum).valid)")
 

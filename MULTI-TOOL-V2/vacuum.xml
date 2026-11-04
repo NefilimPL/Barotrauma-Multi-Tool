@@ -39,7 +39,13 @@
     <InventoryIcon texture="%ModDir%/Assets/Vacuum/backpack.png" sourcerect="0,0,1199,1312" origin="0.5,0.5" compress="false" />
     <Sprite texture="%ModDir%/Assets/Vacuum/backpack.png" sourcerect="0,0,1199,1312" origin="0.5,0.5" depth="0.55" compress="false" />
     <Body width="850" height="1150" density="5" />
-    <Holdable slots="Any,RightHand,LeftHand" holdpos="0,-60" handle1="0,510" holdangle="0" msg="ItemMsgPickUpSelect" />
+    <Wearable slots="Bag" msg="ItemMsgEquipSelect" canbeselected="false" canbepicked="true" pickkey="Select">
+      <sprite name="AegisVacuumPack" texture="%ModDir%/Assets/Vacuum/backpack.png"
+              sourcerect="0,0,1199,1312" limb="Torso" origin="0.80,0.5"
+              scale="0.041" inheritscale="false" inheritlimbdepth="true" />
+    </Wearable>
+    <Holdable slots="RightHand+LeftHand" holdpos="0,-60" handle1="0,510" handle2="0,510" holdangle="0"
+              msg="ItemMsgPickUpUse" pickkey="Use" canbeselected="false" />
     <!-- Real save-owned storage pages. The custom panel shows only their contents. -->
     <ItemContainer capacity="100" maxstacksize="1" hideitems="true" drawinventory="false"
                    canbeselected="false" allowdraganddrop="false" removecontaineditemsondeconstruct="false">

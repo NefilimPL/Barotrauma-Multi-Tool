@@ -3,7 +3,7 @@ local U=require('CombatTool.util')
 local M={}
 function M.install(G,E)
     local UI=E.GUI
-    local panel,rowsFrame,search,status,packButton,pageLabel
+    local panel,rowsFrame,search,status,packButton,pageLabel,salvageButton
     local vacuum,view,snapshot,nextRefresh=nil,{page=0,group=0,search=''},nil,0
     local suppress=false
     local function text(id) return tostring(E.TextManager.Get('vacuum.'..id)) end
@@ -32,6 +32,7 @@ function M.install(G,E)
             s.busy and (' | '..text('busy')) or '')
         packButton.Text=text('pack')..' #'..s.pack..' >'
         pageLabel.Text=string.format('%d / %d',s.page+1,s.pages)
+        salvageButton.Enabled=G.is(vacuum,C.vacuum) and not s.busy and s.charge>0
         rowsFrame.ClearChildren()
         for index,row in ipairs(s.rows) do
             local y=(index-1)/8
@@ -72,14 +73,34 @@ function M.install(G,E)
             view.page=math.min((snapshot and snapshot.pages or 1)-1,view.page+1);request()
         end)
         button(panel.RectTransform,.65,.80,.31,.06,text('groups'),function() view.group=0;view.page=0;request() end)
-        button(panel.RectTransform,.04,.89,.92,.07,text('salvage'),function() request('salvage') end)
+        salvageButton=button(panel.RectTransform,.04,.89,.92,.07,text('salvage'),function() request('salvage') end)
+        salvageButton.Enabled=G.is(item,C.vacuum)
+        salvageButton.ToolTip=text('salvagehelp')
         request()
         return panel
     end
+    local function deviceFor(character)
+        local held=character and character.Inventory and character.Inventory.GetItemInLimbSlot(E.InvSlotType.RightHand)
+        if held and G.is(held,C.vacuum) and G.context(held,character).valid then return held end
+        for _,pack in ipairs(G.packs(character)) do
+            if G.context(pack,character).valid then return pack end
+        end
+    end
+    local launcher=UI.Button(UI.RectTransform(E.Vector2(.20,.045),UI.GUI.Canvas,UI.Anchor.BottomCenter),text('open'))
+    launcher.RectTransform.RelativeOffset=E.Vector2(0,-.13)
+    launcher.Visible=false;launcher.ToolTip=text('openhelp')
+    launcher.OnClicked=function()
+        local device=deviceFor(E.Character.Controlled)
+        if device then if panel then G.closePanel() else G.openPanel(device) end end
+        return true
+    end
+    G.storageButton=launcher
+    function G.disposeClient()
+        G.closePanel();launcher.Visible=false;launcher.RemoveFromGUIUpdateList();launcher.RectTransform.Parent=nil
+    end
     function G.updateClient()
         local character=E.Character.Controlled
-        local held=character and character.Inventory and character.Inventory.GetItemInLimbSlot(E.InvSlotType.RightHand)
-        local device=held and G.is(held,C.vacuum) and held or G.packs(character)[1]
+        local device=(not E.Game or E.Game.RoundStarted) and deviceFor(character)
         if panel and vacuum and G.context(vacuum,character).valid then device=vacuum end
         local ctx=device and G.context(device,character)
         if panel and (not ctx or not ctx.valid or device~=vacuum) then G.closePanel() end
@@ -88,9 +109,17 @@ function M.install(G,E)
         if not typing and E.PlayerInput.KeyHit(E.Keys.F) and ctx and ctx.valid then
             if panel then G.closePanel() else G.openPanel(device) end
         end
+        -- Native storage pages stay hidden; right-click the actual owned bag icon instead.
+        local selected=E.Inventory and E.Inventory.SelectedSlot
+        if not typing and selected and G.is(selected.Item,C.pack)
+            and G.context(selected.Item,character).valid and E.PlayerInput.SecondaryMouseButtonClicked() then
+            if panel and vacuum==selected.Item then G.closePanel() else G.openPanel(selected.Item) end
+        end
         if panel and G.now>=nextRefresh then request() end
         -- Queue the panel during think, after the native screen rebuilds its list.
         if panel then panel.AddToGUIUpdateList() end
+        launcher.Visible=ctx~=nil and ctx.valid and not panel
+        if launcher.Visible then launcher.AddToGUIUpdateList() end
     end
 end
 return M

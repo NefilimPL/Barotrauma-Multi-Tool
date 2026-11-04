@@ -20,7 +20,7 @@ local function begin()
     local function create(id) return Item(ItemPrefab.Prefabs[id],room.WorldPosition,nil) end
     local vacuum,pack,battery,page=create('aegisvacuum'),create('aegisvacuumpack'),create('batterycell'),create('aegisvacuumpage')
     assert(c.Inventory.TryPutItem(vacuum,c,{InvSlotType.RightHand+InvSlotType.LeftHand}))
-    assert(c.Inventory.TryPutItem(pack,c,{InvSlotType.Any}))
+    assert(c.Inventory.TryPutItem(pack,c,{InvSlotType.Bag}))
     assert(vacuum.OwnInventory.TryPutItem(battery,0,false,false,c))
     assert(pack.OwnInventory.TryPutItem(page,c))
     assert(G.insert(pack,create('wrench'),c))

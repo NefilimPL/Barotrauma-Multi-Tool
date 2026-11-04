@@ -10,12 +10,38 @@ function M.install(G,E)
         refreshAt,scanAt,salvageAt=0,0,0
     end
     function G.portable(item)
+        if not item or item.Removed or G.id(item)==C.page then return false end
+        -- Match FastLoot: CanBePicked alone also describes crowbar-operated doors.
+        local slotted=false
+        U.each(item.AllowedSlots,function(slot)
+            local name=tostring(slot):lower()
+            if name~='none' and name~='0' and name~='' then slotted=true end
+        end)
+        if not slotted or U.component(item,'Door') then return false end
+        local wire=U.component(item,'Wire')
+        if wire then
+            local connections=wire.Connections
+            if connections and (connections[0]~=nil or connections[1]~=nil) then return false end
+            local routed=false;U.each(wire.GetNodes(),function() routed=true end)
+            if routed then return false end
+        end
         local pick
         U.each(item.Components,function(component)
             if E.LuaUserData.IsTargetType(component,'Barotrauma.Items.Components.Pickable') then pick=component end
         end)
         return pick and pick.CanBePicked and not pick.IsAttached
-            and pick.PickingTime<2147483647 and G.id(item)~=C.page
+            and pick.PickingTime<2147483647
+    end
+    local function safeContents(item,ctx,seen,budget)
+        if seen[item] or budget.count>=C.pickupTreeLimit then return false end
+        seen[item]=true;budget.count=budget.count+1
+        if not G.portable(item) or not item.HasAccess(ctx.owner) or item==ctx.pack or item==ctx.vacuum
+            or (item.ParentInventory and item.ParentInventory.Locked)
+            or (item.OwnInventory and item.OwnInventory.Locked) then return false end
+        for _,child in ipairs(G.children(item)) do
+            if not safeContents(child,ctx,seen,budget) then return false end
+        end
+        return true
     end
     function G.pickupTarget(item,ctx)
         if not item or item.Removed then return nil end
@@ -36,7 +62,7 @@ function M.install(G,E)
             if not E.LuaUserData.IsTargetType(owner,'Barotrauma.Item') then return nil end
             node=owner
         end
-        return G.portable(target) and target or nil
+        return safeContents(target,ctx,{},{count=0}) and target or nil
     end
     G.patch('suction-use','Barotrauma.Items.Components.RangedWeapon','Use',function(component,p)
         if not G.is(component.Item,C.vacuum) then return end
