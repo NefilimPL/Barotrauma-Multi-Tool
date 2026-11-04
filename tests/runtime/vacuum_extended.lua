@@ -148,8 +148,8 @@ function R.stress()
         end)
         R.measure('contents 10000',function() assert(#G.contents(R.stressPack)==10000) end,10)
         R.measure('grouping 10000',function() Core.groups(G.records(G.contents(R.stressPack))) end,10)
-        local context={pack=R.stressPack,vacuum=R.vacuum,owner={Inventory={AllItems={R.stressPack}}}}
-        R.measure('snapshot 10000',function() local s=G.snapshot(context,{});assert(s.count==10000 and #s.rows==8) end,10)
+        local context={pack=R.stressPack,vacuum=R.vacuum,owner={Inventory={AllItems={R.stressPack},GetItemInLimbSlot=function() return R.stressPack end}}}
+        R.measure('snapshot 10000',function() local s=G.snapshot(context,{});assert(s.count==10000 and #s.rows==40) end,10)
         R.measure('update with 10000 stored entities',function() G.update(.1) end,20)
         write();print('[VACUUM EXTENDED] STRESS COMPLETE')
     end

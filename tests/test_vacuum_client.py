@@ -19,12 +19,14 @@ class VacuumClientTests(LuaCase):
             ui.Frame=function(r,t) return widget('frame',r,t) end
             ui.TextBlock=function(r,t) return widget('text',r,t) end
             ui.TextBox=function(r,t) return widget('input',r,t) end
+            ui.Image=function(r,s) local w=widget('image',r,'');w.Sprite=s;return w end
             owner={Inventory={GetItemInLimbSlot=function() return held end}}
             pack={ID=2,kind='aegisvacuumpack'};vacuum={ID=3,kind='aegisvacuum'}
             owned={pack};handsValid=true
             E={GUI=ui,TextManager={Get=function(s) return s end},
                 Vector2=function(x,y) return {X=x,Y=y} end,Character={Controlled=owner},
                 InvSlotType={RightHand=1},Keys={F=1},Inventory={},
+                ItemPrefab={Prefabs={iron={InventoryIcon={}}}},
                 PlayerInput={KeyHit=function() return hitF end,
                     SecondaryMouseButtonClicked=function() return rightClick end}}
             G={now=0,is=function(i,k) return i and i.kind==k end,
@@ -108,6 +110,32 @@ class VacuumClientTests(LuaCase):
             G.openPanel(pack)
             G.onSnapshot({vacuum=pack.ID,pack=pack.ID,charge=0,groups=0,count=0,
                 busy=false,page=0,pages=1,packs={pack.ID,second.ID},rows={}})
-            button('vacuum.pack #2 >').OnClicked()
+            button('vacuum.pack 1/2').OnClicked()
             assert(requests[#requests].action=='open' and requests[#requests].item==second)
+        """)
+
+    def test_icons_tooltips_stack_action_and_single_pack_selector(self):
+        self.lua.execute("""
+            G.openPanel(pack)
+            G.onSnapshot({vacuum=pack.ID,pack=pack.ID,charge=0,groups=1,count=100,busy=false,
+                page=0,pages=1,packs={pack.ID},rows={{id=10,kind='iron',name='Iron',count=100,condition=80,quality=3,group=1}}})
+            local icon,tile
+            for _,w in ipairs(widgets) do
+                assert(w.Text~='vacuum.drop')
+                if w.kind=='image' then icon=w end
+                if w.kind=='button' and w.ToolTip and w.ToolTip:find('Iron',1,true) then tile=w end
+                if w.kind=='button' and w.Text and w.Text:find('vacuum.pack',1,true) then assert(not w.Visible) end
+            end
+            assert(icon and tile and tile.Text=='')
+            tile.OnClicked();button('vacuum.stack').OnClicked()
+            assert(requests[#requests].action=='stack' and requests[#requests].target==10)
+        """)
+
+    def test_pause_hides_custom_window_instead_of_covering_native_menu(self):
+        self.lua.execute("""
+            G.openPanel(pack);E.GUI.GUI.PauseMenuOpen=true;G.updateClient()
+            assert(not button('vacuum.open').Visible)
+            for _,w in ipairs(widgets) do if w.kind=='frame' and w.RectTransform.Parent==E.GUI.GUI.Canvas then
+                assert(not w.Visible)
+            end end
         """)

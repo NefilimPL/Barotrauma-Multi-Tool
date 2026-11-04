@@ -8,7 +8,10 @@
   <vacuum.title>Aegis vacuum storage</vacuum.title>
   <vacuum.salvage>Salvage all contents</vacuum.salvage>
   <vacuum.search>Search items…</vacuum.search>
-  <vacuum.take>Take out</vacuum.take>
+  <vacuum.take>Take one</vacuum.take>
+  <vacuum.stack>Take stack</vacuum.stack>
+  <vacuum.stackhelp>Take the selected stack, up to 100 items. Excess stays in the backpack. Large items require free hands.</vacuum.stackhelp>
+  <vacuum.details>Instances</vacuum.details>
   <vacuum.drop>Drop</vacuum.drop>
   <vacuum.groups>Groups</vacuum.groups>
   <vacuum.pack>Backpack</vacuum.pack>

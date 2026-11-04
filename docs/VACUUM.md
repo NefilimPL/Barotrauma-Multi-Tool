@@ -1,6 +1,6 @@
 # Odkurzacz i plecak zbierający Aegis
 
-Wersja 1.3.2 zawiera dwa osobno wytwarzane przedmioty. Wymaga LuaCs na
+Wersja 1.3.3 zawiera dwa osobno wytwarzane przedmioty. Wymaga LuaCs na
 kliencie i serwerze, tak jak pozostałe urządzenia Aegis.
 
 ## Przygotowanie
@@ -39,18 +39,40 @@ zachowują własną zawartość. Licznik nie zastępuje przedmiotów — stan,
 jakość, baterie, butle i zawartość pozostają przy konkretnych egzemplarzach.
 
 - Pole wyszukiwania filtruje nazwy i identyfikatory.
-- Kliknięcie wiersza grupy pokazuje poszczególne egzemplarze z ich stanem
-  i jakością. Strzałki zmieniają stronę, „Grupy” wraca do grup.
-- **Wyjmij** przenosi jedną sztukę do zwykłego slotu ekwipunku, jeśli pasuje.
-- **Odłóż** odkłada konkretną sztukę na ziemię obok postaci. Użyj tego dla
-  skrzynek i kombinezonów, których gra nie pozwala schować do zwykłego slotu.
-- Przycisk plecaka przełącza magazyn, jeśli masz więcej niż jeden plecak.
+- Siatka mieści **40 ikon na stronie**. Nazwa, liczba, stan i jakość są
+  w podpowiedzi po najechaniu. Kliknięcie ikony zaznacza stos.
+- **Wyjmij 1** przenosi jedną sztukę, a **Weź stos** pobiera zaznaczoną grupę,
+  maksymalnie 100 sztuk. Gra zachowuje własne limity stosów w ekwipunku postaci;
+  pozostałe rzeczy zostają w plecaku. Skrzynki i kombinezony wymagają wolnych rąk.
+- **Egzemplarze** pokazuje pojedyncze sztuki wybranej grupy. Strzałki zmieniają
+  stronę, a **Grupy** przywraca widok stosów. Przycisku „Odłóż” już nie ma.
+- Przycisk **Plecak 1/2** przełącza magazyn, jeśli masz więcej niż jeden dostępny
+  plecak. Przy jednym magazynie jest ukryty. Numer oznacza kolejność wyboru.
   Bez ręcznego wyboru pierwszeństwo ma plecak założony w slocie Bag.
 
 Stosy po 100 są prezentacją w panelu. Zaplecze używa zapisywanych przez grę
 stron po 100 pojedynczych rzeczy, mieszczących się w natywnym protokole.
 Maksymalna pojemność nie oznacza gwarancji płynności przy 10 000 aktywnych
 przedmiotów; ograniczenia i wyniki prób są w raporcie weryfikacji.
+
+## Szafa i fabrykatory
+
+Plecak można włożyć do dolnych miejsc na torby w dużej stalowej szafie.
+Odkurzacz pasuje do jej zwykłych miejsc. Zawartość schowanego plecaka otworzysz
+prawym kliknięciem jego ikony lub przyciskiem magazynu przy otwartej szafie.
+Obowiązują odległość, blokady i wymagane uprawnienia do szafy.
+
+Zwykły i medyczny fabrykator widzą materiały z plecaka założonego w slocie Bag
+przez osobę obsługującą maszynę. Po zakończeniu obsługi osobisty plecak przestaje
+być źródłem. Plecak w szafie działa zgodnie ze zwykłymi połączeniami maszyn:
+**szafa musi być połączona z fabrykatorem**, tak jak inne magazyny materiałów.
+
+Uwzględniana jest również zagnieżdżona zawartość. Maszyna pobiera i zużywa
+rzeczywiste egzemplarze; nie powstaje kopia surowców. Plecak zablokowany lub
+przetwarzany przez rozbiórkę nie udostępnia materiałów maszynie.
+
+Po aktualizacji uruchom ponownie grę i serwer. Obie strony potrzebują 1.3.3,
+ponieważ panel korzysta z nowej wersji komunikatów sieciowych.
 
 ## Rozbiórka
 

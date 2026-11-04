@@ -69,6 +69,30 @@ class VacuumAdapterTests(LuaCase):
             G.selected[vacuum.ID]=pack.ID;assert(G.context(vacuum).pack==pack)
         """)
 
+    def test_pack_in_selected_cabinet_requires_range_access_and_unlocked_ancestors(self):
+        self.lua.execute("""
+            local cabinet={Prefab={Identifier='steelcabinet'},HasAccess=function() return allowed end}
+            env.LuaUserData.IsTargetType=function(x,t)
+                return t=='Barotrauma.Character' and x==owner or t=='Barotrauma.Item' and x and x.Prefab~=nil
+            end
+            allowed=true;inRange=true;owner.SelectedItem=cabinet
+            owner.CanInteractWith=function(i) return i==cabinet and inRange end
+            cabinet.OwnInventory={Owner=cabinet,AllItems={pack}}
+            pack.ParentInventory=cabinet.OwnInventory;pack.HasAccess=cabinet.HasAccess
+            assert(G.context(pack,owner).valid)
+            cabinet.OwnInventory.Locked=true;assert(not G.context(pack,owner).valid)
+            cabinet.OwnInventory.Locked=false;inRange=false;assert(not G.context(pack,owner).valid)
+            inRange=true;allowed=false;assert(not G.context(pack,owner).valid)
+            allowed=true;owner.SelectedItem=nil;assert(not G.context(pack,owner).valid)
+        """)
+
+    def test_locked_backpack_is_not_accessible_or_operable(self):
+        self.lua.execute("""
+            pack.OwnInventory.Locked=true
+            assert(not G.context(pack,owner).valid)
+            assert(not G.context(vacuum,owner).valid)
+        """)
+
     def test_stunned_or_hands_locked_character_cannot_operate(self):
         self.lua.execute("owner.CanInteract=false;assert(not G.context(vacuum).valid)")
 

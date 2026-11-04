@@ -1,8 +1,51 @@
-# Odkurzacz Aegis 1.3.2 — weryfikacja
+# Odkurzacz Aegis 1.3.3 — weryfikacja
 
 Aktualizacja: 2026-11-04. Barotrauma 1.13.5.0; LuaCs/Luatrauma c6e8829.
 Osobny serwer dedykowany i dwa rzeczywiste klienty w `.runtime`.
 Instalacja Steam i prywatne zapisy gracza pozostały nienaruszone.
+
+## Szafa, materiały i siatka — 1.3.3
+
+- Pełny zestaw regresji: **320 testów, OK**; walidacja 12 XML i 36 modułów
+  Lua 5.2, tekstur i receptur względem lokalnej gry: **OK**.
+- **12 natywnych sprawdzeń SP — PASS**: materiały z założonego plecaka,
+  zakończenie obsługi maszyny, przeniesienie składników do natywnego wejścia,
+  ich rzeczywiste zużycie i utworzenie klucza, medyczny fabrykator, plecak
+  i ssawka w dużej szafie, autoryzacja otwartej szafy, źródło materiałów
+  z połączonej szafy bez duplikacji, blokada trwającej rozbiórki, częściowe
+  pobranie stosu i 40 ikon w panelu. Ostatnia kontrola sprawdzała aktualność
+  indeksu po dodaniu 500 rzeczywistych przedmiotów.
+- Czynność ukończenia receptury wywołano przez natywne StartFabricating/Fabricate;
+  pominięto oczekiwanie na timer i symulację zasilania kopii maszyny testowej.
+  Składniki rzeczywiście opuściły plecak, zostały usunięte po zużyciu,
+  a wynik pojawił się w natywnym wyjściu fabrykatora.
+- Zarejestrowano dokładny typ słownika materiałów, aby LuaCs nie przekazywała
+  jego kopii. Próba serwera ujawniła inną nazwę assembly typu Item; moduł
+  wybiera teraz DedicatedServer albo Barotrauma zależnie od środowiska.
+  Start dedykowanego serwera i odczyt materiałów z noszonego plecaka: PASS.
+- **Rzeczywisty multiplayer**: serwer utworzył 734 przedmioty w ponad 40
+  grupach; osobny klient odebrał 40 wierszy ikon i dwie strony przez protokół v2.
+  Żądanie „Weź stos” przeniosło 50 oryginalnych sztuk do postaci i zostawiło
+  684 w plecaku, zgodnie z wolną pojemnością. Klient i serwer potwierdziły
+  ten sam stan oraz zachowanie źródłowego egzemplarza. PASS.
+- Początkowa dodatkowa asercja serwera zakładała pobranie pełnych 100 sztuk;
+  zgłosiła FAIL, bo natywny ekwipunek mieścił tylko 50. Poprawiona kontrola
+  uwzględnia pojemność i potwierdza bilans 734 = 684 + 50. Zapis pozostawiono
+  w surowym dzienniku jako błąd założenia testowego.
+- Odświeżanie natywnych materiałów przy **566 rzeczywistych przedmiotach**,
+  po przygotowaniu indeksu: 10 prób, mediana 3 ms, maksimum 4 ms,
+  średnia 3,20 ms (publiczny zegar os.clock). To pomiar operacji odświeżania,
+  a nie FPS gry ani pierwszy odczyt pełnego plecaka.
+- Osobny limit odpytywania panelu zapobiega zgubieniu kliknięcia pobierania
+  przez odświeżanie w tle; operacje nadal mają limit powtórzeń.
+- Przegląd kodu nie wskazał potwierdzonych usterek Critical/Important.
+
+Dowody: `grid-native-results.txt`, `grid-network-results.txt`,
+`grid-server-results.txt`, `grid-network-counts.txt`, `grid-metrics.txt`
+i `grid-automatic-results.txt` w `docs/vacuum/`.
+[Rzeczywisty panel ikon](vacuum/grid-window.png).
+Nie powtarzano całego cyklu kampanii z 10 000 przedmiotów dla 1.3.3;
+wcześniejsze wyniki poniżej mają podaną wersję.
 
 ## Poprawka slotu, okna i filtrów — 1.3.2
 
@@ -164,4 +207,4 @@ Limit 10 000 nadal podlega limitom encji silnika. Rozłączenie klienta nie ozna
 zatrzymania partii, jeżeli jego postać wciąż trzyma sprawne urządzenie.
 
 Skrypty `tests/runtime/` i sterowanie klientami nie trafiają do moda.
-Paczka: `output/MULTI-TOOL-V2-1.3.2.zip`.
+Paczka: `output/MULTI-TOOL-V2-1.3.3.zip`.

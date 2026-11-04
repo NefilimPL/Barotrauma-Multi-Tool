@@ -45,6 +45,25 @@ function M.install(G,E)
         end
         return indexes[pack]
     end
+    local function materialTree(index,item,inserted,seen)
+        if seen[item] then return end;seen[item]=true
+        local id=item.ID
+        if inserted then
+            if item.OwnInventory then index.containers[id]=item end
+            if not G.is(item,C.page) then add(index,item) end
+        else index.containers[id]=nil;remove(index,item) end
+        for _,child in ipairs(G.children(item)) do materialTree(index,child,inserted,seen) end
+    end
+    local function materialsFor(pack)
+        local root=indexFor(pack)
+        if not root.materials then
+            local index={items={},positions={},records={},containers={}};root.materials=index
+            for _,page in ipairs(G.pages(pack)) do materialTree(index,page,true,{}) end
+        end
+        return root.materials
+    end
+    function G.materialRecords(pack) return materialsFor(pack).records end
+    function G.materialContainers(pack) return materialsFor(pack).containers end
     function G.contents(pack)
         local items=indexFor(pack).items
         if not G.pending[pack] then return items end
@@ -88,6 +107,16 @@ function M.install(G,E)
                 local index=indexFor(pack)
                 if inserted then add(index,item) else remove(index,item) end
             end
+        end
+        -- Any nested container can supply a machine; keep that lazy index current too.
+        local node,seen=parent,{}
+        while node and not seen[node] do
+            seen[node]=true
+            if G.is(node,C.pack) and indexes[node] and indexes[node].materials then
+                materialTree(indexes[node].materials,item,inserted,{})
+            end
+            local inv=node.ParentInventory;node=inv and inv.Owner
+            if node and not E.LuaUserData.IsTargetType(node,'Barotrauma.Item') then break end
         end
     end
     if G.patch then
@@ -141,15 +170,36 @@ function M.install(G,E)
         end
         return false
     end
+    local function take(item,owner)
+        if owner.Inventory.TryPutItem(item,owner,{E.InvSlotType.Any},true,false,false) then return true end
+        local right,left=E.InvSlotType.RightHand,E.InvSlotType.LeftHand
+        if right and left then return owner.Inventory.TryPutItem(item,owner,{right+left,right,left},true,false,false) end
+        return false
+    end
     function G.withdraw(ctx,id)
         if not ctx.valid or G.pending[ctx.pack] or G.jobs[ctx.pack] then return false end
         for _,item in ipairs(G.contents(ctx.pack)) do
             if item.ID==id then
                 -- Native slots and stack restrictions determine what the user can carry.
-                return ctx.owner.Inventory.TryPutItem(item,ctx.owner,{E.InvSlotType.Any},true,false,false)
+                return take(item,ctx.owner)
             end
         end
         return false
+    end
+    function G.withdrawStack(ctx,id)
+        if not ctx.valid or G.pending[ctx.pack] or G.jobs[ctx.pack] then return false end
+        local group
+        for _,candidate in ipairs(G.storageView(ctx.pack).groups) do
+            for _,r in ipairs(candidate.items) do if r.id==id then group=candidate;break end end
+            if group then break end
+        end
+        if not group then return false end
+        local moved=0
+        for _,r in ipairs(group.items) do
+            if not r.item.Removed and G.has(ctx.pack,r.item)
+                and take(r.item,ctx.owner) then moved=moved+1 end
+        end
+        return moved>0,moved
     end
     function G.drop(ctx,id)
         if not ctx.valid or G.pending[ctx.pack] or G.jobs[ctx.pack] then return false end

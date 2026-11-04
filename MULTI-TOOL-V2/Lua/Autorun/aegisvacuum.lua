@@ -9,6 +9,7 @@ local ok,err=pcall(function()
     end
     require('SalvageVacuum.storage').install(G,_G)
     require('SalvageVacuum.salvage').install(G,_G)
+    require('SalvageVacuum.crafting').install(G,_G)
     require('CombatTool.physics').install(G,_G)
     require('SalvageVacuum.network').install(G,_G)
     if CLIENT then

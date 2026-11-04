@@ -1,0 +1,2 @@
+PASS real server sends forty native item icons over protocol v2
+PASS real stack request is authoritative and leaves excess in storage

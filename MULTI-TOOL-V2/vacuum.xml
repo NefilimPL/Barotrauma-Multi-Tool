@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Items>
   <Item identifier="aegisvacuum" name="Aegis salvage vacuum" category="Equipment"
-        tags="tool,deconstructor,aegisvacuum" scale="0.045" maxstacksize="1" requireaimtouse="true"
+        tags="tool,deconstructor,aegisvacuum,mediumitem" scale="0.045" maxstacksize="1" requireaimtouse="true"
         cargocontaineridentifier="metalcrate" impactsoundtag="impact_metal_heavy">
     <Price baseprice="1800" sold="true" minavailable="1" maxavailable="2" />
     <Fabricate suitablefabricators="fabricator,milfabricator" requiredtime="30">
@@ -26,7 +26,7 @@
     </ItemContainer>
   </Item>
   <Item identifier="aegisvacuumpack" name="Aegis salvage backpack" category="Equipment"
-        tags="aegisvacuumpack,largemobilecontainer" scale="0.048" maxstacksize="1"
+        tags="aegisvacuumpack,largemobilecontainer,mobilecontainer,mediumitem" scale="0.048" maxstacksize="1"
         cargocontaineridentifier="metalcrate" impactsoundtag="impact_metal_heavy">
     <Price baseprice="1400" sold="true" minavailable="1" maxavailable="2" />
     <Fabricate suitablefabricators="fabricator,milfabricator" requiredtime="25">

@@ -26,6 +26,7 @@ class VacuumStorageCacheTests(LuaCase):
                 patch=function(name,class,method,fn) hooks[name]=fn end}
             E={LuaUserData={IsTargetType=function(i,name) return i and i.kind~=nil end}}
             require('SalvageVacuum.storage').install(G,E)
+            G.children=function(item) return item.OwnInventory and item.OwnInventory.AllItems or {} end
         """)
 
     def test_unchanged_contents_and_records_do_not_reenter_native_items(self):
@@ -33,6 +34,23 @@ class VacuumStorageCacheTests(LuaCase):
             G.records(G.contents(pack));reads=0;idReads=0
             for i=1,10 do local r=G.records(G.contents(pack));assert(#r==2 and r[1].kind=='iron') end
             assert(reads==0 and idReads==0,'unchanged storage was rescanned')
+        """)
+
+    def test_material_records_include_nested_contents_and_stay_cached(self):
+        self.lua.execute("""
+            local nested={kind='copper',ID=30};b.OwnInventory=inventory(b,{nested});nested.ParentInventory=b.OwnInventory
+            assert(#G.materialRecords(pack)==3);reads=0;idReads=0
+            for i=1,10 do assert(#G.materialRecords(pack)==3) end
+            assert(reads==0 and idReads==0)
+            b.OwnInventory.items={};nested.ParentInventory=nil
+            hooks['stored-remove']({Item=b},{containedItem=nested})
+            assert(#G.materialRecords(pack)==2)
+        """)
+
+    def test_material_records_keep_reserved_sources_for_machine_exclusion(self):
+        self.lua.execute("""
+            assert(#G.materialRecords(pack)==2);G.pending[pack]={};G.reserved[a]=true
+            assert(#G.contents(pack)==1 and #G.materialRecords(pack)==2)
         """)
 
     def test_native_add_remove_events_keep_contents_and_types_current(self):

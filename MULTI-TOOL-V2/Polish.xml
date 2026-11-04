@@ -8,7 +8,10 @@
   <vacuum.title>Magazyn odkurzacza Aegis</vacuum.title>
   <vacuum.salvage>Rozłóż całą zawartość</vacuum.salvage>
   <vacuum.search>Szukaj przedmiotu…</vacuum.search>
-  <vacuum.take>Wyjmij</vacuum.take>
+  <vacuum.take>Wyjmij 1</vacuum.take>
+  <vacuum.stack>Weź stos</vacuum.stack>
+  <vacuum.stackhelp>Pobierz zaznaczony stos, do 100 sztuk. Nadmiar zostanie w plecaku. Duże przedmioty wymagają wolnych rąk.</vacuum.stackhelp>
+  <vacuum.details>Egzemplarze</vacuum.details>
   <vacuum.drop>Odłóż</vacuum.drop>
   <vacuum.groups>Grupy</vacuum.groups>
   <vacuum.pack>Plecak</vacuum.pack>

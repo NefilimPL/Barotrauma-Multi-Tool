@@ -4,7 +4,7 @@ local U=require('CombatTool.util')
 local M={}
 function M.new(E)
     local G={env=E,authoritative=E.SERVER or E.Game.IsSingleplayer,now=0,alive=true,
-        selected={},states={},jobs={},pending={},patches={},reserved={},lastRequest={}}
+        selected={},states={},jobs={},pending={},patches={},reserved={},lastRequest={},lastPoll={}}
     function G.id(item) return item and tostring(item.Prefab.Identifier):lower() or '' end
     function G.is(item,id) return item and not item.Removed and G.id(item)==id end
     function G.owner(item)
@@ -26,18 +26,54 @@ function M.new(E)
     end
     function G.context(vacuum,character)
         local owner=G.owner(vacuum)
+        if G.is(vacuum,C.pack) and character and G.packAccessible(vacuum,character) then owner=character end
         local ctx={vacuum=vacuum,owner=owner,valid=false}
         if not owner or (character and owner~=character) or owner.Removed or owner.IsDead
             or owner.IsUnconscious or owner.CanInteract==false or vacuum.Condition<=0 then return ctx end
+        if G.is(vacuum,C.pack) and (not vacuum.OwnInventory or vacuum.OwnInventory.Locked) then return ctx end
         if G.is(vacuum,C.pack) then ctx.pack=vacuum;ctx.valid=true;return ctx end
         if not G.is(vacuum,C.vacuum) then return ctx end
         local packs=G.packs(owner)
         for _,pack in ipairs(packs) do if pack.ID==G.selected[vacuum.ID] then ctx.pack=pack end end
         ctx.pack=ctx.pack or packs[1]
-        ctx.valid=ctx.pack~=nil and owner.Inventory.GetItemInLimbSlot(E.InvSlotType.RightHand)==vacuum
+        ctx.valid=ctx.pack~=nil and ctx.pack.OwnInventory~=nil and not ctx.pack.OwnInventory.Locked and owner.Inventory.GetItemInLimbSlot(E.InvSlotType.RightHand)==vacuum
             and owner.Inventory.GetItemInLimbSlot(E.InvSlotType.LeftHand)==vacuum
         ctx.aim=owner.IsKeyDown(E.InputType.Aim)
         return ctx
+    end
+    function G.packAccessible(pack,character)
+        if not character or not G.is(pack,C.pack) or not character.Inventory then return false end
+        if G.owner(pack)==character then return true end
+        local node,seen=pack,{}
+        while node and not seen[node] do
+            seen[node]=true
+            if node.HasAccess and not node.HasAccess(character) then return false end
+            local inv=node.ParentInventory
+            if not inv then
+                return node==character.SelectedItem and character.CanInteractWith and character.CanInteractWith(node,false)
+            end
+            if inv.Locked then return false end
+            local parent=inv.Owner
+            if not parent or not E.LuaUserData.IsTargetType(parent,'Barotrauma.Item') then return false end
+            node=parent
+        end
+        return false
+    end
+    function G.availablePacks(character)
+        local out=G.packs(character)
+        local known={};for _,pack in ipairs(out) do known[pack]=true end
+        local selected=character and character.SelectedItem
+        local function visit(item,budget)
+            if budget.count>=256 then return end;budget.count=budget.count+1
+            if G.is(item,C.pack) then
+                if not known[item] and G.packAccessible(item,character) then out[#out+1]=item;known[item]=true end
+                return
+            end
+            if G.is(item,C.page) then return end
+            for _,child in ipairs(G.children(item)) do visit(child,budget) end
+        end
+        if selected and E.LuaUserData.IsTargetType(selected,'Barotrauma.Item') then visit(selected,{count=0}) end
+        return out
     end
     function G.source(vacuum)
         if not G.is(vacuum,C.vacuum) then return nil end
@@ -80,7 +116,7 @@ function M.new(E)
     function G.reset()
         if G.closePanel then G.closePanel() end
         for _,tx in pairs(G.pending) do tx.cancelled=true end
-        G.states={};G.jobs={};G.selected={};G.reserved={};G.lastRequest={}
+        G.states={};G.jobs={};G.selected={};G.reserved={};G.lastRequest={};G.lastPoll={}
         if G.clearStorageCache then G.clearStorageCache() end
         if G.resetRuntime then G.resetRuntime() end
     end

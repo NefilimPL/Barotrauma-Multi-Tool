@@ -1,0 +1,4 @@
+PASS authoritative native fixture has more than forty groups
+FAIL remote stack moves original items to the requesting player: chunk_46:(1,151-174): assertion failed!
+PASS remote stack respects native capacity and preserves source identity
+PASS dedicated fabricator sees actual worn-backpack ingredients

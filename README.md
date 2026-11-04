@@ -1,11 +1,11 @@
 # Barotrauma-Multi-Tool
 
-Wersja **1.3.2** zawiera **plecak zbierający i dwuręczny odkurzacz Aegis**.
+Wersja **1.3.3** zawiera **plecak zbierający i dwuręczny odkurzacz Aegis**.
 Obie części wytwarza się osobno. Bateria znajduje się w odkurzaczu i zasila
 zasysanie oraz rozbiórkę całej zawartości jednym przyciskiem. Przedmioty bez
 receptury pozostają nietknięte. Panel magazynu (**F**) grupuje rzeczy po 100,
-zachowując stan i zawartość skrzynek. **Odłóż** pozwala wyjąć także skrzynki
-i kombinezony na ziemię. [Instrukcja](docs/VACUUM.md) ·
+zachowując stan i zawartość skrzynek. **Weź stos** pobiera do 100 sztuk,
+zostawiając nadmiar w plecaku. [Instrukcja](docs/VACUUM.md) ·
 [Grafiki i animacja](docs/vacuum/preview.html) ·
 [Wyniki i ograniczenia testów](docs/VACUUM-VERIFICATION.md).
 
@@ -13,6 +13,12 @@ Plecak zakłada się do slotu torby na pasie; grafika pozostaje na plecach
 również bez ssawki. Okno otwiera przycisk **Magazyn plecaka [F]**, klawisz F
 lub prawy klik ikony plecaka. Filtr zgodny z zasadą FastLoot pomija drzwi,
 włazy, przedmioty bez slotu ekwipunku i zamontowane przewody, także w pojemnikach.
+
+Panel pokazuje **40 ikon na stronę**, z nazwą, stanem i jakością po najechaniu.
+Wybór plecaka jest widoczny tylko przy kilku dostępnych magazynach.
+Plecak pasuje do miejsc na torby w dużej stalowej szafie; odkurzacz także można
+schować w szafie. Zwykły i medyczny fabrykator korzystają z prawdziwych materiałów
+z założonego plecaka oraz z plecaka w szafie połączonej z maszyną.
 
 Poprawka 1.3.1 przyspiesza panel pełnego magazynu i czyści stan zasysania
 przy zmianie rundy. Sprawdzono pełny zapis i odczyt kampanii, dwóch klientów,

@@ -2,8 +2,10 @@ local Core=require('SalvageVacuum.core')
 local C=Core.config
 local M={}
 function M.install(G,E)
-    local actions={'open','withdraw','salvage','select','drop'}
-    local ids={open=1,withdraw=2,salvage=3,select=4,drop=5}
+    local actions={'open','withdraw','salvage','select','stack'}
+    local ids={open=1,withdraw=2,salvage=3,select=4,stack=5}
+    local pageSize=C.viewColumns*C.viewRows
+    G.lastPoll=G.lastPoll or {}
     function G.normalizeView(view)
         view=view or {}
         return {page=math.max(0,math.min(99,math.floor(view.page or 0))),
@@ -12,11 +14,12 @@ function M.install(G,E)
     function G.handleRequest(client,action,vacuum,target,view)
         if not G.alive or not G.authoritative or not G.authorize(client,vacuum) or not ids[action] then return false end
         local key=client.Character
-        if G.now-(G.lastRequest[key] or -100)<.1 then return false end
-        G.lastRequest[key]=G.now
+        local quota=action=='open' and G.lastPoll or G.lastRequest
+        if G.now-(quota[key] or -100)<.1 then return false end
+        quota[key]=G.now
         local ctx=G.context(vacuum,client.Character)
         if action=='withdraw' then return G.withdraw(ctx,target) end
-        if action=='drop' then return G.drop(ctx,target) end
+        if action=='stack' then return G.withdrawStack(ctx,target) end
         if action=='salvage' then return G.startSalvage(ctx) end
         if action=='select' then
             if G.jobs[ctx.pack] or G.pending[ctx.pack] then return false end
@@ -41,7 +44,7 @@ function M.install(G,E)
         if view.group>0 and groups[view.group] then
             for _,record in ipairs(groups[view.group].items) do
                 local item=record.item
-                rows[#rows+1]={id=item.ID,count=1,group=view.group,name=tostring(item.Name),
+                rows[#rows+1]={id=item.ID,kind=record.kind,count=1,group=view.group,name=tostring(item.Name),
                     condition=item.MaxCondition>0 and item.Condition/item.MaxCondition*100 or 0,quality=item.Quality}
             end
         else
@@ -49,18 +52,21 @@ function M.install(G,E)
                 local item=group.items[1].item
                 local name=tostring(item.Name)
                 if view.search=='' or name:lower():find(view.search:lower(),1,true) or group.kind:find(view.search:lower(),1,true) then
-                    rows[#rows+1]={id=item.ID,count=#group.items,group=index,name=name,
+                    rows[#rows+1]={id=item.ID,kind=group.kind,count=#group.items,group=index,name=name,
                         condition=item.MaxCondition>0 and item.Condition/item.MaxCondition*100 or 0,quality=item.Quality}
                 end
             end
         end
-        local page=math.min(view.page,math.max(0,math.ceil(#rows/8)-1))
+        local page=math.min(view.page,math.max(0,math.ceil(#rows/pageSize)-1))
         local selected={}
-        for i=page*8+1,math.min(#rows,page*8+8) do selected[#selected+1]=rows[i] end
-        local packs={};for _,pack in ipairs(G.packs(ctx.owner)) do packs[#packs+1]=pack.ID end
+        for i=page*pageSize+1,math.min(#rows,page*pageSize+pageSize) do selected[#selected+1]=rows[i] end
+        local available=G.is(ctx.vacuum,C.vacuum) and G.packs(ctx.owner) or G.availablePacks(ctx.owner)
+        local packs={};for _,pack in ipairs(available) do packs[#packs+1]=pack.ID end
+        local present=false;for _,id in ipairs(packs) do if id==ctx.pack.ID then present=true end end
+        if not present then packs[#packs+1]=ctx.pack.ID end
         return {vacuum=ctx.vacuum.ID,pack=ctx.pack.ID,packs=packs,charge=G.charge(ctx.vacuum),
             busy=G.jobs[ctx.pack]~=nil or G.pending[ctx.pack]~=nil,count=count,groups=#groups,
-            page=page,pages=math.max(1,math.ceil(#rows/8)),rows=selected,group=view.group}
+            page=page,pages=math.max(1,math.ceil(#rows/pageSize)),rows=selected,group=view.group}
     end
     local function sendSnapshot(client,vacuum,view)
         local ctx=G.context(vacuum,client.Character)
@@ -73,6 +79,7 @@ function M.install(G,E)
         m.WriteByte(#s.rows)
         for _,r in ipairs(s.rows) do
             m.WriteUInt16(r.id);m.WriteByte(r.count);m.WriteByte(r.group)
+            m.WriteString(r.kind:sub(1,100))
             m.WriteString(r.name:sub(1,100));m.WriteSingle(r.condition);m.WriteByte(math.min(255,r.quality))
         end
         E.Networking.Send(m,client.Connection)
@@ -96,9 +103,9 @@ function M.install(G,E)
                 count=m.ReadUInt16(),groups=m.ReadByte(),page=m.ReadByte(),pages=m.ReadByte(),group=m.ReadByte(),packs={},rows={}}
             local count=m.ReadByte();if count>100 then return end
             for i=1,count do s.packs[i]=m.ReadUInt16() end
-            count=m.ReadByte();if count>8 then return end
+            count=m.ReadByte();if count>pageSize then return end
             for i=1,count do s.rows[i]={id=m.ReadUInt16(),count=m.ReadByte(),group=m.ReadByte(),
-                name=m.ReadString(),condition=m.ReadSingle(),quality=m.ReadByte()} end
+                kind=m.ReadString(),name=m.ReadString(),condition=m.ReadSingle(),quality=m.ReadByte()} end
             if G.onSnapshot then G.onSnapshot(s) end
         end)
     end
@@ -107,7 +114,7 @@ function M.install(G,E)
         if G.authoritative then
             local client={Character=E.Character.Controlled}
             if G.handleRequest(client,action,vacuum,target or 0,view) and G.onSnapshot then
-                G.onSnapshot(G.snapshot(G.context(vacuum),view))
+                G.onSnapshot(G.snapshot(G.context(vacuum,E.Character.Controlled),view))
             end
             return
         end
