@@ -1,0 +1,6 @@
+PASS real client is multiplayer and has authoritative vacuum adapter disabled
+PASS native campaign synchronization preserves mixed contents
+PASS rejoined client starts second salvage batch
+PASS level transition client A mixed loot
+PASS third level client A preserves nested contents
+PASS partial batch panel after third level has exact conserved count

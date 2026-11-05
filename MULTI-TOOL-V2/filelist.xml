@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<contentpackage name="MULTI-TOOL-V2" modversion="1.2.10" corepackage="False" steamworkshopid="3599880642" gameversion="1.13.5.0">
+<contentpackage name="MULTI-TOOL-V2" modversion="1.3.4" corepackage="False" steamworkshopid="3599880642" gameversion="1.13.5.0">
+  <Item file="%ModDir%/vacuum.xml" />
+  <Sounds file="%ModDir%/vacuum_sounds.xml" />
   <Item file="%ModDir%/regenerative_headsets.xml" />
   <Sounds file="%ModDir%/headset_sounds.xml" />
   <Item file="%ModDir%/tool.xml" />

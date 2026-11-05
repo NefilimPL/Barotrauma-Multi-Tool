@@ -1,0 +1,1 @@
+native material refresh with 566 actual root items: n=10 median=3ms max=4ms mean=3.20ms

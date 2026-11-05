@@ -1,0 +1,7 @@
+native campaign save: n=1 min=38ms median=38ms max=38ms mean=38.00ms
+create 10000 actual items: 4102ms wall time (batched 100/frame)
+contents 10000: n=10 min=408ms median=435ms max=450ms mean=434.60ms
+grouping 10000: n=10 min=878ms median=890ms max=935ms mean=895.30ms
+snapshot 10000: n=10 min=992ms median=1016ms max=1073ms mean=1018.70ms
+update with 10000 stored entities: n=20 min=0ms median=0ms max=63ms mean=12.15ms
+native campaign save: n=1 min=134ms median=134ms max=134ms mean=134.00ms

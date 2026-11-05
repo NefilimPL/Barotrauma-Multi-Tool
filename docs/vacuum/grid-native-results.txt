@@ -1,0 +1,12 @@
+PASS native fabricator sees actual materials inside worn backpack
+PASS deselecting fabricator removes personal backpack materials
+PASS normal fabrication moves genuine backpack ingredients into input
+PASS native fabrication consumes inputs and creates actual output
+PASS medical fabricator sees worn backpack contents too
+PASS backpack and nozzle fit native large steel cabinet slots
+PASS selected cabinet grants backpack access and distance is enforced
+PASS linked cabinet supplies real backpack materials without duplicates
+PASS pending salvage in linked cabinet cannot supply ingredients
+PASS native stack withdrawal respects capacity and exact item counts
+PASS native icon window has forty slots and metadata for tooltips
+PASS native cached material index follows inserts and does not duplicate sources

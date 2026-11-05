@@ -1,0 +1,6 @@
+PASS v3 receives forty actual icon rows and new category metadata
+PASS remote stack fills only one native stack and preserves remaining entities
+PASS remote filter persists tags and reports excluded catalog row
+PASS remote category view only includes native medical items
+PASS server issues a counted trash confirmation without deleting yet
+PASS confirmed remote trash removes actual entities on both sides

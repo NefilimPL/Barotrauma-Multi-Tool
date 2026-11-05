@@ -1,0 +1,24 @@
+PASS campaign save/load preserves mixed items, quality, batteries and nested contents
+PASS campaign save/load restores all 10000 identities and conditions
+PASS native cached full-pack drop and reinsert stay coherent
+PASS owner request succeeds while foreign client cannot take item
+PASS disconnect fixture has 200 tools and 20 raw items
+FAIL disconnect during salvage conserves sources and products: LocalMods/MULTI-TOOL-V2/Lua/Tests/vacuum_disconnect_20261104.lua:(44,14-76): raw items lost 46
+PASS disconnect and reconnect conserve sources and exact native recipe products
+FAIL level transition begins during an active salvage job: LocalMods/MULTI-TOOL-V2/Lua/Tests/vacuum_transition.lua:(24,14-77): cannot access field ToString of userdata<Barotrauma.CampaignMode+TransitionType>
+PASS campaign changed to a different native level
+PASS level transition preserves 10000 actual items and their conditions
+PASS level transition preserves mixed loot, nested contents and quality
+PASS interrupted level-transition batch has no lost or duplicated items
+PASS native batch processed at least three tools before level transition
+FAIL level transition begins during an active salvage job: LocalMods/MULTI-TOOL-V2/Lua/Tests/vacuum_transition_verified.lua:(24,14-67): assertion failed!
+PASS campaign changed to a different native level
+PASS level transition preserves 10000 actual items and their conditions
+PASS level transition preserves mixed loot, nested contents and quality
+PASS interrupted level-transition batch has no lost or duplicated items
+PASS partly completed native batch before level transition
+PASS level transition begins during an active salvage job
+PASS campaign changed to a different native level
+PASS level transition preserves 10000 actual items and their conditions
+PASS level transition preserves mixed loot, nested contents and quality
+PASS interrupted level-transition batch has no lost or duplicated items

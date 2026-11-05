@@ -1,5 +1,35 @@
 # Barotrauma-Multi-Tool
 
+Wersja **1.3.4** zawiera **plecak zbierający i dwuręczny odkurzacz Aegis**.
+Obie części wytwarza się osobno. Bateria znajduje się w odkurzaczu i zasila
+zasysanie oraz rozbiórkę całej zawartości jednym przyciskiem. Przedmioty bez
+receptury pozostają nietknięte. Panel magazynu (**F**) grupuje rzeczy po 100,
+zachowując stan i zawartość skrzynek. **Weź stos** wypełnia tylko jeden slot
+zgodnie z natywnym limitem stosu, zostawiając nadmiar w plecaku.
+[Instrukcja](docs/VACUUM.md) ·
+[Grafiki i animacja](docs/vacuum/preview.html) ·
+[Wyniki i ograniczenia testów](docs/VACUUM-VERIFICATION.md).
+
+Plecak zakłada się do slotu torby na pasie; grafika pozostaje na plecach
+również bez ssawki. Okno otwiera przycisk **Magazyn plecaka [F]**, klawisz F
+lub prawy klik ikony plecaka. Filtr zgodny z zasadą FastLoot pomija drzwi,
+włazy, przedmioty bez slotu ekwipunku i zamontowane przewody, także w pojemnikach.
+
+Panel pokazuje **40 ikon na stronę**, z nazwą, stanem i jakością po najechaniu.
+Kategorie łączą się z wyszukiwaniem. **Filtr zbierania** pozwala wykluczać typy
+przedmiotów, również wewnątrz pojemników; ustawienia są zapisane na plecaku.
+**Kosz** trwale usuwa wybraną grupę lub egzemplarz wraz z zawartością po
+potwierdzeniu liczby. Wsysanie ma dźwięk silnika i płynnie przenikające klatki
+z ciągłym ruchem smug; udana rozbiórka uruchamia dźwięk rozdrabniacza.
+Wybór plecaka jest widoczny tylko przy kilku dostępnych magazynach.
+Plecak pasuje do miejsc na torby w dużej stalowej szafie; odkurzacz także można
+schować w szafie. Zwykły i medyczny fabrykator korzystają z prawdziwych materiałów
+z założonego plecaka oraz z plecaka w szafie połączonej z maszyną.
+
+Poprawka 1.3.1 przyspiesza panel pełnego magazynu i czyści stan zasysania
+przy zmianie rundy. Sprawdzono pełny zapis i odczyt kampanii, dwóch klientów,
+rozłączenie podczas rozbiórki oraz przejście poziomu z 10 000 przedmiotów.
+
 Mod Barotrauma z kompozytowym multitool'em, dwuręcznym **bojowym multitool'em Aegis**
 oraz **dwoma komunikatorami regeneracyjnymi Aegis**.
 
@@ -52,6 +82,8 @@ W zwykłych sklepach kampanii dostępne są wszystkie przedmioty moda:
 | Bojowy multitool Aegis | 2000 mk |
 | Komunikator Aegis | 500 mk |
 | Komunikator Aegis Mk II | 1000 mk |
+| Odkurzacz zbierający Aegis | 1800 mk |
+| Plecak zbierający Aegis | 1400 mk |
 
 Oferty mają co najmniej jedną sztukę (klucz 5–10). Ceny bazowe podlegają
 zwykłym modyfikatorom kampanii, reputacji i promocji. Zapas istniejącego

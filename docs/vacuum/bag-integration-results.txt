@@ -1,0 +1,13 @@
+PASS separate parts, both hands and vacuum battery
+PASS 100+1 actual items retain condition and group correctly
+PASS loaded crate is stored whole and nested content is preserved
+PASS portable loot includes a worn suit on a corpse
+PASS live character gear cannot be suctioned
+PASS loaded crates and suits can be retrieved onto the ground
+PASS backpack is accessible with no held vacuum or charged battery
+PASS locked source inventory cannot be emptied by suction
+PASS one-button salvage uses recipe and keeps things without recipes
+PASS salvage completes, keeps unknown recipe and keeps powered vacuum
+PASS unbreakable contents survive removal of a crate casing
+PASS crate materials and preserved raw item finish together
+PASS native suction collects a loose wrench

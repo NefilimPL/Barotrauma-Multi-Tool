@@ -1,0 +1,2 @@
+PASS authoritative native fixture has more than forty groups
+PASS v3 server conserves original entities after one stack and confirmed trash
