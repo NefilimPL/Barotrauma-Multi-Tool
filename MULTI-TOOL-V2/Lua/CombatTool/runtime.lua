@@ -5,7 +5,11 @@ local M={}
 function M.install(G,E)
     local both=E.LuaUserData.CreateEnumTable('Barotrauma.Items.Components.RepairTool+UseEnvironment').Both
     local function activate(item)
-        G.state(item)
+        local state=G.state(item)
+        if state.runtimeReady then return end
+        state.runtimeReady=true
+        state.lamp=U.component(item,'LightComponent',2)
+        state.permission=U.component(item,'LightComponent')
         U.each(item.Components,function(c)
             if c.Name:lower()=='repairtool' then c.UsableIn=both;c.CharacterUsable=true end
         end)
@@ -75,13 +79,28 @@ function M.install(G,E)
                 if s.resupply then s.resupply.Abandon=true end
                 G.states[item]=nil
             else
-                local ctx=G.context(item)
+                if not s.runtimeReady then activate(item) end
+                local owner=G.owner(item)
+                local inv=owner and owner.Inventory
+                local held=inv and not owner.Removed and not owner.IsDead and not owner.IsUnconscious
+                    and inv.GetItemInLimbSlot(E.InvSlotType.RightHand)==item
+                    and inv.GetItemInLimbSlot(E.InvSlotType.LeftHand)==item
+                local ctx
+                if held then ctx=G.context(item)
+                else
+                    ctx={owner=owner,valid=false,aim=false,bot=owner and owner.IsBot or false,
+                        damage=s.permission and s.permission.IsOn or false}
+                    if ctx.bot and not owner.IsDead and not owner.IsUnconscious then ctx.damage=AI.combatAllowed(owner,item) end
+                end
                 G.transition(s,ctx,true)
                 if not ctx.valid or not ctx.aim or s.lastUseFrame<G.frame-2 then s.chargeStarted=nil end
-                local light=U.component(item,'LightComponent',2)
+                local light=s.lamp
                 local lit=ctx.valid and ctx.aim and G.powered(item,0)
                 if G.authoritative and lit then lit=G.spend(item,0,C.lightCost*dt) end
-                if light then light.IsOn=lit;light.IsActive=lit end
+                if light then
+                    if light.IsOn~=lit then light.IsOn=lit end
+                    if light.IsActive~=lit then light.IsActive=lit end
+                end
                 if G.authoritative then
                     G.updateShield(s,ctx,dt)
                     AI.update(s,ctx)

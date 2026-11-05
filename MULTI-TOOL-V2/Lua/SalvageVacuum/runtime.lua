@@ -5,8 +5,32 @@ local M={}
 function M.install(G,E)
     local items,vacuums={},{}
     local refreshAt,lootAt,scanAt,salvageAt=0,0,0,0
+    local refresh
+    local function updateLoot(wanted)
+        if not wanted then refresh=nil;return end
+        if not refresh and G.now>=lootAt then
+            lootAt=G.now+C.refreshInterval
+            refresh={source=E.Item.ItemList,cursor=1,items={},roots={}}
+        end
+        if not refresh then return end
+        local source=refresh.source
+        local luaList=type(source)=='table'
+        local count=luaList and #source or source.Count
+        for n=1,C.refreshBudget do
+            if refresh.cursor>count then items=refresh.items;refresh=nil;return end
+            local item=source[luaList and refresh.cursor or refresh.cursor-1]
+            refresh.cursor=refresh.cursor+1
+            if item and not item.Removed then
+                local root=item.RootContainer
+                local stored=root and refresh.roots[root]
+                if root and stored==nil then stored=G.is(root,C.pack);refresh.roots[root]=stored end
+                if not stored and G.id(item)~=C.page then refresh.items[#refresh.items+1]=item end
+            end
+        end
+    end
     function G.resetRuntime()
         items,vacuums={},{}
+        refresh=nil
         refreshAt,lootAt,scanAt,salvageAt=0,0,0,0
     end
     function G.portable(item)
@@ -106,18 +130,6 @@ function M.install(G,E)
                     and G.charge(vacuum)>0 and not G.jobs[ctx.pack] and not G.pending[ctx.pack]
                 if G.sendActivity then G.sendActivity(vacuum,state.active) end
                 if state.active and G.spend(vacuum,C.suctionCost*C.scanInterval) then
-                    -- Only the authority needs loot candidates, and only while suction runs.
-                    -- Share one refreshed list between all active nozzles.
-                    if G.now>=lootAt then
-                        lootAt=G.now+C.refreshInterval;items={}
-                        local storageRoots={}
-                        U.each(E.Item.ItemList,function(item)
-                            local root=item.RootContainer
-                            local stored=root and storageRoots[root]
-                            if root and stored==nil then stored=G.is(root,C.pack);storageRoots[root]=stored end
-                            if not item.Removed and not stored and G.id(item)~=C.page then items[#items+1]=item end
-                        end)
-                    end
                     local origin,direction=G.muzzle(vacuum),G.direction(vacuum)
                     local picked,seen=0,{}
                     for n=1,math.min(#items,C.scanBudget) do
@@ -142,6 +154,14 @@ function M.install(G,E)
                     end
                 end
             end
+        end
+        if G.authoritative then
+            local wanted=false
+            for _,vacuum in ipairs(vacuums) do
+                local state=G.states[vacuum]
+                if state and state.active and G.now-(state.usedAt or -100)<.15 then wanted=true;break end
+            end
+            updateLoot(wanted)
         end
         if G.authoritative and G.now>=salvageAt then
             salvageAt=G.now+C.salvageInterval

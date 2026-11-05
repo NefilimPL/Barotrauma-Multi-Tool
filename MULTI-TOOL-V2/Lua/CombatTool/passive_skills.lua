@@ -8,7 +8,13 @@ function M.install(G,E)
     local settings=E.LuaUserData.CreateStatic('Barotrauma.SkillSettings')
     local flags=E.LuaUserData.CreateEnumTable('Barotrauma.AbilityFlags')
     local skills={'helm','weapons','mechanical','electrical','medical'}
-    local progress={}
+    local progress,owners={},{}
+    local discoverAt=0
+    local function track(item,character)
+        local id=U.itemId(item)
+        if character and (id==C.identifier or id=='multi-toolset') then owners[character]=true end
+    end
+    E.Hook.Add('item.equip','bmt.combat.passive-equip',track)
     local function eligible(character)
         local powered=false
         U.each(character.HeldItems,function(item)
@@ -23,30 +29,43 @@ function M.install(G,E)
     end
     function G.updatePassiveSkills(dt)
         if not G.authoritative or dt<=0 then return end
-        local seen={}
-        U.each(E.Character.CharacterList,function(character)
-            seen[character]=true
-            if character.Removed or character.IsDead or not character.Info or not character.Info.Job then
-                progress[character]=nil;return
+        local now=G.now or 0
+        if now>=discoverAt then
+            discoverAt=now+.5
+            owners={}
+            for character in pairs(progress) do
+                if character.Removed or character.IsDead then progress[character]=nil end
             end
-            if character.IsUnconscious or not eligible(character) then return end
-            local elapsed=(progress[character] or 0)+dt
-            local periods=math.floor((elapsed+1e-7)/C.passiveSkillInterval)
-            progress[character]=math.max(0,elapsed-periods*C.passiveSkillInterval)
-            if periods==0 then return end
-            local limit=character.HasAbilityFlag(flags.GainSkillPastMaximum)
-                and settings.Current.MaximumSkillWithTalents or skillType.DefaultMaximumSkill
-            for _,id in ipairs(skills) do
-                local level=character.Info.Job.GetSkillLevel(id)
-                if level<limit then
-                    -- A fixed +2, independent of repair/skill-gain multipliers.
-                    -- Native SetSkillLevel handles the saved level and networking.
-                    character.Info.SetSkillLevel(id,math.min(limit,level+C.passiveSkillAmount*periods),true)
+            for _,id in ipairs({C.identifier,'multi-toolset'}) do
+                U.each(E.Util.GetItemsById(id),function(item)
+                    local owner=not item.Removed and item.ParentInventory and item.ParentInventory.Owner
+                    if owner and E.LuaUserData.IsTargetType(owner,'Barotrauma.Character') then owners[owner]=true end
+                end)
+            end
+        end
+        for character in pairs(owners) do
+            if character.Removed or character.IsDead or not character.Info or not character.Info.Job then
+                progress[character]=nil;owners[character]=nil
+            elseif not character.IsUnconscious and eligible(character) then
+                local elapsed=(progress[character] or 0)+dt
+                local periods=math.floor((elapsed+1e-7)/C.passiveSkillInterval)
+                progress[character]=math.max(0,elapsed-periods*C.passiveSkillInterval)
+                if periods>0 then
+                    local limit=character.HasAbilityFlag(flags.GainSkillPastMaximum)
+                        and settings.Current.MaximumSkillWithTalents or skillType.DefaultMaximumSkill
+                    for _,id in ipairs(skills) do
+                        local level=character.Info.Job.GetSkillLevel(id)
+                        if level<limit then
+                            -- A fixed +2, independent of repair/skill-gain multipliers.
+                            -- Native SetSkillLevel handles the saved level and networking.
+                            character.Info.SetSkillLevel(id,math.min(limit,level+C.passiveSkillAmount*periods),true)
+                        end
+                    end
                 end
             end
-        end)
-        for character in pairs(progress) do if not seen[character] then progress[character]=nil end end
+        end
     end
-    function G.clearPassiveSkills() progress={} end
+    function G.clearPassiveSkills() progress={};owners={};discoverAt=0 end
+    function G.disposePassiveSkills() E.Hook.Remove('item.equip','bmt.combat.passive-equip') end
 end
 return M

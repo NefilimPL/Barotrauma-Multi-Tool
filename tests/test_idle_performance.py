@@ -85,7 +85,7 @@ class IdlePerformanceTests(LuaCase):
             local tool={ID=11000,Components={}}
             G={now=0,frame=0,states={},authoritative=false,patch=function() end,
                 isWeapon=function(i) return i==tool end,
-                state=function() activations=activations+1 end}
+                state=function() activations=activations+1;return {} end}
             require('CombatTool.runtime').install(G,E)
             for i=1,60 do G.update(1/60) end
             indexed.combatmultitool={tool};world[#world+1]=tool

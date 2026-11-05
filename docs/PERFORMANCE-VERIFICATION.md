@@ -1,4 +1,4 @@
-# Wydajność przy bezczynności — 1.3.5–1.3.6
+# Wydajność przy bezczynności — 1.3.5–1.3.7
 
 Data: 2026-11-05. Zgłoszenie: spadki FPS także bez używania narzędzi,
 u wszystkich graczy, najsilniejsze u hosta.
@@ -107,5 +107,9 @@ Pierwsza inicjalizacja grupy nadal wymaga jednego przeglądu istniejących
 przedmiotów. Nie mierzono renderowania GPU zwykłych narzędzi ani całkowitego FPS
 kampanii; aktywne spawanie, tarcze i cząsteczki pozostają osobnym obciążeniem.
 
-Paczka: `output/MULTI-TOOL-V2-1.3.6.zip`. Zaktualizuj hosta oraz wszystkich
+Wersja 1.3.7 dodaje [optymalizacje czasu klatki](FRAME-TIME-VERIFICATION.md):
+renderowanie tarcz, odłożone narzędzia, właściciele pasywnych bonusów,
+porcjowany skan łupu i ponowne używanie GUI.
+
+Paczka: `output/MULTI-TOOL-V2-1.3.7.zip`. Zaktualizuj hosta oraz wszystkich
 klientów i uruchom ponownie grę oraz serwer.

@@ -20,7 +20,7 @@ Timer.Wait(function()
         for _,dir in ipairs({1,-1}) do
             for _,angle in ipairs({0,math.pi/2,math.pi,-math.pi/2}) do
                 gun.body.Dir=dir
-                gun.body.SetTransform(Vector2(2,3),angle)
+                gun.body.SetTransform(ConvertUnits.ToSimUnits(cam.WorldViewCenter),angle)
                 gun.body.UpdateDrawPosition(false)
                 local expected=gun.body.DrawPosition
                 local rays=0

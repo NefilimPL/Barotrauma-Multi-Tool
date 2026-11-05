@@ -1,6 +1,6 @@
 # Barotrauma-Multi-Tool
 
-Wersja **1.3.6** zawiera **plecak zbierający i dwuręczny odkurzacz Aegis**.
+Wersja **1.3.7** zawiera **plecak zbierający i dwuręczny odkurzacz Aegis**.
 Obie części wytwarza się osobno. Bateria znajduje się w odkurzaczu i zasila
 zasysanie oraz rozbiórkę całej zawartości jednym przyciskiem. Przedmioty bez
 receptury pozostają nietknięte. Panel magazynu (**F**) grupuje rzeczy po 100,
@@ -18,6 +18,11 @@ Poprawka **1.3.6** przyspiesza dodatkowo wyszukiwanie baterii i paliwa przez
 boty z headsetami oraz bojowym multitoolem, korzystając z indeksu źródeł
 zasilania zamiast powtarzanych skanów całego poziomu.
 [Pomiary i testy wydajności](docs/PERFORMANCE-VERIFICATION.md).
+
+Poprawka **1.3.7** ogranicza sprawdzanie widoczności tarcz i pomija tarcze poza
+ekranem, upraszcza aktualizacje odłożonych narzędzi oraz śledzi właścicieli
+narzędzi dla pasywnych umiejętności. Skan łupu działa w porcjach po 256 rzeczy
+na klatkę, a panel magazynu ponownie wykorzystuje 40 kafelków.
 
 Plecak zakłada się do slotu torby na pasie; grafika pozostaje na plecach
 również bez ssawki. Okno otwiera przycisk **Magazyn plecaka [F]**, klawisz F

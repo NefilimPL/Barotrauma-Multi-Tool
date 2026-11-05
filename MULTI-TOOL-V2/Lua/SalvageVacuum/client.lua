@@ -5,6 +5,10 @@ function M.install(G,E)
     local UI=E.GUI
     local panel,rowsFrame,search,status,packButton,pageLabel,salvageButton,takeButton,stackButton,detailsButton,trashButton,filterButton
     local selectedId,selectedRow,cells=nil,nil,{}
+    local tiles={}
+    local rowFields={'id','kind','name','count','condition','quality','excluded','blocked'}
+    local placeholderPrefab=E.ItemPrefab and E.ItemPrefab.Prefabs[C.pack]
+    local placeholder=placeholderPrefab and (placeholderPrefab.InventoryIcon or placeholderPrefab.Sprite)
     local vacuum,view,snapshot,nextRefresh=nil,{page=0,group=0,search='',category='all',filters=false},nil,0
     local suppress=false
     local function text(id) return tostring(E.TextManager.Get('vacuum.'..id)) end
@@ -25,7 +29,7 @@ function M.install(G,E)
     function G.closePanel()
         if panel then panel.Visible=false;panel.RemoveFromGUIUpdateList();panel.RectTransform.Parent=nil;panel=nil end
         snapshot=nil;vacuum=nil
-        selectedId=nil;selectedRow=nil;cells={}
+        selectedId=nil;selectedRow=nil;cells={};tiles={}
     end
     local function updateActions()
         local ready=snapshot and not snapshot.busy and selectedRow~=nil and not view.filters
@@ -51,49 +55,72 @@ function M.install(G,E)
         search.RectTransform.RelativeSize=E.Vector2(packButton.Visible and .63 or .92,.055)
         pageLabel.Text=string.format('%d / %d',s.page+1,s.pages)
         salvageButton.Enabled=not view.filters and G.is(vacuum,C.vacuum) and not s.busy and s.charge>0
-        rowsFrame.ClearChildren()
         cells={};selectedRow=nil
         for index=1,C.viewColumns*C.viewRows do
             local row=s.rows[index]
-            local x=((index-1)%C.viewColumns)/C.viewColumns
-            local y=math.floor((index-1)/C.viewColumns)/C.viewRows
-            local cell=button(rowsFrame.RectTransform,x,y,.94/C.viewColumns,.94/C.viewRows,'',function()
-                if not row then return end
-                if view.filters then
-                    if not row.blocked then view.kind=row.kind;request('filter',row.excluded and 0 or 1) end
-                    return
+            local tile=tiles[index]
+            if not tile then
+                tile={};tiles[index]=tile
+                local x=((index-1)%C.viewColumns)/C.viewColumns
+                local y=math.floor((index-1)/C.viewColumns)/C.viewRows
+                tile.button=button(rowsFrame.RectTransform,x,y,.94/C.viewColumns,.94/C.viewRows,'',function()
+                    local current=tile.row
+                    if not current then return end
+                    if view.filters then
+                        if not current.blocked then view.kind=current.kind;request('filter',current.excluded and 0 or 1) end
+                        return
+                    end
+                    selectedId=current.id;selectedRow=current
+                    for id,cell in pairs(cells) do cell.Selected=id==selectedId end
+                    updateActions()
+                end)
+                -- A real initial sprite enables native rescaling when the window changes size.
+                tile.icon=UI.Image(rect(tile.button.RectTransform,.08,.04,.84,.74),placeholder,true,nil)
+                tile.icon.CanBeFocused=false
+                tile.missing=UI.TextBlock(rect(tile.button.RectTransform,.30,.08,.5,.60),'?')
+                tile.missing.CanBeFocused=false
+                tile.badge=UI.TextBlock(rect(tile.button.RectTransform,.35,.61,.60,.33),'')
+                tile.badge.TextScale=.7;tile.badge.CanBeFocused=false
+                if E.Color then
+                    tile.button.HoverColor=E.Color(97,123,102,255)
+                    tile.button.SelectedColor=E.Color(143,166,116,255)
                 end
-                selectedId=row.id;selectedRow=row
-                for id,tile in pairs(cells) do tile.Selected=id==selectedId end
-                updateActions()
-            end)
-            cell.Enabled=row~=nil and not (view.filters and (row.blocked or s.busy))
-            if E.Color then
-                cell.Color=E.Color(53,72,65,230);cell.HoverColor=E.Color(97,123,102,255)
-                cell.SelectedColor=E.Color(143,166,116,255)
             end
+            tile.row=row
+            local cell=tile.button
+            cell.Enabled=row~=nil and not (view.filters and (row.blocked or s.busy))
+            cell.Selected=false
             if row then
                 cells[view.filters and row.kind or row.id]=cell;cell.Selected=not view.filters and row.id==selectedId
                 if cell.Selected then selectedRow=row end
-                cell.ToolTip=string.format('%s\n×%d | %.0f%% | Q%d',row.name,row.count,row.condition,row.quality)
-                if view.filters then
-                    cell.ToolTip=row.name..'\n'..text(row.blocked and 'blocked' or (row.excluded and 'excluded' or 'included'))
-                    if E.Color and row.excluded then cell.Color=E.Color(111,53,48,230) end
+                local changed=not tile.last or tile.filters~=view.filters
+                for _,key in ipairs(rowFields) do
+                    if not tile.last or tile.last[key]~=row[key] then changed=true end
                 end
-                local ok,prefab=pcall(function() return E.ItemPrefab.Prefabs[row.kind] end)
-                if not ok then prefab=nil end
-                local sprite=prefab and (prefab.InventoryIcon or prefab.Sprite)
-                if sprite then
-                    local icon=UI.Image(rect(cell.RectTransform,.08,.04,.84,.74),sprite,true)
-                    icon.CanBeFocused=false
+                if changed then
+                    tile.last={};for key,value in pairs(row) do tile.last[key]=value end;tile.filters=view.filters
+                    if E.Color then cell.Color=E.Color(53,72,65,230) end
+                    cell.ToolTip=string.format('%s\n×%d | %.0f%% | Q%d',row.name,row.count,row.condition,row.quality)
+                    if view.filters then
+                        cell.ToolTip=row.name..'\n'..text(row.blocked and 'blocked' or (row.excluded and 'excluded' or 'included'))
+                        if E.Color and row.excluded then cell.Color=E.Color(111,53,48,230) end
+                    end
+                    local ok,prefab=pcall(function() return E.ItemPrefab.Prefabs[row.kind] end)
+                    if not ok then prefab=nil end
+                    local sprite=prefab and (prefab.InventoryIcon or prefab.Sprite)
+                    tile.inventoryIcon=prefab and prefab.InventoryIcon~=nil
+                    tile.icon.Sprite=sprite;tile.icon.Visible=sprite~=nil;tile.missing.Visible=sprite==nil
+                    tile.badge.Text=view.filters and (row.excluded and '−' or '+') or tostring(row.count)
+                    tile.badge.Visible=true
+                end
+                if tile.icon.Visible then
                     local item=row.id>0 and E.Entity and E.Entity.FindEntityByID(row.id)
-                    if item then icon.Color=prefab.InventoryIcon and item.GetInventoryIconColor() or item.GetSpriteColor() end
-                else
-                    local missing=UI.TextBlock(rect(cell.RectTransform,.30,.08,.5,.60),'?');missing.CanBeFocused=false
+                    if item then tile.icon.Color=tile.inventoryIcon and item.GetInventoryIconColor() or item.GetSpriteColor()
+                    elseif E.Color then tile.icon.Color=E.Color(255,255,255,255) end
                 end
-                local badge=view.filters and (row.excluded and '−' or '+') or tostring(row.count)
-                local count=UI.TextBlock(rect(cell.RectTransform,.35,.61,.60,.33),badge)
-                count.TextScale=.7;count.CanBeFocused=false
+            else
+                tile.last=nil;cell.ToolTip=''
+                tile.icon.Visible=false;tile.missing.Visible=false;tile.badge.Visible=false
             end
         end
         updateActions()

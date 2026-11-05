@@ -1,6 +1,6 @@
 # Odkurzacz i plecak zbierający Aegis
 
-Wersja 1.3.6 zawiera dwa osobno wytwarzane przedmioty. Wymaga LuaCs na
+Wersja 1.3.7 zawiera dwa osobno wytwarzane przedmioty. Wymaga LuaCs na
 kliencie i serwerze, tak jak pozostałe urządzenia Aegis.
 
 ## Przygotowanie
@@ -87,7 +87,7 @@ Uwzględniana jest również zagnieżdżona zawartość. Maszyna pobiera i zuży
 rzeczywiste egzemplarze; nie powstaje kopia surowców. Plecak zablokowany lub
 przetwarzany przez rozbiórkę nie udostępnia materiałów maszynie.
 
-Po aktualizacji uruchom ponownie grę i serwer. Obie strony potrzebują 1.3.6,
+Po aktualizacji uruchom ponownie grę i serwer. Obie strony potrzebują 1.3.7,
 ponieważ panel korzysta z nowej wersji komunikatów sieciowych.
 
 ## Rozbiórka
