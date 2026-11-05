@@ -4,10 +4,10 @@ local U=require('CombatTool.util')
 local M={}
 function M.install(G,E)
     local items,vacuums={},{}
-    local refreshAt,scanAt,salvageAt=0,0,0
+    local refreshAt,lootAt,scanAt,salvageAt=0,0,0,0
     function G.resetRuntime()
         items,vacuums={},{}
-        refreshAt,scanAt,salvageAt=0,0,0
+        refreshAt,lootAt,scanAt,salvageAt=0,0,0,0
     end
     function G.portable(item)
         if not item or item.Removed or G.id(item)==C.page then return false end
@@ -84,20 +84,14 @@ function M.install(G,E)
         G.now=G.now+math.min(dt,.1)
         if G.updateTrash then G.updateTrash() end
         if G.now>=refreshAt then
-            refreshAt=G.now+C.refreshInterval;items={};vacuums={}
-            local storageRoots={}
-            U.each(E.Item.ItemList,function(item)
-                -- Native cached root avoids scanning 10,000 stored items as nearby loot.
+            refreshAt=G.now+C.refreshInterval;vacuums={}
+            -- LuaCs maintains this index on item.created and clears it at round end.
+            -- Discover equipment without crossing into every native item twice a second.
+            U.each(E.Util.GetItemsById(C.vacuum),function(item)
                 local root=item.RootContainer
-                local stored=root and storageRoots[root]
-                if root and stored==nil then stored=G.is(root,C.pack);storageRoots[root]=stored end
-                if not stored then
-                    local id=G.id(item)
-                    if id~=C.page then items[#items+1]=item end
-                    if id==C.vacuum then
-                        vacuums[#vacuums+1]=item
-                        G.states[item]=G.states[item] or {cursor=1}
-                    end
+                if not item.Removed and not (root and G.is(root,C.pack)) then
+                    vacuums[#vacuums+1]=item
+                    G.states[item]=G.states[item] or {cursor=1}
                 end
             end)
             for item in pairs(G.states) do if item.Removed then G.states[item]=nil;G.selected[item.ID]=nil end end
@@ -112,6 +106,18 @@ function M.install(G,E)
                     and G.charge(vacuum)>0 and not G.jobs[ctx.pack] and not G.pending[ctx.pack]
                 if G.sendActivity then G.sendActivity(vacuum,state.active) end
                 if state.active and G.spend(vacuum,C.suctionCost*C.scanInterval) then
+                    -- Only the authority needs loot candidates, and only while suction runs.
+                    -- Share one refreshed list between all active nozzles.
+                    if G.now>=lootAt then
+                        lootAt=G.now+C.refreshInterval;items={}
+                        local storageRoots={}
+                        U.each(E.Item.ItemList,function(item)
+                            local root=item.RootContainer
+                            local stored=root and storageRoots[root]
+                            if root and stored==nil then stored=G.is(root,C.pack);storageRoots[root]=stored end
+                            if not item.Removed and not stored and G.id(item)~=C.page then items[#items+1]=item end
+                        end)
+                    end
                     local origin,direction=G.muzzle(vacuum),G.direction(vacuum)
                     local picked,seen=0,{}
                     for n=1,math.min(#items,C.scanBudget) do

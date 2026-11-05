@@ -1,0 +1,7 @@
+world items=5264; 3000 added native iron items; native human and equipment
+headset bot battery search: 20 calls, n=5 median=10.26ms max=10.74ms
+healthy headset medical check: 20 calls, n=5 median=1.08ms max=1.49ms
+ordinary multitool native idle update: 20 calls, n=5 median=0.02ms max=0.05ms
+wrench/screwdriver native idle update: 20 calls, n=5 median=0.01ms max=0.01ms
+PASS native item.created indexes new batteries and fuel rods, excludes iron
+PASS native AddTag, ReplaceTag and Tags setter update existing source membership

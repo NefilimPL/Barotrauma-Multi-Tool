@@ -33,6 +33,13 @@ class VacuumEffectsTests(LuaCase):
             for _,ch in ipairs(channels) do assert(ch.disposed) end
         """)
 
+    def test_remote_heartbeat_starts_suction_without_local_trigger_and_expires(self):
+        self.lua.execute("""
+            G.now=10;G.remoteActiveUntil[1]=10.4
+            G.updateAudio();assert(#plays==1 and channels[1].Looping)
+            G.now=10.5;G.updateAudio();assert(channels[1].disposed)
+        """)
+
     def test_flow_moves_smoothly_inward_and_fades_at_wrap(self):
         self.lua.execute("""
             local V=require('SalvageVacuum.core')

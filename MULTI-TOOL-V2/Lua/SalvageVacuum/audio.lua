@@ -3,9 +3,9 @@ function M.install(G,E)
     local suction,grinding,lastGrind={},{},{}
     function G.suctionActive(item,state)
         if item.Removed then return false end
+        if G.now-(state.usedAt or -100)>=.15 and (G.remoteActiveUntil[item.ID] or 0)<=G.now then return false end
         local ctx=G.context(item)
         return ctx.valid and ctx.aim and G.charge(item)>0 and not G.jobs[ctx.pack] and not G.pending[ctx.pack]
-            and (G.now-(state.usedAt or -100)<.15 or (G.remoteActiveUntil[item.ID] or 0)>G.now)
     end
     local function stop(channel) if channel then channel.FadeOutAndDispose() end end
     function G.onSalvage(id)

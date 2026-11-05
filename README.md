@@ -1,6 +1,6 @@
 # Barotrauma-Multi-Tool
 
-Wersja **1.3.4** zawiera **plecak zbierający i dwuręczny odkurzacz Aegis**.
+Wersja **1.3.6** zawiera **plecak zbierający i dwuręczny odkurzacz Aegis**.
 Obie części wytwarza się osobno. Bateria znajduje się w odkurzaczu i zasila
 zasysanie oraz rozbiórkę całej zawartości jednym przyciskiem. Przedmioty bez
 receptury pozostają nietknięte. Panel magazynu (**F**) grupuje rzeczy po 100,
@@ -9,6 +9,15 @@ zgodnie z natywnym limitem stosu, zostawiając nadmiar w plecaku.
 [Instrukcja](docs/VACUUM.md) ·
 [Grafiki i animacja](docs/vacuum/preview.html) ·
 [Wyniki i ograniczenia testów](docs/VACUUM-VERIFICATION.md).
+
+Poprawka **1.3.5** usuwa okresowe skanowanie całego świata przy bezczynności
+odkurzacza i bojowego multitoola na serwerze oraz klientach. Łup jest skanowany
+tylko podczas zasysania po stronie serwera. Nieaktywny odkurzacz nie wysyła
+ciągłych komunikatów sieciowych ani nie sprawdza ekwipunku dla audio.
+Poprawka **1.3.6** przyspiesza dodatkowo wyszukiwanie baterii i paliwa przez
+boty z headsetami oraz bojowym multitoolem, korzystając z indeksu źródeł
+zasilania zamiast powtarzanych skanów całego poziomu.
+[Pomiary i testy wydajności](docs/PERFORMANCE-VERIFICATION.md).
 
 Plecak zakłada się do slotu torby na pasie; grafika pozostaje na plecach
 również bez ssawki. Okno otwiera przycisk **Magazyn plecaka [F]**, klawisz F

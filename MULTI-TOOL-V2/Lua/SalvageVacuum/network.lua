@@ -164,8 +164,15 @@ function M.install(G,E)
         local id=m.ReadUInt16();local p={x=m.ReadSingle(),y=m.ReadSingle()}
         if G.alive and G.onTransfer then G.onTransfer(id,p) end
     end) end
+    local activeSenders={}
+    function G.resetNetwork()
+        activeSenders={};G.remoteActiveUntil={}
+    end
     function G.sendActivity(vacuum,active)
         if not E.SERVER then return end
+        -- Active heartbeats keep the remote timeout alive; idle nozzles stay silent.
+        if not active and not activeSenders[vacuum.ID] then return end
+        activeSenders[vacuum.ID]=active or nil
         local m=E.Networking.Start(C.protocol..'.activity')
         m.WriteUInt16(vacuum.ID);m.WriteBoolean(active);E.Networking.Send(m)
     end

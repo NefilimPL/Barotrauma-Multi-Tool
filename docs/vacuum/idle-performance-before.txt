@@ -1,0 +1,2 @@
+vacuum idle, 3000 native items: 120 updates, n=5 median=167.96ms max=178.57ms
+combat idle, 3000 native items: 120 updates, n=5 median=26.44ms max=29.12ms

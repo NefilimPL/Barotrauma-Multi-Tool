@@ -26,7 +26,7 @@ function M.install(G,E)
 end
 function M.candidate(E,character,item,current,failed,now)
     local best,score=nil,math.huge
-    U.each(E.Item.ItemList,function(cell)
+    U.each(U.powerSources(E),function(cell)
         if cell.Removed or cell.Illegitimate or cell==item or not cell.HasTag('mobilebattery') or cell.MaxCondition<=0 then return end
         if failed and (failed[cell] or 0)>(now or 0) then return end
         local charge=cell.Condition/cell.MaxCondition*100

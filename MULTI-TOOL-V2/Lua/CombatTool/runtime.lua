@@ -67,7 +67,7 @@ function M.install(G,E)
         G.now=G.now+dt;G.frame=G.frame+1
         if G.now>=scanAt then
             scanAt=G.now+.5
-            U.each(E.Item.ItemList,function(item) if G.isWeapon(item) then activate(item) end end)
+            U.each(E.Util.GetItemsById(C.identifier),function(item) if G.isWeapon(item) then activate(item) end end)
             if G.pruneShieldTracking then G.pruneShieldTracking() end
         end
         for item,s in pairs(G.states) do

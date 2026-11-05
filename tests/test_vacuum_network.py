@@ -13,6 +13,31 @@ class VacuumNetworkTests(VacuumAdapterTests):
             G.startSalvage=function(ctx) calls=calls+1;return true end
         """)
 
+    def test_activity_sends_heartbeats_only_while_active_and_one_stop(self):
+        self.lua.execute("""
+            local sent=0
+            env.Networking.Start=function() return {WriteUInt16=function() end,WriteBoolean=function() end} end
+            env.Networking.Send=function() sent=sent+1 end
+            for i=1,60 do G.sendActivity(vacuum,false) end
+            assert(sent==0,'idle nozzle sent '..sent..' packets')
+            G.sendActivity(vacuum,true);G.sendActivity(vacuum,true)
+            assert(sent==2,'active heartbeat must keep remote effects alive')
+            for i=1,60 do G.sendActivity(vacuum,false) end
+            assert(sent==3,'release must send exactly one stop packet')
+            G.sendActivity(vacuum,true);assert(sent==4)
+        """)
+
+    def test_round_reset_discards_outgoing_activity_and_remote_timeouts(self):
+        self.lua.execute("""
+            local sent=0
+            env.Networking.Start=function() return {WriteUInt16=function() end,WriteBoolean=function() end} end
+            env.Networking.Send=function() sent=sent+1 end
+            G.sendActivity(vacuum,true);G.remoteActiveUntil[vacuum.ID]=10
+            G.reset();G.sendActivity(vacuum,false)
+            assert(sent==1 and next(G.remoteActiveUntil)==nil)
+            G.sendActivity(vacuum,true);assert(sent==2)
+        """)
+
     def test_invalid_request_never_mutates(self):
         self.lua.execute("""
             assert(not G.handleRequest({Character={}},'salvage',vacuum,0,{}))

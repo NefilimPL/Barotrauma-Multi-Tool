@@ -22,6 +22,7 @@ class HeadsetAdapterTests(LuaCase):
                 entries[#entries+1]=a;return a
             end
         ''')
+        self.item_groups('E')
 
     def test_optional_mod_globals_are_not_required(self):
         self.lua.execute("assert(E.NT==nil and E.HF==nil);G.heal(char,item,1)")

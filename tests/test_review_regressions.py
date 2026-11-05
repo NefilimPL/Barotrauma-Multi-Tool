@@ -21,6 +21,7 @@ class ReviewRegressionTests(LuaCase):
                 AIObjectiveGetItem=function() fetchCalls=(fetchCalls or 0)+1;return {kind='fetch'} end}
             A=require('CombatTool.ai');A.install(G,env)
         ''')
+        self.item_groups('env')
 
     def test_distant_source_is_fetched_before_containment(self):
         self.lua.execute('assert(A.resupply(bot,gun,0,currentParent))')
