@@ -1,8 +1,41 @@
-# Odkurzacz Aegis 1.3.3 — weryfikacja
+# Odkurzacz Aegis 1.3.4 — weryfikacja
 
-Aktualizacja: 2026-11-04. Barotrauma 1.13.5.0; LuaCs/Luatrauma c6e8829.
+Aktualizacja: 2026-11-05. Barotrauma 1.13.5.0; LuaCs/Luatrauma c6e8829.
 Osobny serwer dedykowany i dwa rzeczywiste klienty w `.runtime`.
 Instalacja Steam i prywatne zapisy gracza pozostały nienaruszone.
+
+## Jeden stos, filtry, kosz i efekty — 1.3.4
+
+- **362 testy automatyczne — OK**, 13 XML i 39 modułów Lua 5.2;
+  oba nowe pliki OGG poprawnie zdekodowane przez ffmpeg.
+- **9 sprawdzeń w rzeczywistym kliencie SP — PASS**: dokładnie jeden natywny
+  slot na klik, uzupełnienie częściowego stosu bez zajęcia kolejnego slotu,
+  kategorie i wyszukiwanie, katalog i odrzucanie skrzynki z wykluczoną zawartością,
+  natywny GUIDropDown i panel, oba prawdziwe kanały audio, potwierdzenie kosza,
+  usunięcie skrzynki i jej zawartości przez Entity.Spawner oraz render animacji
+  na GPU bez błędów. Test natywny ujawnił liczbową reprezentację kategorii LuaCs;
+  dodano obsługę masek i test regresji, następnie powtórzono próbę z wynikiem PASS.
+- **6 sprawdzeń rzeczywistego klienta i dedykowanego serwera — PASS**:
+  protokół v3 z 40 ikonami, pojedynczy stos, zapis i replikacja tagów filtra,
+  kategorie, podgląd liczby usuwanych encji i potwierdzone usunięcie po obu stronach.
+  Końcowa kontrola serwera potwierdziła bilans: **734 = 725 w plecaku + 8 w jednym
+  stosie gracza + 1 trwale usunięty przedmiot**. Żaden pozostały egzemplarz nie
+  zmienił właściciela ani tożsamości.
+- Zrzut [nowego panelu](vacuum/filters-window.png) pochodzi z prawdziwego klienta.
+  [Wyniki SP](vacuum/filters-native-results.txt),
+  [sieć](vacuum/filters-network-results.txt),
+  [serwer](vacuum/filters-server-results.txt),
+  [bilans](vacuum/filters-counts.txt),
+  [regresja automatyczna](vacuum/filters-automatic-results.txt).
+- Niezależny przegląd nie znalazł pozostałych błędów Critical/Important.
+
+Nie powtarzano wielopoziomowej kampanii z 10 000 encji dla 1.3.4 ani testu WAN.
+Poniższe starsze próby zachowano z oznaczeniem badanej wersji. Nowy test filtrów
+sprawdza ponowny odczyt tagów po wyczyszczeniu cache i rzeczywistą replikację;
+nie jest osobną próbą zapisu i odczytu całej kampanii po restarcie procesu.
+
+Paczka: `output/MULTI-TOOL-V2-1.3.4.zip`, 14 574 907 bajtów.
+SHA256: `a3486c09345835382f24d72d3fb6791e4262b1c572756ea2a9669d621a6f702c`.
 
 ## Szafa, materiały i siatka — 1.3.3
 

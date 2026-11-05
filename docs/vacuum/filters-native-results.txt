@@ -1,0 +1,9 @@
+PASS one click fills exactly one native inventory slot
+PASS partial native stack is filled without opening another slot
+PASS native prefab category works with combined search
+PASS native filter catalog and nested crate exclusion
+PASS native dropdown, icons and filter panel construct successfully
+PASS native suction loop and grinder sound channels start and stop
+PASS native trash preview includes nested contents and needs exact confirmation
+PASS native remove queue deletes both crate and nested item completely
+PASS native GPU draws interpolated suction and moving streaks without render errors

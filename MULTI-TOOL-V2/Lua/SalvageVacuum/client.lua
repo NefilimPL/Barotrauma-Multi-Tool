@@ -3,9 +3,9 @@ local U=require('CombatTool.util')
 local M={}
 function M.install(G,E)
     local UI=E.GUI
-    local panel,rowsFrame,search,status,packButton,pageLabel,salvageButton,takeButton,stackButton,detailsButton
+    local panel,rowsFrame,search,status,packButton,pageLabel,salvageButton,takeButton,stackButton,detailsButton,trashButton,filterButton
     local selectedId,selectedRow,cells=nil,nil,{}
-    local vacuum,view,snapshot,nextRefresh=nil,{page=0,group=0,search=''},nil,0
+    local vacuum,view,snapshot,nextRefresh=nil,{page=0,group=0,search='',category='all',filters=false},nil,0
     local suppress=false
     local function text(id) return tostring(E.TextManager.Get('vacuum.'..id)) end
     local function rect(parent,x,y,w,h)
@@ -28,21 +28,29 @@ function M.install(G,E)
         selectedId=nil;selectedRow=nil;cells={}
     end
     local function updateActions()
-        local ready=snapshot and not snapshot.busy and selectedRow~=nil
+        local ready=snapshot and not snapshot.busy and selectedRow~=nil and not view.filters
         takeButton.Enabled=ready or false;stackButton.Enabled=ready or false
         detailsButton.Enabled=(ready and view.group==0) or false
+        trashButton.Enabled=ready or false
+        local ticket=ready and snapshot.trashTarget==selectedId and snapshot.trashToken~=0
+        trashButton.Text=ticket and (text('trashconfirm')..' '..snapshot.trashCount) or text('trash')
     end
     function G.onSnapshot(s)
         if not panel or not vacuum or s.vacuum~=vacuum.ID then return end
+        -- Ignore in-flight replies from the previous search/category/mode.
+        if s.filters~=nil and (s.filters~=view.filters or s.category~=view.category or s.search~=view.search or s.group~=view.group) then return end
         snapshot=s;view.page=s.page
         status.Text=string.format('%s: %.1f%% | %d / 100 | %d / 10000%s',text('power'),s.charge,s.groups,s.count,
             s.busy and (' | '..text('busy')) or '')
+        status.ToolTip=view.filters and text('filterhelp') or ''
+        if view.filters then status.Text=text('filterhelp') end
+        filterButton.Text=text(view.filters and 'contents' or 'filters')
         local ordinal=1;for i,id in ipairs(s.packs) do if id==s.pack then ordinal=i end end
         packButton.Text=string.format('%s %d/%d',text('pack'),ordinal,#s.packs)
         packButton.Visible=#s.packs>1
-        search.RectTransform.RelativeSize=E.Vector2(packButton.Visible and .63 or .92,.065)
+        search.RectTransform.RelativeSize=E.Vector2(packButton.Visible and .63 or .92,.055)
         pageLabel.Text=string.format('%d / %d',s.page+1,s.pages)
-        salvageButton.Enabled=G.is(vacuum,C.vacuum) and not s.busy and s.charge>0
+        salvageButton.Enabled=not view.filters and G.is(vacuum,C.vacuum) and not s.busy and s.charge>0
         rowsFrame.ClearChildren()
         cells={};selectedRow=nil
         for index=1,C.viewColumns*C.viewRows do
@@ -51,49 +59,58 @@ function M.install(G,E)
             local y=math.floor((index-1)/C.viewColumns)/C.viewRows
             local cell=button(rowsFrame.RectTransform,x,y,.94/C.viewColumns,.94/C.viewRows,'',function()
                 if not row then return end
+                if view.filters then
+                    if not row.blocked then view.kind=row.kind;request('filter',row.excluded and 0 or 1) end
+                    return
+                end
                 selectedId=row.id;selectedRow=row
                 for id,tile in pairs(cells) do tile.Selected=id==selectedId end
                 updateActions()
             end)
-            cell.Enabled=row~=nil
+            cell.Enabled=row~=nil and not (view.filters and (row.blocked or s.busy))
             if E.Color then
                 cell.Color=E.Color(53,72,65,230);cell.HoverColor=E.Color(97,123,102,255)
                 cell.SelectedColor=E.Color(143,166,116,255)
             end
             if row then
-                cells[row.id]=cell;cell.Selected=row.id==selectedId
+                cells[view.filters and row.kind or row.id]=cell;cell.Selected=not view.filters and row.id==selectedId
                 if cell.Selected then selectedRow=row end
                 cell.ToolTip=string.format('%s\n×%d | %.0f%% | Q%d',row.name,row.count,row.condition,row.quality)
+                if view.filters then
+                    cell.ToolTip=row.name..'\n'..text(row.blocked and 'blocked' or (row.excluded and 'excluded' or 'included'))
+                    if E.Color and row.excluded then cell.Color=E.Color(111,53,48,230) end
+                end
                 local ok,prefab=pcall(function() return E.ItemPrefab.Prefabs[row.kind] end)
                 if not ok then prefab=nil end
                 local sprite=prefab and (prefab.InventoryIcon or prefab.Sprite)
                 if sprite then
                     local icon=UI.Image(rect(cell.RectTransform,.08,.04,.84,.74),sprite,true)
                     icon.CanBeFocused=false
-                    local item=E.Entity and E.Entity.FindEntityByID(row.id)
+                    local item=row.id>0 and E.Entity and E.Entity.FindEntityByID(row.id)
                     if item then icon.Color=prefab.InventoryIcon and item.GetInventoryIconColor() or item.GetSpriteColor() end
                 else
                     local missing=UI.TextBlock(rect(cell.RectTransform,.30,.08,.5,.60),'?');missing.CanBeFocused=false
                 end
-                local count=UI.TextBlock(rect(cell.RectTransform,.35,.61,.60,.33),tostring(row.count))
+                local badge=view.filters and (row.excluded and '−' or '+') or tostring(row.count)
+                local count=UI.TextBlock(rect(cell.RectTransform,.35,.61,.60,.33),badge)
                 count.TextScale=.7;count.CanBeFocused=false
             end
         end
         updateActions()
     end
     function G.openPanel(item)
-        G.closePanel();vacuum=item;view={page=0,group=0,search=''}
-        panel=UI.Frame(UI.RectTransform(E.Vector2(.46,.78),UI.GUI.Canvas,UI.Anchor.Center), 'GUIFrame')
+        G.closePanel();vacuum=item;view={page=0,group=0,search='',category='all',filters=false}
+        panel=UI.Frame(UI.RectTransform(E.Vector2(.56,.86),UI.GUI.Canvas,UI.Anchor.Center), 'GUIFrame')
         UI.TextBlock(rect(panel.RectTransform,.04,.025,.75,.06),text('title'))
         button(panel.RectTransform,.82,.025,.14,.06,text('close'),G.closePanel)
-        status=UI.TextBlock(rect(panel.RectTransform,.04,.10,.92,.06),'…')
-        search=UI.TextBox(rect(panel.RectTransform,.04,.16,.92,.065),'')
+        status=UI.TextBlock(rect(panel.RectTransform,.04,.09,.92,.052),'…')
+        search=UI.TextBox(rect(panel.RectTransform,.04,.15,.92,.055),'')
         search.ToolTip=text('search')
         search.OnTextChangedDelegate=function(_,value)
             if not suppress then view.search=value:sub(1,64);view.page=0;view.group=0;selectedId=nil;nextRefresh=0 end
             return true
         end
-        packButton=button(panel.RectTransform,.70,.16,.26,.065,text('pack'),function()
+        packButton=button(panel.RectTransform,.70,.15,.26,.055,text('pack'),function()
             if snapshot and #snapshot.packs>1 then
                 for i,id in ipairs(snapshot.packs) do
                     if id==snapshot.pack then
@@ -108,21 +125,37 @@ function M.install(G,E)
             end
         end)
         packButton.Visible=false
-        rowsFrame=UI.Frame(rect(panel.RectTransform,.04,.245,.92,.47),nil)
-        button(panel.RectTransform,.04,.73,.14,.065,'<',function() view.page=math.max(0,view.page-1);selectedId=nil;request() end)
-        pageLabel=UI.TextBlock(rect(panel.RectTransform,.21,.73,.25,.065),'1 / 1')
-        button(panel.RectTransform,.48,.73,.14,.065,'>',function()
+        local category=UI.DropDown(rect(panel.RectTransform,.04,.225,.53,.055),text('category.all'),#C.categories)
+        for _,name in ipairs(C.categories) do category.AddItem(text('category.'..name),name) end
+        category.OnSelected=function(_,name)
+            view.category=tostring(name);view.group=0;view.page=0;selectedId=nil;request();return true
+        end
+        filterButton=button(panel.RectTransform,.60,.225,.36,.055,text('filters'),function()
+            view.filters=not view.filters;view.group=0;view.page=0;selectedId=nil;request()
+        end)
+        filterButton.ToolTip=text('filterhelp')
+        rowsFrame=UI.Frame(rect(panel.RectTransform,.04,.30,.92,.41),nil)
+        button(panel.RectTransform,.04,.73,.14,.055,'<',function() view.page=math.max(0,view.page-1);selectedId=nil;request() end)
+        pageLabel=UI.TextBlock(rect(panel.RectTransform,.21,.73,.25,.055),'1 / 1')
+        button(panel.RectTransform,.48,.73,.14,.055,'>',function()
             view.page=math.min((snapshot and snapshot.pages or 1)-1,view.page+1);selectedId=nil;request()
         end)
-        button(panel.RectTransform,.65,.73,.31,.065,text('groups'),function() view.group=0;view.page=0;selectedId=nil;request() end)
-        takeButton=button(panel.RectTransform,.04,.815,.28,.065,text('take'),function() if selectedRow then request('withdraw',selectedRow.id) end end)
-        stackButton=button(panel.RectTransform,.36,.815,.28,.065,text('stack'),function() if selectedRow then request('stack',selectedRow.id) end end)
+        button(panel.RectTransform,.65,.73,.31,.055,text('groups'),function() view.group=0;view.page=0;selectedId=nil;request() end)
+        takeButton=button(panel.RectTransform,.04,.805,.20,.06,text('take'),function() if selectedRow then request('withdraw',selectedRow.id) end end)
+        stackButton=button(panel.RectTransform,.26,.805,.22,.06,text('stack'),function() if selectedRow then request('stack',selectedRow.id) end end)
         stackButton.ToolTip=text('stackhelp')
-        detailsButton=button(panel.RectTransform,.68,.815,.28,.065,text('details'),function()
+        detailsButton=button(panel.RectTransform,.50,.805,.22,.06,text('details'),function()
             if selectedRow then view.group=selectedRow.group;view.page=0;selectedId=nil;request() end
         end)
+        trashButton=button(panel.RectTransform,.74,.805,.22,.06,text('trash'),function()
+            if not selectedRow then return end
+            if snapshot and snapshot.trashTarget==selectedId and (snapshot.trashToken or 0)>0 then
+                view.confirm=snapshot.trashToken;request('trash',selectedId)
+            else request('preparetrash',selectedId) end
+        end)
+        trashButton.ToolTip=text('trashhelp');trashButton.Enabled=false
         takeButton.Enabled=false;stackButton.Enabled=false;detailsButton.Enabled=false
-        salvageButton=button(panel.RectTransform,.04,.905,.92,.065,text('salvage'),function() request('salvage') end)
+        salvageButton=button(panel.RectTransform,.04,.89,.92,.065,text('salvage'),function() request('salvage') end)
         salvageButton.Enabled=G.is(item,C.vacuum)
         salvageButton.ToolTip=text('salvagehelp')
         request()

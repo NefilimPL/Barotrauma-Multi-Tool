@@ -47,4 +47,13 @@ end
 function M.supportedRecipe(recipe)
     return recipe and not recipe.requiresOther and recipe.outputs and #recipe.outputs>0 or false
 end
+function M.animation(now)
+    local frame=now*24
+    return math.floor(frame)%16,frame%1
+end
+function M.flow(now,index)
+    local t=(now*1.3+index*.61803398875)%1
+    return {distance=C.range*(1-t),side=math.sin(index*2.399963)*(.16+.26*(1-t)),
+        alpha=math.sin(math.pi*t)^2}
+end
 return M

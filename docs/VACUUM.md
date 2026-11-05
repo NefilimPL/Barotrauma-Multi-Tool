@@ -1,6 +1,6 @@
 # Odkurzacz i plecak zbierający Aegis
 
-Wersja 1.3.3 zawiera dwa osobno wytwarzane przedmioty. Wymaga LuaCs na
+Wersja 1.3.4 zawiera dwa osobno wytwarzane przedmioty. Wymaga LuaCs na
 kliencie i serwerze, tak jak pozostałe urządzenia Aegis.
 
 ## Przygotowanie
@@ -38,17 +38,33 @@ Teoretyczny limit to 10 000 przedmiotów na plecak; zagnieżdżone skrzynki
 zachowują własną zawartość. Licznik nie zastępuje przedmiotów — stan,
 jakość, baterie, butle i zawartość pozostają przy konkretnych egzemplarzach.
 
-- Pole wyszukiwania filtruje nazwy i identyfikatory.
+- Pole wyszukiwania filtruje nazwy i identyfikatory. Lista kategorii ogranicza
+  widok do materiałów, medycznych, broni, nurkowania, wyposażenia, paliwa,
+  elektrycznych, artefaktów lub pozostałych. Kategorie pochodzą z definicji gry
+  i modów; przedmiot może pasować do kilku kategorii.
 - Siatka mieści **40 ikon na stronie**. Nazwa, liczba, stan i jakość są
   w podpowiedzi po najechaniu. Kliknięcie ikony zaznacza stos.
-- **Wyjmij 1** przenosi jedną sztukę, a **Weź stos** pobiera zaznaczoną grupę,
-  maksymalnie 100 sztuk. Gra zachowuje własne limity stosów w ekwipunku postaci;
-  pozostałe rzeczy zostają w plecaku. Skrzynki i kombinezony wymagają wolnych rąk.
+- **Wyjmij 1** przenosi jedną sztukę, a **Weź stos** uzupełnia tylko jeden
+  zgodny stos lub zajmuje jeden pusty slot, zgodnie z limitem gry i talentami.
+  Przykład: przy limicie 8 klik przenosi 8 sztuk, a przy istniejącym stosie 6/8
+  tylko 2. Różny stan lub jakość nie powoduje zajmowania dodatkowych slotów.
+  Pozostałe rzeczy zostają w plecaku. Skrzynki i kombinezony wymagają wolnych rąk.
 - **Egzemplarze** pokazuje pojedyncze sztuki wybranej grupy. Strzałki zmieniają
   stronę, a **Grupy** przywraca widok stosów. Przycisku „Odłóż” już nie ma.
 - Przycisk **Plecak 1/2** przełącza magazyn, jeśli masz więcej niż jeden dostępny
   plecak. Przy jednym magazynie jest ukryty. Numer oznacza kolejność wyboru.
   Bez ręcznego wyboru pierwszeństwo ma plecak założony w slocie Bag.
+- **Filtr zbierania** otwiera katalog typów ze wszystkich załadowanych modów.
+  Klik ikony przełącza zbieranie; czerwone pole z minusem oznacza pomijanie.
+  Wyszukiwarka i kategorie działają również w katalogu. Elementy konstrukcyjne
+  są trwale zablokowane. Wykluczony przedmiot wewnątrz skrzynki blokuje pobranie
+  całej skrzynki. Filtr jest zapisany w tagach danego plecaka i nie usuwa rzeczy
+  już zebranych. Przycisk **Zawartość** wraca do magazynu.
+- **Kosz** przygotowuje usunięcie zaznaczonej grupy (do 100 sztuk) wraz
+  z zawartością pojemników. W widoku **Egzemplarze** usuwa tylko wskazaną sztukę
+  i jej zawartość. Drugi klik **Usuń: N** potwierdza liczbę wszystkich encji.
+  Potwierdzenie jest ważne 10 sekund; zmiana zawartości unieważnia operację.
+  Usunięte przedmioty nie dają surowców ani nie trafiają na ziemię.
 
 Stosy po 100 są prezentacją w panelu. Zaplecze używa zapisywanych przez grę
 stron po 100 pojedynczych rzeczy, mieszczących się w natywnym protokole.
@@ -71,7 +87,7 @@ Uwzględniana jest również zagnieżdżona zawartość. Maszyna pobiera i zuży
 rzeczywiste egzemplarze; nie powstaje kopia surowców. Plecak zablokowany lub
 przetwarzany przez rozbiórkę nie udostępnia materiałów maszynie.
 
-Po aktualizacji uruchom ponownie grę i serwer. Obie strony potrzebują 1.3.3,
+Po aktualizacji uruchom ponownie grę i serwer. Obie strony potrzebują 1.3.4,
 ponieważ panel korzysta z nowej wersji komunikatów sieciowych.
 
 ## Rozbiórka
@@ -96,6 +112,9 @@ Bateria zasilająca, aktywny odkurzacz i magazyny pomocnicze nie należą do łu
 Wyjęcie baterii, brak energii, odłożenie odkurzacza lub utrata plecaka
 zatrzymują pracę. Aby przetworzyć pozostałe rzeczy, uruchom przycisk ponownie.
 W czasie rozbiórki wyjmowanie i zmiana plecaka są blokowane.
+Udana rozbiórka wydaje dźwięk rozdrabniacza. Zasysanie ma przestrzenny dźwięk
+silnika, który ustaje po puszczeniu przycisku lub utracie zasilania. Animacja
+przenika między klatkami i rysuje płynnie przesuwające się do dyszy smugi.
 
 ## Energia, crafting i konfiguracja
 

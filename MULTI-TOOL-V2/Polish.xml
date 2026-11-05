@@ -10,8 +10,27 @@
   <vacuum.search>Szukaj przedmiotu…</vacuum.search>
   <vacuum.take>Wyjmij 1</vacuum.take>
   <vacuum.stack>Weź stos</vacuum.stack>
-  <vacuum.stackhelp>Pobierz zaznaczony stos, do 100 sztuk. Nadmiar zostanie w plecaku. Duże przedmioty wymagają wolnych rąk.</vacuum.stackhelp>
+  <vacuum.stackhelp>Pobierz jeden stos do jednego slotu ekwipunku, zgodnie z limitem gry. Uzupełnia istniejący stos. Nadmiar zostaje w plecaku; różna jakość i stan nie zajmą kolejnych slotów.</vacuum.stackhelp>
   <vacuum.details>Egzemplarze</vacuum.details>
+  <vacuum.filters>Filtr zbierania</vacuum.filters>
+  <vacuum.contents>Zawartość</vacuum.contents>
+  <vacuum.filterhelp>Czerwone / −: pomijane przy zbieraniu. Kliknij ikonę, aby przełączyć.</vacuum.filterhelp>
+  <vacuum.included>Zbieranie włączone. Kliknij, aby pomijać ten typ.</vacuum.included>
+  <vacuum.excluded>Pomijany przy zbieraniu, także wewnątrz pojemników. Kliknij, aby zbierać.</vacuum.excluded>
+  <vacuum.blocked>Przedmiot poza ekwipunkiem — zawsze pomijany.</vacuum.blocked>
+  <vacuum.trash>Kosz</vacuum.trash>
+  <vacuum.trashconfirm>Usuń:</vacuum.trashconfirm>
+  <vacuum.trashhelp>Trwale usuwa zaznaczoną grupę (lub jeden egzemplarz w szczegółach), także zawartość pojemnika. Pierwszy klik pokazuje liczbę; drugi potwierdza. Potwierdzenie wygasa po 10 sekundach.</vacuum.trashhelp>
+  <vacuum.category.all>Wszystkie kategorie</vacuum.category.all>
+  <vacuum.category.material>Materiały</vacuum.category.material>
+  <vacuum.category.medical>Medyczne</vacuum.category.medical>
+  <vacuum.category.weapon>Broń i amunicja</vacuum.category.weapon>
+  <vacuum.category.diving>Nurkowanie</vacuum.category.diving>
+  <vacuum.category.equipment>Wyposażenie</vacuum.category.equipment>
+  <vacuum.category.fuel>Paliwo</vacuum.category.fuel>
+  <vacuum.category.electrical>Elektryczne</vacuum.category.electrical>
+  <vacuum.category.alien>Artefakty</vacuum.category.alien>
+  <vacuum.category.misc>Pozostałe</vacuum.category.misc>
   <vacuum.drop>Odłóż</vacuum.drop>
   <vacuum.groups>Grupy</vacuum.groups>
   <vacuum.pack>Plecak</vacuum.pack>

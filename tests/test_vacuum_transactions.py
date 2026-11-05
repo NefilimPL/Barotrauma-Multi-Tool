@@ -44,6 +44,12 @@ class VacuumTransactionTests(LuaCase):
             queue[2]();assert(removed[source] and job.done==1 and not G.pending[pack])
         """)
 
+    def test_salvage_effect_only_plays_after_successful_commit(self):
+        self.lua.execute("""
+            effects=0;G.salvageEffect=function(device) assert(device==vacuum);effects=effects+1 end
+            G.processSalvage(job);assert(effects==0);queue[1]();queue[2]();assert(effects==1)
+        """)
+
     def test_unequip_or_reload_rolls_back_products_and_refunds_battery(self):
         self.lua.execute("""
             G.processSalvage(job);local p1=queue[1]()

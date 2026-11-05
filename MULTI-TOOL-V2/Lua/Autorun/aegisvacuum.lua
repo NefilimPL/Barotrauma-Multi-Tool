@@ -8,12 +8,15 @@ local ok,err=pcall(function()
         LuaUserData.RegisterType(typeName)
     end
     require('SalvageVacuum.storage').install(G,_G)
+    require('SalvageVacuum.filters').install(G,_G)
+    require('SalvageVacuum.trash').install(G,_G)
     require('SalvageVacuum.salvage').install(G,_G)
     require('SalvageVacuum.crafting').install(G,_G)
     require('CombatTool.physics').install(G,_G)
     require('SalvageVacuum.network').install(G,_G)
     if CLIENT then
         require('SalvageVacuum.client').install(G,_G)
+        require('SalvageVacuum.audio').install(G,_G)
         require('SalvageVacuum.visuals').install(G,_G,modPath)
     end
     require('SalvageVacuum.runtime').install(G,_G)

@@ -10,8 +10,27 @@
   <vacuum.search>Search items…</vacuum.search>
   <vacuum.take>Take one</vacuum.take>
   <vacuum.stack>Take stack</vacuum.stack>
-  <vacuum.stackhelp>Take the selected stack, up to 100 items. Excess stays in the backpack. Large items require free hands.</vacuum.stackhelp>
+  <vacuum.stackhelp>Take one stack into one inventory slot, using the game stack limit. Tops up an existing stack. Excess stays in the backpack; different quality or condition will not fill more slots.</vacuum.stackhelp>
   <vacuum.details>Instances</vacuum.details>
+  <vacuum.filters>Pickup filter</vacuum.filters>
+  <vacuum.contents>Contents</vacuum.contents>
+  <vacuum.filterhelp>Red / −: excluded from pickup. Click an icon to toggle.</vacuum.filterhelp>
+  <vacuum.included>Pickup enabled. Click to exclude this item type.</vacuum.included>
+  <vacuum.excluded>Excluded from pickup, including inside containers. Click to enable.</vacuum.excluded>
+  <vacuum.blocked>Cannot enter inventory — always skipped.</vacuum.blocked>
+  <vacuum.trash>Trash</vacuum.trash>
+  <vacuum.trashconfirm>Delete:</vacuum.trashconfirm>
+  <vacuum.trashhelp>Permanently delete the selected group (or one instance in details), including container contents. First click shows the count; second confirms. Confirmation expires in 10 seconds.</vacuum.trashhelp>
+  <vacuum.category.all>All categories</vacuum.category.all>
+  <vacuum.category.material>Materials</vacuum.category.material>
+  <vacuum.category.medical>Medical</vacuum.category.medical>
+  <vacuum.category.weapon>Weapons and ammunition</vacuum.category.weapon>
+  <vacuum.category.diving>Diving</vacuum.category.diving>
+  <vacuum.category.equipment>Equipment</vacuum.category.equipment>
+  <vacuum.category.fuel>Fuel</vacuum.category.fuel>
+  <vacuum.category.electrical>Electrical</vacuum.category.electrical>
+  <vacuum.category.alien>Alien</vacuum.category.alien>
+  <vacuum.category.misc>Other</vacuum.category.misc>
   <vacuum.drop>Drop</vacuum.drop>
   <vacuum.groups>Groups</vacuum.groups>
   <vacuum.pack>Backpack</vacuum.pack>

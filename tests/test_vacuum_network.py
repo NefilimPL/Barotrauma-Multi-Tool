@@ -45,7 +45,7 @@ class VacuumNetworkTests(VacuumAdapterTests):
     def test_snapshot_limits_page_size_and_search_length(self):
         self.lua.execute("""
             local view=G.normalizeView({page=10000,group=-1,search=string.rep('x',500)})
-            assert(view.page==99 and view.group==0 and #view.search==64)
+            assert(view.page==10000 and view.group==0 and #view.search==64)
             local s=G.snapshot(G.context(vacuum),view)
             assert(#s.rows<=40 and s.pack==pack.ID)
         """)
@@ -60,4 +60,28 @@ class VacuumNetworkTests(VacuumAdapterTests):
             assert(#s.rows==40 and s.pages==2 and s.rows[1].kind)
             local next=G.snapshot(G.context(vacuum),{page=1})
             assert(#next.rows==11)
+        """)
+
+    def test_category_search_and_filter_catalog_are_separate_from_contents(self):
+        self.lua.execute("""
+            env.ItemPrefab={Prefabs={}};require('SalvageVacuum.filters').install(G,env)
+            local item={ID=20,Name='Iron',Prefab={Category='Material'},kind='iron',Condition=100,MaxCondition=100,Quality=0}
+            G.contents=function() return {item} end
+            G.records=function() return {{item=item,id=20,kind='iron'}} end
+            assert(#G.snapshot(G.context(vacuum),{category='medical'}).rows==0)
+            assert(#G.snapshot(G.context(vacuum),{category='material',search='iron'}).rows==1)
+            local s=G.snapshot(G.context(vacuum),{filters=true})
+            assert(#s.rows==0 and s.count==1 and s.filters)
+            assert(G.normalizeView({category='forged'}).category=='all')
+        """)
+
+    def test_filter_request_uses_authorized_pack_and_never_accepts_unknown_action(self):
+        self.lua.execute("""
+            G.setExcluded=function(ctx,kind,excluded)
+                assert(ctx.pack==pack and kind=='iron' and excluded==true);calls=calls+1;return true
+            end
+            assert(G.handleRequest({Character=owner},'filter',vacuum,1,{kind='iron'}))
+            assert(calls==1)
+            G.now=2;assert(not G.handleRequest({Character={}},'filter',vacuum,1,{kind='iron'}))
+            assert(not G.handleRequest({Character=owner},'hack',vacuum,0,{}))
         """)

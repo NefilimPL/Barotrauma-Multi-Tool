@@ -29,6 +29,7 @@ function M.install(G,E)
             -- only complete source or complete products survive a campaign save.
             E.Entity.Spawner.AddItemToRemoveQueue(tx.item)
             tx.job.done=tx.job.done+1
+            if G.salvageEffect then G.salvageEffect(tx.ctx.vacuum) end
         else rollback(tx);tx.job.skipped=tx.job.skipped+1 end
         G.reserved[tx.item]=nil;G.pending[tx.ctx.pack]=nil
     end

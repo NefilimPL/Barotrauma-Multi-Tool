@@ -20,6 +20,11 @@ class VacuumClientTests(LuaCase):
             ui.TextBlock=function(r,t) return widget('text',r,t) end
             ui.TextBox=function(r,t) return widget('input',r,t) end
             ui.Image=function(r,s) local w=widget('image',r,'');w.Sprite=s;return w end
+            ui.DropDown=function(r,t)
+                local w=widget('dropdown',r,t);w.items={}
+                w.AddItem=function(label,data) w.items[#w.items+1]={label=label,data=data} end
+                return w
+            end
             owner={Inventory={GetItemInLimbSlot=function() return held end}}
             pack={ID=2,kind='aegisvacuumpack'};vacuum={ID=3,kind='aegisvacuum'}
             owned={pack};handsValid=true
@@ -35,7 +40,8 @@ class VacuumClientTests(LuaCase):
                     local own=false;for _,p in ipairs(owned) do if i==p then own=true end end
                     return {valid=c==owner and (own or (i==vacuum and handsValid)),pack=own and i or pack,owner=owner}
                 end,
-                request=function(a,i,t,v) requests[#requests+1]={action=a,item=i,target=t} end,
+                request=function(a,i,t,v) requests[#requests+1]={action=a,item=i,target=t,
+                    filters=v.filters,category=v.category,kind=v.kind,confirm=v.confirm} end,
                 patch=function(n,c,m,fn) patches[n]=fn end}
             require('SalvageVacuum.client').install(G,E)
             function button(label)
@@ -138,4 +144,32 @@ class VacuumClientTests(LuaCase):
             for _,w in ipairs(widgets) do if w.kind=='frame' and w.RectTransform.Parent==E.GUI.GUI.Canvas then
                 assert(not w.Visible)
             end end
+        """)
+
+    def test_category_and_filter_mode_request_the_selected_catalog(self):
+        self.lua.execute("""
+            G.openPanel(pack)
+            local dropdown;for _,w in ipairs(widgets) do if w.kind=='dropdown' then dropdown=w end end
+            assert(dropdown and #dropdown.items==10)
+            dropdown.OnSelected(nil,'medical')
+            assert(requests[#requests].category=='medical')
+            button('vacuum.filters').OnClicked()
+            assert(requests[#requests].filters)
+            G.onSnapshot({vacuum=pack.ID,pack=pack.ID,charge=0,groups=0,count=0,busy=false,page=0,pages=1,
+                filters=true,category='medical',search='',group=0,packs={pack.ID},rows={{id=0,kind='iron',name='Iron',count=1,condition=0,quality=0,group=0,excluded=false}}})
+            for _,w in ipairs(widgets) do if w.kind=='button' and w.ToolTip and w.ToolTip:find('Iron',1,true) then w.OnClicked();break end end
+            assert(requests[#requests].action=='filter' and requests[#requests].kind=='iron' and requests[#requests].target==1)
+        """)
+
+    def test_trash_needs_server_preview_before_confirmation_click(self):
+        self.lua.execute("""
+            G.openPanel(pack)
+            local s={vacuum=pack.ID,pack=pack.ID,charge=0,groups=1,count=1,busy=false,page=0,pages=1,packs={pack.ID},
+                rows={{id=10,kind='iron',name='Iron',count=1,condition=100,quality=0,group=1}}}
+            G.onSnapshot(s)
+            for _,w in ipairs(widgets) do if w.kind=='button' and w.ToolTip and w.ToolTip:find('Iron',1,true) then w.OnClicked();break end end
+            button('vacuum.trash').OnClicked();assert(requests[#requests].action=='preparetrash')
+            s.trashTarget=10;s.trashToken=7;s.trashCount=1;G.onSnapshot(s)
+            button('vacuum.trashconfirm 1').OnClicked()
+            assert(requests[#requests].action=='trash' and requests[#requests].confirm==7)
         """)

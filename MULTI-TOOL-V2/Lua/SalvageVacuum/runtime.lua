@@ -67,7 +67,8 @@ function M.install(G,E)
             if not E.LuaUserData.IsTargetType(owner,'Barotrauma.Item') then return nil end
             node=owner
         end
-        return safeContents(target,ctx,{},{count=0}) and target or nil
+        return safeContents(target,ctx,{},{count=0})
+            and (not G.acceptsLoot or G.acceptsLoot(ctx.pack,target)) and target or nil
     end
     G.patch('suction-use','Barotrauma.Items.Components.RangedWeapon','Use',function(component,p)
         if not G.is(component.Item,C.vacuum) then return end
@@ -81,6 +82,7 @@ function M.install(G,E)
     end)
     function G.update(dt)
         G.now=G.now+math.min(dt,.1)
+        if G.updateTrash then G.updateTrash() end
         if G.now>=refreshAt then
             refreshAt=G.now+C.refreshInterval;items={};vacuums={}
             local storageRoots={}
@@ -142,6 +144,7 @@ function M.install(G,E)
         end
         if G.updateClient then G.updateClient(dt) end
         if G.updateVisuals then G.updateVisuals(dt) end
+        if G.updateAudio then G.updateAudio(dt) end
     end
     E.Hook.Add('think','bmt.vacuum.think',function() G.update(1/60) end)
     E.Hook.Add('roundEnd','bmt.vacuum.roundEnd',G.reset)

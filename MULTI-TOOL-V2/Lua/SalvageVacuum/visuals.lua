@@ -1,4 +1,5 @@
 local C=require('SalvageVacuum.config')
+local Core=require('SalvageVacuum.core')
 local U=require('CombatTool.util')
 local M={}
 function M.install(G,E,root)
@@ -47,19 +48,33 @@ function M.install(G,E,root)
                         line(batch,cam,previous,p,E.Color(67,83,89,255),1)
                         previous=p
                     end
-                    local active=ctx.aim and G.charge(item)>0 and
-                        (G.now-(state.usedAt or -100)<.15 or (G.remoteActiveUntil[item.ID] or 0)>G.now)
+                    local active=G.suctionActive(item,state)
                     if active then
                         local direction,rotation=G.direction(item)
                         -- Sheet points left-to-right; rotate its inlet to face the nozzle.
-                        local frame=math.floor(G.now*16)%16
-                        local col,row=frame%4,math.floor(frame/4)
-                        local x,y=math.floor(col*1451/4),math.floor(row*1084/4)
-                        local right,bottom=math.floor((col+1)*1451/4),math.floor((row+1)*1084/4)
-                        stream.SourceRect=E.Rectangle(x,y,right-x,bottom-y)
-                        stream.Origin=E.Vector2(right-x,(bottom-y)/2)
-                        stream.Draw(batch,screen(cam,origin),E.Color(150,240,255,95),stream.Origin,-rotation+math.pi,
-                            E.Vector2(C.range/(right-x)*cam.Zoom,.35*cam.Zoom))
+                        local frame,fraction=Core.animation(G.now)
+                        for layer=0,1 do
+                            local f=(frame+layer)%16
+                            local col,row=f%4,math.floor(f/4)
+                            local x,y=math.floor(col*1451/4),math.floor(row*1084/4)
+                            local right,bottom=math.floor((col+1)*1451/4),math.floor((row+1)*1084/4)
+                            stream.SourceRect=E.Rectangle(x,y,right-x,bottom-y)
+                            stream.Origin=E.Vector2(right-x,(bottom-y)/2)
+                            local weight=layer==0 and (1-fraction) or fraction
+                            stream.Draw(batch,screen(cam,origin),E.Color(150,240,255,math.floor(78*weight)),stream.Origin,-rotation+math.pi,
+                                E.Vector2(C.range/(right-x)*cam.Zoom,.35*cam.Zoom))
+                        end
+                        -- Continuous world-space streaks travel inward independently of sheet frames.
+                        for n=1,18 do
+                            local flow=Core.flow(G.now,n)
+                            local function point(distance)
+                                local lateral=flow.side*distance+math.sin(G.now*3+n)*distance*.018
+                                return {x=origin.x+direction.x*distance-direction.y*lateral,
+                                    y=origin.y+direction.y*distance+direction.x*lateral}
+                            end
+                            line(batch,cam,point(flow.distance),point(math.min(C.range,flow.distance+12)),
+                                E.Color(161,224,231,math.floor(flow.alpha*95)),1)
+                        end
                     end
                 end
             end
@@ -77,6 +92,7 @@ function M.install(G,E,root)
         end
     end
     G.draw=draw
+    function G.clearEffects() effects={} end
     G.patch('draw','Barotrauma.GameScreen','DrawMap',function(screenObj,p)
         if G.visualError then return end
         local batch=p['spriteBatch']

@@ -188,16 +188,32 @@ function M.install(G,E)
     end
     function G.withdrawStack(ctx,id)
         if not ctx.valid or G.pending[ctx.pack] or G.jobs[ctx.pack] then return false end
-        local group
+        local group,selected
         for _,candidate in ipairs(G.storageView(ctx.pack).groups) do
-            for _,r in ipairs(candidate.items) do if r.id==id then group=candidate;break end end
+            for _,r in ipairs(candidate.items) do if r.id==id then group=candidate;selected=r.item;break end end
             if group then break end
         end
         if not group then return false end
-        local moved=0
+        local inv,slot=ctx.owner.Inventory,nil
+        -- Choose one ordinary slot, preferring an existing compatible partial stack.
+        -- Native checks preserve quality/condition restrictions and talent stack bonuses.
+        for pass=1,2 do
+            for i=0,inv.Capacity-1 do
+                if inv.SlotTypes[i]==E.InvSlotType.Any and (inv.GetItemAt(i)~=nil)==(pass==1)
+                    and inv.CanBePutInSlot(selected,i,false) then slot=i;break end
+            end
+            if slot then break end
+        end
+        if slot==nil then
+            -- Large crates/suits can require hands; a single item is a whole stack.
+            local ok=take(selected,ctx.owner);return ok,ok and 1 or 0
+        end
+        if not inv.TryPutItem(selected,slot,false,false,ctx.owner,true,false,false) then return false end
+        local moved=1
         for _,r in ipairs(group.items) do
-            if not r.item.Removed and G.has(ctx.pack,r.item)
-                and take(r.item,ctx.owner) then moved=moved+1 end
+            if r.item~=selected and not r.item.Removed and G.has(ctx.pack,r.item)
+                and inv.CanBePutInSlot(r.item,slot,false)
+                and inv.TryPutItem(r.item,slot,false,false,ctx.owner,true,false,false) then moved=moved+1 end
         end
         return moved>0,moved
     end

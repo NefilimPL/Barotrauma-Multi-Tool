@@ -119,6 +119,10 @@ function M.new(E)
         G.states={};G.jobs={};G.selected={};G.reserved={};G.lastRequest={};G.lastPoll={}
         if G.clearStorageCache then G.clearStorageCache() end
         if G.resetRuntime then G.resetRuntime() end
+        if G.clearFilters then G.clearFilters() end
+        if G.clearTrash then G.clearTrash() end
+        if G.clearEffects then G.clearEffects() end
+        if G.clearAudio then G.clearAudio() end
     end
     function G.dispose()
         G.alive=false;G.reset()
