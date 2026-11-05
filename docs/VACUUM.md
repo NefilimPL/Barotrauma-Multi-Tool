@@ -1,6 +1,6 @@
 # Odkurzacz i plecak zbierający Aegis
 
-Wersja 1.3.7 zawiera dwa osobno wytwarzane przedmioty. Wymaga LuaCs na
+Wersja 1.3.8 zawiera dwa osobno wytwarzane przedmioty. Wymaga LuaCs na
 kliencie i serwerze, tak jak pozostałe urządzenia Aegis.
 
 ## Przygotowanie
@@ -26,7 +26,8 @@ slot przedmiotu. Drzwi i włazy, urządzenia bez slotów oraz przewody podłącz
 choćby jednym końcem lub rozłożone w ścianie są wykluczone. Luźny przewód,
 skrzynka z amunicją i kombinezon nadal mogą zostać pobrane. Kontrola obejmuje
 zawartość pojemników, aby nie przenosić w nich niedozwolonych elementów.
-Cały pojemnik przekraczający 256 sprawdzanych encji jest pomijany.
+Cały pojemnik przekraczający 256 sprawdzanych encji jest pomijany;
+odkurzacz może pobrać z niego pojedyncze dozwolone rzeczy.
 
 ## Magazyn
 
@@ -57,8 +58,11 @@ jakość, baterie, butle i zawartość pozostają przy konkretnych egzemplarzach
 - **Filtr zbierania** otwiera katalog typów ze wszystkich załadowanych modów.
   Klik ikony przełącza zbieranie; czerwone pole z minusem oznacza pomijanie.
   Wyszukiwarka i kategorie działają również w katalogu. Elementy konstrukcyjne
-  są trwale zablokowane. Wykluczony przedmiot wewnątrz skrzynki blokuje pobranie
-  całej skrzynki. Filtr jest zapisany w tagach danego plecaka i nie usuwa rzeczy
+  są trwale zablokowane. Jeśli worek lub skrzynka zawiera wykluczony przedmiot,
+  pozostaje na miejscu, a odkurzacz pobiera tylko dozwoloną zawartość.
+  Przykład: przy wykluczonym żelazie miedź trafia do plecaka, a żelazo zostaje
+  w worku. Bez wykluczeń pojemnik jest zbierany w całości.
+  Filtr jest zapisany w tagach danego plecaka i nie usuwa rzeczy
   już zebranych. Przycisk **Zawartość** wraca do magazynu.
 - **Kosz** przygotowuje usunięcie zaznaczonej grupy (do 100 sztuk) wraz
   z zawartością pojemników. W widoku **Egzemplarze** usuwa tylko wskazaną sztukę
@@ -87,8 +91,8 @@ Uwzględniana jest również zagnieżdżona zawartość. Maszyna pobiera i zuży
 rzeczywiste egzemplarze; nie powstaje kopia surowców. Plecak zablokowany lub
 przetwarzany przez rozbiórkę nie udostępnia materiałów maszynie.
 
-Po aktualizacji uruchom ponownie grę i serwer. Obie strony potrzebują 1.3.7,
-ponieważ panel korzysta z nowej wersji komunikatów sieciowych.
+Po aktualizacji uruchom ponownie grę i serwer. Zainstaluj tę samą wersję
+1.3.8 na hoście i u wszystkich graczy.
 
 ## Rozbiórka
 

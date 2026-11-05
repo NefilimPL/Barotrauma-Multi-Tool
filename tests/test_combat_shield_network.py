@@ -33,6 +33,30 @@ class ShieldFriendlyFireTests(LuaCase):
         self.assertTrue(self.lua.eval('params.PreventExecution'))
         self.assertEqual(self.lua.eval('battery.Condition'), 98)
 
+    def test_turning_weapon_refreshes_collision_arc_before_next_shield_tick(self):
+        self.lua.execute('''
+            gun.body={TransformedRotation=math.pi}
+            local bullet={Item={WorldPosition={X=-120,Y=0},body={Enabled=true}},
+                IsActive=true,User=attacker,FriendlyFire=true}
+            hooks['projectile-launch'](bullet,{})
+            bullet.Item.WorldPosition={X=0,Y=0}
+            hooks['projectile-update'](bullet,{})
+            assert(not bullet.IsActive and battery.Condition==98,
+                'bullet used the old right-facing arc after the weapon turned left')
+        ''')
+
+    def test_moving_weapon_refreshes_collision_center_before_next_shield_tick(self):
+        self.lua.execute('''
+            gun.body={TransformedRotation=0};gun.WorldPosition={X=200,Y=0}
+            local bullet={Item={WorldPosition={X=300,Y=0},body={Enabled=true}},
+                IsActive=true,User=attacker,FriendlyFire=true}
+            hooks['projectile-launch'](bullet,{})
+            bullet.Item.WorldPosition={X=200,Y=0}
+            hooks['projectile-update'](bullet,{})
+            assert(not bullet.IsActive and battery.Condition==98,
+                'bullet used the old arc center after the weapon moved')
+        ''')
+
     def test_disabled_server_friendly_fire_does_not_drain_shield(self):
         self.lua.execute('env.Game.ServerSettings.AllowFriendlyFire=false;shoot(true)')
         self.assertTrue(self.lua.eval('projectile.IsActive'))

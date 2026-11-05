@@ -4,6 +4,12 @@ local C=Core.config
 local M={}
 function M.install(G,E)
     local physical,consumed,scans={},{},{}
+    local function geometry(item)
+        local direction,angle=G.direction(item)
+        local pos=item.WorldPosition
+        return {x=pos.X-direction.x*25,y=pos.Y-direction.y*25,
+            radius=C.shieldRadius,angle=angle,halfAngle=C.shieldHalfAngle},direction
+    end
     local function blocksAttacker(owner,attacker,friendlyFire)
         if owner and owner==attacker then return false end
         if friendlyFire==false and G.friendly(owner,attacker) then return false end
@@ -21,6 +27,9 @@ function M.install(G,E)
         local nearest=nil
         for _,s in pairs(G.states) do
             if s.shield and s.item~=weapon and blocksAttacker(s.owner,attacker,friendlyFire) then
+                -- Item/physics updates can move or turn the weapon between think ticks.
+                -- Intercept at its current simulation pose, matching the rendered mount.
+                if s.item.body then s.shield=geometry(s.item) end
                 local t,point=Core.segmentArc(a,b,s.shield)
                 local emitter=U.point(s.item.WorldPosition)
                 if t and (not nearest or t<nearest.t) and not G.cast(emitter,point,0,s.owner,true) then
@@ -51,10 +60,9 @@ function M.install(G,E)
             G.event('break',s,{x=s.item.WorldPosition.X,y=s.item.WorldPosition.Y})
             s.shield=nil;return
         end
-        local direction,angle=G.direction(s.item)
+        local direction
+        s.shield,direction=geometry(s.item)
         local pos=s.item.WorldPosition
-        s.shield={x=pos.X-direction.x*25,y=pos.Y-direction.y*25,
-            radius=C.shieldRadius,angle=angle,halfAngle=C.shieldHalfAngle}
         U.each(E.Character.CharacterList,function(target)
             if not s.shield or target.Removed or target.IsDead or G.friendly(ctx.owner,target) then return end
             local nextContact=s.contactTimes[target] or 0

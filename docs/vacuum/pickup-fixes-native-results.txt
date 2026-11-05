@@ -1,0 +1,5 @@
+PASS wire connected only at either native end cannot be collected
+PASS duffel bag retains excluded iron while copper is collected
+PASS production suction collects floor loot and allowed bag contents
+PASS native category popup is above tiles and receives mouse focus
+PASS closing popup releases keyboard focus

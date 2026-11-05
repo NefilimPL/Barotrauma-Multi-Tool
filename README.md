@@ -1,6 +1,6 @@
 # Barotrauma-Multi-Tool
 
-Wersja **1.3.7** zawiera **plecak zbierający i dwuręczny odkurzacz Aegis**.
+Wersja **1.3.8** zawiera **plecak zbierający i dwuręczny odkurzacz Aegis**.
 Obie części wytwarza się osobno. Bateria znajduje się w odkurzaczu i zasila
 zasysanie oraz rozbiórkę całej zawartości jednym przyciskiem. Przedmioty bez
 receptury pozostają nietknięte. Panel magazynu (**F**) grupuje rzeczy po 100,
@@ -23,6 +23,13 @@ Poprawka **1.3.7** ogranicza sprawdzanie widoczności tarcz i pomija tarcze poza
 ekranem, upraszcza aktualizacje odłożonych narzędzi oraz śledzi właścicieli
 narzędzi dla pasywnych umiejętności. Skan łupu działa w porcjach po 256 rzeczy
 na klatkę, a panel magazynu ponownie wykorzystuje 40 kafelków.
+
+Poprawka **1.3.8** przenosi rozwijaną listę kategorii nad ikony i usuwa
+opóźnienia zbierania spowodowane odległymi przedmiotami, także przy kilku
+aktywnych odkurzaczach. Worek z wykluczoną zawartością pozostaje na miejscu,
+a odkurzacz zabiera z niego dozwolone rzeczy. Chronione są oba końce
+podłączonego przewodu. Tarcza sprawdza aktualne położenie i obrót broni
+przy trafieniu. [Weryfikacja poprawek](docs/PICKUP-SHIELD-VERIFICATION.md).
 
 Plecak zakłada się do slotu torby na pasie; grafika pozostaje na plecach
 również bez ssawki. Okno otwiera przycisk **Magazyn plecaka [F]**, klawisz F
@@ -124,6 +131,22 @@ Następnie użyj wybranej komendy. `inventory` tworzy przedmiot w ekwipunku
 kontrolowanej postaci. Na serwerze potrzebujesz uprawnień do tych komend.
 Komendy kopiuj przyciskiem kopiowania bloku kodu. Dostępne są też w
 [zwykłym pliku tekstowym](docs/spawn-commands.txt).
+
+Odkurzacz Aegis:
+
+```text
+spawnitem aegisvacuum inventory 1
+```
+
+Plecak zbierający Aegis, wymagany do pracy odkurzacza:
+
+```text
+spawnitem aegisvacuumpack inventory 1
+```
+
+Załóż plecak w slocie torby na pasie, włóż naładowaną baterię do odkurzacza
+i weź odkurzacz w obie ręce. Zwykłą baterię utworzysz komendą
+`spawnitem batterycell inventory 1`.
 
 Komunikator regeneracyjny Aegis:
 

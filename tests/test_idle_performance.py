@@ -78,6 +78,44 @@ class IdlePerformanceTests(LuaCase):
             end
         """)
 
+    def test_nearby_ground_loot_is_not_delayed_by_distant_world_items(self):
+        self.lua.execute("""
+            local nozzle={ID=1,kind='aegisvacuum',WorldPosition={X=-10000,Y=0}}
+            indexed.aegisvacuum={nozzle};world={nozzle}
+            for i=2,5001 do world[i]={ID=i,kind='iron',WorldPosition={X=-10000,Y=0}} end
+            local loose={ID=5002,kind='copper',WorldPosition={X=60,Y=0}};world[#world+1]=loose
+            vacuumRuntime(true);G.update(.01)
+            local pack,owner={},{}
+            G.context=function() return {valid=true,aim=true,pack=pack,owner=owner} end
+            G.charge=function() return 100 end;G.spend=function() return true end
+            G.muzzle=function() return {x=0,y=0} end;G.direction=function() return {x=1,y=0} end
+            G.cast=function() end;G.pickupTarget=function(item) return item end
+            local picked=false;G.insert=function(_,item) if item==loose then picked=true end;return true end
+            for i=1,90 do G.states[nozzle].usedAt=G.now;G.update(1/60) end
+            assert(picked,'nearby ground loot is starved behind distant installed items')
+        """)
+
+    def test_remote_vacuum_candidates_do_not_delay_local_ground_loot(self):
+        self.lua.execute("""
+            local localNozzle={ID=1,kind='aegisvacuum',WorldPosition={X=-20000,Y=0}}
+            local remoteNozzle={ID=2,kind='aegisvacuum',WorldPosition={X=-20000,Y=0}}
+            indexed.aegisvacuum={localNozzle,remoteNozzle};world={localNozzle,remoteNozzle}
+            for i=3,5002 do world[i]={ID=i,kind='installed',WorldPosition={X=-9940,Y=0}} end
+            local loose={ID=5003,kind='copper',WorldPosition={X=60,Y=0}};world[#world+1]=loose
+            vacuumRuntime(true);G.update(.01)
+            G.context=function() return {valid=true,aim=true,pack={},owner={}} end
+            G.charge=function() return 100 end;G.spend=function() return true end
+            G.muzzle=function(item) return {x=item==remoteNozzle and -10000 or 0,y=0} end
+            G.direction=function() return {x=1,y=0} end;G.cast=function() end
+            G.pickupTarget=function(item) if item==loose then return item end end
+            local picked=false;G.insert=function(_,item) picked=item==loose;item.Removed=true;return true end
+            for i=1,90 do
+                for _,nozzle in ipairs(indexed.aegisvacuum) do G.states[nozzle].usedAt=G.now end
+                G.update(1/60)
+            end
+            assert(picked,'another active vacuum starved the local suction cursor')
+        """)
+
     def test_idle_combat_tool_uses_index_instead_of_scanning_world(self):
         self.lua.execute("""
             worldItems(10000)

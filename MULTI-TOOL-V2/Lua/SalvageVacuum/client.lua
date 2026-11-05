@@ -3,7 +3,7 @@ local U=require('CombatTool.util')
 local M={}
 function M.install(G,E)
     local UI=E.GUI
-    local panel,rowsFrame,search,status,packButton,pageLabel,salvageButton,takeButton,stackButton,detailsButton,trashButton,filterButton
+    local panel,category,rowsFrame,search,status,packButton,pageLabel,salvageButton,takeButton,stackButton,detailsButton,trashButton,filterButton
     local selectedId,selectedRow,cells=nil,nil,{}
     local tiles={}
     local rowFields={'id','kind','name','count','condition','quality','excluded','blocked'}
@@ -27,6 +27,12 @@ function M.install(G,E)
         nextRefresh=G.now+.5
     end
     function G.closePanel()
+        if category then
+            category.Dropped=false
+            if UI.GUI.KeyboardDispatcher.Subscriber==category then UI.GUI.KeyboardDispatcher.Subscriber=nil end
+            category.ListBox.RemoveFromGUIUpdateList()
+            category=nil
+        end
         if panel then panel.Visible=false;panel.RemoveFromGUIUpdateList();panel.RectTransform.Parent=nil;panel=nil end
         snapshot=nil;vacuum=nil
         selectedId=nil;selectedRow=nil;cells={};tiles={}
@@ -152,7 +158,7 @@ function M.install(G,E)
             end
         end)
         packButton.Visible=false
-        local category=UI.DropDown(rect(panel.RectTransform,.04,.225,.53,.055),text('category.all'),#C.categories)
+        category=UI.DropDown(rect(panel.RectTransform,.04,.225,.53,.055),text('category.all'),#C.categories)
         for _,name in ipairs(C.categories) do category.AddItem(text('category.'..name),name) end
         category.OnSelected=function(_,name)
             view.category=tostring(name);view.group=0;view.page=0;selectedId=nil;request();return true
@@ -230,7 +236,11 @@ function M.install(G,E)
         end
         if panel and G.now>=nextRefresh then request() end
         -- Queue the panel during think, after the native screen rebuilds its list.
-        if panel then panel.AddToGUIUpdateList(false,10) end
+        if panel then
+            panel.AddToGUIUpdateList(false,10)
+            -- Native GUIDropDown queues its popup at order 1, below this panel.
+            if category.Dropped then category.ListBox.AddToGUIUpdateList(false,11) end
+        end
         launcher.Visible=ctx~=nil and ctx.valid and not panel
         if launcher.Visible then launcher.AddToGUIUpdateList() end
     end
