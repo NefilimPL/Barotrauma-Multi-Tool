@@ -1,0 +1,3 @@
+32 idle combat tools: 120 updates median=0.102ms p95=0.209ms max=10.181ms total=30.94ms
+passive skill owner checks: 120 updates median=0.001ms p95=0.001ms max=0.006ms total=0.12ms
+active vacuum native world refresh: 120 updates median=1.134ms p95=7.081ms max=8.117ms total=278.90ms

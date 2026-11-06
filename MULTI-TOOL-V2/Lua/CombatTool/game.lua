@@ -148,6 +148,7 @@ function Module.new(E)
     end
     function G.dispose()
         G.cleanup()
+        if G.disposePassiveSkills then G.disposePassiveSkills() end
         if G.disposeDiagnostics then G.disposeDiagnostics() end
         if E.Hook and E.Hook.Remove then
             E.Hook.Remove('think','bmt.combat.update')

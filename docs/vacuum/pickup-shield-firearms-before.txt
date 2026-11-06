@@ -1,0 +1,16 @@
+start revolverround hitscan=true change=nil
+event shieldhit at 18931,49050.1328125
+PASS revolverround change=nil energy=97.44000244140625 healthDelta=0
+start smground hitscan=true change=nil
+event shieldhit at 18931,49050.1328125
+PASS smground change=nil energy=98.625 healthDelta=0
+start riflebullet hitscan=true change=nil
+event shieldhit at 18931,49050.1328125
+PASS riflebullet change=nil energy=96 healthDelta=0
+start shotgunshell hitscan=true change=nil
+event shieldhit at 18939.179067157944,49014.89428804598
+PASS shotgunshell change=nil energy=99 healthDelta=0
+start revolverround hitscan=true change=turned
+FAIL revolverround change=turned energy=100 healthDelta=-14.400001525878906
+start revolverround hitscan=true change=moved
+FAIL revolverround change=moved energy=100 healthDelta=-14.400001525878906

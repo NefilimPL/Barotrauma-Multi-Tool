@@ -1,0 +1,5 @@
+PASS Aegis awards exactly two to all five skills after 300 seconds
+PASS stowing pauses the common timer; switching to smaller tool preserves time
+PASS fuel-rod repair gain buff does not multiply the fixed passive reward
+PASS empty source prevents progress and native skill cap is respected
+PASS native think loop completes the remaining second without manual timer calls

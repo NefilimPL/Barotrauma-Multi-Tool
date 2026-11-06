@@ -6,7 +6,9 @@ class VacuumRoundResetTests(LuaCase):
         super().setUp()
         self.lua.execute("""
             item={kind='aegisvacuum',ID=1}
-            env={Item={ItemList={item}},Hook={Add=function() end}}
+            indexed={item}
+            env={Item={ItemList={item}},Hook={Add=function() end},
+                Util={GetItemsById=function() return indexed end}}
             G={now=0,states={},jobs={},selected={},pending={},authoritative=true,
                 patch=function() end,
                 id=function(i) return i.kind end,
@@ -24,7 +26,7 @@ class VacuumRoundResetTests(LuaCase):
 
     def test_runtime_reset_discards_old_world_candidates_immediately(self):
         self.lua.execute("""
-            G.update(.01);G.states={};env.Item.ItemList={}
+            G.update(.01);G.states={};env.Item.ItemList={};indexed={}
             G.resetRuntime();G.update(.02)
             assert(next(G.states)==nil)
         """)
@@ -36,7 +38,7 @@ class VacuumRoundResetTests(LuaCase):
             G.is=function(i,id) probes=probes+1;return i and i.kind==id end
             for i=1,10000 do env.Item.ItemList[i]={kind='iron',RootContainer=pack,ID=i} end
             local spare={kind='aegisvacuum',RootContainer=pack,ID=10001}
-            env.Item.ItemList[10001]=spare
+            env.Item.ItemList[10001]=spare;indexed={spare}
             G.update(.01)
             assert(probes<50,'reclassified the same backpack for every stored item: '..probes)
             assert(G.states[spare]==nil,'stored spare nozzle was treated as active equipment')

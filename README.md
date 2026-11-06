@@ -1,6 +1,6 @@
 # Barotrauma-Multi-Tool
 
-Wersja **1.3.4** zawiera **plecak zbierający i dwuręczny odkurzacz Aegis**.
+Wersja **1.3.10** zawiera **plecak zbierający i dwuręczny odkurzacz Aegis**.
 Obie części wytwarza się osobno. Bateria znajduje się w odkurzaczu i zasila
 zasysanie oraz rozbiórkę całej zawartości jednym przyciskiem. Przedmioty bez
 receptury pozostają nietknięte. Panel magazynu (**F**) grupuje rzeczy po 100,
@@ -9,6 +9,41 @@ zgodnie z natywnym limitem stosu, zostawiając nadmiar w plecaku.
 [Instrukcja](docs/VACUUM.md) ·
 [Grafiki i animacja](docs/vacuum/preview.html) ·
 [Wyniki i ograniczenia testów](docs/VACUUM-VERIFICATION.md).
+
+Poprawka **1.3.5** usuwa okresowe skanowanie całego świata przy bezczynności
+odkurzacza i bojowego multitoola na serwerze oraz klientach. Łup jest skanowany
+tylko podczas zasysania po stronie serwera. Nieaktywny odkurzacz nie wysyła
+ciągłych komunikatów sieciowych ani nie sprawdza ekwipunku dla audio.
+Poprawka **1.3.6** przyspiesza dodatkowo wyszukiwanie baterii i paliwa przez
+boty z headsetami oraz bojowym multitoolem, korzystając z indeksu źródeł
+zasilania zamiast powtarzanych skanów całego poziomu.
+[Pomiary i testy wydajności](docs/PERFORMANCE-VERIFICATION.md).
+
+Poprawka **1.3.7** ogranicza sprawdzanie widoczności tarcz i pomija tarcze poza
+ekranem, upraszcza aktualizacje odłożonych narzędzi oraz śledzi właścicieli
+narzędzi dla pasywnych umiejętności. Skan łupu działa w porcjach po 256 rzeczy
+na klatkę, a panel magazynu ponownie wykorzystuje 40 kafelków.
+
+Poprawka **1.3.8** przenosi rozwijaną listę kategorii nad ikony i usuwa
+opóźnienia zbierania spowodowane odległymi przedmiotami, także przy kilku
+aktywnych odkurzaczach. Worek z wykluczoną zawartością pozostaje na miejscu,
+a odkurzacz zabiera z niego dozwolone rzeczy. Chronione są oba końce
+podłączonego przewodu. Tarcza sprawdza aktualne położenie i obrót broni
+przy trafieniu. [Weryfikacja poprawek](docs/PICKUP-SHIELD-VERIFICATION.md).
+
+Poprawka **1.3.9** przesuwa osadzenie tarczy do punktu mocowania broni,
+aby wystająca podczas obrotu ręka nie przyjmowała pocisku przed łukiem.
+Grafika i sprawdzanie ścian używają tego samego punktu. Test serwera
+z Neurotraumą obejmuje rewolwer, SMG, karabin i pełne serie śrutu.
+[Wyniki i zakres testu](docs/COMBAT-VERIFICATION.md).
+Po aktualizacji host i gracze powinni ponownie uruchomić grę oraz serwer.
+
+Poprawka **1.3.10** uwzględnia historyczne kolizje postaci przy przechwytywaniu
+pocisków w multiplayerze. Plecak opisuje osobno **Grupy / 100** i **Sztuki / 10000**,
+pokazuje postęp oraz wynik rozbiórki i pozwala dalej zbierać podczas jej pracy.
+Nowe rzeczy czekają na następną partię. Rozbiórka pomija rzeczy bez receptury
+w krótkich porcjach i odtwarza zapętlony dźwięk dekonstruktora z gry.
+[Sprawdzenia i zakres poprawki](docs/SHIELD-SALVAGE-VERIFICATION.md).
 
 Plecak zakłada się do slotu torby na pasie; grafika pozostaje na plecach
 również bez ssawki. Okno otwiera przycisk **Magazyn plecaka [F]**, klawisz F
@@ -110,6 +145,22 @@ Następnie użyj wybranej komendy. `inventory` tworzy przedmiot w ekwipunku
 kontrolowanej postaci. Na serwerze potrzebujesz uprawnień do tych komend.
 Komendy kopiuj przyciskiem kopiowania bloku kodu. Dostępne są też w
 [zwykłym pliku tekstowym](docs/spawn-commands.txt).
+
+Odkurzacz Aegis:
+
+```text
+spawnitem aegisvacuum inventory 1
+```
+
+Plecak zbierający Aegis, wymagany do pracy odkurzacza:
+
+```text
+spawnitem aegisvacuumpack inventory 1
+```
+
+Załóż plecak w slocie torby na pasie, włóż naładowaną baterię do odkurzacza
+i weź odkurzacz w obie ręce. Zwykłą baterię utworzysz komendą
+`spawnitem batterycell inventory 1`.
 
 Komunikator regeneracyjny Aegis:
 

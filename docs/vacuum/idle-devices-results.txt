@@ -1,0 +1,1 @@
+PASS native item.created index, device discovery, stored spare exclusion and removal

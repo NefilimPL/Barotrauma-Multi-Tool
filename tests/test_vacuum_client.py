@@ -8,7 +8,7 @@ class VacuumClientTests(LuaCase):
             widgets={};requests={};patches={}
             local function widget(kind,rt,label)
                 local w={kind=kind,RectTransform=rt,Text=label,Visible=true}
-                w.AddToGUIUpdateList=function() w.queued=true end
+                w.AddToGUIUpdateList=function(_,order) w.queued=true;w.UpdateOrder=order or 0 end
                 w.RemoveFromGUIUpdateList=function() w.queued=false end
                 w.ClearChildren=function() end
                 widgets[#widgets+1]=w;return w
@@ -21,7 +21,7 @@ class VacuumClientTests(LuaCase):
             ui.TextBox=function(r,t) return widget('input',r,t) end
             ui.Image=function(r,s) local w=widget('image',r,'');w.Sprite=s;return w end
             ui.DropDown=function(r,t)
-                local w=widget('dropdown',r,t);w.items={}
+                local w=widget('dropdown',r,t);w.items={};w.ListBox=widget('listbox',r,'')
                 w.AddItem=function(label,data) w.items[#w.items+1]={label=label,data=data} end
                 return w
             end
@@ -54,6 +54,36 @@ class VacuumClientTests(LuaCase):
         self.lua.execute("""
             G.updateClient();local b=button('vacuum.open');assert(b.Visible)
             b.OnClicked();assert(requests[#requests].action=='open' and requests[#requests].item==pack)
+        """)
+
+    def test_capacity_labels_and_salvage_progress_are_visible_without_hover(self):
+        self.lua.execute("""
+            G.openPanel(vacuum)
+            G.onSnapshot({vacuum=vacuum.ID,pack=pack.ID,charge=37.9,groups=62,count=598,busy=true,
+                page=0,pages=1,packs={pack.ID},rows={},
+                salvage={phase='working',processed=9,total=598,done=7,skipped=2}})
+            local capacity,progress
+            for _,w in ipairs(widgets) do
+                if w.kind=='text' and w.Text and w.Text:find('62 / 100',1,true) then capacity=w.Text end
+                if w.kind=='text' and w.Text and w.Text:find('9 / 598',1,true) then progress=w.Text end
+            end
+            assert(capacity and capacity:find('vacuum.groups',1,true) and capacity:find('vacuum.items',1,true))
+            assert(progress and progress:find('vacuum.salvaged',1,true) and progress:find('vacuum.skipped',1,true))
+        """)
+
+    def test_dropped_categories_are_above_panel_and_release_keyboard_on_close(self):
+        self.lua.execute("""
+            local panel=G.openPanel(pack);local dropdown
+            for _,w in ipairs(widgets) do if w.kind=='dropdown' then dropdown=w end end
+            dropdown.Dropped=true;E.GUI.GUI.KeyboardDispatcher.Subscriber=dropdown
+            G.updateClient()
+            assert(dropdown.ListBox.queued and dropdown.ListBox.UpdateOrder>panel.UpdateOrder,
+                'category list is covered by the panel and item tiles')
+            dropdown.OnSelected(nil,'medical')
+            assert(requests[#requests].category=='medical')
+            G.closePanel()
+            assert(not dropdown.Dropped and E.GUI.GUI.KeyboardDispatcher.Subscriber==nil,
+                'closed dropdown retained keyboard focus')
         """)
 
     def test_visible_button_prefers_operational_two_handed_nozzle(self):

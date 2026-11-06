@@ -65,6 +65,32 @@ class VacuumPickupTests(LuaCase):
             assert(not G.portable(item))
         """)
 
+    def test_wire_with_only_second_luacs_array_end_connected_is_not_loot(self):
+        self.lua.execute("""
+            item.Components={pick,{Name='Wire',Connections={[2]={}},GetNodes=function() return {} end}}
+            assert(not G.portable(item),'LuaCs sparse second connection was missed')
+            assert(G.pickupTarget(item,ctx)==nil)
+        """)
+
+    def test_filtered_bag_leaves_excluded_items_but_allows_other_contents(self):
+        self.lua.execute("""
+            local allow=item;allow.type='Barotrauma.Item'
+            local excluded={id='iron',Components={pick},AllowedSlots={'Any'},HasAccess=item.HasAccess}
+            local bag={id='duffelbag',type='Barotrauma.Item',Components={pick},AllowedSlots={'Any'},
+                HasAccess=item.HasAccess,children={allow,excluded}}
+            local inv={Owner=bag,Locked=false};allow.ParentInventory=inv;excluded.ParentInventory=inv
+            ctx.pack={Tags='bmt.vacuum.exclude.iron'};G.jobs={};G.pending={}
+            require('SalvageVacuum.filters').install(G,E)
+            assert(G.pickupTarget(bag,ctx)==nil,'filtered bag must remain on the floor')
+            assert(G.pickupTarget(excluded,ctx)==nil,'excluded contents must stay in the bag')
+            assert(G.pickupTarget(allow,ctx)==allow,'allowed contents were blocked by a sibling filter')
+            inv.Locked=true;assert(G.pickupTarget(allow,ctx)==nil,'fallback bypassed locked bag')
+            inv.Locked=false;bag.ParentInventory={Owner=ctx.owner};ctx.owner.type='Barotrauma.Character'
+            assert(G.pickupTarget(allow,ctx)==nil,'fallback stole carried contents')
+            bag.ParentInventory=nil;ctx.pack.Tags='';G.clearFilters()
+            assert(G.pickupTarget(allow,ctx)==bag,'unfiltered container should remain intact')
+        """)
+
     def test_portable_container_cannot_smuggle_structural_or_installed_contents(self):
         self.lua.execute("""
             local bad={id='hatch',Components={pick,{Name='Door'}},AllowedSlots={'Any'},HasAccess=item.HasAccess}

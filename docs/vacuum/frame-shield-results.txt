@@ -1,0 +1,1 @@
+PASS native entity lookup and GPU shield drawing: 4 angles x 2 facings, stale snapshot position ignored

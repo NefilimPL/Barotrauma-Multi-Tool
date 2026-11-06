@@ -33,6 +33,17 @@
   <vacuum.category.misc>Other</vacuum.category.misc>
   <vacuum.drop>Drop</vacuum.drop>
   <vacuum.groups>Groups</vacuum.groups>
+  <vacuum.items>Items</vacuum.items>
+  <vacuum.capacityhelp>Each group holds up to 100 items of one type. A type may occupy several groups. Total: 100 groups and up to 10,000 items, preserving condition and quality.</vacuum.capacityhelp>
+  <vacuum.salvaged>Salvaged</vacuum.salvaged>
+  <vacuum.skipped>Skipped</vacuum.skipped>
+  <vacuum.salvagestate.working>Checked</vacuum.salvagestate.working>
+  <vacuum.salvagestate.products>Creating materials</vacuum.salvagestate.products>
+  <vacuum.salvagestate.space>Preparing storage</vacuum.salvagestate.space>
+  <vacuum.salvagestate.complete>Salvage complete</vacuum.salvagestate.complete>
+  <vacuum.salvagestate.full>Finished — insufficient output space</vacuum.salvagestate.full>
+  <vacuum.salvagestate.power>Stopped — insufficient battery charge</vacuum.salvagestate.power>
+  <vacuum.salvagestate.interrupted>Salvage interrupted</vacuum.salvagestate.interrupted>
   <vacuum.pack>Backpack</vacuum.pack>
   <vacuum.power>Vacuum battery</vacuum.power>
   <vacuum.help>F — storage • aim + use — collect</vacuum.help>
@@ -40,7 +51,7 @@
   <vacuum.close>Close</vacuum.close>
   <vacuum.open>Backpack storage [F]</vacuum.open>
   <vacuum.openhelp>Open backpack contents. You can also right-click the backpack icon in the belt slot.</vacuum.openhelp>
-  <vacuum.salvagehelp>Salvage requires a vacuum held in both hands, a charged battery inside the vacuum and the selected backpack.</vacuum.salvagehelp>
+  <vacuum.salvagehelp>Hold the charged vacuum in both hands. Salvage processes the contents present when started. You can keep collecting; new items wait for the next salvage job. Items without supported recipes, requiring special machines or without output space are skipped. Progress and results appear above search.</vacuum.salvagehelp>
   <entityname.combatmultitool>Aegis combat multitool</entityname.combatmultitool>
   <entitydescription.combatmultitool>Two-handed ricocheting energy-ring emitter and shield. Requires Lua for Barotrauma. One cell or fuel rod powers weapons, shield, light and tools. Quality grants 1/2/3/4 bounces. Players disable NPC damage to weld/cut. Extinguisher takes priority over firing. Bots automatically select combat or one technical function for their actual task. While held and powered, grants +2 to all five skills every 5 minutes; shared progress with the composite multi-tool.</entitydescription.combatmultitool>
   <label.combatpowerslots>Shared power: weapon / shield / tools</label.combatpowerslots>

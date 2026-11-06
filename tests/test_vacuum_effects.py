@@ -33,6 +33,28 @@ class VacuumEffectsTests(LuaCase):
             for _,ch in ipairs(channels) do assert(ch.disposed) end
         """)
 
+    def test_remote_heartbeat_starts_suction_without_local_trigger_and_expires(self):
+        self.lua.execute("""
+            G.now=10;G.remoteActiveUntil[1]=10.4
+            G.updateAudio();assert(#plays==1 and channels[1].Looping)
+            G.now=10.5;G.updateAudio();assert(channels[1].disposed)
+        """)
+
+    def test_salvage_loop_is_reused_and_expires_after_last_progress_event(self):
+        self.lua.execute("""
+            G.onSalvage(1);assert(channels[1].Looping)
+            G.now=1.3;G.onSalvage(1);assert(#plays==1)
+            G.now=1.5;G.updateAudio();assert(not channels[1].disposed)
+            G.now=2;G.updateAudio();assert(channels[1].disposed)
+        """)
+
+    def test_running_salvage_job_does_not_silence_active_suction(self):
+        self.lua.execute("""
+            local p={};G.context=function() return {valid=true,aim=true,pack=p} end
+            G.jobs[p]={}
+            G.updateAudio();assert(plays[1]=='aegis_vacuum_suction')
+        """)
+
     def test_flow_moves_smoothly_inward_and_fades_at_wrap(self):
         self.lua.execute("""
             local V=require('SalvageVacuum.core')

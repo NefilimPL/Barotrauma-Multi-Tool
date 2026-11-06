@@ -1,0 +1,5 @@
+world items=5224; 3000 added native iron items; native human and equipment
+headset bot battery search: 20 calls, n=5 median=184.63ms max=323.60ms
+healthy headset medical check: 20 calls, n=5 median=2.17ms max=2.41ms
+ordinary multitool native idle update: 20 calls, n=5 median=0.02ms max=0.19ms
+wrench/screwdriver native idle update: 20 calls, n=5 median=0.01ms max=0.01ms

@@ -212,6 +212,7 @@ class HeadsetBotInsertionTests(LuaCase):
             E.Item={ItemList={spare}}
             E.AIObjectiveContainItem=function() return {} end
         ''')
+        self.item_groups('E')
 
     def test_idle_bot_inserts_local_spare_without_current_objective(self):
         self.lua.execute('''

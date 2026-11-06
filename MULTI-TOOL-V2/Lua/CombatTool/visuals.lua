@@ -17,7 +17,7 @@ function M.install(G,E,root)
         for item in pairs(G.states or {}) do
             if not item.Removed and U.itemId(item)==C.identifier and item.body then
                 local lamp=U.component(item,'LightComponent',2)
-                if lamp and lamp.Light then
+                if lamp and lamp.IsOn and lamp.IsActive and lamp.Light then
                     local body=item.body
                     body.UpdateDrawPosition()
                     local angle=body.DrawRotation
@@ -170,14 +170,40 @@ function M.install(G,E,root)
             electricity.Origin,-Core.angle(dx,dy)-math.pi/2,
             E.Vector2(width*cam.Zoom,length/electricity.FrameSize.Y*cam.Zoom))
     end
+    local masks={}
+    local function visible(cam,s)
+        local view=cam.WorldView
+        if not view then return true end
+        local radius=C.shieldRadius+16
+        return s.x+radius>=view.X and s.x-radius<=view.X+view.Width
+            and s.y+radius>=view.Y-view.Height and s.y-radius<=view.Y
+    end
     local function drawShield(batch,cam,s)
+        if not visible(cam,s) then return end
+        local key=s.id or s
+        local mask=masks[key]
+        if not mask or G.now>=mask.expires or math.abs(mask.x-s.x)+math.abs(mask.y-s.y)>2
+            or math.abs(mask.angle-s.angle)>.01 then
+            mask={x=s.x,y=s.y,angle=s.angle,expires=G.now+.1,edge={},strips={}}
+            masks[key]=mask
+            local emitter={x=s.x,y=s.y}
+            for i=0,24 do
+                local a=s.angle-C.shieldHalfAngle+2*C.shieldHalfAngle*i/24
+                mask.edge[i+1]=not G.cast(emitter,{x=s.x+math.cos(a)*C.shieldRadius,y=s.y+math.sin(a)*C.shieldRadius},0,nil,true)
+            end
+            local height=2*C.shieldRadius*math.sin(C.shieldHalfAngle)
+            for strip=0,15 do
+                local y=(.5-(strip+.5)/16)*height
+                local x=math.sqrt(math.max(0,C.shieldRadius*C.shieldRadius-y*y))
+                mask.strips[strip+1]=not G.cast(emitter,{x=s.x+x*math.cos(s.angle)-y*math.sin(s.angle),
+                    y=s.y+x*math.sin(s.angle)+y*math.cos(s.angle)},0,nil,true)
+            end
+        end
         local points={}
-        local emitter={x=s.x+25*math.cos(s.angle),y=s.y+25*math.sin(s.angle)}
         for i=0,24 do
             local a=s.angle-C.shieldHalfAngle+2*C.shieldHalfAngle*i/24
             local p={x=s.x+math.cos(a)*C.shieldRadius,y=s.y+math.sin(a)*C.shieldRadius}
-            local blocked=G.cast(emitter,p,0,nil,true)
-            points[#points+1]={point=p,visible=blocked==nil}
+            points[#points+1]={point=p,visible=mask.edge[i+1]}
         end
         local energy=math.max(.15,math.min(1,(s.energy or 100)/100))
         local height=2*C.shieldRadius*math.sin(C.shieldHalfAngle)
@@ -185,11 +211,7 @@ function M.install(G,E,root)
         -- Clip individual texture strips instead of discarding the whole sheet
         -- when even one edge touches the ceiling or a wall.
         for strip=0,15 do
-            local y=(.5-(strip+.5)/16)*height
-            local x=math.sqrt(math.max(0,C.shieldRadius*C.shieldRadius-y*y))
-            local p={x=s.x+x*math.cos(s.angle)-y*math.sin(s.angle),
-                y=s.y+x*math.sin(s.angle)+y*math.cos(s.angle)}
-            if not G.cast(emitter,p,0,nil,true) then
+            if mask.strips[strip+1] then
                 drawSheet(batch,cam,'shield-active',math.floor(G.now*12)%16,center,s.angle,
                     C.shieldRadius*.86/314,height/314,
                     C.shieldTextureOpacity*(.8+.2*energy)*(.95+.05*math.sin(G.now*5)),{strip/16,(strip+1)/16})
@@ -211,13 +233,14 @@ function M.install(G,E,root)
             -- DrawPosition already includes the interpolated submarine offset.
             -- Follow the displayed weapon every frame; snapshots still decide
             -- whether the shield exists and how much energy it has.
-            return {x=pos.X-25*math.cos(angle),y=pos.Y-25*math.sin(angle),
+            return {id=item.ID,x=pos.X,y=pos.Y,
                 angle=angle,energy=energy or s.energy}
         end
-        return {x=s.x,y=s.y,angle=s.angle,energy=energy or s.energy}
+        return {id=s.id,x=s.x,y=s.y,angle=s.angle,energy=energy or s.energy}
     end
     function G.draw(batch,cam)
         if not cam then return end
+        for key,mask in pairs(masks) do if G.now>mask.expires+1 then masks[key]=nil end end
         local rings,shields={},{}
         if G.authoritative then
             rings=G.rings
@@ -263,7 +286,7 @@ function M.install(G,E,root)
             end
         end
     end
-    function G.clearVisuals() effects={};G.remote={shields={},rings={}} end
+    function G.clearVisuals() effects={};masks={};G.remote={shields={},rings={}} end
     -- DrawMap ends its batch before returning, and the HUD is drawn afterwards.
     -- This explicit native point avoids depending on historical draw aliases.
     G.patch('draw','Barotrauma.GameScreen','DrawMap',function(screen,p)

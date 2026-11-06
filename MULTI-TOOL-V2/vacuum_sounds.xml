@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <sounds>
   <aegis_vacuum_suction identifier="aegis_vacuum_suction_1" file="%ModDir%/Assets/Vacuum/Audio/suction.ogg" volume="0.48" range="700" />
-  <aegis_vacuum_salvage identifier="aegis_vacuum_salvage_1" file="%ModDir%/Assets/Vacuum/Audio/salvage.ogg" volume="0.60" range="700" />
+  <aegis_vacuum_salvage identifier="aegis_vacuum_salvage_1" file="Content/Items/Fabricators/Deconstructor.ogg" volume="0.60" range="700" />
 </sounds>

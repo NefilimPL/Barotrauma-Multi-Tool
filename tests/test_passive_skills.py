@@ -20,6 +20,12 @@ class PassiveSkillTests(LuaCase):
                     return {Current={MaximumSkillWithTalents=150}}
                 end}}
             G={authoritative=true}
+            hooks={};gun.ParentInventory={Owner=actor}
+            env.Util={GetItemsById=function(id)
+                if gun.Prefab.Identifier.Value==id then return {gun} end
+            end}
+            env.Hook={Add=function(event,id,fn) hooks[event]=fn end,Remove=function() end}
+            env.LuaUserData.IsTargetType=function(o,t) return t=='Barotrauma.Character' and o.Info~=nil end
             require('CombatTool.passive_skills').install(G,env)
         ''')
 

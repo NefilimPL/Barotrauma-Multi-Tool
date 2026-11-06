@@ -1,0 +1,144 @@
+CASE 1 control=false
+POSE 1 shield=true angle=-3.0178308486938477 gun={X:23703.68 Y:50205.176} valid=true aim=true damage=true unconscious=false stun=0 oxygen=99.91666412353516 energy=99.79588317871094 now=19.966666666666814 cooldown=0
+LAG compensation displacement=160
+FIRE nativeRanged=true
+PASS revolverround Torso arc=0.7821446369859058 hits=1 damageCalls=0
+FIRE nativeRanged=true
+PASS revolverround Head arc=0.8289157858416857 hits=1 damageCalls=0
+FIRE nativeRanged=true
+PASS revolverround RightHand arc=0.8214237308110952 hits=1 damageCalls=0
+FIRE nativeRanged=true
+PASS revolverround Waist arc=0.7609312546269948 hits=1 damageCalls=0
+PASS smground Torso arc=0.7821446369859058 hits=1 damageCalls=0
+PASS smground Head arc=0.8289157858416857 hits=1 damageCalls=0
+PASS smground RightHand arc=0.8214237308110952 hits=1 damageCalls=0
+PASS smground Waist arc=0.7609312546269948 hits=1 damageCalls=0
+PASS riflebullet Torso arc=0.7821446369859058 hits=1 damageCalls=0
+PASS riflebullet Head arc=0.8289157858416857 hits=1 damageCalls=0
+PASS riflebullet RightHand arc=0.8214237308110952 hits=1 damageCalls=0
+PASS riflebullet Waist arc=0.7609312546269948 hits=1 damageCalls=0
+PASS shotgunshell Torso arc=0.7821446369859058 hits=1 damageCalls=0
+PASS shotgunshell Head arc=0.8289157858416857 hits=1 damageCalls=0
+PASS shotgunshell RightHand arc=0.8214237308110952 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.7609312546269948 hits=1 damageCalls=0
+CASE 2 control=false
+POSE 1 shield=true angle=6.159423828125 gun={X:23867.385 Y:50367.57} valid=true aim=true damage=true unconscious=false stun=0 oxygen=99.91666412353516 energy=99.79796600341797 now=21.58333333333339 cooldown=0
+LAG compensation displacement=160
+FIRE nativeRanged=true
+PASS revolverround Torso arc=0.7835404921898652 hits=1 damageCalls=0
+FIRE nativeRanged=true
+PASS revolverround Head arc=0.8295407182370048 hits=1 damageCalls=0
+FIRE nativeRanged=true
+PASS revolverround RightHand arc=0.8213973717255454 hits=1 damageCalls=0
+FIRE nativeRanged=true
+PASS revolverround Waist arc=0.7629990889848869 hits=1 damageCalls=0
+PASS smground Torso arc=0.7835404921898652 hits=1 damageCalls=0
+PASS smground Head arc=0.8295407182370048 hits=1 damageCalls=0
+PASS smground RightHand arc=0.8213973717255454 hits=1 damageCalls=0
+PASS smground Waist arc=0.7629990889848869 hits=1 damageCalls=0
+PASS riflebullet Torso arc=0.7835404921898652 hits=1 damageCalls=0
+PASS riflebullet Head arc=0.8295407182370048 hits=1 damageCalls=0
+PASS riflebullet RightHand arc=0.8213973717255454 hits=1 damageCalls=0
+PASS riflebullet Waist arc=0.7629990889848869 hits=1 damageCalls=0
+PASS shotgunshell Torso arc=0.7835404921898652 hits=1 damageCalls=0
+PASS shotgunshell Head arc=0.8295407182370048 hits=1 damageCalls=0
+PASS shotgunshell RightHand arc=0.8213973717255454 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.7629990889848869 hits=1 damageCalls=0
+CASE 3 control=false
+POSE 1 shield=true angle=-2.5184578895568848 gun={X:23698.605 Y:50504.508} valid=true aim=true damage=true unconscious=false stun=0 oxygen=99.91666412353516 energy=99.79796600341797 now=23.199999999999964 cooldown=0
+LAG compensation displacement=160
+FIRE nativeRanged=true
+PASS revolverround Torso arc=0.7808666611729926 hits=1 damageCalls=0
+FIRE nativeRanged=true
+PASS revolverround Head arc=0.8292702274167953 hits=1 damageCalls=0
+FIRE nativeRanged=true
+PASS revolverround RightHand arc=0.8214124652941116 hits=1 damageCalls=0
+FIRE nativeRanged=true
+PASS revolverround Waist arc=0.7578923911177639 hits=1 damageCalls=0
+PASS smground Torso arc=0.7808666611729926 hits=1 damageCalls=0
+PASS smground Head arc=0.8292702274167953 hits=1 damageCalls=0
+PASS smground RightHand arc=0.8214124652941116 hits=1 damageCalls=0
+PASS smground Waist arc=0.7578923911177639 hits=1 damageCalls=0
+PASS riflebullet Torso arc=0.7808666611729926 hits=1 damageCalls=0
+PASS riflebullet Head arc=0.8292702274167953 hits=1 damageCalls=0
+PASS riflebullet RightHand arc=0.8214124652941116 hits=1 damageCalls=0
+PASS riflebullet Waist arc=0.7578923911177639 hits=1 damageCalls=0
+PASS shotgunshell Torso arc=0.7808666611729926 hits=1 damageCalls=0
+PASS shotgunshell Head arc=0.8292702274167953 hits=1 damageCalls=0
+PASS shotgunshell RightHand arc=0.8214124652941116 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.7578923911177639 hits=1 damageCalls=0
+CASE 4 control=false
+POSE 1 shield=true angle=2.7658541202545166 gun={X:23729.951 Y:50783.15} valid=true aim=true damage=true unconscious=false stun=0 oxygen=99.91666412353516 energy=99.79796600341797 now=24.81666666666654 cooldown=0
+LAG compensation displacement=160
+FIRE nativeRanged=true
+PASS revolverround Torso arc=0.7845507806466981 hits=1 damageCalls=0
+FIRE nativeRanged=true
+PASS revolverround Head arc=0.8289908958465996 hits=1 damageCalls=0
+FIRE nativeRanged=true
+PASS revolverround RightHand arc=0.8214159898767848 hits=1 damageCalls=0
+FIRE nativeRanged=true
+PASS revolverround Waist arc=0.7656377881118455 hits=1 damageCalls=0
+PASS smground Torso arc=0.7845507806466981 hits=1 damageCalls=0
+PASS smground Head arc=0.8289908958465996 hits=1 damageCalls=0
+PASS smground RightHand arc=0.8214159898767848 hits=1 damageCalls=0
+PASS smground Waist arc=0.7656377881118455 hits=1 damageCalls=0
+PASS riflebullet Torso arc=0.7845507806466981 hits=1 damageCalls=0
+PASS riflebullet Head arc=0.8289908958465996 hits=1 damageCalls=0
+PASS riflebullet RightHand arc=0.8214159898767848 hits=1 damageCalls=0
+PASS riflebullet Waist arc=0.7656377881118455 hits=1 damageCalls=0
+PASS shotgunshell Torso arc=0.7845507806466981 hits=1 damageCalls=0
+PASS shotgunshell Head arc=0.8289908958465996 hits=1 damageCalls=0
+PASS shotgunshell RightHand arc=0.8214159898767848 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.7656377881118455 hits=1 damageCalls=0
+CASE 5 control=false
+POSE 1 shield=true angle=0.3756881058216095 gun={X:23841.025 Y:50997.297} valid=true aim=true damage=true unconscious=false stun=0 oxygen=99.91666412353516 energy=99.79796600341797 now=26.433333333333113 cooldown=0
+LAG compensation displacement=160
+FIRE nativeRanged=true
+PASS revolverround Torso arc=0.7854010725722603 hits=1 damageCalls=0
+FIRE nativeRanged=true
+PASS revolverround Head arc=0.8301297712938425 hits=1 damageCalls=0
+FIRE nativeRanged=true
+PASS revolverround RightHand arc=0.8213971372061507 hits=1 damageCalls=0
+FIRE nativeRanged=true
+PASS revolverround Waist arc=0.7661675753928794 hits=1 damageCalls=0
+PASS smground Torso arc=0.7854010725722603 hits=1 damageCalls=0
+PASS smground Head arc=0.8301297712938425 hits=1 damageCalls=0
+PASS smground RightHand arc=0.8213971372061507 hits=1 damageCalls=0
+PASS smground Waist arc=0.7661675753928794 hits=1 damageCalls=0
+PASS riflebullet Torso arc=0.7854010725722603 hits=1 damageCalls=0
+PASS riflebullet Head arc=0.8301297712938425 hits=1 damageCalls=0
+PASS riflebullet RightHand arc=0.8213971372061507 hits=1 damageCalls=0
+PASS riflebullet Waist arc=0.7661675753928794 hits=1 damageCalls=0
+PASS shotgunshell Torso arc=0.7854010725722603 hits=1 damageCalls=0
+PASS shotgunshell Head arc=0.8301297712938425 hits=1 damageCalls=0
+PASS shotgunshell RightHand arc=0.8213971372061507 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.7661675753928794 hits=1 damageCalls=0
+CASE 6 control=false
+POSE 1 shield=true angle=5.660025119781494 gun={X:23873.64 Y:51144.3} valid=true aim=true damage=true unconscious=false stun=0 oxygen=99.91666412353516 energy=99.79796600341797 now=28.049999999999688 cooldown=0
+LAG compensation displacement=160
+FIRE nativeRanged=true
+PASS revolverround Torso arc=0.7815589677923118 hits=1 damageCalls=0
+FIRE nativeRanged=true
+PASS revolverround Head arc=0.8294021200267628 hits=1 damageCalls=0
+FIRE nativeRanged=true
+PASS revolverround RightHand arc=0.8214219073152242 hits=1 damageCalls=0
+FIRE nativeRanged=true
+PASS revolverround Waist arc=0.7589799734094799 hits=1 damageCalls=0
+PASS smground Torso arc=0.7815589677923118 hits=1 damageCalls=0
+PASS smground Head arc=0.8294021200267628 hits=1 damageCalls=0
+PASS smground RightHand arc=0.8214219073152242 hits=1 damageCalls=0
+PASS smground Waist arc=0.7589799734094799 hits=1 damageCalls=0
+PASS riflebullet Torso arc=0.7815589677923118 hits=1 damageCalls=0
+PASS riflebullet Head arc=0.8294021200267628 hits=1 damageCalls=0
+PASS riflebullet RightHand arc=0.8214219073152242 hits=1 damageCalls=0
+PASS riflebullet Waist arc=0.7589799734094799 hits=1 damageCalls=0
+PASS shotgunshell Torso arc=0.7815589677923118 hits=1 damageCalls=0
+PASS shotgunshell Head arc=0.8294021200267628 hits=1 damageCalls=0
+PASS shotgunshell RightHand arc=0.8214219073152242 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.7589799734094799 hits=1 damageCalls=0
+CASE 7 control=true
+POSE 1 shield=true angle=-3.0178825855255127 gun={X:23703.678 Y:51422.22} valid=true aim=true damage=true unconscious=false stun=0 oxygen=99.91666412353516 energy=99.79796600341797 now=29.666666666666263 cooldown=0
+LAG compensation displacement=160
+FIRE nativeRanged=true
+PASS revolverround Torso arc=nil hits=0 damageCalls=1
+TOTAL passed=97 failed=0

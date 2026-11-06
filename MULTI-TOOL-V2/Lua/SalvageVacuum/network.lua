@@ -85,6 +85,7 @@ function M.install(G,E)
         local ticket=G.trashTicket and G.trashTicket(ctx)
         return {vacuum=ctx.vacuum.ID,pack=ctx.pack.ID,packs=packs,charge=G.charge(ctx.vacuum),
             busy=G.jobs[ctx.pack]~=nil or G.pending[ctx.pack]~=nil,count=count,groups=#groups,
+            salvage=G.salvageProgress and G.salvageProgress(ctx.pack),
             page=page,pages=math.min(65535,math.max(1,math.ceil(#rows/pageSize))),rows=selected,group=view.group,
             filters=view.filters,category=view.category,search=view.search,
             trashTarget=ticket and ticket.id or 0,trashToken=ticket and ticket.token or 0,trashCount=ticket and ticket.count or 0}
@@ -95,6 +96,10 @@ function M.install(G,E)
         local s=G.snapshot(ctx,view)
         local m=E.Networking.Start(C.protocol..'.snapshot')
         m.WriteUInt16(s.vacuum);m.WriteUInt16(s.pack);m.WriteSingle(s.charge);m.WriteBoolean(s.busy)
+        local progress=s.salvage
+        m.WriteString(progress and progress.phase or '')
+        m.WriteUInt32(progress and progress.total or 0)
+        m.WriteUInt32(progress and progress.done or 0);m.WriteUInt32(progress and progress.skipped or 0)
         m.WriteUInt16(s.count);m.WriteByte(s.groups);m.WriteUInt16(s.page);m.WriteUInt16(s.pages);m.WriteByte(s.group)
         m.WriteBoolean(s.filters);m.WriteString(s.category);m.WriteString(s.search)
         m.WriteUInt16(s.trashTarget);m.WriteUInt16(s.trashToken);m.WriteUInt16(math.min(65535,s.trashCount))
@@ -124,10 +129,14 @@ function M.install(G,E)
     if E.CLIENT then
         E.Networking.Receive(C.protocol..'.snapshot',function(m)
             if not G.alive then return end
-            local s={vacuum=m.ReadUInt16(),pack=m.ReadUInt16(),charge=m.ReadSingle(),busy=m.ReadBoolean(),
-                count=m.ReadUInt16(),groups=m.ReadByte(),page=m.ReadUInt16(),pages=m.ReadUInt16(),group=m.ReadByte(),
+            local s={vacuum=m.ReadUInt16(),pack=m.ReadUInt16(),charge=m.ReadSingle(),busy=m.ReadBoolean()}
+            local phase=m.ReadString()
+            local total,done,skipped=m.ReadUInt32(),m.ReadUInt32(),m.ReadUInt32()
+            if phase~='' then s.salvage={phase=phase,total=total,done=done,skipped=skipped,processed=done+skipped} end
+            local fields={count=m.ReadUInt16(),groups=m.ReadByte(),page=m.ReadUInt16(),pages=m.ReadUInt16(),group=m.ReadByte(),
                 filters=m.ReadBoolean(),category=m.ReadString(),search=m.ReadString(),
                 trashTarget=m.ReadUInt16(),trashToken=m.ReadUInt16(),trashCount=m.ReadUInt16(),packs={},rows={}}
+            for key,value in pairs(fields) do s[key]=value end
             local count=m.ReadByte();if count>100 then return end
             for i=1,count do s.packs[i]=m.ReadUInt16() end
             count=m.ReadByte();if count>pageSize then return end
@@ -164,8 +173,15 @@ function M.install(G,E)
         local id=m.ReadUInt16();local p={x=m.ReadSingle(),y=m.ReadSingle()}
         if G.alive and G.onTransfer then G.onTransfer(id,p) end
     end) end
+    local activeSenders={}
+    function G.resetNetwork()
+        activeSenders={};G.remoteActiveUntil={}
+    end
     function G.sendActivity(vacuum,active)
         if not E.SERVER then return end
+        -- Active heartbeats keep the remote timeout alive; idle nozzles stay silent.
+        if not active and not activeSenders[vacuum.ID] then return end
+        activeSenders[vacuum.ID]=active or nil
         local m=E.Networking.Start(C.protocol..'.activity')
         m.WriteUInt16(vacuum.ID);m.WriteBoolean(active);E.Networking.Send(m)
     end

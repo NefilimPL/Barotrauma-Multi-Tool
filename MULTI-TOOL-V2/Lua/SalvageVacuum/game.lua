@@ -117,8 +117,10 @@ function M.new(E)
         if G.closePanel then G.closePanel() end
         for _,tx in pairs(G.pending) do tx.cancelled=true end
         G.states={};G.jobs={};G.selected={};G.reserved={};G.lastRequest={};G.lastPoll={}
+        G.salvageResults={}
         if G.clearStorageCache then G.clearStorageCache() end
         if G.resetRuntime then G.resetRuntime() end
+        if G.resetNetwork then G.resetNetwork() end
         if G.clearFilters then G.clearFilters() end
         if G.clearTrash then G.clearTrash() end
         if G.clearEffects then G.clearEffects() end

@@ -1,6 +1,6 @@
 # Odkurzacz i plecak zbierający Aegis
 
-Wersja 1.3.4 zawiera dwa osobno wytwarzane przedmioty. Wymaga LuaCs na
+Wersja 1.3.10 zawiera dwa osobno wytwarzane przedmioty. Wymaga LuaCs na
 kliencie i serwerze, tak jak pozostałe urządzenia Aegis.
 
 ## Przygotowanie
@@ -26,7 +26,8 @@ slot przedmiotu. Drzwi i włazy, urządzenia bez slotów oraz przewody podłącz
 choćby jednym końcem lub rozłożone w ścianie są wykluczone. Luźny przewód,
 skrzynka z amunicją i kombinezon nadal mogą zostać pobrane. Kontrola obejmuje
 zawartość pojemników, aby nie przenosić w nich niedozwolonych elementów.
-Cały pojemnik przekraczający 256 sprawdzanych encji jest pomijany.
+Cały pojemnik przekraczający 256 sprawdzanych encji jest pomijany;
+odkurzacz może pobrać z niego pojedyncze dozwolone rzeczy.
 
 ## Magazyn
 
@@ -57,8 +58,11 @@ jakość, baterie, butle i zawartość pozostają przy konkretnych egzemplarzach
 - **Filtr zbierania** otwiera katalog typów ze wszystkich załadowanych modów.
   Klik ikony przełącza zbieranie; czerwone pole z minusem oznacza pomijanie.
   Wyszukiwarka i kategorie działają również w katalogu. Elementy konstrukcyjne
-  są trwale zablokowane. Wykluczony przedmiot wewnątrz skrzynki blokuje pobranie
-  całej skrzynki. Filtr jest zapisany w tagach danego plecaka i nie usuwa rzeczy
+  są trwale zablokowane. Jeśli worek lub skrzynka zawiera wykluczony przedmiot,
+  pozostaje na miejscu, a odkurzacz pobiera tylko dozwoloną zawartość.
+  Przykład: przy wykluczonym żelazie miedź trafia do plecaka, a żelazo zostaje
+  w worku. Bez wykluczeń pojemnik jest zbierany w całości.
+  Filtr jest zapisany w tagach danego plecaka i nie usuwa rzeczy
   już zebranych. Przycisk **Zawartość** wraca do magazynu.
 - **Kosz** przygotowuje usunięcie zaznaczonej grupy (do 100 sztuk) wraz
   z zawartością pojemników. W widoku **Egzemplarze** usuwa tylko wskazaną sztukę
@@ -87,8 +91,8 @@ Uwzględniana jest również zagnieżdżona zawartość. Maszyna pobiera i zuży
 rzeczywiste egzemplarze; nie powstaje kopia surowców. Plecak zablokowany lub
 przetwarzany przez rozbiórkę nie udostępnia materiałów maszynie.
 
-Po aktualizacji uruchom ponownie grę i serwer. Obie strony potrzebują 1.3.4,
-ponieważ panel korzysta z nowej wersji komunikatów sieciowych.
+Po aktualizacji uruchom ponownie grę i serwer. Zainstaluj tę samą wersję
+1.3.8 na hoście i u wszystkich graczy.
 
 ## Rozbiórka
 
@@ -112,7 +116,19 @@ Bateria zasilająca, aktywny odkurzacz i magazyny pomocnicze nie należą do łu
 Wyjęcie baterii, brak energii, odłożenie odkurzacza lub utrata plecaka
 zatrzymują pracę. Aby przetworzyć pozostałe rzeczy, uruchom przycisk ponownie.
 W czasie rozbiórki wyjmowanie i zmiana plecaka są blokowane.
-Udana rozbiórka wydaje dźwięk rozdrabniacza. Zasysanie ma przestrzenny dźwięk
+Zasysanie może działać równocześnie; na czas tworzenia jednej porcji surowców
+odkurzacz krótko rezerwuje miejsce. Nowo zebrane rzeczy czekają na następną
+partię rozbiórki. Nad wyszukiwaniem widać liczbę sprawdzonych przedmiotów,
+liczbę rozłożonych i pominiętych, a po zakończeniu także wynik lub powód
+przerwania. Przedmioty bez receptury są sprawdzane w porcjach po maksymalnie 32,
+zamiast zajmować osobny odstęp pracy dla każdej sztuki.
+
+Liczniki **Grupy / 100** i **Sztuki / 10000** pokazują różne ograniczenia:
+jedna grupa mieści do 100 sztuk jednego typu. Większa liczba tego samego
+typu zajmuje kolejne grupy. Stan, jakość i zawartość pojemników są zachowywane.
+
+Rozbiórka odtwarza zapętlony dźwięk dekonstruktora z gry; ustaje on po końcu
+pracy lub braku kolejnych potwierdzeń przetwarzania. Zasysanie ma przestrzenny dźwięk
 silnika, który ustaje po puszczeniu przycisku lub utracie zasilania. Animacja
 przenika między klatkami i rysuje płynnie przesuwające się do dyszy smugi.
 

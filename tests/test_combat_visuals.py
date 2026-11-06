@@ -10,7 +10,7 @@ class VisualContractTests(LuaCase):
                 LuaUserData={RegisterType=function() end,CreateEnumTable=function() return {} end,CreateStatic=function() return {} end}}
             local body={DrawRotation=0,Dir=1,UpdateDrawPosition=function() refreshed=true end}
             local saved={Name='LightComponent',Light={OffsetFromBody=v(11,22)}}
-            local lamp={Name='LightComponent',LightOffset=v(670,-90),Light={}}
+            local lamp={Name='LightComponent',IsOn=true,IsActive=true,LightOffset=v(670,-90),Light={}}
             local gun={Prefab={Identifier={Value='combatmultitool'}},Scale=.068,body=body,Components={saved,lamp}}
             local G={states={[gun]={}},patch=function(_,class,method,fn,after)
                 if method=='RenderLightMap' then
