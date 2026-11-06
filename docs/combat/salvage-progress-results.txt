@@ -1,0 +1,7 @@
+PASS original snapshot has 41 inputs
+PASS new loot enters during running job
+PASS new loot stays outside original snapshot
+PASS initial progress is present
+PASS native job finishes and retains final progress
+PASS native recipe removed source and kept newly collected wrench
+PASS unsupported materials skipped in bounded batches

@@ -25,15 +25,24 @@ function M.install(G,E)
         end
         return true
     end
-    function G.findShield(a,b,attacker,weapon,friendlyFire)
+    function G.findShield(a,b,attacker,weapon,friendlyFire,historical)
         local nearest=nil
         for _,s in pairs(G.states) do
             if s.shield and s.item~=weapon and blocksAttacker(s.owner,attacker,friendlyFire) then
                 -- Item/physics updates can move or turn the weapon between think ticks.
                 -- Intercept at its current simulation pose, matching the rendered mount.
                 if s.item.body then s.shield=geometry(s.item) end
-                local t,point=Core.segmentArc(a,b,s.shield)
+                local shield=s.shield
                 local emitter=U.point(s.item.WorldPosition)
+                if historical and historical.owner==s.owner then
+                    -- Native hitscans also hit lag-compensated limb fixtures.
+                    -- Translate this owner's shield into that fixture's frame;
+                    -- never overwrite the live/rendered arc with historical data.
+                    shield={x=shield.x+historical.x,y=shield.y+historical.y,
+                        radius=shield.radius,angle=shield.angle,halfAngle=shield.halfAngle}
+                    emitter={x=emitter.x+historical.x,y=emitter.y+historical.y}
+                end
+                local t,point=Core.segmentArc(a,b,shield)
                 if t and (not nearest or t<nearest.t) and not G.cast(emitter,point,0,s.owner,true) then
                     nearest={t=t,x=point.x,y=point.y,kind='shield',state=s}
                 end
@@ -94,9 +103,9 @@ function M.install(G,E)
         if E.Entity.Spawner then E.Entity.Spawner.AddItemToRemoveQueue(projectile.Item) end
         physical[projectile]=nil
     end
-    local function intercept(projectile,a,b,includeCharacters)
+    local function intercept(projectile,a,b,includeCharacters,historical)
         if consumed[projectile] then return true end
-        local hit=G.findShield(a,b,projectile.User or projectile.Attacker,projectile.Launcher,projectile.FriendlyFire)
+        local hit=G.findShield(a,b,projectile.User or projectile.Attacker,projectile.Launcher,projectile.FriendlyFire,historical)
         if not hit then return false end
         local obstacle=G.cast(a,b,0,projectile.User or projectile.Attacker,not includeCharacters,projectile.FriendlyFire)
         if obstacle and obstacle.t<hit.t then return false end
@@ -118,7 +127,18 @@ function M.install(G,E)
     G.patch('projectile-collision','Barotrauma.Items.Components.Projectile','HandleProjectileCollision',function(proj,p)
         local current=U.point(proj.Item.WorldPosition)
         local scan=scans[proj]
-        local blocked,hit=intercept(proj,scan and scan.lastPoint or physical[proj] or current,current,not scan)
+        local historical
+        local fixture=p['target']
+        local limb=fixture and fixture.Body.UserData
+        if scan and limb and E.LuaUserData and E.LuaUserData.IsTargetType(limb,'Barotrauma.Limb') then
+            local body=limb.LagCompensatedBody
+            if body and fixture.Body==body.FarseerBody then
+                local delta=E.ConvertUnits.ToDisplayUnits(E.Vector2(body.SimPosition.X-limb.body.SimPosition.X,
+                    body.SimPosition.Y-limb.body.SimPosition.Y))
+                historical={owner=limb.character,x=delta.X,y=delta.Y}
+            end
+        end
+        local blocked,hit=intercept(proj,scan and scan.lastPoint or physical[proj] or current,current,not scan,historical)
         if consumed[proj] or blocked then
             p.PreventExecution=true
             if scan then

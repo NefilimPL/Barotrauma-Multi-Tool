@@ -1,0 +1,304 @@
+POSE 1 shield=true angle=-2.5123708248138428 gun={X:23705.086 Y:62623.51} valid=true aim=true damage=true unconscious=false stun=0 oxygen=100 energy=99.79588317871094 now=220.98333333340133 cooldown=0
+LAG compensation displacement=160
+DAMAGE TRACE short=none full=none start=23283.5,62266.4921875 contact=23667.357421875,62488.2578125 arc=23575.72802734375,62529.3466796875,-2.5123708248138428
+PASS shotgunshell Waist arc=0.8023050175799645 hits=0 damageCalls=1
+DAMAGE TRACE short=none full=none start=23283.5,62266.4921875 contact=23659.396484375,62495.375 arc=23575.72802734375,62529.3466796875,-2.5123708248138428
+PASS shotgunshell Waist arc=0.8023050175799645 hits=0 damageCalls=1
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+DAMAGE TRACE short=none full=none start=23283.5,62266.4921875 contact=23668.07421875,62487.6171875 arc=23575.72802734375,62529.3466796875,-2.5123708248138428
+PASS shotgunshell Waist arc=0.8023050175799645 hits=0 damageCalls=1
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+DAMAGE TRACE short=none full=none start=23283.5,62266.4921875 contact=23665.919921875,62489.5390625 arc=23575.72802734375,62529.3466796875,-2.5123708248138428
+PASS shotgunshell Waist arc=0.8023050175799645 hits=0 damageCalls=1
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+DAMAGE TRACE short=none full=none start=23283.5,62266.4921875 contact=23675.966796875,62487.8046875 arc=23575.72802734375,62529.3466796875,-2.5123708248138428
+PASS shotgunshell Waist arc=0.8023050175799645 hits=0 damageCalls=1
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+DAMAGE TRACE short=none full=none start=23283.5,62266.4921875 contact=23663.8671875,62491.375 arc=23575.72802734375,62529.3466796875,-2.5123708248138428
+PASS shotgunshell Waist arc=0.8023050175799645 hits=0 damageCalls=1
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+DAMAGE TRACE short=none full=none start=23283.5,62266.4921875 contact=23663.32421875,62491.86328125 arc=23575.72802734375,62529.3466796875,-2.5123708248138428
+PASS shotgunshell Waist arc=0.8023050175799645 hits=0 damageCalls=1
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+DAMAGE TRACE short=none full=none start=23283.5,62266.4921875 contact=23660.423828125,62494.45703125 arc=23575.72802734375,62529.3466796875,-2.5123708248138428
+PASS shotgunshell Waist arc=0.8023050175799645 hits=0 damageCalls=1
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+DAMAGE TRACE short=none full=none start=23283.5,62266.4921875 contact=23678.09765625,62486.64453125 arc=23575.72802734375,62529.3466796875,-2.5123708248138428
+PASS shotgunshell Waist arc=0.8023050175799645 hits=0 damageCalls=1
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+DAMAGE TRACE short=none full=none start=23283.5,62266.4921875 contact=23678.03125,62486.68359375 arc=23575.72802734375,62529.3466796875,-2.5123708248138428
+PASS shotgunshell Waist arc=0.8023050175799645 hits=0 damageCalls=1
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+DAMAGE TRACE short=none full=none start=23283.5,62266.4921875 contact=23661.341796875,62493.6328125 arc=23575.72802734375,62529.3466796875,-2.5123708248138428
+PASS shotgunshell Waist arc=0.8023050175799645 hits=0 damageCalls=1
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+DAMAGE TRACE short=none full=none start=23283.5,62266.4921875 contact=23673.8984375,62488.9296875 arc=23575.72802734375,62529.3466796875,-2.5123708248138428
+PASS shotgunshell Waist arc=0.8023050175799645 hits=0 damageCalls=1
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+DAMAGE TRACE short=none full=none start=23283.5,62266.4921875 contact=23677.6953125,62486.8671875 arc=23575.72802734375,62529.3466796875,-2.5123708248138428
+PASS shotgunshell Waist arc=0.8023050175799645 hits=0 damageCalls=1
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+DAMAGE TRACE short=none full=none start=23283.5,62266.4921875 contact=23663.794921875,62491.44140625 arc=23575.72802734375,62529.3466796875,-2.5123708248138428
+PASS shotgunshell Waist arc=0.8023050175799645 hits=0 damageCalls=1
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+DAMAGE TRACE short=none full=none start=23283.5,62266.4921875 contact=23678.44921875,62486.4609375 arc=23575.72802734375,62529.3466796875,-2.5123708248138428
+PASS shotgunshell Waist arc=0.8023050175799645 hits=0 damageCalls=1
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+DAMAGE TRACE short=none full=none start=23283.5,62266.4921875 contact=23665.283203125,62490.1171875 arc=23575.72802734375,62529.3466796875,-2.5123708248138428
+PASS shotgunshell Waist arc=0.8023050175799645 hits=0 damageCalls=1
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+DAMAGE TRACE short=none full=none start=23283.5,62266.4921875 contact=23663.478515625,62491.73046875 arc=23575.72802734375,62529.3466796875,-2.5123708248138428
+PASS shotgunshell Waist arc=0.8023050175799645 hits=0 damageCalls=1
+DAMAGE TRACE short=none full=none start=23283.5,62266.4921875 contact=23673.642578125,62489.0703125 arc=23575.72802734375,62529.3466796875,-2.5123708248138428
+PASS shotgunshell Waist arc=0.8023050175799645 hits=0 damageCalls=1
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+DAMAGE TRACE short=none full=none start=23283.5,62266.4921875 contact=23661.373046875,62493.6015625 arc=23575.72802734375,62529.3466796875,-2.5123708248138428
+PASS shotgunshell Waist arc=0.8023050175799645 hits=0 damageCalls=1
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+DAMAGE TRACE short=none full=none start=23283.5,62266.4921875 contact=23679.736328125,62485.76171875 arc=23575.72802734375,62529.3466796875,-2.5123708248138428
+PASS shotgunshell Waist arc=0.8023050175799645 hits=0 damageCalls=1
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+DAMAGE TRACE short=none full=none start=23283.5,62266.4921875 contact=23680.712890625,62485.23046875 arc=23575.72802734375,62529.3466796875,-2.5123708248138428
+PASS shotgunshell Waist arc=0.8023050175799645 hits=0 damageCalls=1
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+DAMAGE TRACE short=none full=none start=23283.5,62266.4921875 contact=23666.1015625,62489.37890625 arc=23575.72802734375,62529.3466796875,-2.5123708248138428
+PASS shotgunshell Waist arc=0.8023050175799645 hits=0 damageCalls=1
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+DAMAGE TRACE short=none full=none start=23283.5,62266.4921875 contact=23678.154296875,62486.61328125 arc=23575.72802734375,62529.3466796875,-2.5123708248138428
+PASS shotgunshell Waist arc=0.8023050175799645 hits=0 damageCalls=1
+DAMAGE TRACE short=none full=none start=23283.5,62266.4921875 contact=23673.45703125,62489.16796875 arc=23575.72802734375,62529.3466796875,-2.5123708248138428
+PASS shotgunshell Waist arc=0.8023050175799645 hits=0 damageCalls=1
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+DAMAGE TRACE short=none full=none start=23283.5,62266.4921875 contact=23664.5703125,62490.74609375 arc=23575.72802734375,62529.3466796875,-2.5123708248138428
+PASS shotgunshell Waist arc=0.8023050175799645 hits=0 damageCalls=1
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+DAMAGE TRACE short=none full=none start=23283.5,62266.4921875 contact=23664.3828125,62490.91015625 arc=23575.72802734375,62529.3466796875,-2.5123708248138428
+PASS shotgunshell Waist arc=0.8023050175799645 hits=0 damageCalls=1
+DAMAGE TRACE short=none full=none start=23283.5,62266.4921875 contact=23664.126953125,62491.14453125 arc=23575.72802734375,62529.3466796875,-2.5123708248138428
+PASS shotgunshell Waist arc=0.8023050175799645 hits=0 damageCalls=1
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+DAMAGE TRACE short=none full=none start=23283.5,62266.4921875 contact=23680.875,62485.13671875 arc=23575.72802734375,62529.3466796875,-2.5123708248138428
+PASS shotgunshell Waist arc=0.8023050175799645 hits=0 damageCalls=1
+DAMAGE TRACE short=none full=none start=23283.5,62266.4921875 contact=23677.3515625,62487.0546875 arc=23575.72802734375,62529.3466796875,-2.5123708248138428
+PASS shotgunshell Waist arc=0.8023050175799645 hits=0 damageCalls=1
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+DAMAGE TRACE short=none full=none start=23283.5,62266.4921875 contact=23662.4375,62492.65625 arc=23575.72802734375,62529.3466796875,-2.5123708248138428
+PASS shotgunshell Waist arc=0.8023050175799645 hits=0 damageCalls=1
+DAMAGE TRACE short=none full=none start=23283.5,62266.4921875 contact=23661.14453125,62493.8046875 arc=23575.72802734375,62529.3466796875,-2.5123708248138428
+PASS shotgunshell Waist arc=0.8023050175799645 hits=0 damageCalls=1
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+DAMAGE TRACE short=none full=none start=23283.5,62266.4921875 contact=23680.779296875,62485.1875 arc=23575.72802734375,62529.3466796875,-2.5123708248138428
+PASS shotgunshell Waist arc=0.8023050175799645 hits=0 damageCalls=1
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+DAMAGE TRACE short=none full=none start=23283.5,62266.4921875 contact=23660.533203125,62494.35546875 arc=23575.72802734375,62529.3466796875,-2.5123708248138428
+PASS shotgunshell Waist arc=0.8023050175799645 hits=0 damageCalls=1
+DAMAGE TRACE short=none full=none start=23283.5,62266.4921875 contact=23666.626953125,62488.91015625 arc=23575.72802734375,62529.3466796875,-2.5123708248138428
+PASS shotgunshell Waist arc=0.8023050175799645 hits=0 damageCalls=1
+DAMAGE TRACE short=none full=none start=23283.5,62266.4921875 contact=23678.123046875,62486.6328125 arc=23575.72802734375,62529.3466796875,-2.5123708248138428
+PASS shotgunshell Waist arc=0.8023050175799645 hits=0 damageCalls=1
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+DAMAGE TRACE short=none full=none start=23283.5,62266.4921875 contact=23681.9375,62484.5625 arc=23575.72802734375,62529.3466796875,-2.5123708248138428
+PASS shotgunshell Waist arc=0.8023050175799645 hits=0 damageCalls=1
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+DAMAGE TRACE short=none full=none start=23283.5,62266.4921875 contact=23663.580078125,62491.6328125 arc=23575.72802734375,62529.3466796875,-2.5123708248138428
+PASS shotgunshell Waist arc=0.8023050175799645 hits=0 damageCalls=1
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+DAMAGE TRACE short=none full=none start=23283.5,62266.4921875 contact=23662.400390625,62492.6875 arc=23575.72802734375,62529.3466796875,-2.5123708248138428
+PASS shotgunshell Waist arc=0.8023050175799645 hits=0 damageCalls=1
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+DAMAGE TRACE short=none full=none start=23283.5,62266.4921875 contact=23659.5390625,62495.24609375 arc=23575.72802734375,62529.3466796875,-2.5123708248138428
+PASS shotgunshell Waist arc=0.8023050175799645 hits=0 damageCalls=1
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+DAMAGE TRACE short=none full=none start=23283.5,62266.4921875 contact=23663.103515625,62492.05859375 arc=23575.72802734375,62529.3466796875,-2.5123708248138428
+PASS shotgunshell Waist arc=0.8023050175799645 hits=0 damageCalls=1
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+DAMAGE TRACE short=none full=none start=23283.5,62266.4921875 contact=23661.4765625,62493.51171875 arc=23575.72802734375,62529.3466796875,-2.5123708248138428
+PASS shotgunshell Waist arc=0.8023050175799645 hits=0 damageCalls=1
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+DAMAGE TRACE short=none full=none start=23283.5,62266.4921875 contact=23660.18359375,62494.671875 arc=23575.72802734375,62529.3466796875,-2.5123708248138428
+PASS shotgunshell Waist arc=0.8023050175799645 hits=0 damageCalls=1
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+DAMAGE TRACE short=none full=none start=23283.5,62266.4921875 contact=23682.775390625,62484.10546875 arc=23575.72802734375,62529.3466796875,-2.5123708248138428
+PASS shotgunshell Waist arc=0.8023050175799645 hits=0 damageCalls=1
+DAMAGE TRACE short=none full=none start=23283.5,62266.4921875 contact=23674.912109375,62488.37109375 arc=23575.72802734375,62529.3466796875,-2.5123708248138428
+PASS shotgunshell Waist arc=0.8023050175799645 hits=0 damageCalls=1
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+DAMAGE TRACE short=none full=none start=23283.5,62266.4921875 contact=23678.34765625,62486.51171875 arc=23575.72802734375,62529.3466796875,-2.5123708248138428
+PASS shotgunshell Waist arc=0.8023050175799645 hits=0 damageCalls=1
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+PASS shotgunshell Waist arc=0.8023050175799645 hits=1 damageCalls=0
+EDGE coveredDamage=0 outsideDamage=45 intercepted=211

@@ -36,6 +36,57 @@ class VacuumStorageCacheTests(LuaCase):
             assert(reads==0 and idReads==0,'unchanged storage was rescanned')
         """)
 
+    def test_pickup_is_allowed_during_job_between_atomic_product_spawns(self):
+        self.lua.execute("""
+            G.jobs[pack]={}
+            local incoming={ID=77,kind='iron'}
+            page.OwnInventory.TryPutItem=function(item,slot) page.OwnInventory.items[slot+1]=item;item.ParentInventory=page.OwnInventory;return true end
+            assert(G.insert(pack,incoming,{}),'whole salvage job blocked new pickup')
+            G.pending[pack]={}
+            assert(not G.insert(pack,{ID=78,kind='iron'},{}),'pickup must not consume pending product slots')
+        """)
+
+    def test_new_loot_stays_outside_salvage_snapshot_across_native_callbacks(self):
+        self.lua.execute("""
+            local vacuum={kind='aegisvacuum'};local owner={};local charge=50
+            local ctx={valid=true,pack=pack,vacuum=vacuum,owner=owner}
+            local recipe={ItemIdentifier='copper',Amount=1,MinCondition=0,MaxCondition=1,
+                OutConditionMin=1,OutConditionMax=1,RequiredOtherItem={},Commonness=1,
+                IsValidDeconstructor=function() return true end}
+            a.kind='wrench';a.Condition=100;a.MaxCondition=100;a.AllowDeconstruct=true
+            a.Prefab={DeconstructItems={recipe}}
+            b.AllowDeconstruct=false;b.MaxCondition=100
+            local battery={Condition=50,MaxCondition=100}
+            G.alive=true;G.context=function() return ctx end
+            G.charge=function() return battery.Condition end;G.source=function() return battery end
+            G.spend=function(_,cost) battery.Condition=battery.Condition-cost;return true end
+            page.OwnInventory.TryPutItem=function(item,slot)
+                page.OwnInventory.items[slot+1]=item;item.ParentInventory=page.OwnInventory;return true
+            end
+            E.ItemPrefab={Prefabs={copper={Health=100}}}
+            local callback
+            E.Entity={Spawner={AddItemToSpawnQueue=function(_,inv,condition,_,fn)
+                callback=function()
+                    local product={ID=99,kind='copper'}
+                    for i=0,inv.Capacity-1 do if not inv.GetItemAt(i) then inv.TryPutItem(product,i);break end end
+                    hooks['stored-add']({Item=page},{containedItem=product});fn(product)
+                end
+            end,AddItemToRemoveQueue=function(item)
+                hooks['stored-remove']({Item=page},{containedItem=item});item.Removed=true
+            end}}
+            require('SalvageVacuum.salvage').install(G,E)
+            assert(G.startSalvage(ctx));local job=G.jobs[pack]
+            local incoming={ID=77,kind='wrench',Condition=100,MaxCondition=100,AllowDeconstruct=true,Prefab=a.Prefab}
+            assert(G.insert(pack,incoming,owner) and #job.items==2)
+            G.processSalvage(job);local before=battery.Condition
+            assert(G.pending[pack] and not G.insert(pack,{ID=78,kind='iron'},owner))
+            assert(not a.Removed and battery.Condition==before)
+            callback();G.processSalvage(job)
+            local result=G.salvageProgress(pack)
+            assert(a.Removed and not incoming.Removed and G.has(pack,incoming))
+            assert(result.phase=='complete' and result.total==2 and result.done==1 and result.skipped==1)
+        """)
+
     def test_material_records_include_nested_contents_and_stay_cached(self):
         self.lua.execute("""
             local nested={kind='copper',ID=30};b.OwnInventory=inventory(b,{nested});nested.ParentInventory=b.OwnInventory

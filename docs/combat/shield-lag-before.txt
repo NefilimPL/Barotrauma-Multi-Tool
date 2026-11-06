@@ -1,0 +1,22 @@
+POSE 1 shield=true angle=-3.017829418182373 gun={X:16295.682 Y:50085.664} valid=true aim=true damage=true unconscious=false stun=0 oxygen=99.91666412353516 energy=99.79588317871094 now=67.83333333333077 cooldown=0
+LAG compensation displacement=160
+FIRE nativeRanged=true
+revolverround Torso arc=0.5643092078734911 hits=0 damageCalls=1
+FIRE nativeRanged=true
+revolverround Head arc=0.6578358192640006 hits=0 damageCalls=1
+FIRE nativeRanged=true
+revolverround RightHand arc=0.6428444846297646 hits=0 damageCalls=1
+FIRE nativeRanged=true
+revolverround Waist arc=0.5218963253433259 hits=0 damageCalls=1
+smground Torso arc=0.5643092078734911 hits=0 damageCalls=1
+smground Head arc=0.6578358192640006 hits=0 damageCalls=1
+smground RightHand arc=0.6428444846297646 hits=0 damageCalls=1
+smground Waist arc=0.5218963253433259 hits=0 damageCalls=1
+riflebullet Torso arc=0.5643092078734911 hits=0 damageCalls=1
+riflebullet Head arc=0.6578358192640006 hits=0 damageCalls=1
+riflebullet RightHand arc=0.6428444846297646 hits=0 damageCalls=1
+riflebullet Waist arc=0.3942078463012563 hits=1 damageCalls=0
+shotgunshell Torso arc=0.44647557003987504 hits=0 damageCalls=8
+shotgunshell Head arc=0.5561441259074326 hits=1 damageCalls=2
+shotgunshell RightHand arc=0.5262597757381374 hits=0 damageCalls=8
+shotgunshell Waist arc=0.3942078463012563 hits=1 damageCalls=4

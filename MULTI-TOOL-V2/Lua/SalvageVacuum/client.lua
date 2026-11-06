@@ -3,7 +3,7 @@ local U=require('CombatTool.util')
 local M={}
 function M.install(G,E)
     local UI=E.GUI
-    local panel,category,rowsFrame,search,status,packButton,pageLabel,salvageButton,takeButton,stackButton,detailsButton,trashButton,filterButton
+    local panel,category,rowsFrame,search,status,progress,packButton,pageLabel,salvageButton,takeButton,stackButton,detailsButton,trashButton,filterButton
     local selectedId,selectedRow,cells=nil,nil,{}
     local tiles={}
     local rowFields={'id','kind','name','count','condition','quality','excluded','blocked'}
@@ -50,9 +50,13 @@ function M.install(G,E)
         -- Ignore in-flight replies from the previous search/category/mode.
         if s.filters~=nil and (s.filters~=view.filters or s.category~=view.category or s.search~=view.search or s.group~=view.group) then return end
         snapshot=s;view.page=s.page
-        status.Text=string.format('%s: %.1f%% | %d / 100 | %d / 10000%s',text('power'),s.charge,s.groups,s.count,
-            s.busy and (' | '..text('busy')) or '')
-        status.ToolTip=view.filters and text('filterhelp') or ''
+        status.Text=string.format('%s: %.1f%% | %s: %d / %d | %s: %d / %d',text('power'),s.charge,
+            text('groups'),s.groups,C.groups,text('items'),s.count,C.groups*C.groupSize)
+        status.ToolTip=view.filters and text('filterhelp') or text('capacityhelp')
+        local p=s.salvage
+        progress.Text=p and string.format('%s: %d / %d | %s: %d | %s: %d',text('salvagestate.'..p.phase),
+            p.processed,p.total,text('salvaged'),p.done,text('skipped'),p.skipped) or ''
+        progress.ToolTip=text('salvagehelp')
         if view.filters then status.Text=text('filterhelp') end
         filterButton.Text=text(view.filters and 'contents' or 'filters')
         local ordinal=1;for i,id in ipairs(s.packs) do if id==s.pack then ordinal=i end end
@@ -136,7 +140,10 @@ function M.install(G,E)
         panel=UI.Frame(UI.RectTransform(E.Vector2(.56,.86),UI.GUI.Canvas,UI.Anchor.Center), 'GUIFrame')
         UI.TextBlock(rect(panel.RectTransform,.04,.025,.75,.06),text('title'))
         button(panel.RectTransform,.82,.025,.14,.06,text('close'),G.closePanel)
-        status=UI.TextBlock(rect(panel.RectTransform,.04,.09,.92,.052),'…')
+        status=UI.TextBlock(rect(panel.RectTransform,.04,.087,.92,.031),'…')
+        status.TextScale=.8
+        progress=UI.TextBlock(rect(panel.RectTransform,.04,.119,.92,.027),'')
+        progress.TextScale=.75
         search=UI.TextBox(rect(panel.RectTransform,.04,.15,.92,.055),'')
         search.ToolTip=text('search')
         search.OnTextChangedDelegate=function(_,value)

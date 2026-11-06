@@ -56,6 +56,21 @@ class VacuumClientTests(LuaCase):
             b.OnClicked();assert(requests[#requests].action=='open' and requests[#requests].item==pack)
         """)
 
+    def test_capacity_labels_and_salvage_progress_are_visible_without_hover(self):
+        self.lua.execute("""
+            G.openPanel(vacuum)
+            G.onSnapshot({vacuum=vacuum.ID,pack=pack.ID,charge=37.9,groups=62,count=598,busy=true,
+                page=0,pages=1,packs={pack.ID},rows={},
+                salvage={phase='working',processed=9,total=598,done=7,skipped=2}})
+            local capacity,progress
+            for _,w in ipairs(widgets) do
+                if w.kind=='text' and w.Text and w.Text:find('62 / 100',1,true) then capacity=w.Text end
+                if w.kind=='text' and w.Text and w.Text:find('9 / 598',1,true) then progress=w.Text end
+            end
+            assert(capacity and capacity:find('vacuum.groups',1,true) and capacity:find('vacuum.items',1,true))
+            assert(progress and progress:find('vacuum.salvaged',1,true) and progress:find('vacuum.skipped',1,true))
+        """)
+
     def test_dropped_categories_are_above_panel_and_release_keyboard_on_close(self):
         self.lua.execute("""
             local panel=G.openPanel(pack);local dropdown

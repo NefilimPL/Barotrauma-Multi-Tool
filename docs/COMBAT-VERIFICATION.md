@@ -1,5 +1,22 @@
 # Aegis — weryfikacja
 
+## Poprawka 1.3.10 — historyczne kolizje multiplayer (2026-11-06)
+
+Pozostałe rany od przodu odtworzono na natywnych `Limb.LagCompensatedBody`.
+`Projectile.Use` ustawia te dodatkowe kolizje dla strzelca będącego klientem,
+a `DoHitscan` uwzględnia je mimo `CollidesWith=None`. Dotychczasowa tarcza
+porównywała taki cel z bieżącym położeniem broni. Poprawka rozpoznaje konkretną
+historyczną kolizję i przesuwa do jej układu tylko tarczę trafianego właściciela.
+Nie zmienia położenia tarczy widocznej ani natywnych kolizji postaci.
+
+**96 chronionych strzałów + kontrola bez tarczy — PASS**, na izolowanym
+serwerze z Neurotraumą: sześć kierunków natywnego celowania, cztery kończyny
+i cztery rodzaje amunicji. Rewolwer korzysta z `RangedWeapon.Use`, pozostałe
+z `Projectile.Shoot`; strzelba zachowuje natywną liczbę śrutów i rozrzut.
+Próba jawnie przesuwa historyczne kolizje o 160 jednostek; nie jest testem
+wyboru czasu cofnięcia przez rzeczywiście dołączonego klienta ani pełnego
+cofania kierunku celowania. [Pełny opis](SHIELD-SALVAGE-VERIFICATION.md).
+
 ## Poprawka 1.3.9 — ręka przed tarczą (2026-11-06)
 
 Zgłoszenie: host dostaje ranę postrzałową mimo efektu uderzenia w tarczę.

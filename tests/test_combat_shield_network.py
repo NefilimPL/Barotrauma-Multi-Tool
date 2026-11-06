@@ -33,6 +33,66 @@ class ShieldFriendlyFireTests(LuaCase):
         self.assertTrue(self.lua.eval('params.PreventExecution'))
         self.assertEqual(self.lua.eval('battery.Condition'), 98)
 
+    def lag_compensated_collision(self, rear=False, ghost=True):
+        self.lua.execute('''
+            env.LuaUserData={IsTargetType=function(value,name) return name=='Barotrauma.Limb' and value==limb end}
+            env.ConvertUnits={ToDisplayUnits=function(v) return {X=v.X*100,Y=v.Y*100} end}
+            env.Vector2=function(x,y) return {X=x,Y=y} end
+            gun.body={TransformedRotation=0}
+            local historicalBody={}
+            limb={character=defender,body={SimPosition={X=0,Y=0}},
+                LagCompensatedBody={FarseerBody=historicalBody,SimPosition={X=1.6,Y=0}}}
+            fixture={Body={UserData=limb}}
+            fixture.Body=historicalBody;historicalBody.UserData=limb
+            projectile={Item={WorldPosition={X=300,Y=0},body={Enabled=true},Move=function() end},
+                IsActive=true,User=attacker,FriendlyFire=true,MaxTargetsToHit=1}
+        ''')
+        if not ghost:
+            self.lua.execute('fixture={Body={UserData=limb}}')
+        if rear:
+            self.lua.execute('projectile.Item.WorldPosition={X=-300,Y=0}')
+        self.lua.execute('''
+            hooks['hitscan'](projectile,{dir={X=projectile.Item.WorldPosition.X>0 and -1 or 1,Y=0}})
+            projectile.Item.WorldPosition={X=150,Y=0}
+            params={target=fixture};hooks['projectile-collision'](projectile,params)
+        ''')
+
+    def test_multiplayer_ghost_hit_uses_shield_in_same_historical_coordinate_frame(self):
+        self.lag_compensated_collision()
+        self.assertTrue(self.lua.eval('params.PreventExecution'))
+        self.assertFalse(self.lua.eval('projectile.IsActive'))
+        self.assertEqual(self.lua.eval('battery.Condition'), 98)
+        self.assertEqual(self.lua.eval('state.shield.x'), 0)
+
+    def test_historical_collision_does_not_add_rear_protection(self):
+        self.lag_compensated_collision(rear=True)
+        self.assertFalse(self.lua.eval('params.PreventExecution or false'))
+        self.assertEqual(self.lua.eval('battery.Condition'), 100)
+
+    def test_current_limb_collision_does_not_receive_historical_shield_offset(self):
+        self.lag_compensated_collision(ghost=False)
+        self.assertFalse(self.lua.eval('params.PreventExecution or false'))
+        self.assertEqual(self.lua.eval('battery.Condition'), 100)
+
+    def test_historical_collision_preserves_friendly_fire_and_empty_battery(self):
+        self.lua.execute('env.Game.ServerSettings.AllowFriendlyFire=false')
+        self.lag_compensated_collision()
+        self.assertFalse(self.lua.eval('params.PreventExecution or false'))
+        self.assertEqual(self.lua.eval('battery.Condition'), 100)
+
+    def test_historical_shield_does_not_protect_through_a_wall(self):
+        self.lua.execute("G.cast=function() return {kind='wall',t=.1} end")
+        self.lag_compensated_collision()
+        self.assertFalse(self.lua.eval('params.PreventExecution or false'))
+        self.assertEqual(self.lua.eval('battery.Condition'), 100)
+
+    def test_historical_shield_still_requires_enough_energy_for_the_hit(self):
+        self.lua.execute('battery.Condition=.5')
+        self.lag_compensated_collision()
+        self.assertFalse(self.lua.eval('params.PreventExecution or false'))
+        self.assertTrue(self.lua.eval('projectile.IsActive'))
+        self.assertEqual(self.lua.eval('battery.Condition'), 0)
+
     def test_turning_weapon_refreshes_collision_arc_before_next_shield_tick(self):
         self.lua.execute('''
             gun.body={TransformedRotation=math.pi}

@@ -33,6 +33,17 @@
   <vacuum.category.misc>Pozostałe</vacuum.category.misc>
   <vacuum.drop>Odłóż</vacuum.drop>
   <vacuum.groups>Grupy</vacuum.groups>
+  <vacuum.items>Sztuki</vacuum.items>
+  <vacuum.capacityhelp>Każda grupa mieści do 100 sztuk jednego typu. Ten sam typ może zajmować kilka grup. Łącznie: 100 grup i maksymalnie 10 000 sztuk, z zachowaniem stanu i jakości przedmiotów.</vacuum.capacityhelp>
+  <vacuum.salvaged>Rozłożono</vacuum.salvaged>
+  <vacuum.skipped>Pominięto</vacuum.skipped>
+  <vacuum.salvagestate.working>Sprawdzono</vacuum.salvagestate.working>
+  <vacuum.salvagestate.products>Tworzenie surowców</vacuum.salvagestate.products>
+  <vacuum.salvagestate.space>Przygotowanie miejsca</vacuum.salvagestate.space>
+  <vacuum.salvagestate.complete>Rozbiórka zakończona</vacuum.salvagestate.complete>
+  <vacuum.salvagestate.full>Zakończono — za mało miejsca na surowce</vacuum.salvagestate.full>
+  <vacuum.salvagestate.power>Przerwano — za mało energii</vacuum.salvagestate.power>
+  <vacuum.salvagestate.interrupted>Rozbiórka przerwana</vacuum.salvagestate.interrupted>
   <vacuum.pack>Plecak</vacuum.pack>
   <vacuum.power>Bateria odkurzacza</vacuum.power>
   <vacuum.help>F — magazyn • celowanie + użycie — zasysanie</vacuum.help>
@@ -40,7 +51,7 @@
   <vacuum.close>Zamknij</vacuum.close>
   <vacuum.open>Magazyn plecaka [F]</vacuum.open>
   <vacuum.openhelp>Otwórz zawartość plecaka. Możesz też kliknąć prawym przyciskiem ikonę plecaka na pasie.</vacuum.openhelp>
-  <vacuum.salvagehelp>Rozbiórka wymaga odkurzacza trzymanego w obu rękach, naładowanej baterii w odkurzaczu i wybranego plecaka.</vacuum.salvagehelp>
+  <vacuum.salvagehelp>Trzymaj odkurzacz oburącz z naładowaną baterią. Rozbiórka obejmuje zawartość z chwili naciśnięcia przycisku. Możesz dalej zbierać; nowe rzeczy zostaną na następną rozbiórkę. Bez receptury, wymagające specjalnej maszyny i bez miejsca na surowce są pomijane. Postęp i wynik widać nad wyszukiwaniem.</vacuum.salvagehelp>
   <entityname.combatmultitool>Bojowy multitool Aegis</entityname.combatmultitool>
   <entitydescription.combatmultitool>Dwuręczny emiter odbijających się pierścieni i tarczy. Wymaga Lua for Barotrauma. Jedno ogniwo lub pręt zasila broń, tarczę, latarkę i narzędzia. Jakość zwiększa liczbę odbić (1/2/3/4). Gracz wyłącza obrażenia, aby spawać lub ciąć. Gaśnica ma pierwszeństwo przed strzelaniem. Boty samodzielnie wybierają walkę albo jedną funkcję techniczną według wykonywanego zadania. Trzymany i zasilany daje +2 do wszystkich pięciu umiejętności co 5 minut; wspólny licznik z kompozytowym multitoolem.</entitydescription.combatmultitool>
   <label.combatpowerslots>Wspólne zasilanie: broń / tarcza / narzędzia</label.combatpowerslots>

@@ -74,3 +74,44 @@ class VacuumTransactionTests(LuaCase):
             G.processSalvage(job)
             assert(#queue==0 and not removed[source] and battery.Condition==50)
         """)
+
+    def test_skipped_recipes_advance_in_bounded_batches_with_visible_progress(self):
+        self.lua.execute("""
+            job.items={}
+            for i=1,100 do job.items[i]={parent=pack,AllowDeconstruct=false,MaxCondition=100} end
+            G.processSalvage(job)
+            assert(job.index>2 and job.index<=33,'unsupported items still take one whole interval each')
+            local p=G.salvageProgress(pack)
+            assert(p.total==100 and p.processed==job.skipped and p.done==0 and p.phase=='working')
+            for i=1,5 do G.processSalvage(job) end
+            p=G.salvageProgress(pack)
+            assert(not G.jobs[pack] and p.processed==100 and p.skipped==100 and p.phase=='complete')
+            assert(#queue==0 and battery.Condition==50)
+        """)
+
+    def test_low_battery_retains_reason_and_completed_counts(self):
+        self.lua.execute("""
+            job.done=3;job.skipped=2;battery.Condition=0
+            G.processSalvage(job)
+            local p=G.salvageProgress(pack)
+            assert(not G.jobs[pack] and p.phase=='power' and p.done==3 and p.skipped==2)
+        """)
+
+    def test_last_success_is_complete_even_when_it_spends_remaining_energy(self):
+        self.lua.execute("""
+            battery.Condition=require('SalvageVacuum.config').salvageCost
+            G.processSalvage(job);queue[1]();queue[2]();G.processSalvage(job)
+            local p=G.salvageProgress(pack)
+            assert(p.phase=='complete' and p.done==1 and p.processed==p.total)
+        """)
+
+    def test_cancelled_old_callbacks_cannot_restore_cleared_results(self):
+        self.lua.execute("""
+            G.processSalvage(job)
+            ctx.valid=false;G.processSalvage(job)
+            assert(G.salvageProgress(pack).phase=='interrupted')
+            G.salvageResults={};G.pending[pack].cancelled=true
+            queue[1]();queue[2]()
+            assert(G.salvageProgress(pack)==nil,'old callback restored reset status')
+            assert(not removed[source] and battery.Condition==50)
+        """)

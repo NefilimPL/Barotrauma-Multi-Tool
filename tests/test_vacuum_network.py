@@ -27,6 +27,31 @@ class VacuumNetworkTests(VacuumAdapterTests):
             G.sendActivity(vacuum,true);assert(sent==4)
         """)
 
+    def test_salvage_stop_reason_and_counts_survive_server_client_wire_roundtrip(self):
+        self.lua.execute("""
+            local receive={};env.CLIENT=true
+            local function reader(values)
+                local index=0;local function nextValue() index=index+1;return values[index] end
+                return {ReadByte=nextValue,ReadUInt16=nextValue,ReadUInt32=nextValue,
+                    ReadSingle=nextValue,ReadBoolean=nextValue,ReadString=nextValue}
+            end
+            env.Entity={FindEntityByID=function(id) if id==vacuum.ID then return vacuum end end}
+            env.Networking.Receive=function(name,fn) receive[name]=fn end
+            env.Networking.Start=function(name)
+                local values={};local function write(v) values[#values+1]=v end
+                return {name=name,values=values,WriteByte=write,WriteUInt16=write,WriteUInt32=write,
+                    WriteSingle=write,WriteBoolean=write,WriteString=write}
+            end
+            env.Networking.Send=function(message) receive[message.name](reader(message.values)) end
+            G.salvageProgress=function() return {phase='power',total=598,processed=9,done=7,skipped=2} end
+            local result;G.onSnapshot=function(s) result=s end
+            require('SalvageVacuum.network').install(G,env)
+            local protocol=require('SalvageVacuum.config').protocol
+            receive[protocol..'.request'](reader({1,vacuum.ID,0,0,0,'',false,'all','',0}),{Character=owner})
+            assert(result and result.salvage and result.salvage.phase=='power')
+            assert(result.salvage.total==598 and result.salvage.processed==9 and result.salvage.done==7 and result.salvage.skipped==2)
+        """)
+
     def test_round_reset_discards_outgoing_activity_and_remote_timeouts(self):
         self.lua.execute("""
             local sent=0

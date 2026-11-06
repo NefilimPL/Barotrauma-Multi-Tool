@@ -1,6 +1,6 @@
 # Barotrauma-Multi-Tool
 
-Wersja **1.3.9** zawiera **plecak zbierający i dwuręczny odkurzacz Aegis**.
+Wersja **1.3.10** zawiera **plecak zbierający i dwuręczny odkurzacz Aegis**.
 Obie części wytwarza się osobno. Bateria znajduje się w odkurzaczu i zasila
 zasysanie oraz rozbiórkę całej zawartości jednym przyciskiem. Przedmioty bez
 receptury pozostają nietknięte. Panel magazynu (**F**) grupuje rzeczy po 100,
@@ -37,6 +37,13 @@ Grafika i sprawdzanie ścian używają tego samego punktu. Test serwera
 z Neurotraumą obejmuje rewolwer, SMG, karabin i pełne serie śrutu.
 [Wyniki i zakres testu](docs/COMBAT-VERIFICATION.md).
 Po aktualizacji host i gracze powinni ponownie uruchomić grę oraz serwer.
+
+Poprawka **1.3.10** uwzględnia historyczne kolizje postaci przy przechwytywaniu
+pocisków w multiplayerze. Plecak opisuje osobno **Grupy / 100** i **Sztuki / 10000**,
+pokazuje postęp oraz wynik rozbiórki i pozwala dalej zbierać podczas jej pracy.
+Nowe rzeczy czekają na następną partię. Rozbiórka pomija rzeczy bez receptury
+w krótkich porcjach i odtwarza zapętlony dźwięk dekonstruktora z gry.
+[Sprawdzenia i zakres poprawki](docs/SHIELD-SALVAGE-VERIFICATION.md).
 
 Plecak zakłada się do slotu torby na pasie; grafika pozostaje na plecach
 również bez ssawki. Okno otwiera przycisk **Magazyn plecaka [F]**, klawisz F

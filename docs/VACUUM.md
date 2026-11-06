@@ -1,6 +1,6 @@
 # Odkurzacz i plecak zbierający Aegis
 
-Wersja 1.3.8 zawiera dwa osobno wytwarzane przedmioty. Wymaga LuaCs na
+Wersja 1.3.10 zawiera dwa osobno wytwarzane przedmioty. Wymaga LuaCs na
 kliencie i serwerze, tak jak pozostałe urządzenia Aegis.
 
 ## Przygotowanie
@@ -116,7 +116,19 @@ Bateria zasilająca, aktywny odkurzacz i magazyny pomocnicze nie należą do łu
 Wyjęcie baterii, brak energii, odłożenie odkurzacza lub utrata plecaka
 zatrzymują pracę. Aby przetworzyć pozostałe rzeczy, uruchom przycisk ponownie.
 W czasie rozbiórki wyjmowanie i zmiana plecaka są blokowane.
-Udana rozbiórka wydaje dźwięk rozdrabniacza. Zasysanie ma przestrzenny dźwięk
+Zasysanie może działać równocześnie; na czas tworzenia jednej porcji surowców
+odkurzacz krótko rezerwuje miejsce. Nowo zebrane rzeczy czekają na następną
+partię rozbiórki. Nad wyszukiwaniem widać liczbę sprawdzonych przedmiotów,
+liczbę rozłożonych i pominiętych, a po zakończeniu także wynik lub powód
+przerwania. Przedmioty bez receptury są sprawdzane w porcjach po maksymalnie 32,
+zamiast zajmować osobny odstęp pracy dla każdej sztuki.
+
+Liczniki **Grupy / 100** i **Sztuki / 10000** pokazują różne ograniczenia:
+jedna grupa mieści do 100 sztuk jednego typu. Większa liczba tego samego
+typu zajmuje kolejne grupy. Stan, jakość i zawartość pojemników są zachowywane.
+
+Rozbiórka odtwarza zapętlony dźwięk dekonstruktora z gry; ustaje on po końcu
+pracy lub braku kolejnych potwierdzeń przetwarzania. Zasysanie ma przestrzenny dźwięk
 silnika, który ustaje po puszczeniu przycisku lub utracie zasilania. Animacja
 przenika między klatkami i rysuje płynnie przesuwające się do dyszy smugi.
 

@@ -3,10 +3,24 @@ local Recipes=require('SalvageVacuum.recipes')
 local C=Core.config
 local M={}
 function M.install(G,E)
+    G.salvageResults={}
+    local function stopJob(job,phase)
+        G.jobs[job.ctx.pack]=nil
+        job.finalPhase=phase
+        G.salvageResults[job.ctx.pack]={total=#job.items,processed=job.done+job.skipped,
+            done=job.done,skipped=job.skipped,phase=phase}
+    end
+    function G.salvageProgress(pack)
+        local job=G.jobs[pack]
+        if job then return {total=#job.items,processed=job.done+job.skipped,done=job.done,skipped=job.skipped,
+            phase=G.pending[pack] and 'products' or job.waiting or 'working'} end
+        return G.salvageResults[pack]
+    end
     function G.startSalvage(ctx)
         if not ctx.valid or not G.is(ctx.vacuum,C.vacuum) or G.charge(ctx.vacuum)<=0 or G.jobs[ctx.pack] or G.pending[ctx.pack] then return false end
         local items=Core.snapshot(G.contents(ctx.pack),G.children)
         G.jobs[ctx.pack]={ctx=ctx,items=items,index=1,done=0,skipped=0}
+        G.salvageResults[ctx.pack]=nil
         return true
     end
     local function rollback(tx)
@@ -32,26 +46,37 @@ function M.install(G,E)
             if G.salvageEffect then G.salvageEffect(tx.ctx.vacuum) end
         else rollback(tx);tx.job.skipped=tx.job.skipped+1 end
         G.reserved[tx.item]=nil;G.pending[tx.ctx.pack]=nil
+        if tx.job.finalPhase and not tx.cancelled and G.alive then stopJob(tx.job,tx.job.finalPhase) end
     end
     function G.processSalvage(job)
         local ctx=G.context(job.ctx.vacuum,job.ctx.owner)
-        if not ctx.valid or ctx.pack~=job.ctx.pack or G.charge(ctx.vacuum)<C.salvageCost then
-            G.jobs[job.ctx.pack]=nil;return
-        end
+        if not ctx.valid or ctx.pack~=job.ctx.pack then stopJob(job,'interrupted');return end
         if G.pending[ctx.pack] then return end
-        local item=job.items[job.index]
-        if not item then G.jobs[ctx.pack]=nil;return end
-        if item.Removed or not G.has(ctx.pack,item) then job.index=job.index+1;return end
-        local plan=Recipes.plan(E,item,ctx.vacuum)
-        if not plan then job.index=job.index+1;job.skipped=job.skipped+1;return end
+        if not job.items[job.index] then stopJob(job,job.noSpace and 'full' or 'complete');return end
+        if G.charge(ctx.vacuum)<C.salvageCost then stopJob(job,'power');return end
+        local item,plan
+        -- Unsupported/missing inputs need no spawner transaction. Skip a bounded
+        -- batch rather than making a large material-only pack look stalled.
+        for _=1,32 do
+            item=job.items[job.index]
+            if not item then stopJob(job,job.noSpace and 'full' or 'complete');return end
+            plan=not item.Removed and G.has(ctx.pack,item) and Recipes.plan(E,item,ctx.vacuum)
+            if plan then break end
+            job.index=job.index+1;job.skipped=job.skipped+1
+        end
+        if not plan then return end
+        job.waiting=nil
         local children=G.children(item)
         local remaining={}
         for _,i in ipairs(G.contents(ctx.pack)) do if i~=item then remaining[#remaining+1]=i end end
         local extra=G.records(children)
         for _,p in ipairs(plan) do extra[#extra+1]=p end
-        if not Core.canFit(G.records(remaining),extra) then job.index=job.index+1;job.skipped=job.skipped+1;return end
+        if not Core.canFit(G.records(remaining),extra) then
+            job.index=job.index+1;job.skipped=job.skipped+1;job.noSpace=true;return
+        end
         if not G.ensureSpace(ctx.pack,#children+#plan) then
-            if #G.pages(ctx.pack)>=C.pages then job.index=job.index+1;job.skipped=job.skipped+1 end
+            job.waiting='space'
+            if #G.pages(ctx.pack)>=C.pages then job.index=job.index+1;job.skipped=job.skipped+1;job.noSpace=true end
             return
         end
         -- Move surviving nested content before removal; never discard it with its casing.

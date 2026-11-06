@@ -143,6 +143,7 @@ function M.install(G,E)
                 end
             end)
             for item in pairs(G.states) do if item.Removed then G.states[item]=nil;G.selected[item.ID]=nil end end
+            for pack in pairs(G.salvageResults or {}) do if pack.Removed then G.salvageResults[pack]=nil end end
         end
         if G.authoritative and G.now>=scanAt then
             scanAt=G.now+C.scanInterval
@@ -151,7 +152,7 @@ function M.install(G,E)
                 G.states[vacuum]=state
                 local ctx=G.context(vacuum)
                 state.active=ctx.valid and ctx.aim and G.now-(state.usedAt or -100)<.15
-                    and G.charge(vacuum)>0 and not G.jobs[ctx.pack] and not G.pending[ctx.pack]
+                    and G.charge(vacuum)>0 and not G.pending[ctx.pack]
                 if G.sendActivity then G.sendActivity(vacuum,state.active) end
                 if state.active and G.spend(vacuum,C.suctionCost*C.scanInterval) then
                     local origin,direction=G.muzzle(vacuum),G.direction(vacuum)

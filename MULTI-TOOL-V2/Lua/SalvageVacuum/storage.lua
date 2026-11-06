@@ -161,7 +161,9 @@ function M.install(G,E)
     end
     function G.insert(pack,item,user,internal)
         if not pack or pack.Removed or not item or item.Removed or item==pack or G.id(item)==C.page then return false end
-        if not internal and (G.pending[pack] or G.jobs[pack] or G.reserved[item]) then return false end
+        -- Only the atomic output spawn reserves insertion capacity. A running
+        -- job owns its input snapshot, so newly collected loot remains intact.
+        if not internal and (G.pending[pack] or G.reserved[item]) then return false end
         if G.has(item,pack) then return false end
         if not Core.canAccept(G.records(G.contents(pack)),{kind=G.id(item)}) then return false end
         if not G.ensureSpace(pack,1) then return false end

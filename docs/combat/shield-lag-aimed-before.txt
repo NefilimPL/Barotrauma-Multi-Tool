@@ -1,0 +1,22 @@
+POSE 1 shield=true angle=-3.008528470993042 gun={X:16303.496 Y:62652.45} valid=true aim=true damage=true unconscious=false stun=0 oxygen=99.91666412353516 energy=99.79588317871094 now=438.3166666665967 cooldown=0
+LAG compensation displacement=160
+FIRE nativeRanged=true
+FAIL revolverround Torso arc=0.7942318597139294 hits=0 damageCalls=1
+FIRE nativeRanged=true
+FAIL revolverround Head arc=0.8260110417604097 hits=0 damageCalls=1
+FIRE nativeRanged=true
+FAIL revolverround RightHand arc=0.822065600773758 hits=0 damageCalls=1
+FIRE nativeRanged=true
+FAIL revolverround Waist arc=0.7869961537084265 hits=0 damageCalls=1
+FAIL smground Torso arc=0.7942318597139294 hits=0 damageCalls=0
+FAIL smground Head arc=0.8260110417604097 hits=0 damageCalls=0
+FAIL smground RightHand arc=0.822065600773758 hits=0 damageCalls=0
+FAIL smground Waist arc=0.7869961537084265 hits=0 damageCalls=0
+FAIL riflebullet Torso arc=0.7942318597139294 hits=0 damageCalls=0
+FAIL riflebullet Head arc=0.8260110417604097 hits=0 damageCalls=0
+FAIL riflebullet RightHand arc=0.822065600773758 hits=0 damageCalls=0
+FAIL riflebullet Waist arc=0.7869961537084265 hits=0 damageCalls=0
+FAIL shotgunshell Torso arc=0.7942318597139294 hits=0 damageCalls=0
+FAIL shotgunshell Head arc=0.8260110417604097 hits=0 damageCalls=0
+FAIL shotgunshell RightHand arc=0.822065600773758 hits=0 damageCalls=0
+FAIL shotgunshell Waist arc=0.7869961537084265 hits=0 damageCalls=0
