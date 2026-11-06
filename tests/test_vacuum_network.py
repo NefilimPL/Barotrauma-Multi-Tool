@@ -2,6 +2,53 @@ from test_vacuum_adapter import VacuumAdapterTests
 
 
 class VacuumNetworkTests(VacuumAdapterTests):
+    def test_batch_insert_and_floor_mode_cross_the_actual_wire_format(self):
+        self.lua.execute('''
+            local receive={};env.CLIENT=true;env.Character={Controlled=owner}
+            local function reader(values)
+                local i=0;local function read() i=i+1;return values[i] end
+                return {ReadByte=read,ReadUInt16=read,ReadUInt32=read,ReadSingle=read,ReadBoolean=read,ReadString=read}
+            end
+            env.Entity={FindEntityByID=function(id) if id==vacuum.ID then return vacuum end end}
+            env.Networking.Receive=function(name,fn) receive[name]=fn end
+            env.Networking.Start=function(name)
+                local values={};local function write(v) values[#values+1]=v end
+                return {name=name,values=values,WriteByte=write,WriteUInt16=write,WriteUInt32=write,
+                    WriteSingle=write,WriteBoolean=write,WriteString=write}
+            end
+            env.Networking.Send=function(m)
+                local old=G.authoritative;G.authoritative=true
+                receive[m.name](reader(m.values),{Character=owner});G.authoritative=old
+            end
+            local withdrawn,inserted,loose,snapshot
+            G.withdrawBatch=function(ctx,ids,groups) withdrawn={ids=ids,groups=groups};return true end
+            G.insertBatch=function(ctx,ids) inserted=ids;return true end
+            G.setLooseOnly=function(ctx,value) loose=value;return true end
+            G.looseOnly=function() return loose==true end
+            G.onSnapshot=function(value) snapshot=value end
+            require('SalvageVacuum.network').install(G,env);G.authoritative=false
+            G.request('batch',vacuum,0,{targets={11,11,12},group=1})
+            assert(withdrawn and #withdrawn.ids==2 and withdrawn.ids[2]==12 and not withdrawn.groups)
+            G.now=G.now+1;G.request('insert',vacuum,0,{targets={21,22}})
+            assert(inserted and #inserted==2 and inserted[1]==21 and inserted[2]==22)
+            G.now=G.now+1;G.request('loose',vacuum,1,{})
+            assert(loose and snapshot.looseOnly==true)
+        ''')
+
+    def test_batch_request_validates_access_and_deduplicates_bounded_selection(self):
+        self.lua.execute('''
+            local received
+            G.withdrawBatch=function(ctx,ids,groups) received={ctx=ctx,ids=ids,groups=groups};return true end
+            assert(not G.handleRequest({Character={}},'batch',vacuum,0,{targets={3,4}}))
+            assert(not received)
+            assert(G.handleRequest({Character=owner},'batch',vacuum,0,{targets={3,3,4},group=0}))
+            assert(#received.ids==2 and received.ids[1]==3 and received.ids[2]==4 and received.groups)
+            G.now=G.now+1;local ids={};for i=1,101 do ids[i]=i end
+            received=nil
+            assert(not G.handleRequest({Character=owner},'batch',vacuum,0,{targets=ids}))
+            assert(not received,'oversized mutation was partially accepted')
+        ''')
+
     def setUp(self):
         super().setUp()
         self.lua.execute("""

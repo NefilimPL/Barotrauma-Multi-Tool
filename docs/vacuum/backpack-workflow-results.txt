@@ -1,0 +1,8 @@
+PASS native batch takes multiple unstackable welders and preserves overflow
+PASS native floor filter skips cabinets and loaded bags, then toggles back
+PASS native merchant lists real stored iron and keeps condition/theft/lock rules
+PASS native drag slot path inserts the original item without swapping worn pack
+PASS real localized GUI shows batch action and floor toggle
+PASS native container inventory drag uses the matching overload and slot parameter
+PASS empty native pack accepts manual request before first storage page exists
+PASS first-page spawn retry finishes and preserves the original tool

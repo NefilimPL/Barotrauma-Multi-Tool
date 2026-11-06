@@ -14,6 +14,8 @@ local ok,err=pcall(function()
     require('SalvageVacuum.crafting').install(G,_G)
     require('CombatTool.physics').install(G,_G)
     require('SalvageVacuum.network').install(G,_G)
+    require('SalvageVacuum.manual').install(G,_G)
+    require('SalvageVacuum.merchant').install(G,_G)
     if CLIENT then
         require('SalvageVacuum.client').install(G,_G)
         require('SalvageVacuum.audio').install(G,_G)

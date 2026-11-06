@@ -2,6 +2,23 @@ from test_vacuum_storage_cache import VacuumStorageCacheTests
 
 
 class VacuumStackTests(VacuumStorageCacheTests):
+    def test_batch_groups_spread_unstackable_items_and_leave_overflow(self):
+        self.lua.execute('''
+            capacity=1
+            for i=5,44 do page.OwnInventory.items[#page.OwnInventory.items+1]={kind='iron',ID=i,ParentInventory=page.OwnInventory} end
+            local ok,moved=G.withdrawBatch(ctx,{a.ID,a.ID,999},true)
+            assert(ok and moved==4 and #taken==4)
+            assert(#G.contents(pack)==38,'overflow was lost or foreign item moved')
+            for _,it in ipairs(taken) do assert(it.kind=='iron') end
+        ''')
+
+    def test_batch_details_only_move_selected_instances_and_obey_busy_state(self):
+        self.lua.execute('''
+            G.pending[pack]={};assert(not G.withdrawBatch(ctx,{a.ID,b.ID},false));G.pending[pack]=nil
+            local ok,moved=G.withdrawBatch(ctx,{b.ID,b.ID,999},false)
+            assert(ok and moved==1 and taken[1]==b and G.has(pack,a))
+        ''')
+
     def setUp(self):
         super().setUp()
         self.lua.execute("""

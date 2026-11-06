@@ -107,11 +107,12 @@ function M.new(E)
         end)
         return out
     end
-    function G.patch(name,class,method,fn,after)
+    function G.patch(name,class,method,fn,after,types)
         local id='bmt.vacuum.'..name
         local phase=after and E.Hook.HookMethodType.After or E.Hook.HookMethodType.Before
-        E.Hook.Patch(id,class,method,fn,phase)
-        G.patches[#G.patches+1]={id,class,method,phase}
+        if types then E.Hook.Patch(id,class,method,types,fn,phase)
+        else E.Hook.Patch(id,class,method,fn,phase) end
+        G.patches[#G.patches+1]={id,class,method,phase,types}
     end
     function G.reset()
         if G.closePanel then G.closePanel() end
@@ -123,6 +124,7 @@ function M.new(E)
         if G.resetNetwork then G.resetNetwork() end
         if G.clearFilters then G.clearFilters() end
         if G.clearTrash then G.clearTrash() end
+        if G.clearManual then G.clearManual() end
         if G.clearEffects then G.clearEffects() end
         if G.clearAudio then G.clearAudio() end
     end
@@ -133,7 +135,10 @@ function M.new(E)
         for _,event in ipairs({'think','roundEnd','stop','draw','keyUpdate','GUI.AddToGUIUpdateList'}) do
             E.Hook.Remove(event,'bmt.vacuum.'..event)
         end
-        for _,p in ipairs(G.patches) do E.Hook.RemovePatch(p[1],p[2],p[3],p[4]) end
+        for _,p in ipairs(G.patches) do
+            if p[5] then E.Hook.RemovePatch(p[1],p[2],p[3],p[5],p[4])
+            else E.Hook.RemovePatch(p[1],p[2],p[3],p[4]) end
+        end
     end
     return G
 end

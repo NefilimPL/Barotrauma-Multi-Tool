@@ -1,6 +1,6 @@
 # Barotrauma-Multi-Tool
 
-Wersja **1.3.10** zawiera **plecak zbierający i dwuręczny odkurzacz Aegis**.
+Wersja **1.3.11** zawiera **plecak zbierający i dwuręczny odkurzacz Aegis**.
 Obie części wytwarza się osobno. Bateria znajduje się w odkurzaczu i zasila
 zasysanie oraz rozbiórkę całej zawartości jednym przyciskiem. Przedmioty bez
 receptury pozostają nietknięte. Panel magazynu (**F**) grupuje rzeczy po 100,
@@ -9,6 +9,17 @@ zgodnie z natywnym limitem stosu, zostawiając nadmiar w plecaku.
 [Instrukcja](docs/VACUUM.md) ·
 [Grafiki i animacja](docs/vacuum/preview.html) ·
 [Wyniki i ograniczenia testów](docs/VACUUM-VERIFICATION.md).
+
+W **1.3.11** można zaznaczać wiele ikon i używać **Wyjmij zaznaczone**,
+także dla grup spawarek i innych rzeczy z natywnym stosem 1. Nadmiar zostaje
+w plecaku. Ręczne wkładanie działa przez przeciągnięcie przedmiotu na ikonę
+plecaka. Zawartość jest dostępna u sprzedawcy w **Przy sobie**. Przełącznik
+**Tylko luzem** pomija szafy, inne ekwipunki i załadowane pojemniki na ziemi.
+Ustawienie zapisuje się na plecaku. Trafienia mają ograniczony koszt rysowania:
+zbliżone błyski z jednej serii łączą się, a efekty poza ekranem są pomijane.
+[Pomiary w grze i weryfikacja 1.3.11](docs/IMPACT-BACKPACK-VERIFICATION.md).
+Host i wszyscy gracze muszą zaktualizować mod oraz ponownie uruchomić grę;
+protokół plecaka zmienił się na v5.
 
 Poprawka **1.3.5** usuwa okresowe skanowanie całego świata przy bezczynności
 odkurzacza i bojowego multitoola na serwerze oraz klientach. Łup jest skanowany

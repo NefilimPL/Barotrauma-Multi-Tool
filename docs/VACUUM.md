@@ -1,6 +1,6 @@
 # Odkurzacz i plecak zbierający Aegis
 
-Wersja 1.3.10 zawiera dwa osobno wytwarzane przedmioty. Wymaga LuaCs na
+Wersja 1.3.11 zawiera dwa osobno wytwarzane przedmioty. Wymaga LuaCs na
 kliencie i serwerze, tak jak pozostałe urządzenia Aegis.
 
 ## Przygotowanie
@@ -20,6 +20,11 @@ w całości, razem z amunicją. Można zdjąć kombinezon z martwej postaci.
 Żywe postacie, własny ekwipunek, przymocowane urządzenia, zablokowane
 inwentarze i niedostępne zamknięcia są pomijane. Ściany i zamknięte drzwi
 blokują zasysanie. Obowiązują natywne zasady własności i kradzieży.
+
+Przełącznik **Tylko luzem** zbiera wyłącznie przedmioty poza ekwipunkami.
+Pozostawia zawartość szaf i toreb, rzeczy postaci oraz pojemniki z zawartością
+leżące na ziemi. Pusty, przenośny pojemnik może zostać zebrany. Ten wybór
+zapisuje się na danym plecaku i współpracuje z filtrem typów.
 
 Reguła przedmiotów ekwipunkowych odpowiada FastLoot: wymagany jest rzeczywisty
 slot przedmiotu. Drzwi i włazy, urządzenia bez slotów oraz przewody podłączone
@@ -44,7 +49,14 @@ jakość, baterie, butle i zawartość pozostają przy konkretnych egzemplarzach
   elektrycznych, artefaktów lub pozostałych. Kategorie pochodzą z definicji gry
   i modów; przedmiot może pasować do kilku kategorii.
 - Siatka mieści **40 ikon na stronie**. Nazwa, liczba, stan i jakość są
-  w podpowiedzi po najechaniu. Kliknięcie ikony zaznacza stos.
+  w podpowiedzi po najechaniu. Kliknięcie ikony przełącza jej zaznaczenie;
+  można zaznaczyć kilka ikon na bieżącej stronie.
+- **Wyjmij zaznaczone** przenosi wszystkie sztuki wybranych grup, także rzeczy
+  ze stosem 1, jak spawarki. W widoku **Egzemplarze** przenosi wybrane sztuki.
+  Wypełnia dostępne miejsca postaci zgodnie z natywnymi limitami; reszta
+  zostaje w plecaku. Zmiana strony, wyszukiwania, kategorii lub plecaka
+  czyści zaznaczenie. Przy kilku zaznaczeniach działania dla jednej pozycji,
+  w tym kosz, są nieaktywne.
 - **Wyjmij 1** przenosi jedną sztukę, a **Weź stos** uzupełnia tylko jeden
   zgodny stos lub zajmuje jeden pusty slot, zgodnie z limitem gry i talentami.
   Przykład: przy limicie 8 klik przenosi 8 sztuk, a przy istniejącym stosie 6/8
@@ -74,6 +86,18 @@ Stosy po 100 są prezentacją w panelu. Zaplecze używa zapisywanych przez grę
 stron po 100 pojedynczych rzeczy, mieszczących się w natywnym protokole.
 Maksymalna pojemność nie oznacza gwarancji płynności przy 10 000 aktywnych
 przedmiotów; ograniczenia i wyniki prób są w raporcie weryfikacji.
+
+Przeciągnij przedmiot ze swojego ekwipunku albo dostępnego pojemnika na
+ikonę plecaka, aby włożyć go ręcznie. Działa także dla plecaka w otwartej,
+dostępnej szafie. Pierwsza strona magazynu tworzy się automatycznie.
+Filtry zasysania nie ograniczają ręcznego wkładania. Brak miejsca, blokada
+czy utrata dostępu pozostawia oryginał w jego dotychczasowym miejscu.
+
+Rzeczy z noszonego plecaka pojawiają się u sprzedawcy w **Przy sobie**,
+zgodnie ze zwykłymi zasadami stanu, własności i wcześniejszej sprzedaży.
+Wewnętrzne strony magazynu pozostają ukryte. Rozbiórka i oczekujące produkty
+blokują sprzedaż zawartości; multiplayer sprawdza tę blokadę na serwerze.
+Plecak nie wymaga prądu do ręcznego wkładania, wyjmowania ani sprzedaży.
 
 ## Szafa i fabrykatory
 

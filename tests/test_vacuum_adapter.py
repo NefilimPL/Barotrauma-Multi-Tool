@@ -2,6 +2,20 @@ from lua_support import LuaCase
 
 
 class VacuumAdapterTests(LuaCase):
+    def test_overloaded_inventory_patch_is_installed_and_removed_with_its_signature(self):
+        self.lua.execute('''
+            local installed,removed
+            env.Hook={HookMethodType={Before=1,After=2},Remove=function() end,
+                Patch=function(id,class,method,types,fn,phase)
+                    assert(type(types)=='table' and types[2]=='System.Int32','ambiguous inventory hook')
+                    installed=types
+                end,
+                RemovePatch=function(id,class,method,types,phase) removed=types end}
+            local signature={'Barotrauma.Item','System.Int32'}
+            G.patch('drag','Barotrauma.CharacterInventory','TryPutItem',function() end,false,signature)
+            G.dispose();assert(installed==signature and removed==signature)
+        ''')
+
     def setUp(self):
         super().setUp()
         self.lua.execute("""

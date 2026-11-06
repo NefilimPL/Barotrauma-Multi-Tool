@@ -11,6 +11,23 @@ function M.install(G,E)
     local function encode(s)
         return (s:gsub('[%%,%s]',function(c) return string.format('%%%02x',string.byte(c)) end))
     end
+    local function setTag(ctx,target,enabled)
+        if not ctx.valid or G.jobs[ctx.pack] or G.pending[ctx.pack] or type(enabled)~='boolean' then return false end
+        local result={}
+        for tag in tostring(ctx.pack.Tags or ''):gmatch('[^,]+') do if tag~=target then result[#result+1]=tag end end
+        if enabled then result[#result+1]=target end
+        ctx.pack.Tags=table.concat(result,',')
+        if E.SERVER then
+            local property=ctx.pack.SerializableProperties[E.Identifier('Tags')]
+            E.Networking.CreateEntityEvent(ctx.pack,E.Item.ChangePropertyEventData(property,ctx.pack))
+        end
+        return true
+    end
+    function G.looseOnly(pack)
+        for tag in tostring(pack and pack.Tags or ''):gmatch('[^,]+') do if tag=='bmt.vacuum.looseonly' then return true end end
+        return false
+    end
+    function G.setLooseOnly(ctx,enabled) return setTag(ctx,'bmt.vacuum.looseonly',enabled) end
     function G.filter(pack)
         local tags=tostring(pack and pack.Tags or '')
         local old=cache[pack]
@@ -81,15 +98,7 @@ function M.install(G,E)
             or #kind>100 or type(excluded)~='boolean' then return false end
         catalog();local row=byKind[kind]
         if not row or row.blocked then return false end
-        local result,target={},prefix..encode(kind)
-        for tag in tostring(ctx.pack.Tags or ''):gmatch('[^,]+') do if tag~=target then result[#result+1]=tag end end
-        if excluded then result[#result+1]=target end
-        ctx.pack.Tags=table.concat(result,',')
-        if E.SERVER then
-            local property=ctx.pack.SerializableProperties[E.Identifier('Tags')]
-            E.Networking.CreateEntityEvent(ctx.pack,E.Item.ChangePropertyEventData(property,ctx.pack))
-        end
-        return true
+        return setTag(ctx,prefix..encode(kind),excluded)
     end
     function G.acceptsLoot(pack,item)
         local filter,seen,budget=G.filter(pack),{},0

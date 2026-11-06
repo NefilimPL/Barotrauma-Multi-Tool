@@ -2,15 +2,21 @@ local Core=require('SalvageVacuum.core')
 local C=Core.config
 local M={}
 function M.install(G,E)
-    local actions={'open','withdraw','salvage','select','stack','filter','preparetrash','trash'}
-    local ids={open=1,withdraw=2,salvage=3,select=4,stack=5,filter=6,preparetrash=7,trash=8}
+    local actions={'open','withdraw','salvage','select','stack','filter','preparetrash','trash','batch','loose','insert'}
+    local ids={open=1,withdraw=2,salvage=3,select=4,stack=5,filter=6,preparetrash=7,trash=8,batch=9,loose=10,insert=11}
     local pageSize=C.viewColumns*C.viewRows
     G.lastPoll=G.lastPoll or {}
     function G.normalizeView(view)
         view=view or {}
         local category='all'
         for _,name in ipairs(C.categories) do if name==view.category then category=name end end
-        return {page=math.max(0,math.min(65534,math.floor(view.page or 0))),category=category,filters=view.filters==true,
+        local targets,seen={},{}
+        local invalid=type(view.targets)~='nil' and (type(view.targets)~='table' or #view.targets>100)
+        if not invalid then for _,id in ipairs(view.targets or {}) do
+            if type(id)~='number' or id<1 or id>65535 or id%1~=0 then invalid=true;break end
+            if not seen[id] then seen[id]=true;targets[#targets+1]=id end
+        end end
+        return {targets=targets,invalid=invalid,page=math.max(0,math.min(65534,math.floor(view.page or 0))),category=category,filters=view.filters==true,
             kind=tostring(view.kind or ''):sub(1,100),confirm=math.max(0,math.min(65535,math.floor(view.confirm or 0))),
             group=math.max(0,math.min(100,math.floor(view.group or 0))),search=tostring(view.search or ''):sub(1,64)}
     end
@@ -22,6 +28,13 @@ function M.install(G,E)
         quota[key]=G.now
         local ctx=G.context(vacuum,client.Character)
         view=G.normalizeView(view)
+        if view.invalid then return false end
+        if action=='batch' then return G.withdrawBatch(ctx,view.targets,view.group==0) end
+        if action=='insert' then return G.insertBatch(ctx,view.targets) end
+        if action=='loose' then
+            if target~=0 and target~=1 then return false end
+            return G.setLooseOnly(ctx,target==1)
+        end
         if action=='withdraw' then return G.withdraw(ctx,target) end
         if action=='stack' then return G.withdrawStack(ctx,target) end
         if action=='salvage' then return G.startSalvage(ctx) end
@@ -87,7 +100,7 @@ function M.install(G,E)
             busy=G.jobs[ctx.pack]~=nil or G.pending[ctx.pack]~=nil,count=count,groups=#groups,
             salvage=G.salvageProgress and G.salvageProgress(ctx.pack),
             page=page,pages=math.min(65535,math.max(1,math.ceil(#rows/pageSize))),rows=selected,group=view.group,
-            filters=view.filters,category=view.category,search=view.search,
+            filters=view.filters,looseOnly=G.looseOnly and G.looseOnly(ctx.pack) or false,category=view.category,search=view.search,
             trashTarget=ticket and ticket.id or 0,trashToken=ticket and ticket.token or 0,trashCount=ticket and ticket.count or 0}
     end
     local function sendSnapshot(client,vacuum,view)
@@ -101,7 +114,7 @@ function M.install(G,E)
         m.WriteUInt32(progress and progress.total or 0)
         m.WriteUInt32(progress and progress.done or 0);m.WriteUInt32(progress and progress.skipped or 0)
         m.WriteUInt16(s.count);m.WriteByte(s.groups);m.WriteUInt16(s.page);m.WriteUInt16(s.pages);m.WriteByte(s.group)
-        m.WriteBoolean(s.filters);m.WriteString(s.category);m.WriteString(s.search)
+        m.WriteBoolean(s.filters);m.WriteBoolean(s.looseOnly);m.WriteString(s.category);m.WriteString(s.search)
         m.WriteUInt16(s.trashTarget);m.WriteUInt16(s.trashToken);m.WriteUInt16(math.min(65535,s.trashCount))
         m.WriteByte(math.min(100,#s.packs));for i=1,math.min(100,#s.packs) do m.WriteUInt16(s.packs[i]) end
         m.WriteByte(#s.rows)
@@ -121,6 +134,10 @@ function M.install(G,E)
                 local target=m.ReadUInt16()
                 local view={page=m.ReadUInt16(),group=m.ReadByte(),search=m.ReadString():sub(1,64),
                     filters=m.ReadBoolean(),category=m.ReadString():sub(1,20),kind=m.ReadString():sub(1,100),confirm=m.ReadUInt16()}
+                if action=='batch' or action=='insert' then
+                    local count=m.ReadByte();if count>100 then return end
+                    view.targets={};for i=1,count do view.targets[i]=m.ReadUInt16() end
+                end
                 if G.handleRequest(client,action,vacuum,target,view) then sendSnapshot(client,vacuum,view) end
             end)
             if not ok and E.printerror then E.printerror('[Aegis Vacuum] Invalid request: '..tostring(err)) end
@@ -134,7 +151,7 @@ function M.install(G,E)
             local total,done,skipped=m.ReadUInt32(),m.ReadUInt32(),m.ReadUInt32()
             if phase~='' then s.salvage={phase=phase,total=total,done=done,skipped=skipped,processed=done+skipped} end
             local fields={count=m.ReadUInt16(),groups=m.ReadByte(),page=m.ReadUInt16(),pages=m.ReadUInt16(),group=m.ReadByte(),
-                filters=m.ReadBoolean(),category=m.ReadString(),search=m.ReadString(),
+                filters=m.ReadBoolean(),looseOnly=m.ReadBoolean(),category=m.ReadString(),search=m.ReadString(),
                 trashTarget=m.ReadUInt16(),trashToken=m.ReadUInt16(),trashCount=m.ReadUInt16(),packs={},rows={}}
             for key,value in pairs(fields) do s[key]=value end
             local count=m.ReadByte();if count>100 then return end
@@ -148,6 +165,7 @@ function M.install(G,E)
     end
     function G.request(action,vacuum,target,view)
         view=G.normalizeView(view)
+        if view.invalid then return end
         if G.authoritative then
             local client={Character=E.Character.Controlled}
             if G.handleRequest(client,action,vacuum,target or 0,view) and G.onSnapshot then
@@ -159,6 +177,9 @@ function M.install(G,E)
         m.WriteByte(ids[action]);m.WriteUInt16(vacuum.ID);m.WriteUInt16(target or 0)
         m.WriteUInt16(view.page);m.WriteByte(view.group);m.WriteString(view.search)
         m.WriteBoolean(view.filters);m.WriteString(view.category);m.WriteString(view.kind);m.WriteUInt16(view.confirm)
+        if action=='batch' or action=='insert' then
+            m.WriteByte(#view.targets);for _,id in ipairs(view.targets) do m.WriteUInt16(id) end
+        end
         E.Networking.Send(m)
     end
     function G.transferEffect(vacuum,point)

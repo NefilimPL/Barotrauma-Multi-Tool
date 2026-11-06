@@ -1,0 +1,4 @@
+PASS native sale list conversion keeps valid stored and ordinary items, excludes internal page
+PASS native sale hook rejects active salvage before removal
+PASS native sale hook rejects pending products before removal
+PASS native sale hook rejects reserved input before removal
