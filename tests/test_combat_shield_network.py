@@ -62,6 +62,18 @@ class ShieldFriendlyFireTests(LuaCase):
         self.assertTrue(self.lua.eval('projectile.IsActive'))
         self.assertEqual(self.lua.eval('battery.Condition'), 100)
 
+    def test_turning_held_weapon_blocks_before_protruding_arm_fixture(self):
+        # Native server capture: weapon turns left while the arm still occupies
+        # the preceding pose. The arm fixture is hit 4 units before the old arc.
+        self.lua.execute('''
+            gun.WorldPosition={X=14.274,Y=.742}
+            gun.body={TransformedRotation=math.pi}
+            local hit=G.findShield({x=-239.686,y=25.023},
+                {x=-40.75,y=24.469},attacker,nil,true)
+            assert(hit,'native arm fixture is in front of the protective arc')
+            assert(hit.x < -40.75,'shield must stop the bullet before the arm')
+        ''')
+
     def test_projectile_friendly_fire_opt_out_does_not_drain_shield(self):
         self.lua.execute('shoot(false)')
         self.assertTrue(self.lua.eval('projectile.IsActive'))
@@ -140,11 +152,11 @@ class ShieldRenderSynchronizationTests(LuaCase):
     def test_confirmed_client_shield_tracks_rendered_weapon_between_snapshots(self):
         self.lua.execute('draw()')
         self.assertAlmostEqual(self.lua.globals().drawX, 30)
-        self.assertAlmostEqual(self.lua.globals().drawY, 75)
+        self.assertAlmostEqual(self.lua.globals().drawY, 100)
         self.assertAlmostEqual(self.lua.globals().drawAngle, -1.5707963267948966)
         self.lua.execute('body.DrawPosition={X=80,Y=90};body.Dir=-1;draw()')
         self.assertAlmostEqual(self.lua.globals().drawX, 80)
-        self.assertAlmostEqual(self.lua.globals().drawY, 55)
+        self.assertAlmostEqual(self.lua.globals().drawY, 30)
         self.assertAlmostEqual(self.lua.globals().drawAngle, 1.5707963267948966)
         self.assertEqual(self.lua.eval('G.remote.shields[1].x'), -100)
 
@@ -155,7 +167,7 @@ class ShieldRenderSynchronizationTests(LuaCase):
             draw()
         ''')
         self.assertAlmostEqual(self.lua.globals().drawX, 30)
-        self.assertAlmostEqual(self.lua.globals().drawY, 75)
+        self.assertAlmostEqual(self.lua.globals().drawY, 100)
         self.assertEqual(self.lua.eval('state.shield.x'), -100)
 
     def test_client_never_draws_unconfirmed_or_expired_shield(self):

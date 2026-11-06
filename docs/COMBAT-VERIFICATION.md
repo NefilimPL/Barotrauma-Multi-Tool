@@ -1,5 +1,50 @@
 # Aegis — weryfikacja
 
+## Poprawka 1.3.9 — ręka przed tarczą (2026-11-06)
+
+Zgłoszenie: host dostaje ranę postrzałową mimo efektu uderzenia w tarczę.
+Na izolowanym serwerze Barotrauma 1.13.5.0, LuaCs c6e8829 z Neurotraumą
+CS2.0.5 odtworzono trafienie natywnej kończyny przed powierzchnią tarczy.
+Środek łuku był cofnięty o 25 jednostek względem broni. W badanej pozycji
+kolizja ramienia wystawała około 4 jednostek przed powierzchnię ochrony.
+Przy strzelbie wcześniejszy śrut powodował ranę, a późniejszy błysk tarczy.
+
+Środek łuku jest teraz w punkcie mocowania broni. Renderer korzysta z tego
+samego przesunięcia, również przy interpolacji i wyznaczaniu widoczności
+przez ściany. Promień, kąt, koszty energii i kolejność trafień pozostają te same.
+Nie dodano odporności postaci w obsłudze obrażeń ani skanowania kończyn.
+
+- **390 testów automatycznych — OK.** Nowa regresja z przechwyconymi
+  współrzędnymi ramienia najpierw nie przechodziła na starym osadzeniu.
+- **28/28 strzałów chronionych — PASS:** cztery natywne rodzaje amunicji
+  (`revolverround`, `smground`, `riflebullet`, `shotgunshell`) × siedem
+  kierunków celowania w kończyny. Bez wymuszania limitu trafień lub liczby
+  śrutów. Każda próba pobiera energię i ma zero wywołań
+  `Attack.DoDamageToLimb` na obrońcy oraz zerowy spadek zdrowia.
+- **Kontrola bez tarczy — PASS:** rzeczywiste obrażenia i wywołanie ataku.
+  Chroni to przed fałszywym wynikiem z wyłączoną fizyką postaci.
+- Przed poprawką ten sam test dawał trzy nieszczelności ramienia dla
+  rewolweru/SMG/karabinu oraz ranę i błysk w jednym strzale ze strzelby.
+  [Przed](combat/shield-held-before.txt) · [Po](combat/shield-held-after.txt).
+- Walidacja 13 plików XML i 39 modułów Lua 5.2 oraz receptur — OK.
+- Pełny restart izolowanego serwera z kopią plików produkcyjnych:
+  ponownie **29/29 PASS**, bez przeładowywania hooków w trakcie procesu.
+  Niezależny przegląd nie wykazał blokujących problemów; dodatkowe 49
+  testów geometrii, adapterów i synchronizacji tarczy — OK.
+
+Scenariusz: [shield_held_probe.lua](../tests/runtime/shield_held_probe.lua).
+Postać naprawdę trzyma narzędzie oburącz i ma włączone natywne kolizje.
+Test celowo obraca emiter przed następnym krokiem fizyki ramion, aby
+powtarzalnie badać rozbieżność pozy. Strzały są wywoływane bezpośrednio
+przez `Projectile.Shoot`, przechodząc przez produkcyjne hooki. To test
+odtworzonej konfiguracji na dedykowanym serwerze, nie pełna sesja hosta
+z dołączonymi klientami ani wszystkie animacje i pociski innych modów.
+Natywne strzały obejmują hitscan; fizyczne pociski, wcześniejsze przeszkody
+i friendly fire obejmują istniejące testy automatyczne.
+
+Paczka: `output/MULTI-TOOL-V2-1.3.9.zip`. Po wymianie plików na hoście
+i klientach trzeba ponownie uruchomić grę i serwer, aby przeładować Lua.
+
 ## Poprawka 1.2.10 — rewolwer NPC wrogiej placówki (2026-11-03)
 
 Użytkownik doprecyzował, że strzelał mieszkaniec wrogiej placówki z rewolweru.

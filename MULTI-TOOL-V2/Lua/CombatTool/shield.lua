@@ -7,7 +7,9 @@ function M.install(G,E)
     local function geometry(item)
         local direction,angle=G.direction(item)
         local pos=item.WorldPosition
-        return {x=pos.X-direction.x*25,y=pos.Y-direction.y*25,
+        -- A rearward pivot lets an arm fixture protrude through the arc while
+        -- the held weapon turns. Keep the barrier ahead of the weapon mount.
+        return {x=pos.X,y=pos.Y,
             radius=C.shieldRadius,angle=angle,halfAngle=C.shieldHalfAngle},direction
     end
     local function blocksAttacker(owner,attacker,friendlyFire)

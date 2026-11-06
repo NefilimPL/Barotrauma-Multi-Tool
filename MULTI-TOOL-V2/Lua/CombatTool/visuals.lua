@@ -186,7 +186,7 @@ function M.install(G,E,root)
             or math.abs(mask.angle-s.angle)>.01 then
             mask={x=s.x,y=s.y,angle=s.angle,expires=G.now+.1,edge={},strips={}}
             masks[key]=mask
-            local emitter={x=s.x+25*math.cos(s.angle),y=s.y+25*math.sin(s.angle)}
+            local emitter={x=s.x,y=s.y}
             for i=0,24 do
                 local a=s.angle-C.shieldHalfAngle+2*C.shieldHalfAngle*i/24
                 mask.edge[i+1]=not G.cast(emitter,{x=s.x+math.cos(a)*C.shieldRadius,y=s.y+math.sin(a)*C.shieldRadius},0,nil,true)
@@ -233,7 +233,7 @@ function M.install(G,E,root)
             -- DrawPosition already includes the interpolated submarine offset.
             -- Follow the displayed weapon every frame; snapshots still decide
             -- whether the shield exists and how much energy it has.
-            return {id=item.ID,x=pos.X-25*math.cos(angle),y=pos.Y-25*math.sin(angle),
+            return {id=item.ID,x=pos.X,y=pos.Y,
                 angle=angle,energy=energy or s.energy}
         end
         return {id=s.id,x=s.x,y=s.y,angle=s.angle,energy=energy or s.energy}
