@@ -1,0 +1,4 @@
+phase=mass_idle_A seconds=18.00 activeShieldTicks=1073
+phase=mass_block_A seconds=18.02 activeShieldTicks=1080 shieldhit=299 nativeShots=255 charge=45 shot=45
+phase=mass_idle_B seconds=18.02 activeShieldTicks=1080 charge=3 shot=3
+phase=mass_block_B seconds=18.00 activeShieldTicks=1079 shieldhit=259 nativeShots=255 charge=45 shot=45 damageCalls=3 hit=3

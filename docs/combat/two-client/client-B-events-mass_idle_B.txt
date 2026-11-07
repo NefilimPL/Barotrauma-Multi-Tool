@@ -1,0 +1,7 @@
+phase=mass_idle_B
+controlled=5857
+inputs=2507
+authority=false
+visualError=nil
+charge=3
+shot=3

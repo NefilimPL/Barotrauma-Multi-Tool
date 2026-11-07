@@ -1,0 +1,8 @@
+phase=single_fire_B
+controlled=5857
+inputs=3223
+authority=false
+visualError=nil
+charge=45
+shot=45
+hit=45

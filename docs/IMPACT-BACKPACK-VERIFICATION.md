@@ -39,9 +39,10 @@ Scenariusz: `tests/runtime/combat_effects_profile.lua`;
 zegar: `tests/runtime/CombatProfileStartup.cs`.
 
 Zakres: jest to rzeczywisty test renderowania klienta, z odtworzonymi
-zdarzeniami efektów. Nie wykonano sesji dwóch połączonych klientów z
-opóźnieniem ani pomiaru na komputerach znajomych. Nie potwierdza to,
-że każdy zgłoszony spadek FPS miał wyłącznie tę przyczynę.
+zdarzeniami efektów. Ten pierwszy pomiar nie obejmował pełnej sesji sieciowej.
+Później wykonano [rzeczywistą sesję dwóch klientów](TWO-CLIENT-COMBAT-VERIFICATION.md)
+z pojedynczym celem, grupą 15 postaci i masowym ostrzałem tarcz. Nadal nie
+jest to pomiar na komputerach znajomych ani z opóźnieniami Internetu.
 
 ## Plecak w prawdziwej grze
 

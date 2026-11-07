@@ -18,6 +18,7 @@ plecaka. Zawartość jest dostępna u sprzedawcy w **Przy sobie**. Przełącznik
 Ustawienie zapisuje się na plecaku. Trafienia mają ograniczony koszt rysowania:
 zbliżone błyski z jednej serii łączą się, a efekty poza ekranem są pomijane.
 [Pomiary w grze i weryfikacja 1.3.11](docs/IMPACT-BACKPACK-VERIFICATION.md).
+[Rzeczywista sesja dwóch klientów: ostrzał 1/15 celów i masowe blokowanie](docs/TWO-CLIENT-COMBAT-VERIFICATION.md).
 Host i wszyscy gracze muszą zaktualizować mod oraz ponownie uruchomić grę;
 protokół plecaka zmienił się na v5.
 

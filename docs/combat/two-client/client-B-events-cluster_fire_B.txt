@@ -1,0 +1,9 @@
+phase=cluster_fire_B
+controlled=5857
+inputs=2984
+authority=false
+visualError=nil
+charge=47
+shot=47
+hit=45
+arc=24
