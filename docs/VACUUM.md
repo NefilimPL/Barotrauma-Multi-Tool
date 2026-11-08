@@ -22,8 +22,9 @@ inwentarze i niedostępne zamknięcia są pomijane. Ściany i zamknięte drzwi
 blokują zasysanie. Obowiązują natywne zasady własności i kradzieży.
 
 Przełącznik **Tylko luzem** zbiera wyłącznie przedmioty poza ekwipunkami.
-Pozostawia zawartość szaf i toreb, rzeczy postaci oraz pojemniki z zawartością
-leżące na ziemi. Pusty, przenośny pojemnik może zostać zebrany. Ten wybór
+Pozostawia zawartość szaf i toreb oraz rzeczy postaci. Wyrzucone narzędzia
+z baterią, butlą lub amunicją oraz przenośne pojemniki leżące na ziemi
+zbiera w całości, bez wyciągania ich zawartości. Ten wybór
 zapisuje się na danym plecaku i współpracuje z filtrem typów.
 
 Reguła przedmiotów ekwipunkowych odpowiada FastLoot: wymagany jest rzeczywisty
@@ -95,6 +96,9 @@ czy utrata dostępu pozostawia oryginał w jego dotychczasowym miejscu.
 
 Rzeczy z noszonego plecaka pojawiają się u sprzedawcy w **Przy sobie**,
 zgodnie ze zwykłymi zasadami stanu, własności i wcześniejszej sprzedaży.
+Narzędzie z baterią, paliwem lub amunicją w środku jest przez natywny sklep
+ukrywane do czasu sprzedaży albo wyjęcia zawartości. Przykład: sprzedaj
+najpierw baterię z bojowego multitoola, a następnie samo narzędzie.
 Wewnętrzne strony magazynu pozostają ukryte. Rozbiórka i oczekujące produkty
 blokują sprzedaż zawartości; multiplayer sprawdza tę blokadę na serwerze.
 Plecak nie wymaga prądu do ręcznego wkładania, wyjmowania ani sprzedaży.

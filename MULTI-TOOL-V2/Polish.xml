@@ -69,5 +69,5 @@
   <vacuum.takeselected>Wyjmij zaznaczone</vacuum.takeselected>
   <vacuum.batchhelp>Klikaj kilka ikon, aby je zaznaczyć. W widoku grup wyjmiesz wszystkie sztuki zaznaczonych grup; w szczegółach — wybrane egzemplarze. Rzeczy, które się nie zmieszczą, zostaną w plecaku.</vacuum.batchhelp>
   <vacuum.looseonly>Tylko luzem</vacuum.looseonly>
-  <vacuum.loosehelp>Zbieraj tylko luźne przedmioty poza ekwipunkami. Pomijaj zawartość szaf i załadowane pojemniki na podłodze. Ustawienie zapisywane na tym plecaku.</vacuum.loosehelp>
+  <vacuum.loosehelp>Zbieraj przedmioty z podłogi, także wyrzucone narzędzia z paliwem lub amunicją. Przenośne pojemniki zabieraj w całości, bez wyciągania ich zawartości. Ustawienie zapisywane na tym plecaku.</vacuum.loosehelp>
 </infotexts>

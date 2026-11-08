@@ -1,6 +1,6 @@
 # Barotrauma-Multi-Tool
 
-Wersja **1.3.11** zawiera **plecak zbierający i dwuręczny odkurzacz Aegis**.
+Wersja **1.3.12** zawiera **plecak zbierający i dwuręczny odkurzacz Aegis**.
 Obie części wytwarza się osobno. Bateria znajduje się w odkurzaczu i zasila
 zasysanie oraz rozbiórkę całej zawartości jednym przyciskiem. Przedmioty bez
 receptury pozostają nietknięte. Panel magazynu (**F**) grupuje rzeczy po 100,
@@ -14,10 +14,13 @@ W **1.3.11** można zaznaczać wiele ikon i używać **Wyjmij zaznaczone**,
 także dla grup spawarek i innych rzeczy z natywnym stosem 1. Nadmiar zostaje
 w plecaku. Ręczne wkładanie działa przez przeciągnięcie przedmiotu na ikonę
 plecaka. Zawartość jest dostępna u sprzedawcy w **Przy sobie**. Przełącznik
-**Tylko luzem** pomija szafy, inne ekwipunki i załadowane pojemniki na ziemi.
+**Tylko luzem** pomija zawartość szaf i innych ekwipunków. Od **1.3.12**
+zbiera także wyrzucone narzędzia z paliwem i przenośne pojemniki na ziemi,
+zachowując ich zawartość.
 Ustawienie zapisuje się na plecaku. Trafienia mają ograniczony koszt rysowania:
 zbliżone błyski z jednej serii łączą się, a efekty poza ekranem są pomijane.
 [Pomiary w grze i weryfikacja 1.3.11](docs/IMPACT-BACKPACK-VERIFICATION.md).
+[Poprawka zbierania i wyjaśnienie sprzedaży narzędzi z baterią — 1.3.12](docs/LOOSE-PICKUP-MERCHANT-VERIFICATION.md).
 [Rzeczywista sesja dwóch klientów: ostrzał 1/15 celów i masowe blokowanie](docs/TWO-CLIENT-COMBAT-VERIFICATION.md).
 Host i wszyscy gracze muszą zaktualizować mod oraz ponownie uruchomić grę;
 protokół plecaka zmienił się na v5.

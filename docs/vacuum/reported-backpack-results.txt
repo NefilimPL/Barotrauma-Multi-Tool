@@ -1,0 +1,7 @@
+PASS stored empty combat multitool is sellable
+PASS manual insert empty combat multitool stays sellable
+PASS loaded combat multitool follows native sale order and battery is listed
+PASS battery removal makes manually inserted combat multitool sellable
+PASS floor mode collects player-dropped loaded welder intact
+PASS floor mode collects dropped loaded combat multitool but leaves cabinet contents
+PASS production suction collects a dropped loaded welder without extracting cabinet contents

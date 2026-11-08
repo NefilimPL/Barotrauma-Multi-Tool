@@ -69,5 +69,5 @@
   <vacuum.takeselected>Take selected</vacuum.takeselected>
   <vacuum.batchhelp>Click several tiles to select them. In group view, take all items in the selected groups; in details, take the selected instances. Items that do not fit stay in the backpack.</vacuum.batchhelp>
   <vacuum.looseonly>Loose items only</vacuum.looseonly>
-  <vacuum.loosehelp>Collect only loose items outside inventories. Skip cabinet contents and loaded containers on the floor. Saved on this backpack.</vacuum.loosehelp>
+  <vacuum.loosehelp>Collect items on the floor, including dropped tools with fuel or ammo inside. Take portable containers intact; never extract their contents. Saved on this backpack.</vacuum.loosehelp>
 </infotexts>

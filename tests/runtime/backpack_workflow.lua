@@ -37,11 +37,11 @@ check('native batch takes multiple unstackable welders and preserves overflow',f
     assert(carried==moved and stored==40-moved and G.has(pack,iron))
     for _,item in ipairs(welders) do if item.ParentInventory==c.Inventory then item.Remove() end end
 end)
-check('native floor filter skips cabinets and loaded bags, then toggles back',function()
+check('native floor filter skips contents and collects loaded floor bags intact',function()
     local bag,copper=create('duffelbag'),create('copper')
     assert(bag.OwnInventory.TryPutItem(copper,c))
     assert(G.setLooseOnly(ctx,true) and G.looseOnly(pack))
-    assert(not G.pickupTarget(copper,ctx) and not G.pickupTarget(bag,ctx))
+    assert(not G.pickupTarget(copper,ctx) and G.pickupTarget(bag,ctx)==bag)
     local wrench=create('wrench');assert(G.pickupTarget(wrench,ctx)==wrench)
     assert(G.setLooseOnly(ctx,false) and G.pickupTarget(copper,ctx)==bag)
 end)
