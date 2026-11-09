@@ -1,12 +1,14 @@
 local U=require('CombatTool.util')
 local C=require('AegisHeadset.config')
 local Core=require('AegisHeadset.core')
+local Power=require('AegisHeadset.power')
 local T=require('AegisHeadset.treatments')
 local Medical=require('AegisHeadset.medical')
 local AI=require('AegisHeadset.ai')
 local M={}
 function M.new(E)
     local G={env=E,now=0,states={},patients={},patches={},contexts={},damageScope={},attackScopes={},providers={},effectOrigins={}}
+    local power=Power.new()
     G.authoritative=E.SERVER or E.Game.IsSingleplayer
     G.registerTreatment=T.register
     function G.registerProvider(name,provider)
@@ -44,12 +46,24 @@ function M.new(E)
     function G.powerCost(item,cost)
         return cost*(C.identifiers[U.itemId(item)]==2 and C.mk2EnergyMultiplier or 1)
     end
+    local function reserve(item,cost)
+        return power.reserve(G.source(item),G.now,G.energy(item),cost)
+    end
+    local function commit(payment,used)
+        used=power.finish(payment,used)
+        if used>0 and payment.cell and not payment.cell.Removed then
+            -- Read the current value: treatment callbacks may have consumed
+            -- another reservation while this one was pending.
+            local cell=payment.cell
+            cell.Condition=math.max(0,cell.Condition-used*cell.MaxCondition/100)
+        end
+        return used
+    end
     function G.spend(item,cost,reason)
         cost=G.powerCost(item,cost)
-        local left,fraction=Core.debit(G.energy(item),cost)
-        G.setEnergy(item,left)
-        if fraction>0 then G.recordDebit(item,cost*fraction,reason) end
-        return fraction
+        local payment=reserve(item,cost)
+        G.recordDebit(item,commit(payment,payment.amount),reason)
+        return payment.fraction
     end
     local function emit(character,item,kind,joint)
         if G.emit then G.emit(character,item,kind,joint) end
@@ -106,11 +120,13 @@ function M.new(E)
         end
         local patient=G.patients[character] or {jobs={}}
         G.patients[character]=patient
-        local actions=T.plan(entries,math.min(C.healRate*speed*dt,G.energy(item)/healCost))
+        -- Each reservation applies the actual (possibly discounted) price.
+        -- A nominal affordability cap would slow free overflow treatment.
+        local actions=T.plan(entries,C.healRate*speed*dt)
         local changed=false
         for _,action in ipairs(actions) do
-            local before=G.energy(item)
-            local left,fraction=Core.debit(before,action.amount*healCost)
+            local payment=reserve(item,action.amount*healCost)
+            local fraction=payment.fraction
             -- Reserve mathematically; commit only the actual cost once.
             -- A provisional zero followed by a refund would fire OnBroken.
             if fraction>0 then
@@ -120,14 +136,15 @@ function M.new(E)
                 end)
                 local actual=action.entry.ref and math.abs(action.entry.ref.Strength-action.entry.strength) or
                     (ok and action.amount*fraction or 0)
-                local used=math.min(before-left,actual*healCost)
-                G.setEnergy(item,before-used)
+                local used=commit(payment,payment.amount*math.min(1,actual/(action.amount*fraction)))
                 G.recordDebit(item,used,'heal:'..action.entry.id)
-                if used>1e-7 then changed=true end
+                if actual>1e-7 then changed=true end
                 if not ok and not G.healError then
                     G.healError=tostring(err)
                     if E.printerror then E.printerror('[Aegis headsets] Treatment failed: '..G.healError) end
                 end
+            else
+                commit(payment,0)
             end
         end
         local jobs=Medical.jobs(character,entries,E.LimbType)
@@ -139,12 +156,13 @@ function M.new(E)
             local cost=job.kind=='organ' and C.organCost or job.kind=='surgery' and C.surgeryCost or C.limbCost
             cost=G.powerCost(item,cost)
             local seconds=job.kind=='organ' and C.organSeconds or job.kind=='surgery' and C.surgerySeconds or C.limbSeconds
-            local before=G.energy(item)
             local regenSpeed=C.identifiers[U.itemId(item)]==2 and C.mk2RegenMultiplier or 1
-            local left,done=Core.advanceJob(progress,before,dt*regenSpeed,cost,seconds)
-            G.setEnergy(item,left)
-            G.recordDebit(item,before-left,'regenerate:'..job.key)
-            if left<before then changed=true end
+            local requested=math.min(math.max(0,cost-progress.paid),cost*math.max(0,dt*regenSpeed)/seconds)
+            local payment=reserve(item,requested)
+            local _,done=Core.advanceJob(progress,requested*payment.fraction,dt*regenSpeed,cost,seconds)
+            local used=commit(payment,payment.amount)
+            G.recordDebit(item,used,'regenerate:'..job.key)
+            if requested*payment.fraction>1e-7 then changed=true end
             if done then
                 for _,entry in ipairs(job.entries) do
                     if entry.apply then entry.apply(entry.policy.target or 0) else entry.ref.Strength=entry.policy.target or 0 end
@@ -208,22 +226,20 @@ function M.new(E)
             if not passthrough[#incoming] then damage=damage+G.blockableStrength(character,a,multiplier,limb,position,penetration) end
         end)
         if damage<=0 then return nil end
-        local before=G.energy(item)
-        local left,residual=Core.absorb(before,damage,G.powerCost(item,1))
-        G.setEnergy(item,left)
-        local fraction=residual/damage
+        local payment=reserve(item,G.powerCost(item,math.max(C.hitMinimum,damage*C.hitMultiplier)))
+        local used=commit(payment,payment.amount)
+        local fraction=1-payment.fraction
         local result={};local buffs=false
         for i,a in ipairs(incoming) do
             if passthrough[i] then result[#result+1]=a;buffs=true
             elseif fraction>1e-7 then result[#result+1]=a.CreateMultiplied(fraction,a) end
         end
-        if not deferFeedback then G.recordDebit(item,before-left,'hit');emit(character,item,'hit') end
-        return {afflictions=result,fraction=fraction,empty=fraction<=1e-7 and not buffs,cost=before-left}
+        if not deferFeedback then G.recordDebit(item,used,'hit');emit(character,item,'hit') end
+        return {afflictions=result,fraction=fraction,empty=fraction<=1e-7 and not buffs,cost=used,payment=payment}
     end
     function G.intercept(character,p,emptyResult)
         if G.damageScope[character] then return end
         local item=G.equipped(character)
-        local previous=G.energy(item)
         local outcome=G.absorb(character,p['afflictions'],p['stun'],p['damageMultiplier'],p['attacker'],p['hitLimb'],p['worldPosition'],p['penetration'],true)
         if not outcome then return end
         if outcome.empty then
@@ -242,7 +258,9 @@ function M.new(E)
             p['shouldImplode'] and outcome.fraction>1e-7 or false,p['ignoreDamageOverlay'],p['recalculateVitality'])
         G.damageScope[character]=nil
         if not ok then
-            G.setEnergy(item,previous)
+            local cell=outcome.payment.cell
+            local refund=power.refund(outcome.payment)
+            if cell and not cell.Removed and refund>0 then cell.Condition=cell.Condition+refund*cell.MaxCondition/100 end
             if not G.damageError then
                 G.damageError=tostring(value)
                 if E.printerror then E.printerror('[Aegis headsets] Native damage fallback: '..G.damageError) end
@@ -338,6 +356,7 @@ function M.new(E)
             G.healTime=(G.healTime or 0)+dt
             if G.healTime>=C.healInterval then
                 local elapsed=G.healTime;G.healTime=0
+                power.prune()
                 U.each(E.Character.CharacterList,function(character)
                     local item=G.equipped(character)
                     if item then
@@ -360,6 +379,7 @@ function M.new(E)
     function G.clear()
         for _,s in pairs(G.states) do AI.cancel(s) end
         G.states={};G.patients={};G.contexts={};G.damageScope={};G.attackScopes={};G.effectOrigins={};G.healTime=0
+        power=Power.new()
         if G.clearEffects then G.clearEffects() end
     end
     function G.dispose()

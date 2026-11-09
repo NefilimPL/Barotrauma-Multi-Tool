@@ -64,8 +64,8 @@ class HeadsetAdapterTests(LuaCase):
     def test_optional_neurotrauma_anatomy_waits_for_paid_regeneration(self):
         self.lua.execute("""
             E.NT={};a=add('heartremoved',100,false)
-            for i=1,4 do G.heal(char,item,1);assert(a.Strength==100) end
-            G.heal(char,item,1);assert(a.Strength==0)
+            for i=1,4 do G.now=i;G.heal(char,item,1);assert(a.Strength==100) end
+            G.now=5;G.heal(char,item,1);assert(a.Strength==0)
         """)
         self.assertEqual(self.lua.eval('battery.Condition'), 92.5)
 
@@ -73,7 +73,7 @@ class HeadsetAdapterTests(LuaCase):
         self.lua.execute("""
             a=add('alien_missing_gland',100,true)
             G.registerTreatment('alien_missing_gland',{anatomy='organ',target=0})
-            for i=1,5 do G.heal(char,item,1) end
+            for i=1,5 do G.now=i;G.heal(char,item,1) end
             assert(a.Strength==0 and battery.Condition==92.5)
         """)
 
@@ -140,8 +140,8 @@ class HeadsetAdapterTests(LuaCase):
         self.lua.execute("""
             E.NT={};a=add('surgeryincision',100,true);b=add('retractedskin',100,true)
             char.CharacterHealth.GetAfflictionLimb=function() return {HealthIndex=3} end
-            for i=1,4 do G.heal(char,item,1);assert(a.Strength==100 and b.Strength==100) end
-            G.heal(char,item,1);assert(a.Strength==0 and b.Strength==0 and battery.Condition==92.5)
+            for i=1,4 do G.now=i;G.heal(char,item,1);assert(a.Strength==100 and b.Strength==100) end
+            G.now=5;G.heal(char,item,1);assert(a.Strength==0 and b.Strength==0 and battery.Condition==92.5)
         """)
 
     def test_provider_can_treat_future_mod_health_outside_afflictions(self):
@@ -184,8 +184,8 @@ class HeadsetAdapterTests(LuaCase):
     def test_neurotrauma_cs_is_detected_without_legacy_lua_globals(self):
         self.lua.execute("""
             a=add('heartremoved',100,false);a.Prefab.ContentPackage={Name='Neurotrauma CS'}
-            for i=1,4 do G.heal(char,item,1);assert(a.Strength==100) end
-            G.heal(char,item,1);assert(a.Strength==0 and battery.Condition==92.5)
+            for i=1,4 do G.now=i;G.heal(char,item,1);assert(a.Strength==100) end
+            G.now=5;G.heal(char,item,1);assert(a.Strength==0 and battery.Condition==92.5)
         """)
 
     def test_zero_probability_and_fully_resisted_hits_do_not_charge(self):

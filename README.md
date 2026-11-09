@@ -1,5 +1,14 @@
 # Barotrauma-Multi-Tool
 
+Wersja **1.3.13** zabezpiecza baterie obu słuchawek Aegis przed spamem
+trafień i efektów, również modowych. Wszystkie koszty ochrony, leczenia
+i regeneracji dzielą limit: początkowo do 5% baterii, następnie do 5%/s.
+Pełne ogniwo wystarcza na co najmniej 19 s maksymalnego obciążenia
+słuchawkami. Ochrona i tempo leczenia pozostają zachowane przy dodatnim
+naładowaniu. Przekładanie baterii nie resetuje limitu.
+[Testy i zakres zabezpieczenia](docs/HEADSET-POWER-VERIFICATION.md).
+Po aktualizacji zrestartuj grę i serwer, aby wczytać nowe skrypty LuaCs.
+
 Wersja **1.3.12** zawiera **plecak zbierający i dwuręczny odkurzacz Aegis**.
 Obie części wytwarza się osobno. Bateria znajduje się w odkurzaczu i zasila
 zasysanie oraz rozbiórkę całej zawartości jednym przyciskiem. Przedmioty bez

@@ -4,6 +4,8 @@ assert(G and #G.patches>=4,'headset bootstrap missing')
 local U=require('CombatTool.util')
 local results={}
 local function check(name,fn)
+    -- Each case is independent; direct helper calls do not advance think time.
+    G.now=G.now+1
     local ok,err=pcall(fn)
     local result=(ok and 'PASS ' or 'FAIL ')..name..(ok and '' or ': '..tostring(err))
     results[#results+1]=result;print('[HEADSET TEST] '..result)
@@ -34,7 +36,7 @@ check('native full attack blocked before health damage',function()
     local before=character.Vitality
     character.AddDamage(position,{AfflictionPrefab.Prefabs['burn'].Instantiate(100)},0,false,Vector2.Zero,nil,1)
     assert(not character.IsDead and character.Vitality==before,'attack reached wearer')
-    assert(math.abs(G.energy(item)-80)<.01,'attack not charged exactly once')
+    assert(math.abs(G.energy(item)-95)<.01,'attack bypassed shared burst limit')
 end)
 check('native partial battery passes remaining attack damage',function()
     character.CharacterHealth.SetAllDamage(0,0,0);cell.Condition=2
