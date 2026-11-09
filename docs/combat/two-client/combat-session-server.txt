@@ -1,0 +1,10 @@
+phase=single_idle seconds=18.00 victims=0
+phase=single_fire_A seconds=18.01 victims=1 charge=45 shot=45 damageCalls=44 vitalityDrops=44 hit=44
+phase=single_fire_B seconds=18.01 victims=1 charge=45 shot=45 damageCalls=45 vitalityDrops=45 hit=45
+phase=cluster_idle seconds=18.01 victims=1 charge=1 damageCalls=1 vitalityDrops=1 hit=1
+phase=cluster_fire_A seconds=18.01 victims=4 charge=47 shot=47 damageCalls=45 vitalityDrops=45 hit=45 arc=24
+phase=cluster_fire_B seconds=18.01 victims=4 charge=47 shot=47 damageCalls=45 vitalityDrops=45 hit=45 arc=24
+phase=shield_idle_A seconds=18.00 victims=0
+phase=shield_mass_A seconds=18.00 victims=1 charge=47 nativeShots=255 shot=47 damageCalls=18 vitalityDrops=18 hit=18 shieldhit=96
+phase=shield_idle_B seconds=18.00 victims=0
+phase=shield_mass_B seconds=18.01 victims=0 nativeShots=255 shieldhit=89

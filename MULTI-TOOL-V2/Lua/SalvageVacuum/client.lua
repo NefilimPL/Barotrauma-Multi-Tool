@@ -5,6 +5,7 @@ function M.install(G,E)
     local UI=E.GUI
     local panel,category,rowsFrame,search,status,progress,packButton,pageLabel,salvageButton,takeButton,stackButton,detailsButton,trashButton,filterButton
     local selectedId,selectedRow,cells=nil,nil,{}
+    local selectedRows,batchButton,looseButton={}
     local tiles={}
     local rowFields={'id','kind','name','count','condition','quality','excluded','blocked'}
     local placeholderPrefab=E.ItemPrefab and E.ItemPrefab.Prefabs[C.pack]
@@ -35,20 +36,24 @@ function M.install(G,E)
         end
         if panel then panel.Visible=false;panel.RemoveFromGUIUpdateList();panel.RectTransform.Parent=nil;panel=nil end
         snapshot=nil;vacuum=nil
-        selectedId=nil;selectedRow=nil;cells={};tiles={}
+        selectedId=nil;selectedRow=nil;cells={};tiles={};selectedRows={}
     end
     local function updateActions()
         local ready=snapshot and not snapshot.busy and selectedRow~=nil and not view.filters
-        takeButton.Enabled=ready or false;stackButton.Enabled=ready or false
-        detailsButton.Enabled=(ready and view.group==0) or false
-        trashButton.Enabled=ready or false
-        local ticket=ready and snapshot.trashTarget==selectedId and snapshot.trashToken~=0
+        local count=0;for _ in pairs(selectedRows) do count=count+1 end
+        local single=ready and count==1
+        takeButton.Enabled=single or false;stackButton.Enabled=single or false
+        if batchButton then batchButton.Enabled=snapshot and not snapshot.busy and next(selectedRows)~=nil and not view.filters or false end
+        detailsButton.Enabled=(single and view.group==0) or false
+        trashButton.Enabled=single or false
+        local ticket=single and snapshot.trashTarget==selectedId and snapshot.trashToken~=0
         trashButton.Text=ticket and (text('trashconfirm')..' '..snapshot.trashCount) or text('trash')
     end
     function G.onSnapshot(s)
         if not panel or not vacuum or s.vacuum~=vacuum.ID then return end
         -- Ignore in-flight replies from the previous search/category/mode.
         if s.filters~=nil and (s.filters~=view.filters or s.category~=view.category or s.search~=view.search or s.group~=view.group) then return end
+        if snapshot and snapshot.pack~=s.pack then selectedId=nil;selectedRows={} end
         snapshot=s;view.page=s.page
         status.Text=string.format('%s: %.1f%% | %s: %d / %d | %s: %d / %d',text('power'),s.charge,
             text('groups'),s.groups,C.groups,text('items'),s.count,C.groups*C.groupSize)
@@ -59,6 +64,12 @@ function M.install(G,E)
         progress.ToolTip=text('salvagehelp')
         if view.filters then status.Text=text('filterhelp') end
         filterButton.Text=text(view.filters and 'contents' or 'filters')
+        looseButton.Selected=s.looseOnly==true
+        looseButton.Enabled=not s.busy
+        if not selectedId then selectedRows={} end
+        local present={};for _,row in ipairs(s.rows) do present[row.id]=true end
+        for id in pairs(selectedRows) do if not present[id] then selectedRows[id]=nil end end
+        selectedId=selectedRows[selectedId] and selectedId or next(selectedRows)
         local ordinal=1;for i,id in ipairs(s.packs) do if id==s.pack then ordinal=i end end
         packButton.Text=string.format('%s %d/%d',text('pack'),ordinal,#s.packs)
         packButton.Visible=#s.packs>1
@@ -80,8 +91,9 @@ function M.install(G,E)
                         if not current.blocked then view.kind=current.kind;request('filter',current.excluded and 0 or 1) end
                         return
                     end
-                    selectedId=current.id;selectedRow=current
-                    for id,cell in pairs(cells) do cell.Selected=id==selectedId end
+                    selectedRows[current.id]=not selectedRows[current.id] and current or nil
+                    selectedId=next(selectedRows);selectedRow=selectedRows[selectedId]
+                    for id,cell in pairs(cells) do cell.Selected=selectedRows[id]~=nil end
                     updateActions()
                 end)
                 -- A real initial sprite enables native rescaling when the window changes size.
@@ -101,8 +113,8 @@ function M.install(G,E)
             cell.Enabled=row~=nil and not (view.filters and (row.blocked or s.busy))
             cell.Selected=false
             if row then
-                cells[view.filters and row.kind or row.id]=cell;cell.Selected=not view.filters and row.id==selectedId
-                if cell.Selected then selectedRow=row end
+                cells[view.filters and row.kind or row.id]=cell;cell.Selected=not view.filters and selectedRows[row.id]~=nil
+                if cell.Selected then selectedRows[row.id]=row;if row.id==selectedId then selectedRow=row end end
                 local changed=not tile.last or tile.filters~=view.filters
                 for _,key in ipairs(rowFields) do
                     if not tile.last or tile.last[key]~=row[key] then changed=true end
@@ -195,7 +207,17 @@ function M.install(G,E)
         end)
         trashButton.ToolTip=text('trashhelp');trashButton.Enabled=false
         takeButton.Enabled=false;stackButton.Enabled=false;detailsButton.Enabled=false
-        salvageButton=button(panel.RectTransform,.04,.89,.92,.065,text('salvage'),function() request('salvage') end)
+        batchButton=button(panel.RectTransform,.04,.875,.55,.05,text('takeselected'),function()
+            if not selectedId then return end
+            view.targets={};for id in pairs(selectedRows) do view.targets[#view.targets+1]=id end
+            table.sort(view.targets);request('batch');view.targets=nil
+        end)
+        batchButton.Enabled=false;batchButton.ToolTip=text('batchhelp')
+        looseButton=button(panel.RectTransform,.61,.875,.35,.05,text('looseonly'),function()
+            request('loose',snapshot and snapshot.looseOnly and 0 or 1)
+        end)
+        looseButton.ToolTip=text('loosehelp')
+        salvageButton=button(panel.RectTransform,.04,.94,.92,.04,text('salvage'),function() request('salvage') end)
         salvageButton.Enabled=G.is(item,C.vacuum)
         salvageButton.ToolTip=text('salvagehelp')
         request()

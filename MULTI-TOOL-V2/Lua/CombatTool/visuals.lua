@@ -10,6 +10,7 @@ function M.install(G,E,root)
     E.LuaUserData.RegisterType('Microsoft.Xna.Framework.Graphics.BlendState')
     local blend=E.LuaUserData.CreateStatic('Microsoft.Xna.Framework.Graphics.BlendState')
     local assets={}
+    local project
     for _,name in ipairs({'shield-active','shield-hit','shield-break','shield-contact'}) do
         assets[name]=E.Sprite(root..'/Assets/Combat/'..name..'.png',E.Vector2(.5,.5))
     end
@@ -36,6 +37,7 @@ function M.install(G,E,root)
     -- before the light map consumes it, using the same interpolated pose.
     G.patch('flashlight-origin','Barotrauma.Lights.LightManager','RenderLightMap',G.updateFlashlights)
     local effects={}
+    local impacts={hit=true,shieldhit=true,bounce=true,wallhit=true}
     local electricity,particleManager
     local function emitNativeArc(point,endpoint)
         local dx,dy=endpoint.x-point.x,endpoint.y-point.y
@@ -58,6 +60,18 @@ function M.install(G,E,root)
         spark(endpoint.x,endpoint.y)
     end
     function G.onEffect(kind,point,angle,id,endpoint)
+        if impacts[kind] then
+            local count,oldest=0,nil
+            for i=#effects,1,-1 do
+                local e=effects[i]
+                if impacts[e.kind] then count=count+1;oldest=i end
+                if e.kind==kind and e.id==id and e.age<.04
+                    and (e.x-point.x)^2+(e.y-point.y)^2<24^2 then return end
+            end
+            -- A burst may contain many real pellet contacts. Keep simulation and
+            -- networking intact while bounding their purely visual overlap.
+            if count>=24 then table.remove(effects,oldest) end
+        end
         if G.playCombatSound then G.playCombatSound(kind,point) end
         if kind=='arc' and endpoint then emitNativeArc(point,endpoint) end
         effects[#effects+1]={kind=kind,x=point.x,y=point.y,angle=angle,age=0,id=id,endpoint=endpoint}
@@ -103,12 +117,12 @@ function M.install(G,E,root)
             -- Keep each cropped strip registered to the same full-frame pivot.
             origin=E.Vector2(rect.Width/2,rect.Height/2-top)
         end
-        local screen=cam.WorldToScreen(E.Vector2(point.x,point.y))
+        local screen=project(cam,point.x,point.y)
         sprite.Draw(batch,screen,E.Color(255,255,255,math.floor(255*(alpha or 1))),origin,-angle,
             E.Vector2(sx*cam.Zoom,sy*cam.Zoom))
     end
     local function line(batch,cam,a,b,color,width)
-        gui.DrawLine(batch,cam.WorldToScreen(E.Vector2(a.x,a.y)),cam.WorldToScreen(E.Vector2(b.x,b.y)),color,0,math.max(1,math.floor(width*cam.Zoom+.5)))
+        gui.DrawLine(batch,project(cam,a.x,a.y),project(cam,b.x,b.y),color,0,math.max(1,math.floor(width*cam.Zoom+.5)))
     end
     local function circle(batch,cam,x,y,angle,radius,color,width,phase,span,squash)
         local previous=nil
@@ -166,15 +180,15 @@ function M.install(G,E,root)
         local alpha=math.floor(255*(1-e.age/.22))
         local frame=(math.floor(e.age*60)+(e.id or 0))%electricity.FrameCount
         local width=math.min(length/electricity.FrameSize.X,1)*(.7+.3*math.abs(math.sin(e.age*90)))
-        electricity.Draw(batch,frame,cam.WorldToScreen(E.Vector2(e.x,e.y)),E.Color(190,235,255,alpha),
+        electricity.Draw(batch,frame,project(cam,e.x,e.y),E.Color(190,235,255,alpha),
             electricity.Origin,-Core.angle(dx,dy)-math.pi/2,
             E.Vector2(width*cam.Zoom,length/electricity.FrameSize.Y*cam.Zoom))
     end
     local masks={}
-    local function visible(cam,s)
+    local function visible(cam,s,radius)
         local view=cam.WorldView
         if not view then return true end
-        local radius=C.shieldRadius+16
+        radius=radius or C.shieldRadius+16
         return s.x+radius>=view.X and s.x-radius<=view.X+view.Width
             and s.y+radius>=view.Y-view.Height and s.y-radius<=view.Y
     end
@@ -240,6 +254,13 @@ function M.install(G,E,root)
     end
     function G.draw(batch,cam)
         if not cam then return end
+        -- Cache the native camera's affine matrix once, including shake/rotation.
+        -- Avoid two managed WorldToScreen calls for every procedural line.
+        local transform=cam.Transform
+        if transform then
+            local a,b,c,d,x,y=transform.M11,transform.M12,transform.M21,transform.M22,transform.M41,transform.M42
+            project=function(_,px,py) return E.Vector2(px*a-py*c+x,px*b-py*d+y) end
+        else project=function(camera,x,y) return camera.WorldToScreen(E.Vector2(x,y)) end end
         for key,mask in pairs(masks) do if G.now>mask.expires+1 then masks[key]=nil end end
         local rings,shields={},{}
         if G.authoritative then
@@ -257,13 +278,19 @@ function M.install(G,E,root)
             drawShield(batch,cam,item and shieldVisual(s,item) or s)
         end
         for _,r in ipairs(rings) do
-            if r.alive~=false then
+            if r.alive~=false and visible(cam,r,160) then
                 drawRing(batch,cam,r)
             end
         end
         for _,effect in ipairs(effects) do
             local f=math.floor(effect.age/.65*16)
-            if f<16 then
+            local onScreen=visible(cam,effect,160)
+            if effect.kind=='arc' and effect.endpoint and cam.WorldView then
+                local v=cam.WorldView
+                onScreen=math.max(effect.x,effect.endpoint.x)>=v.X and math.min(effect.x,effect.endpoint.x)<=v.X+v.Width
+                    and math.max(effect.y,effect.endpoint.y)>=v.Y-v.Height and math.min(effect.y,effect.endpoint.y)<=v.Y
+            end
+            if f<16 and onScreen then
                 if effect.kind=='break' then
                     drawSheet(batch,cam,'shield-break',f,
                         {x=effect.x+C.shieldRadius*.75*math.cos(effect.angle),y=effect.y+C.shieldRadius*.75*math.sin(effect.angle)},

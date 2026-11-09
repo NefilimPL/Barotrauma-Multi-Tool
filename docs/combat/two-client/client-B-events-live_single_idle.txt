@@ -1,0 +1,10 @@
+phase=live_single_idle
+controlled=5857
+inputs=3239
+authority=false
+visualError=nil
+shot=2
+bounce=2
+hit=1
+charge=1
+wallhit=1

@@ -1,0 +1,8 @@
+phase=mass_block_A
+controlled=5857
+inputs=2783
+authority=false
+visualError=nil
+shieldhit=299
+charge=45
+shot=45

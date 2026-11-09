@@ -1,0 +1,77 @@
+-- Disposable native singleplayer reproduction for reported floor/shop bugs.
+assert(CLIENT and Game.IsSingleplayer and Game.RoundStarted)
+local G,U=BMTVacuum,require('CombatTool.util')
+local results={}
+local function check(label,fn)
+ local ok,err=pcall(fn);results[#results+1]=(ok and 'PASS ' or 'FAIL ')..label..(ok and '' or ': '..tostring(err))
+ File.Write('LocalMods/MULTI-TOOL-V2/reported-backpack-results.txt',table.concat(results,'\n'));print(results[#results])
+end
+local room
+for h in Hull.HullList do if h.Submarine==Submarine.MainSub then room=h;break end end
+local c=Character.Create('human',room.WorldPosition,'bmt-bag-reported',nil,0,false,true,true,nil,true,false)
+c.GodMode=true;c.AIController.Enabled=false;Character.Controlled=c
+local function create(id) return Item(ItemPrefab.Prefabs[id],room.WorldPosition,nil) end
+local pack,page=create('aegisvacuumpack'),create('aegisvacuumpage')
+assert(c.Inventory.TryPutItem(pack,c,{InvSlotType.Bag}))
+assert(pack.OwnInventory.TryPutItem(page,c))
+local ctx=G.context(pack,c)
+LuaUserData.RegisterType('Barotrauma.CargoManager')
+local manager=LuaUserData.CreateStatic('Barotrauma.CargoManager')(nil)
+local function listed(item)
+ local found=false;U.each(manager.GetSellableItems(c),function(it) if it==item then found=true end end);return found
+end
+local tool=create('combatmultitool')
+assert(G.insert(pack,tool,c))
+check('stored empty combat multitool is sellable',function() assert(listed(tool)) end)
+local manual=create('combatmultitool')
+assert(c.Inventory.TryPutItem(manual,c,{InvSlotType.Any}))
+check('manual insert empty combat multitool stays sellable',function()
+ assert(listed(manual));assert(G.insertBatch(ctx,{manual.ID}));assert(G.has(pack,manual));assert(listed(manual))
+end)
+local battery=create('batterycell');assert(manual.OwnInventory.TryPutItem(battery,c))
+check('loaded combat multitool follows native sale order and battery is listed',function()
+ assert(not listed(manual),'native requires contained battery sold first');assert(listed(battery),'stored battery missing')
+end)
+check('battery removal makes manually inserted combat multitool sellable',function()
+ battery.Drop(c,true);assert(listed(manual))
+end)
+local welder,fuel=create('weldingtool'),create('weldingfueltank')
+assert(welder.OwnInventory.TryPutItem(fuel,c));assert(c.Inventory.TryPutItem(welder,c,{InvSlotType.Any}))
+welder.Drop(c,true)
+check('floor mode collects player-dropped loaded welder intact',function()
+ assert(G.setLooseOnly(ctx,true));assert(not welder.ParentInventory)
+ assert(G.pickupTarget(welder,ctx)==welder,'loaded dropped welder was rejected')
+ assert(not G.pickupTarget(fuel,ctx),'fuel extracted separately');assert(fuel.Container==welder)
+ assert(G.insert(pack,welder,c));assert(G.has(pack,welder) and fuel.Container==welder)
+end)
+check('floor mode collects dropped loaded combat multitool but leaves cabinet contents',function()
+ assert(manual.OwnInventory.TryPutItem(battery,c));assert(G.withdraw(ctx,manual.ID));manual.Drop(c,true)
+ assert(G.pickupTarget(manual,ctx)==manual and not G.pickupTarget(battery,ctx))
+ local cabinet,copper=create('mediumsteelcabinet'),create('copper')
+ assert(cabinet.OwnInventory.TryPutItem(copper,c))
+ assert(not G.pickupTarget(copper,ctx) and not G.pickupTarget(cabinet,ctx))
+end)
+check('production suction collects a dropped loaded welder without extracting cabinet contents',function()
+ local bot=Character.Create('human',Submarine.MainSub.WorldPosition+Vector2(0,2500),'bmt-floor-loop',nil,0,false,true,true,nil,true,false)
+ bot.GodMode=true;bot.AIController.Enabled=false
+ local nozzle,cell,bagPack,storage=create('aegisvacuum'),create('batterycell'),create('aegisvacuumpack'),create('aegisvacuumpage')
+ assert(bot.Inventory.TryPutItem(bagPack,bot,{InvSlotType.Bag}))
+ assert(bot.Inventory.TryPutItem(nozzle,bot,{InvSlotType.RightHand+InvSlotType.LeftHand}))
+ assert(nozzle.OwnInventory.TryPutItem(cell,0,false,false,bot));assert(bagPack.OwnInventory.TryPutItem(storage,bot))
+ local dropped,tank,cabinet,copper=create('weldingtool'),create('weldingfueltank'),create('mediumsteelcabinet'),create('copper')
+ assert(dropped.OwnInventory.TryPutItem(tank,bot));assert(bot.Inventory.TryPutItem(dropped,bot,{InvSlotType.Any}))
+ dropped.Drop(bot,true);assert(cabinet.OwnInventory.TryPutItem(copper,bot))
+ local p,d=G.muzzle(nozzle),G.direction(nozzle);local ahead=Vector2(p.x+d.x*40,p.y+d.y*40)
+ dropped.Move(ahead-dropped.WorldPosition,true);cabinet.Move(ahead+Vector2(0,30)-cabinet.WorldPosition,true)
+ assert(G.setLooseOnly(G.context(nozzle,bot),true))
+ local pickup=G.pickupTarget;local owned={[dropped]=true,[tank]=true,[cabinet]=true,[copper]=true}
+ G.pickupTarget=function(it,context) if owned[it] then return pickup(it,context) end end
+ local ok,err=pcall(function()
+  bot.SetInput(InputType.Aim,false,true);local ranged=U.component(nozzle,'RangedWeapon')
+  for i=1,100 do ranged.Use(.1,bot);G.update(.1);if G.has(bagPack,dropped) then break end end
+  assert(G.has(bagPack,dropped),'production suction missed dropped loaded tool')
+  assert(tank.Container==dropped and copper.Container==cabinet and not cabinet.ParentInventory)
+ end)
+ G.pickupTarget=pickup;bot.SetInput(InputType.Aim,false,false);assert(ok,err)
+end)
+_G.ReportedBackpack={G=G,c=c,pack=pack,page=page,ctx=ctx,tool=tool,manual=manual,battery=battery,manager=manager,create=create,check=check,listed=listed}

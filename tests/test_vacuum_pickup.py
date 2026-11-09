@@ -2,6 +2,33 @@ from lua_support import LuaCase
 
 
 class VacuumPickupTests(LuaCase):
+    def test_floor_only_skips_contained_items_but_collects_loaded_floor_items_intact(self):
+        self.lua.execute('''
+            ctx.pack={Tags='bmt.vacuum.looseonly'};G.jobs={};G.pending={}
+            require('SalvageVacuum.filters').install(G,E)
+            assert(G.pickupTarget(item,ctx)==item)
+            local cabinet={id='cabinet',type='Barotrauma.Item',Components={},HasAccess=item.HasAccess}
+            item.ParentInventory={Owner=cabinet}
+            assert(G.pickupTarget(item,ctx)==nil,'floor mode extracted cabinet contents')
+            item.ParentInventory=nil
+            item.children={{id='iron',Components={pick},AllowedSlots={'Any'},HasAccess=item.HasAccess}}
+            assert(G.pickupTarget(item,ctx)==item,'floor mode rejected a dropped tool with fuel')
+            item.children={};assert(G.pickupTarget(item,ctx)==item)
+        ''')
+
+    def test_floor_loaded_item_still_respects_descendant_exclusions_and_locks(self):
+        self.lua.execute('''
+            ctx.pack={Tags='bmt.vacuum.looseonly,bmt.vacuum.exclude.iron'};G.jobs={};G.pending={}
+            require('SalvageVacuum.filters').install(G,E)
+            local child={id='iron',Components={pick},AllowedSlots={'Any'},HasAccess=item.HasAccess}
+            item.children={child}
+            assert(not G.pickupTarget(item,ctx),'excluded cargo was collected inside a floor container')
+            ctx.pack.Tags='bmt.vacuum.looseonly';G.clearFilters()
+            assert(G.pickupTarget(item,ctx)==item)
+            child.ParentInventory={Locked=true}
+            assert(not G.pickupTarget(item,ctx),'locked cargo was collected inside a floor container')
+        ''')
+
     def setUp(self):
         super().setUp()
         self.lua.execute("""

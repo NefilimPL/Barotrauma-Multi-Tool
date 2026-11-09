@@ -1,5 +1,14 @@
 # Aegis — weryfikacja
 
+## Poprawka 1.3.11 — koszt efektów trafień (2026-11-06)
+
+Natywny klient GPU potwierdził wysoki koszt nakładających się błysków.
+Renderer łączy bliskie trafienia tego samego źródła w oknie 40 ms,
+ogranicza liczbę jednoczesnych efektów trafień do 24, pomija rysowanie
+efektów poza ekranem i korzysta z macierzy kamery w obliczeniach punktów.
+Decyzje o obrażeniach, kolizjach i energii pozostają w symulacji serwera.
+[Pomiar, scenariusz i ograniczenia](IMPACT-BACKPACK-VERIFICATION.md).
+
 ## Poprawka 1.3.10 — historyczne kolizje multiplayer (2026-11-06)
 
 Pozostałe rany od przodu odtworzono na natywnych `Limb.LagCompensatedBody`.

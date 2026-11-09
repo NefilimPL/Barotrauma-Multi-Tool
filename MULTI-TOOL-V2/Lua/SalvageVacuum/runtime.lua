@@ -91,8 +91,12 @@ function M.install(G,E)
         end
         return true
     end
+    function G.safeStorageInput(item,ctx) return safeContents(item,ctx,{},{count=0}) end
     function G.pickupTarget(item,ctx)
         if not item or item.Removed then return nil end
+        -- A dropped tool may contain fuel/ammo. Take the floor root intact,
+        -- but never extract any item from an inventory in this mode.
+        if G.looseOnly and G.looseOnly(ctx.pack) and item.ParentInventory then return nil end
         local candidates,node,seen={},item,{}
         while node do
             if seen[node] then return nil end

@@ -188,6 +188,25 @@ function M.install(G,E)
         end
         return false
     end
+    function G.withdrawBatch(ctx,ids,wholeGroups)
+        if not ctx.valid or G.pending[ctx.pack] or G.jobs[ctx.pack] or type(ids)~='table' or #ids>100 then return false,0 end
+        local selected={};for _,id in ipairs(ids) do selected[id]=true end
+        local items={}
+        if wholeGroups then
+            for _,group in ipairs(G.storageView(ctx.pack).groups) do
+                local chosen=false
+                for _,r in ipairs(group.items) do if selected[r.id] then chosen=true;break end end
+                if chosen then for _,r in ipairs(group.items) do items[#items+1]=r.item end end
+            end
+        else
+            for _,item in ipairs(G.contents(ctx.pack)) do if selected[item.ID] then items[#items+1]=item end end
+        end
+        local moved=0
+        for _,item in ipairs(items) do
+            if not item.Removed and not G.reserved[item] and G.has(ctx.pack,item) and take(item,ctx.owner) then moved=moved+1 end
+        end
+        return moved>0,moved
+    end
     function G.withdrawStack(ctx,id)
         if not ctx.valid or G.pending[ctx.pack] or G.jobs[ctx.pack] then return false end
         local group,selected

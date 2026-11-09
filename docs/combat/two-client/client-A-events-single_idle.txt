@@ -1,0 +1,5 @@
+phase=single_idle
+controlled=5845
+inputs=3243
+authority=false
+visualError=nil

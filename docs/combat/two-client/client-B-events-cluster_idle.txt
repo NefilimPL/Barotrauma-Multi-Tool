@@ -1,0 +1,7 @@
+phase=cluster_idle
+controlled=5857
+inputs=3091
+authority=false
+visualError=nil
+charge=1
+hit=1

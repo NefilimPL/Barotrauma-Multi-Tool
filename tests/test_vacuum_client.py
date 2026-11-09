@@ -41,7 +41,7 @@ class VacuumClientTests(LuaCase):
                     return {valid=c==owner and (own or (i==vacuum and handsValid)),pack=own and i or pack,owner=owner}
                 end,
                 request=function(a,i,t,v) requests[#requests+1]={action=a,item=i,target=t,
-                    filters=v.filters,category=v.category,kind=v.kind,confirm=v.confirm} end,
+                    filters=v.filters,category=v.category,kind=v.kind,confirm=v.confirm,targets=v.targets} end,
                 patch=function(n,c,m,fn) patches[n]=fn end}
             require('SalvageVacuum.client').install(G,E)
             function button(label)
@@ -49,6 +49,28 @@ class VacuumClientTests(LuaCase):
                 error('missing button '..label)
             end
         """)
+
+    def test_multiple_tiles_toggle_and_submit_one_batch_request(self):
+        self.lua.execute('''
+            G.openPanel(pack)
+            G.onSnapshot({vacuum=pack.ID,pack=pack.ID,charge=0,groups=2,count=41,busy=false,
+                page=0,pages=1,packs={pack.ID},rows={
+                    {id=31,kind='iron',name='Iron',count=40,group=1,condition=100,quality=0},
+                    {id=32,kind='iron',name='Copper',count=1,group=2,condition=100,quality=0}}})
+            local cells={}
+            for _,w in ipairs(widgets) do if w.kind=='button' and w.ToolTip and
+                (w.ToolTip:find('Iron',1,true) or w.ToolTip:find('Copper',1,true)) then cells[#cells+1]=w end end
+            cells[1].OnClicked();cells[2].OnClicked()
+            assert(cells[1].Selected and cells[2].Selected,'second selection replaced first')
+            assert(not button('vacuum.trash').Enabled and not button('vacuum.take').Enabled,
+                'single-target actions must not pick an arbitrary item from a multiselection')
+            button('vacuum.takeselected').OnClicked()
+            local r=requests[#requests];assert(r.action=='batch' and #r.targets==2)
+            cells[1].OnClicked();assert(not cells[1].Selected and cells[2].Selected)
+            G.onSnapshot({vacuum=pack.ID,pack=pack.ID,charge=0,groups=0,count=0,busy=false,
+                page=0,pages=1,packs={pack.ID},rows={}})
+            assert(not button('vacuum.takeselected').Enabled,'stale selection survived removal from storage')
+        ''')
 
     def test_visible_storage_button_opens_backpack_without_nozzle(self):
         self.lua.execute("""

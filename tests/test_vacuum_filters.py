@@ -2,6 +2,16 @@ from lua_support import LuaCase
 
 
 class VacuumFilterTests(LuaCase):
+    def test_floor_mode_persists_without_erasing_exclusions_or_other_tags(self):
+        self.lua.execute('''
+            assert(G.setLooseOnly(ctx,true));assert(G.looseOnly(pack))
+            assert(G.setExcluded(ctx,'iron',true));G.clearFilters()
+            assert(G.looseOnly(pack) and G.filter(pack).iron)
+            assert(G.setLooseOnly(ctx,false));assert(not G.looseOnly(pack))
+            assert(pack.Tags:find('custom.tag',1,true) and G.filter(pack).iron)
+            G.pending[pack]={};assert(not G.setLooseOnly(ctx,true))
+        ''')
+
     def setUp(self):
         super().setUp()
         self.lua.execute("""

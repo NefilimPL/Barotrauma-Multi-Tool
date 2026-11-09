@@ -1,0 +1,8 @@
+phase=live_cluster_idle
+controlled=5845
+inputs=3246
+authority=false
+visualError=nil
+charge=2
+shot=2
+hit=2

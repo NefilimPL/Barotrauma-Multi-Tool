@@ -2,6 +2,42 @@ from lua_support import LuaCase
 
 
 class VisualContractTests(LuaCase):
+    def test_repeated_pellet_impacts_coalesce_and_offscreen_impacts_do_not_draw(self):
+        self.lua.execute('''
+            local draws,sounds=0,0
+            local function v(x,y) return {X=x,Y=y} end
+            local E={Sprite=function() return {Draw=function() draws=draws+1 end} end,Vector2=v,
+                Rectangle=function(x,y,w,h) return {X=x,Y=y,Width=w,Height=h} end,Color=function() return {} end,
+                LuaUserData={RegisterType=function() end,CreateEnumTable=function() return {} end,CreateStatic=function() return {} end},
+                GUI={GUI={DrawLine=function() end}}}
+            local G={now=0,authoritative=false,remote={received=0,rings={},shields={}},patch=function() end,
+                playCombatSound=function() sounds=sounds+1 end}
+            require('CombatTool.visuals').install(G,E,'mod')
+            local cam={Zoom=1,WorldView={X=0,Y=100,Width=100,Height=100},WorldToScreen=function(p) return p end}
+            for i=1,64 do G.onEffect('shieldhit',{x=50+i%4,y=50},0,7) end
+            G.draw({},cam)
+            assert(draws==1 and sounds==1,'pellet burst multiplied the same impact rendering/audio')
+            G.clearVisuals();draws=0
+            G.onEffect('hit',{x=10000,y=10000},0,1);G.draw({},cam)
+            assert(draws==0,'offscreen broadcasts consumed impact draw time')
+        ''')
+
+    def test_camera_matrix_projection_preserves_rotation_and_world_y_flip(self):
+        self.lua.execute('''
+            local function v(x,y) return {X=x,Y=y} end
+            local position
+            local E={Sprite=function() return {Draw=function(_,p) position=p end} end,Vector2=v,
+                Rectangle=function(x,y,w,h) return {X=x,Y=y,Width=w,Height=h} end,Color=function() return {} end,
+                LuaUserData={RegisterType=function() end,CreateEnumTable=function() return {} end,CreateStatic=function() return {} end},
+                GUI={GUI={DrawLine=function() end}}}
+            local G={now=0,authoritative=false,remote={received=0,rings={},shields={}},patch=function() end}
+            require('CombatTool.visuals').install(G,E,'mod')
+            local cam={Zoom=2,Transform={M11=0,M12=2,M21=-2,M22=0,M41=100,M42=200},
+                WorldToScreen=function() error('native projection should be cached once per frame') end}
+            G.onEffect('hit',{x=10,y=20},0,1);G.draw({},cam)
+            assert(position.X==140 and position.Y==220,'camera rotation or world Y inversion changed')
+        ''')
+
     def test_flashlight_mount_follows_rendered_body_rotation_and_facing(self):
         self.lua.execute('''
             local beforeLightMap
