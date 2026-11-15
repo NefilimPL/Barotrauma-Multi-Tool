@@ -69,7 +69,7 @@ class MedicalOriginsTests(HeadsetAdapterTests):
             local a=add('burn',20,false)
             G.effectOrigin({},char,a)
             assert(G.absorb(char,{a},0,1).empty and battery.Condition==96)
-            battery.Condition=100
+            battery.Condition=100;G.now=G.now+1
             assert(G.absorb(char,{a},0,1).empty and battery.Condition==96)
         ''')
 
@@ -104,9 +104,9 @@ class MedicalOriginsTests(HeadsetAdapterTests):
         self.lua.execute('''
             local unknown=add('unknown_mod_disease',100,false)
             local artery=add('arterialcut',100,false)
-            for i=1,9 do G.heal(char,item,1) end
+            for i=1,9 do G.now=i;G.heal(char,item,1) end
             assert(math.abs(unknown.Strength+artery.Strength-20)<.0001)
-            G.heal(char,item,1)
+            G.now=10;G.heal(char,item,1)
             assert(unknown.Strength<.0001 and artery.Strength<.0001)
             assert(math.abs(battery.Condition-90)<.0001)
             G.heal(char,item,1)

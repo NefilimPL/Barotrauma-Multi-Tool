@@ -1,0 +1,8 @@
+START client=ShieldHost godmode=false gun=6124 attacker=6125
+SHOT 1 user=Human pos={X:33684.24 Y:69452.42} shield=true gun={X:34273.004 Y:69439.195} angle=-3.081913948059082 dir={X:0.992595 Y:-0.12147091} ff=true
+SHOT 2 user=Human pos={X:33684.44 Y:70117.9} shield=true gun={X:34272.87 Y:70104.2} angle=-3.0819144248962402 dir={X:0.999622 Y:-0.027493652} ff=true
+SHOT 3 user=Human pos={X:33684.387 Y:70835.695} shield=true gun={X:34272.758 Y:70822.28} angle=-3.0819144248962402 dir={X:0.99931014 Y:-0.037138328} ff=true
+SHOT 4 user=Human pos={X:33684.426 Y:71579.75} shield=true gun={X:34272.824 Y:71566.37} angle=-3.0819144248962402 dir={X:0.99999416 Y:-0.0034120653} ff=true
+SHOT 5 user=Human pos={X:33684.504 Y:72336.44} shield=true gun={X:34272.72 Y:72322.734} angle=-3.081913948059082 dir={X:0.99865353 Y:-0.05187644} ff=true
+SHOT 6 user=Human pos={X:33684.645 Y:73096.4} shield=true gun={X:34272.734 Y:73093.45} angle=-3.0739941596984863 dir={X:0.99992734 Y:-0.012052453} ff=true
+RESULT shots=6 hits=6 damage=0 vitality=100 aim=true shield=true AI=Barotrauma.AIObjectiveCombat weapon=nil

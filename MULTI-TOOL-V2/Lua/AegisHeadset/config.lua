@@ -3,6 +3,7 @@ return {
     pressureCost=2.5,healRate=5,healCost=.125,
     mk2HealMultiplier=4,mk2RegenMultiplier=1.5,
     mk2EnergyMultiplier=.4,
+    powerBurst=5,powerRate=5,
     organCost=7.5,organSeconds=5,limbCost=12.5,limbSeconds=10,
     surgeryCost=7.5,surgerySeconds=5,
     hitMinimum=1,hitMultiplier=.5,

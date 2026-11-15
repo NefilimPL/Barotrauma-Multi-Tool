@@ -1,0 +1,7 @@
+ammo=scp_357round end=34208.015625,69387.265625 onArc=true passed=1 failed=0
+ammo=scp_357round end=34193.61328125,70103.921875 onArc=true passed=2 failed=0
+ammo=scp_357round end=34194.640625,70816.859375 onArc=true passed=3 failed=0
+ammo=scp_357round end=34199.12890625,71577.953125 onArc=true passed=4 failed=0
+ammo=scp_357round end=34193.80078125,72310.203125 onArc=true passed=5 failed=0
+ammo=scp_357round end=34197.8828125,73100.953125 onArc=true passed=6 failed=0
+TOTAL expected=6 passed=6 failed=0

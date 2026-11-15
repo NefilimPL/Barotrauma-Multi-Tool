@@ -201,7 +201,7 @@ class ShieldRenderSynchronizationTests(LuaCase):
                 Entity={FindEntityByID=function(id) if id==42 then return gun end end}}
             G=require('CombatTool.game').new(env)
             require('CombatTool.physics').install(G,env)
-            G.patch=function() end;G.cast=function() end
+            hooks={};G.patch=function(id,_,_,fn) hooks[id]=fn end;G.cast=function() end
             require('CombatTool.visuals').install(G,env,'mod')
             G.authoritative=false
             G.remote={received=0,rings={},shields={{id=42,x=-100,y=-200,angle=0,energy=70}}}
@@ -240,3 +240,78 @@ class ShieldRenderSynchronizationTests(LuaCase):
         self.lua.execute('env.Entity.FindEntityByID=function() end;draw()')
         self.assertAlmostEqual(self.lua.globals().drawX, -40)
         self.assertAlmostEqual(self.lua.globals().drawY, -200)
+
+    def tracer(self, start=(30, 200), end=(30, 40), setup='', projectile_setup=''):
+        self.lua.execute(setup)
+        self.lua.execute('''
+            projectile={Item={}}
+            params={startLocation=env.Vector2(...)}
+        ''', *start)
+        self.lua.globals().params.endLocation = self.lua.globals().env.Vector2(*end)
+        self.lua.execute(projectile_setup)
+        self.lua.execute("if hooks['shield-tracer'] then hooks['shield-tracer'](projectile,params) end")
+        return self.lua.eval('params.endLocation.X'), self.lua.eval('params.endLocation.Y')
+
+    def test_multiplayer_tracer_ends_at_visible_shield_without_spending_energy(self):
+        self.assertEqual(self.tracer(), (30, 120))
+        self.assertEqual(self.lua.eval('G.remote.shields[1].energy'), 70)
+        self.assertIsNone(self.lua.eval('params.PreventExecution'))
+
+    def test_tracer_preserves_rear_inside_and_nearer_wall_endpoints(self):
+        for start, end in [((30, -100), (30, 40)), ((30, 100), (30, 40)),
+                           ((30, 200), (30, 150))]:
+            with self.subTest(start=start, end=end):
+                self.assertEqual(self.tracer(start, end), end)
+
+    def test_tracer_requires_current_confirmed_powered_unclipped_shield(self):
+        for setup in ['G.remote.shields={}', 'G.now=.6',
+                      'G.remote.shields[1].energy=0',
+                      'G.remote.shields[1].energy=.5',
+                      "G.cast=function() return {kind='wall',t=.5} end"]:
+            with self.subTest(setup=setup):
+                self.setUp()
+                self.assertEqual(self.tracer(setup=setup), (30, 40))
+
+    def test_tracer_can_use_confirmed_snapshot_when_weapon_entity_is_missing(self):
+        self.assertEqual(self.tracer(start=(100, -200), end=(-100, -200),
+            setup='env.Entity.FindEntityByID=function() end'), (-20, -200))
+
+    def test_tracer_matches_reactor_rod_energy_discount(self):
+        self.assertEqual(self.tracer(setup='''
+            G.remote.shields[1].energy=.5
+            gun.OwnInventory={GetItemAt=function() return {
+                Condition=.5,MaxCondition=100,HasTag=function(t) return t=='reactorfuel' end} end}
+        '''), (30, 120))
+
+    def test_singleplayer_tracer_keeps_native_server_collision_result(self):
+        self.assertEqual(self.tracer(setup='G.authoritative=true'), (30, 40))
+
+    def test_tracer_stops_at_nearest_confirmed_shield(self):
+        self.assertEqual(self.tracer(setup='''
+            G.remote.shields[2]={id=43,x=30,y=90,angle=math.pi/2,energy=70}
+        '''), (30, 170))
+
+    def test_tracer_respects_native_friendly_fire_filters(self):
+        setup='''
+            owner={TeamID=1};attacker={TeamID=1,IsOnPlayerTeam=true}
+            G.owner=function() return owner end;G.friendly=function() return true end
+            env.Game={ServerSettings={AllowFriendlyFire=false}}
+        '''
+        self.assertEqual(self.tracer(setup=setup,
+            projectile_setup='projectile.User=attacker;projectile.FriendlyFire=true'), (30, 40))
+        self.assertEqual(self.tracer(setup='attacker.TeamID=3;attacker.IsOnPlayerTeam=false',
+            projectile_setup='projectile.User=attacker;projectile.FriendlyFire=true'), (30, 120))
+        self.assertEqual(self.tracer(
+            projectile_setup='projectile.User=attacker;projectile.FriendlyFire=false'), (30, 40))
+        self.assertEqual(self.tracer(projectile_setup='projectile.User=owner'), (30, 40))
+
+    def test_tracer_uses_actual_projectile_damage_for_energy_cost(self):
+        self.assertEqual(self.tracer(setup='G.remote.shields[1].energy=2',
+            projectile_setup='projectile.Attack={GetTotalCharacterDamage=function() return 40 end}'), (30, 40))
+
+    def test_tracer_never_clips_own_weapon_fire(self):
+        self.lua.execute('''
+            params={startLocation=env.Vector2(30,200),endLocation=env.Vector2(30,40)}
+            if hooks['shield-tracer'] then hooks['shield-tracer']({Item={},Launcher=gun},params) end
+        ''')
+        self.assertEqual(self.lua.eval('params.endLocation.Y'), 40)

@@ -1,0 +1,15 @@
+native coil before energy=100.0000
+native coil hit 1 energy=95.0000
+native coil hit 2 energy=95.0000
+native coil hit 3 energy=95.0000
+native coil hit 4 energy=95.0000
+native coil hit 5 energy=95.0000
+native coil hit 6 energy=95.0000
+burn before energy=100.0000
+burn after 1000 calls in one frame energy=95.0000
+stun before energy=100.0000
+stun after 1000 calls in one frame energy=95.0000
+internaldamage before energy=100.0000
+internaldamage after 1000 calls in one frame energy=95.0000
+normal healing with small positive remainder energy=0.1000
+mixed spam 5.0167s 301 frames energy=69.9992

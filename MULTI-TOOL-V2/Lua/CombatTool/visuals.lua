@@ -252,6 +252,44 @@ function M.install(G,E,root)
         end
         return {id=s.id,x=s.x,y=s.y,angle=s.angle,energy=energy or s.energy}
     end
+    function G.findClientShield(a,b,proj,rendered)
+        if G.authoritative or G.now-(G.remote.received or -100)>=.5 then return end
+        local nearest,point
+        local attacker=proj.User or proj.Attacker
+        local damage=proj.Attack and proj.Attack.GetTotalCharacterDamage() or 20
+        local cost=Core.bulletCost(damage)
+        for _,snapshot in ipairs(G.remote.shields) do
+            local item=snapshot.id and E.Entity and E.Entity.FindEntityByID(snapshot.id)
+            local owner=item and G.owner(item)
+            local allowed=(not item or item~=proj.Launcher) and (not owner or owner~=attacker)
+            if allowed and proj.FriendlyFire==false and G.friendly(owner,attacker) then allowed=false end
+            if allowed and owner and attacker and attacker.IsOnPlayerTeam and owner.TeamID==attacker.TeamID then
+                local settings=E.Game and E.Game.ServerSettings
+                if settings and settings.AllowFriendlyFire==false then allowed=false end
+            end
+            local source=item and G.source(item,0)
+            local debit=cost*(source and source.multiplier or 1)
+            if allowed and (snapshot.energy or 0)+1e-7>=debit then
+                local shield
+                if not rendered and item and item.body then
+                    local pos=item.WorldPosition
+                    shield={x=pos.X,y=pos.Y,angle=item.body.TransformedRotation}
+                else shield=shieldVisual(snapshot,item) end
+                shield.radius,shield.halfAngle=C.shieldRadius,C.shieldHalfAngle
+                local t,hit=Core.segmentArc(a,b,shield)
+                if t and (not nearest or t<nearest) and not G.cast(shield,hit,0,owner,true) then
+                    nearest,point=t,hit
+                end
+            end
+        end
+        return point
+    end
+    G.patch('shield-tracer','Barotrauma.Items.Components.Projectile','LaunchProjSpecific',function(proj,p)
+        -- Native multiplayer hitscans also produce tracers independently of
+        -- the server. Use the rendered pose only for their visual endpoint.
+        local point=G.findClientShield(U.point(p['startLocation']),U.point(p['endLocation']),proj,true)
+        if point then p['endLocation']=E.Vector2(point.x,point.y) end
+    end)
     function G.draw(batch,cam)
         if not cam then return end
         -- Cache the native camera's affine matrix once, including shake/rotation.

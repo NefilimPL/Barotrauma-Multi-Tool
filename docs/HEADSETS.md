@@ -47,6 +47,23 @@ z geometrią produkcyjnego renderera. To ilustracja, nie zrzut ekranu gry.
 
 ## Zasilanie
 
+Od **1.3.13** wszystkie funkcje obu modeli dzielą jeden limit poboru
+przypisany do fizycznego ogniwa: zapas 5 punktów procentowych baterii,
+odnawiany o 5 punktów/s czasu symulacji. Przez `t` sekund słuchawki mogą
+zużyć najwyżej `5 + 5*t` punktów. Pełne ogniwo wystarcza na co najmniej
+19 s nawet przy ciągłym maksymalnym obciążeniu. Bezczynność nie powiększa
+zapasu powyżej 5 punktów, a przełożenie ogniwa nie resetuje limitu.
+
+Limit obejmuje łącznie trafienia, ogłuszenie, efekty innych modów, leczenie,
+regenerację anatomii i ochronę przed ciśnieniem. Po wykorzystaniu bieżącego
+budżetu kolejne efekty nie zwiększają poboru. Ochrona i tempo leczenia są
+zachowane przy dodatnim naładowaniu; pusta bateria nadal ich nie zapewnia.
+Nieudane leczenie i nieudane przechwycenie ataku zwracają niewykorzystany
+budżet. Limit nie obejmuje innych urządzeń ani skryptów zmieniających stan
+ogniwa bezpośrednio. [Weryfikacja](HEADSET-POWER-VERIFICATION.md).
+
+Poniższe ceny są kosztami nominalnymi, przed wspólnym ograniczeniem poboru.
+
 - Ciśnienie: podstawowy 2,5% standardowego ogniwa/s (około 40 s);
   Mk II 1%/s (około 100 s samej ochrony).
 - Leczenie: wspólny limit 5 jednostek siły/s w podstawowym, 20 w Mk II;

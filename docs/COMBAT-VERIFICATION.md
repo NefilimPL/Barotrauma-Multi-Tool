@@ -1,5 +1,19 @@
 # Aegis — weryfikacja
 
+## Poprawka 1.3.15 — lokalne obrażenia cofane przez serwer (2026-11-15)
+
+Po skróceniu smug klient nadal wykonywał natywną kolizję pocisku z postacią.
+Odtworzono spadki zdrowia 100 → 56 → 12, przy zerowych obrażeniach i zdrowiu
+100 na serwerze. Poprawka zatrzymuje tę kolizję przed raną i efektem bólu.
+[Scenariusz, wyniki i zakres](SHIELD-CLIENT-DAMAGE-VERIFICATION.md).
+
+## Poprawka 1.3.14 — smugi przez tarczę w multiplayerze (2026-11-15)
+
+Odtworzono rozbieżność: serwer blokował pociski kapitana, ale klient rysował
+smugi do postaci za tarczą. Poprawka skraca natywny efekt `LaunchProjSpecific`
+do łuku potwierdzonej, widocznej tarczy. Nie zmienia obsługi obrażeń.
+[Scenariusz, wyniki i ograniczenia](SHIELD-TRACER-VERIFICATION.md).
+
 ## Poprawka 1.3.11 — koszt efektów trafień (2026-11-06)
 
 Natywny klient GPU potwierdził wysoki koszt nakładających się błysków.

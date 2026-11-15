@@ -1,0 +1,9 @@
+PASS native headset slot and battery container
+PASS native gradual burn treatment and energy cost
+PASS native full attack blocked before health damage
+PASS native partial battery passes remaining attack damage
+PASS native basic headset receives ordinary attacks
+PASS native severed limb restored with joints and mass
+PASS native pressure consumes at configured rate outside hull
+PASS native update protects exposed wearer before implosion
+PASS removing headset leaves no permanent pressure immunity

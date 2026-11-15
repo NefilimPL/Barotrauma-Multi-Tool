@@ -1,0 +1,4 @@
+READY headset=nil
+BEFORE call=1 limb=12 health=100 overlay=0
+AFTER delta=-44 health=56 overlay=0.4399999976158142
+LATER health=45.09937286376953 calls=1 drops=1

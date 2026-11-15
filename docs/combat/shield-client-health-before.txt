@@ -1,0 +1,16 @@
+READY headset=Słuchawki z mikrofonem (ID: 3923)
+BEFORE call=1 limb=1 health=100 overlay=0
+AFTER delta=-4.1999969482421875 health=95.80000305175781 overlay=0.2800000011920929
+LATER health=95.80000305175781 calls=1 drops=1
+BEFORE call=2 limb=12 health=100 overlay=-0.003333335742354393
+AFTER delta=-44 health=56 overlay=0.4399999976158142
+LATER health=56 calls=2 drops=2
+BEFORE call=3 limb=12 health=56 overlay=-0.010000145062804222
+AFTER delta=-44 health=12 overlay=0.4399999976158142
+LATER health=12 calls=3 drops=3
+BEFORE call=4 limb=12 health=100 overlay=-0.010000145062804222
+AFTER delta=-44 health=56 overlay=0.4399999976158142
+LATER health=56 calls=4 drops=4
+BEFORE call=5 limb=12 health=56 overlay=-0.010000145062804222
+AFTER delta=-44 health=12 overlay=0.4399999976158142
+LATER health=12 calls=5 drops=5
