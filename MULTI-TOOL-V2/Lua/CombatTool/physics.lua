@@ -1,4 +1,5 @@
 local U=require('CombatTool.util')
+local C=require('CombatTool.config')
 local P={}
 function P.install(G,E)
     local function is(value,name) return value and E.LuaUserData.IsTargetType(value,'Barotrauma.'..name) end
@@ -7,6 +8,14 @@ function P.install(G,E)
     function G.direction(item)
         local angle=item.body.TransformedRotation
         return {x=math.cos(angle),y=math.sin(angle)},angle
+    end
+    function G.recoil(item)
+        if not item or item.Removed or U.itemId(item)~=C.identifier then return end
+        local body=item.body
+        if not body or not body.Enabled then return end
+        G.state(item).recoilStarted=G.now
+        local direction=G.direction(item)
+        body.ApplyLinearImpulse(E.Vector2(-direction.x,-direction.y)*body.Mass*C.recoilVelocity,C.recoilMaxVelocity)
     end
     function G.muzzle(item)
         local ranged=U.component(item,'RangedWeapon')
