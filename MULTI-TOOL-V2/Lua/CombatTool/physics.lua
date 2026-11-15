@@ -13,6 +13,7 @@ function P.install(G,E)
         if not item or item.Removed or U.itemId(item)~=C.identifier then return end
         local body=item.body
         if not body or not body.Enabled then return end
+        G.state(item).recoilStarted=G.now
         local direction=G.direction(item)
         body.ApplyLinearImpulse(E.Vector2(-direction.x,-direction.y)*body.Mass*C.recoilVelocity,C.recoilMaxVelocity)
     end

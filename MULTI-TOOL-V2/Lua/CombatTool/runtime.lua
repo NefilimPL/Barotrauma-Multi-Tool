@@ -4,6 +4,20 @@ local AI=require('CombatTool.ai')
 local M={}
 function M.install(G,E)
     local both=E.LuaUserData.CreateEnumTable('Barotrauma.Items.Components.RepairTool+UseEnvironment').Both
+    -- HoldItem resets body dynamics every frame, cancelling physical recoil.
+    -- Offset its aimed pose so the native weapon and hands show the shot pulse.
+    G.patch('recoil-pose','Barotrauma.AnimController','HoldItem',function(_,p)
+        local s=G.states[p['item']]
+        if not p['aim'] or not s or not s.recoilStarted then return end
+        local age=G.now-s.recoilStarted
+        if age<0 or age>=C.recoilDuration then return end
+        local kick=math.min(age/.025,1)*(1-age/C.recoilDuration)^2
+        local pos=p['itemPos']
+        -- HoldItem takes simulation units and radians; Holdable properties use
+        -- display units and degrees. Change only these call arguments.
+        p['itemPos']=E.Vector2(pos.X-C.recoilDistance*kick/100,pos.Y)
+        p['itemAngleRelativeToHoldAngle']=E.Single((p['itemAngleRelativeToHoldAngle'] or 0)+C.recoilAngle*kick)
+    end)
     local function activate(item)
         local state=G.state(item)
         if state.runtimeReady then return end

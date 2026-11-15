@@ -72,3 +72,48 @@ class CombatRecoilTests(LuaCase):
             assert(lastImpulse.X==-20 and lastImpulse.Y==0)
             assert(#G.rings==1,'recoil changed projectile creation')
         ''')
+
+    def test_held_pose_recoils_and_recovers_without_changing_prefab(self):
+        self.lua.execute('''
+            local v=env.Vector2
+            local hold={Name='Holdable',AimPos=v(40,-7),AimAngle=0}
+            gun.Components={hold}
+            local hooks={}
+            G.patch=function(name,_,_,fn) hooks[name]=fn end
+            env.LuaUserData={CreateEnumTable=function() return {Both=1} end,
+                RegisterType=function() return {} end,MakeFieldAccessible=function() end}
+            env.Hook={Add=function() end}
+            env.Single=function(value) return {Value=value,isSingle=true} end
+            require('CombatTool.runtime').install(G,env)
+            assert(hooks['recoil-pose'],'held weapon pose has no recoil hook')
+            G.now=1;G.recoil(gun)
+            local function arguments(item,aim)
+                local values={item=item,aim=aim,itemPos=v(.4,-.07),itemAngleRelativeToHoldAngle=0}
+                return setmetatable({}, {__index=values,__newindex=function(_,key,value)
+                    if key=='itemAngleRelativeToHoldAngle' then
+                        assert(type(value)=='table' and value.isSingle,'native float parameter received an unboxed Lua double')
+                        values[key]=value.Value
+                    else values[key]=value end
+                end})
+            end
+            local function pose(age,aim,item)
+                G.now=1+age
+                local p=arguments(item or gun,aim)
+                hooks['recoil-pose']({},p)
+                return p
+            end
+            local peak=pose(.025,true)
+            assert(peak.itemPos.X<.35,'held weapon did not move back at least five pixels')
+            assert(peak.itemAngleRelativeToHoldAngle>.02,'held weapon did not visibly lift its muzzle')
+            local recovery=pose(.15,true)
+            assert(recovery.itemPos.X>peak.itemPos.X and recovery.itemPos.X<.4)
+            for _,p in ipairs({pose(.3,true),pose(.025,false),pose(.025,true,{})}) do
+                assert(p.itemPos.X==.4 and p.itemAngleRelativeToHoldAngle==0,'recoil leaked outside its aimed pulse')
+            end
+            assert(hold.AimPos.X==40 and hold.AimAngle==0,'recoil permanently changed the prefab pose')
+            G.now=2;G.recoil(gun)
+            G.now=2.025
+            local p=arguments(gun,true)
+            hooks['recoil-pose']({},p)
+            assert(math.abs(p.itemPos.X-peak.itemPos.X)<.00001,'repeated shots accumulated positional drift')
+        ''')
