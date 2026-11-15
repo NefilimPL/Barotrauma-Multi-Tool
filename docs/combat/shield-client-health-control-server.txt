@@ -1,0 +1,4 @@
+START client=ShieldHost godmode=false gun=3281 attacker=3282
+SHOT 1 user=Human pos={X:16769.488 Y:79317.23} shield=false gun={X:17353.191 Y:79314.25} angle=nil dir={X:0.9984226 Y:-0.056145042} ff=true
+DAMAGE limb=12 shield=false
+RESULT shots=1 hits=0 damage=1 vitality=45.453155517578125 aim=true shield=false AI=Barotrauma.AIObjectiveCombat weapon=Service Revolver (ID: 3284)

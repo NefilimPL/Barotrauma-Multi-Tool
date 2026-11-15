@@ -1,5 +1,12 @@
 # Barotrauma-Multi-Tool
 
+Wersja **1.3.15** zatrzymuje także lokalnie przewidywane trafienie pocisku
+w tarczę. W 1.3.14 serwer blokował obrażenia i smuga kończyła się na tarczy,
+ale klient nadal chwilowo naliczał ranę i ból, po czym synchronizacja
+przywracała zdrowie. Poprawka przerywa trafienie przed zadaniem obrażeń;
+nie leczy postaci po strzale. [Weryfikacja](docs/SHIELD-CLIENT-DAMAGE-VERIFICATION.md).
+Po aktualizacji zrestartuj grę i hostowany serwer.
+
 Wersja **1.3.14** kończy smugi pocisków na widocznej tarczy w multiplayerze.
 Klient wcześniej rysował je przez tarczę mimo zablokowania obrażeń na serwerze.
 Odtworzono to na rewolwerze kapitana z Enhanced Armaments i podłączonym graczu.

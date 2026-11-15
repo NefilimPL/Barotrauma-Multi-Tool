@@ -1,0 +1,13 @@
+ammo=scp_357round end=17279.23828125,79287.2734375 onArc=true passed=1 failed=0
+HEALTH value=100 localDamage=0 overlay=-0.010000145062804222
+ammo=scp_357round end=17274.3671875,79312.6015625 onArc=true passed=2 failed=0
+HEALTH value=100 localDamage=0 overlay=-0.010000145062804222
+ammo=scp_357round end=17276.33984375,79296.859375 onArc=true passed=3 failed=0
+HEALTH value=100 localDamage=0 overlay=-0.010000145062804222
+ammo=scp_357round end=17283.9375,79276.609375 onArc=true passed=4 failed=0
+HEALTH value=100 localDamage=0 overlay=-0.010000145062804222
+ammo=scp_357round end=17274.9609375,79304.609375 onArc=true passed=5 failed=0
+HEALTH value=100 localDamage=0 overlay=-0.010000145062804222
+ammo=scp_357round end=17274.26953125,79312.6640625 onArc=true passed=6 failed=0
+HEALTH value=100 localDamage=0 overlay=-0.010000145062804222
+TOTAL serverShots=6 clientScans=6 passed=6 failed=0 localDamage=0 minHealth=100 maxOverlay=0

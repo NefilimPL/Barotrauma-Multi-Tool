@@ -16,13 +16,28 @@ Hook.Patch('bmt.host.netinput','Barotrauma.Character','UpdateNetInput',input,Hoo
 print('[HOST SHIELD] client ready')
 
 local U=require('CombatTool.util');local Core=require('CombatTool.core');local G=BMTCombat
-local rows={};local passed,failed=0,0
+local rows={};local passed,failed,localDamage=0,0,0
+local minHealth,maxOverlay,clientScans=math.huge,0,0
+Hook.Patch('bmt.host.client-damage','Barotrauma.Attack','DoDamageToLimb',function(_,p)
+ local limb=p['targetLimb']
+ if limb and limb.character==Character.Controlled then localDamage=localDamage+1 end
+end,Hook.HookMethodType.Before)
+Hook.Patch('bmt.host.client-health','Barotrauma.Items.Components.Projectile','DoHitscan',function(proj)
+ if not proj.User or proj.User.ID~=ShieldHostTarget then return end
+ clientScans=clientScans+1
+ local c=Character.Controlled
+ minHealth=math.min(minHealth,c.Vitality);maxOverlay=math.max(maxOverlay,c.CharacterHealth.DamageOverlayTimer)
+ local row='HEALTH value='..c.Vitality..' localDamage='..localDamage..' overlay='..c.CharacterHealth.DamageOverlayTimer
+ rows[#rows+1]=row;print('[TRACER CHECK] '..row)
+end,Hook.HookMethodType.After)
 Networking.Receive('bmt.shield.host.done',function(m)
  local expected=m.ReadUInt16()
- local summary='TOTAL expected='..expected..' passed='..passed..' failed='..failed
+ local summary='TOTAL serverShots='..expected..' clientScans='..clientScans..' passed='..passed..' failed='..failed..' localDamage='..localDamage..' minHealth='..minHealth..' maxOverlay='..maxOverlay
  rows[#rows+1]=summary;print('[TRACER CHECK] '..summary)
  File.Write('LocalMods/MULTI-TOOL-V2/host-tracer-after.txt',table.concat(rows,'\n'))
- assert(expected>0 and passed==expected and failed==0,'tracers must stop on every shield contact')
+ -- Count native client replays separately from authoritative server shots.
+ assert(expected>0 and clientScans>0 and clientScans<=expected and passed==clientScans and failed==0,'every replayed shot must stop on the shield')
+ assert(localDamage==0 and minHealth>=99.99 and maxOverlay<.001,'blocked bullets must not cause local wounds or pain')
 end)
 Hook.Patch('bmt.host.tracer','Barotrauma.Items.Components.Projectile','LaunchProjSpecific',function(proj,p)
  if not proj.User or proj.User.ID~=ShieldHostTarget then return end

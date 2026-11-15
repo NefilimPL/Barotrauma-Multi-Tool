@@ -11,6 +11,7 @@ for h in Hull.HullList do if h.Submarine==Submarine.MainSub and (not room or h.R
 local origin=room.WorldPosition
 c.TeleportTo(origin+Vector2(200,0));c.GodMode=false;c.SetAllDamage(0,0,0);c.CharacterHealth.RemoveAllAfflictions()
 for item in c.Inventory.AllItems do item.Drop(c,true) end
+assert(not BMTHeadsets.equipped(c),'shield test must not use headset protection or healing')
 local function spawn(kind,inv,fn) Entity.Spawner.AddItemToSpawnQueue(ItemPrefab.Prefabs[kind],inv,nil,nil,function(x) R.created[#R.created+1]=x;if fn then fn(x) end end,false) end
 spawn('combatmultitool',c.Inventory,function(gun) R.gun=gun;assert(c.Inventory.TryPutItem(gun,c,{InvSlotType.RightHand+InvSlotType.LeftHand}));U.component(gun,'LightComponent').IsOn=true;spawn('batterycell',gun.OwnInventory,function(cell) R.cell=cell end) end)
 Entity.Spawner.AddCharacterToSpawnQueue('human',origin-Vector2(350,0),function(a)

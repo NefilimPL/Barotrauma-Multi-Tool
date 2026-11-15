@@ -18,6 +18,7 @@ local ok,err=pcall(function()
     if CLIENT then
         require('CombatTool.audio').install(G,_G)
         require('CombatTool.visuals').install(G,_G,modPath)
+        require('CombatTool.shield_client').install(G,_G)
     end
     require('CombatTool.runtime').install(G,_G)
     require('CombatTool.diagnostics').install(G,_G)

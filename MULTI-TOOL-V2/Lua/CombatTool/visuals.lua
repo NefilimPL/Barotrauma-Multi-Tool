@@ -252,12 +252,8 @@ function M.install(G,E,root)
         end
         return {id=s.id,x=s.x,y=s.y,angle=s.angle,energy=energy or s.energy}
     end
-    G.patch('shield-tracer','Barotrauma.Items.Components.Projectile','LaunchProjSpecific',function(proj,p)
-        -- Multiplayer clients run their own hitscan for particles. Server-side
-        -- interception stops damage, but does not shorten those native tracers.
-        -- Only clip their visual endpoint; energy and hits stay on the server.
+    function G.findClientShield(a,b,proj,rendered)
         if G.authoritative or G.now-(G.remote.received or -100)>=.5 then return end
-        local a,b=U.point(p['startLocation']),U.point(p['endLocation'])
         local nearest,point
         local attacker=proj.User or proj.Attacker
         local damage=proj.Attack and proj.Attack.GetTotalCharacterDamage() or 20
@@ -274,7 +270,11 @@ function M.install(G,E,root)
             local source=item and G.source(item,0)
             local debit=cost*(source and source.multiplier or 1)
             if allowed and (snapshot.energy or 0)+1e-7>=debit then
-                local shield=shieldVisual(snapshot,item)
+                local shield
+                if not rendered and item and item.body then
+                    local pos=item.WorldPosition
+                    shield={x=pos.X,y=pos.Y,angle=item.body.TransformedRotation}
+                else shield=shieldVisual(snapshot,item) end
                 shield.radius,shield.halfAngle=C.shieldRadius,C.shieldHalfAngle
                 local t,hit=Core.segmentArc(a,b,shield)
                 if t and (not nearest or t<nearest) and not G.cast(shield,hit,0,owner,true) then
@@ -282,6 +282,12 @@ function M.install(G,E,root)
                 end
             end
         end
+        return point
+    end
+    G.patch('shield-tracer','Barotrauma.Items.Components.Projectile','LaunchProjSpecific',function(proj,p)
+        -- Native multiplayer hitscans also produce tracers independently of
+        -- the server. Use the rendered pose only for their visual endpoint.
+        local point=G.findClientShield(U.point(p['startLocation']),U.point(p['endLocation']),proj,true)
         if point then p['endLocation']=E.Vector2(point.x,point.y) end
     end)
     function G.draw(batch,cam)
