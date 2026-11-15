@@ -34,6 +34,11 @@ function N.install(G,E)
             local angle=message.ReadSingle()
             local endpoint
             if kind=='arc' then endpoint={x=message.ReadSingle(),y=message.ReadSingle()} end
+            -- Multiplayer firing is simulated on the server; the native client
+            -- weapon Use is suppressed. Reproduce its small recoil locally.
+            if kind=='shot' and not G.authoritative and E.Entity then
+                G.recoil(E.Entity.FindEntityByID(id))
+            end
             if kind and G.onEffect then G.onEffect(kind,point,angle,id,endpoint) end
         end)
         E.Networking.Receive(snapshotName,function(message)

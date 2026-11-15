@@ -22,10 +22,11 @@ class ShieldFrameTests(ShieldRenderSynchronizationTests):
     def test_stationary_occlusion_is_reused_and_moving_or_expired_masks_refresh(self):
         self.lua.execute("""
             local casts=0;G.cast=function() casts=casts+1 end
-            draw();assert(casts==41)
-            G.now=.02;draw();assert(casts==41,'stationary shield repeated occlusion casts')
-            body.DrawPosition.X=body.DrawPosition.X+10;draw();assert(casts==82)
-            G.now=.15;draw();assert(casts==123,'dynamic obstruction mask did not expire')
+            env.GUI.GUI.DrawLine=function() error('extra procedural shield outline') end
+            draw();assert(casts==16 and drawCount>0)
+            G.now=.02;draw();assert(casts==16,'stationary shield repeated occlusion casts')
+            body.DrawPosition.X=body.DrawPosition.X+10;draw();assert(casts==32)
+            G.now=.15;draw();assert(casts==48,'dynamic obstruction mask did not expire')
         """)
 
     def test_offscreen_shield_does_not_cast_or_draw(self):
@@ -34,7 +35,7 @@ class ShieldFrameTests(ShieldRenderSynchronizationTests):
             camera.WorldView={X=10000,Y=10100,Width=100,Height=100}
             draw();assert(casts==0 and drawCount==0,'offscreen shield performed rendering work')
             camera.WorldView={X=-200,Y=200,Width=400,Height=400}
-            draw();assert(casts==41 and drawCount>0,'visible shield disappeared')
+            draw();assert(casts==16 and drawCount>0,'visible shield disappeared')
         """)
 
 

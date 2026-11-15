@@ -198,13 +198,9 @@ function M.install(G,E,root)
         local mask=masks[key]
         if not mask or G.now>=mask.expires or math.abs(mask.x-s.x)+math.abs(mask.y-s.y)>2
             or math.abs(mask.angle-s.angle)>.01 then
-            mask={x=s.x,y=s.y,angle=s.angle,expires=G.now+.1,edge={},strips={}}
+            mask={x=s.x,y=s.y,angle=s.angle,expires=G.now+.1,strips={}}
             masks[key]=mask
             local emitter={x=s.x,y=s.y}
-            for i=0,24 do
-                local a=s.angle-C.shieldHalfAngle+2*C.shieldHalfAngle*i/24
-                mask.edge[i+1]=not G.cast(emitter,{x=s.x+math.cos(a)*C.shieldRadius,y=s.y+math.sin(a)*C.shieldRadius},0,nil,true)
-            end
             local height=2*C.shieldRadius*math.sin(C.shieldHalfAngle)
             for strip=0,15 do
                 local y=(.5-(strip+.5)/16)*height
@@ -212,12 +208,6 @@ function M.install(G,E,root)
                 mask.strips[strip+1]=not G.cast(emitter,{x=s.x+x*math.cos(s.angle)-y*math.sin(s.angle),
                     y=s.y+x*math.sin(s.angle)+y*math.cos(s.angle)},0,nil,true)
             end
-        end
-        local points={}
-        for i=0,24 do
-            local a=s.angle-C.shieldHalfAngle+2*C.shieldHalfAngle*i/24
-            local p={x=s.x+math.cos(a)*C.shieldRadius,y=s.y+math.sin(a)*C.shieldRadius}
-            points[#points+1]={point=p,visible=mask.edge[i+1]}
         end
         local energy=math.max(.15,math.min(1,(s.energy or 100)/100))
         local height=2*C.shieldRadius*math.sin(C.shieldHalfAngle)
@@ -229,12 +219,6 @@ function M.install(G,E,root)
                 drawSheet(batch,cam,'shield-active',math.floor(G.now*12)%16,center,s.angle,
                     C.shieldRadius*.86/314,height/314,
                     C.shieldTextureOpacity*(.8+.2*energy)*(.95+.05*math.sin(G.now*5)),{strip/16,(strip+1)/16})
-            end
-        end
-        for i=2,#points do
-            if points[i-1].visible and points[i].visible then
-                line(batch,cam,points[i-1].point,points[i].point,E.Color(45,195,230,math.floor(24*energy)),6)
-                line(batch,cam,points[i-1].point,points[i].point,E.Color(110,235,250,math.floor(95*energy)),1)
             end
         end
     end

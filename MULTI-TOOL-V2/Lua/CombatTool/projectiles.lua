@@ -16,9 +16,7 @@ function M.install(G,E)
         ring.id=G.nextRingID;ring.owner=ctx.owner;ring.weapon=s.item
         ring.autonomous=ctx.bot or false
         G.rings[#G.rings+1]=ring
-        if s.item.body and s.item.body.Enabled then
-            s.item.body.ApplyLinearImpulse(E.Vector2(-direction.x,-direction.y)*s.item.body.Mass*C.recoilVelocity,4)
-        end
+        G.recoil(s.item)
         G.event('shot',s,muzzle)
     end
     function G.cancelRings(item)
