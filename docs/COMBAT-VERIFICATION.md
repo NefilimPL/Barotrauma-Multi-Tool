@@ -1,5 +1,12 @@
 # Aegis — weryfikacja
 
+## Poprawka 1.3.14 — smugi przez tarczę w multiplayerze (2026-11-15)
+
+Odtworzono rozbieżność: serwer blokował pociski kapitana, ale klient rysował
+smugi do postaci za tarczą. Poprawka skraca natywny efekt `LaunchProjSpecific`
+do łuku potwierdzonej, widocznej tarczy. Nie zmienia obsługi obrażeń.
+[Scenariusz, wyniki i ograniczenia](SHIELD-TRACER-VERIFICATION.md).
+
 ## Poprawka 1.3.11 — koszt efektów trafień (2026-11-06)
 
 Natywny klient GPU potwierdził wysoki koszt nakładających się błysków.

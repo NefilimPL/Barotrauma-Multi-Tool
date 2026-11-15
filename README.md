@@ -1,5 +1,11 @@
 # Barotrauma-Multi-Tool
 
+Wersja **1.3.14** kończy smugi pocisków na widocznej tarczy w multiplayerze.
+Klient wcześniej rysował je przez tarczę mimo zablokowania obrażeń na serwerze.
+Odtworzono to na rewolwerze kapitana z Enhanced Armaments i podłączonym graczu.
+[Próba przed i po oraz zakres poprawki](docs/SHIELD-TRACER-VERIFICATION.md).
+Po aktualizacji zrestartuj grę i hostowany serwer.
+
 Wersja **1.3.13** zabezpiecza baterie obu słuchawek Aegis przed spamem
 trafień i efektów, również modowych. Wszystkie koszty ochrony, leczenia
 i regeneracji dzielą limit: początkowo do 5% baterii, następnie do 5%/s.
