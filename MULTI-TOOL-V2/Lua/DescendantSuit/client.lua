@@ -122,12 +122,11 @@ function M.install(G,E,root)
         for item,s in pairs(G.states) do
             local owner=s.owner or G.owner(item)
             if owner and G.equipped(owner)==item then
-                local base=G.mount(owner)
+                local base,bodyRotation,facing=G.mount(owner,true)
                 local sp=screen(cam,base)
                 local viewport=gui.Canvas.Rect
                 if sp.X> -300 and sp.Y> -300 and sp.X<viewport.Width+300 and sp.Y<viewport.Height+300 then
-                    local facing=owner.AnimController.Dir<0 and -1 or 1
-                    local goal={x=base.x+facing*24,y=base.y+20}
+                    local goal=G.attachment(owner,6,30,true)
                     local target=s.target
                     if target then
                         if target.entity and not target.entity.Removed and target.kind~='weld' then target.point=U.point(target.entity.WorldPosition) end
@@ -143,12 +142,12 @@ function M.install(G,E,root)
                     local pose=Core.pose(base,s.drawGoal,facing)
                     link(batch,cam,'upper',base,pose.elbow,310,E.Vector2(65,75))
                     link(batch,cam,'lower',pose.elbow,pose.tip,230,E.Vector2(65,75))
-                    local point=target and target.point or {x=pose.tip.x+facing,y=pose.tip.y}
+                    local point=target and target.point or {x=pose.tip.x+facing*math.cos(bodyRotation),y=pose.tip.y+facing*math.sin(bodyRotation)}
                     local angle=-math.atan2(point.y-pose.tip.y,point.x-pose.tip.x)
                     local colorKey=target and (target.kind=='combat' and 'red' or target.kind=='grab' and 'orange' or 'blue') or 'blue'
                     sprite(batch,cam,colorKey,pose.tip,angle,.12,E.Vector2(82,95))
-                    local motor={x=base.x-facing*5,y=base.y-38}
-                    sprite(batch,cam,'rotor'..(s.swimming and math.floor(G.now*18)%4 or 0),motor,0,.12)
+                    local motor=G.attachment(owner,-20,-18,true)
+                    sprite(batch,cam,'rotor'..(s.swimming and math.floor(G.now*18)%4 or 0),motor,-bodyRotation,.12)
                     local short=not target or (target.kind~='repair' and target.kind~='weld') or
                         (target.point.x-pose.tip.x)^2+(target.point.y-pose.tip.y)^2<=(C.repairBeam+2)^2
                     if target and s.active and short then

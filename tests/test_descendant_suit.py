@@ -83,6 +83,37 @@ class DescendantSuitTests(LuaCase):
             assert(not C.grabPress(s,false));assert(C.grabPress(s,true))
         """)
 
+    def test_grab_uses_network_aim_direction_instead_of_reconstructed_cursor_distance(self):
+        self.lua.execute("""
+            local C=require('DescendantSuit.core')
+            local t={id='g1',kind='grab',distance=230,point={x=230,y=10},free=true,visible=true}
+            assert(C.aimGrab({x=0,y=10},{x=500,y=10},{t})==t)
+            assert(C.aimGrab({x=0,y=10},{x=230,y=10},{t})==t)
+        """)
+
+    def test_grab_ray_rejects_occluded_behind_out_of_range_and_off_axis_targets(self):
+        self.lua.execute("""
+            local C=require('DescendantSuit.core')
+            local t={id='g1',kind='grab',distance=230,point={x=230,y=0},free=true,visible=true}
+            local function pick() return C.aimGrab({x=0,y=0},{x=500,y=0},{t}) end
+            t.visible=false;assert(not pick());t.visible=true
+            t.free=false;assert(not pick());t.free=true
+            t.distance=301;assert(not pick());t.distance=230
+            t.point.x=-230;assert(not pick());t.point.x=230
+            t.point.y=41;assert(not pick());t.point.y=0
+            assert(not C.aimGrab({x=0,y=0},{x=0,y=0},{t}))
+        """)
+
+    def test_grab_ray_selects_only_the_first_visible_target(self):
+        self.lua.execute("""
+            local C=require('DescendantSuit.core')
+            local near={id=1,kind='grab',distance=100,point={x=100,y=0},free=true,visible=true}
+            local far={id=2,kind='grab',distance=200,point={x=200,y=0},free=true,visible=true}
+            assert(C.aimGrab({x=0,y=0},{x=500,y=0},{far,near})==near)
+            near.visible=false
+            assert(C.aimGrab({x=0,y=0},{x=500,y=0},{far,near})==far)
+        """)
+
     def test_beam_waits_for_the_arm_to_approach_a_new_target(self):
         self.lua.execute("""
             local C=require('DescendantSuit.core');local s={}
@@ -114,6 +145,28 @@ class DescendantAdapterTests(LuaCase):
 
     def test_paused_singleplayer_does_not_advance_suit_simulation(self):
         self.lua.execute("E.Game.Paused=true;G.now=5;G.update(.1);assert(G.now==5 and battery.Condition==50)")
+
+    def test_mount_rotates_with_the_torso_when_swimming(self):
+        self.lua.execute("""
+            E.LimbType={Torso=1};wearer.WorldPosition={X=1000,Y=2000}
+            local torso={WorldPosition={X=10,Y=20},body={Rotation=math.pi/2,Dir=1}}
+            wearer.AnimController.GetLimb=function(kind) assert(kind==1);return torso end
+            local p=G.mount(wearer)
+            assert(math.abs(p.x)<.00001 and math.abs(p.y-2)<.00001)
+            torso.body.Dir=-1;p=G.mount(wearer)
+            assert(math.abs(p.x)<.00001 and math.abs(p.y-38)<.00001)
+        """)
+
+    def test_visible_mount_uses_interpolated_torso_position_and_rotation(self):
+        self.lua.execute("""
+            E.LimbType={Torso=1};wearer.WorldPosition={X=1000,Y=2000}
+            local updated=false
+            local torso={WorldPosition={X=10,Y=20},body={Rotation=0,DrawRotation=math.pi/2,Dir=1,
+                DrawPosition={X=50,Y=60},UpdateDrawPosition=function() updated=true end}}
+            wearer.AnimController.GetLimb=function() return torso end
+            local p=G.mount(wearer,true)
+            assert(updated and math.abs(p.x-40)<.00001 and math.abs(p.y-42)<.00001)
+        """)
 
     def test_air_does_not_drain_tank_and_water_resumes_consumption(self):
         self.lua.execute("""

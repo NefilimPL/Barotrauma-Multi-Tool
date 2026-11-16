@@ -1,0 +1,10 @@
+READY authoritative=false real multiplayer client
+PASS 1 mode=repair active=true open=true oxygen=97.08779907226562 sparks=34 renderer=ok
+PASS 2 mode=combat active=true open=true oxygen=95.22736358642578 sparks=0 renderer=ok
+PASS 3 mode=grab active=true open=true oxygen=94.04193115234375 sparks=0 renderer=ok
+PASS 4 mode=off active=false open=false oxygen=99.16666412353516 sparks=0 renderer=ok
+PASS 5 mode=off active=false open=true oxygen=90.9339828491211 sparks=0 renderer=ok
+PASS 6 mode=off active=false open=true oxygen=89.50973510742188 sparks=0 renderer=ok
+PASS 7 mode=off active=false open=true oxygen=87.90229797363281 sparks=0 renderer=ok
+PASS 8 mode=repair active=true open=true oxygen=92.80307006835938 sparks=35 renderer=ok
+DONE real joined client phases complete

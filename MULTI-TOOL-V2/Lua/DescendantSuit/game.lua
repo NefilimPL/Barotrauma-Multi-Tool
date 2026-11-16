@@ -65,10 +65,25 @@ function M.new(E)
             tank.Condition=math.max(0,tank.Condition-C.oxygenRate*math.min(dt,.1))
         end
     end
-    function G.mount(owner)
-        local p=owner.WorldPosition
-        local facing=owner.AnimController and owner.AnimController.Dir or 1
-        return {x=p.X-(facing<0 and -1 or 1)*18,y=p.Y+25}
+    function G.attachment(owner,x,y,draw)
+        local anim=owner.AnimController
+        local torso=anim and anim.GetLimb and E.LimbType and anim.GetLimb(E.LimbType.Torso)
+        local p,rotation=owner.WorldPosition,0
+        local facing=anim and anim.Dir or 1
+        if torso and torso.body then
+            local body=torso.body
+            facing=body.Dir
+            if draw then
+                body.UpdateDrawPosition();p=body.DrawPosition;rotation=body.DrawRotation
+            else p=torso.WorldPosition;rotation=body.Rotation end
+        end
+        facing=facing<0 and -1 or 1
+        local rx=x*facing
+        return {x=p.X+rx*math.cos(rotation)-y*math.sin(rotation),
+            y=p.Y+rx*math.sin(rotation)+y*math.cos(rotation)},rotation,facing
+    end
+    function G.mount(owner,draw)
+        return G.attachment(owner,-18,10,draw)
     end
     local function position(entity)
         local p=entity.WorldPosition;return {x=p.X,y=p.Y}
@@ -270,12 +285,10 @@ function M.new(E)
                                 if s.acquireGrab then
                                     s.acquireGrab=false
                                     local cursor=owner.CursorWorldPosition
-                                    local best,distance=nil,40*40
-                                    for _,t in ipairs(candidates) do
-                                        local d=(t.point.x-cursor.X)^2+(t.point.y-cursor.Y)^2
-                                        if t.kind=='grab' and d<distance and t.visible and t.free then best=t;distance=d end
-                                    end
-                                    s.target=best;s.grabStarted=G.now
+                                    local aim=owner.AimRefPosition
+                                    if owner.Submarine then aim=aim+owner.Submarine.Position end
+                                    s.target=Core.aimGrab({x=aim.X,y=aim.Y},{x=cursor.X,y=cursor.Y},candidates)
+                                    s.grabStarted=G.now
                                 end
                             end
                         end

@@ -5,7 +5,8 @@ ramieniem do automatycznej naprawy i spawania, obrony lub chwytania celu.
 Ma oddzielne pojemniki tlenu i baterii/pręta oraz obsługę AI.
 [Podgląd tekstur, animacji i dźwięków](docs/descendant-suit/index.html) ·
 [Używanie i rzeczywisty zakres weryfikacji](docs/DESCENDANT-SUIT.md).
-Końcowe dopasowanie pancerza w kliencie i pełny multiplayer pozostają do sprawdzenia.
+Pancerz sprawdzono w kliencie GPU; osiem etapów lokalnej sesji z podłączonym
+klientem multiplayer przeszło. Szczegóły i granice próby opisano w dokumentacji.
 
 Wersja **1.3.15** zatrzymuje także lokalnie przewidywane trafienie pocisku
 w tarczę. W 1.3.14 serwer blokował obrażenia i smuga kończyła się na tarczy,

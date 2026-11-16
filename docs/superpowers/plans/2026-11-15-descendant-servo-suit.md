@@ -39,7 +39,7 @@
 - [x] Add the actual XML suit and namespaced Lua adapter without changing existing multitool behavior. Validate native component APIs against the installed game before using them.
 - [x] Run the complete test suite and `tools/validate_content.py --game .runtime/server`.
 - [x] Check the actual suit, repair sparks, welding, AI, oxygen and beam/arm rendering in an isolated game. Record what was observed and any remaining limits.
-- [ ] Reinspect final armor fitting on a functioning GPU client and run a complete joined-client multiplayer session before promoting this prototype to a release.
+- [x] Reinspect final armor fitting on a functioning GPU client and run a complete joined-client multiplayer session. Keep this a documented preview pending wider gameplay testing.
 
 ## Execution record
 
@@ -49,5 +49,7 @@
 - Ruling: no asset materializer is needed once direct filesystem access works; retain original sheets and use source rectangles rather than destructively cropping or removing RGB backgrounds.
 - Native findings fixed with regressions: client breathing properties, pause handling, GUI queueing, grab lease/input/cooldown, wrong wall section, native oxygen API, and bot gear removal. Added verified `divinggear_wearableindoors` tag.
 - Review findings fixed: functional seal/helmet Wearable plus a separate visual plate Wearable prevent doubled armor; non-hideable plates and explicit source depths preserve layering. Native armor check passes.
-- Final: 500 full-suite tests, 20 preview checks, 17 XML / 49 Lua content validation, 11 native checks, actual enabled bot repair and underwater breathing/propulsion all passed. Raw evidence lives in `docs/descendant-suit/`.
-- Boundary: earlier client GPU tests rendered the panel/arm/beam/sparks and confirmed pressure/air behavior. Final GPU startup failed with NoSuitableGraphicsDeviceException before the game. Final armor fitting and complete multiplayer remain explicitly pending in `docs/DESCENDANT-SUIT.md`.
+- Final continuation: 505 full-suite tests, 20 preview checks, 17 XML / 49 Lua content validation. Previous 11 native checks and enabled bot repair/underwater checks remain recorded. Final GPU armor inspection and all eight joined-client localhost multiplayer phases passed; raw evidence and screenshots live in `docs/descendant-suit/`.
+- Native multiplayer exposed the fixed-distance reconstructed cursor: replaced point-distance acquisition with an aim ray using the native aim reference, with range, LOS and eligibility checks. RED/GREEN regressions cover acquisition, blocked/behind/out-of-range targets and first-target selection. Corrected torso rotation and interpolated attachment drawing, with two regressions.
+- Repeated probe fixtures initially interfered with repair/grab targets; isolated cleanup and aim settling corrected the test, without weakening authoritative assertions. Test scripts remain outside the distributed mod.
+- Read-only follow-up review found no Important/Critical issue. No Steam P2P/high-latency multi-client or actual 10 km boundary test; these limits remain in `docs/DESCENDANT-SUIT.md`.

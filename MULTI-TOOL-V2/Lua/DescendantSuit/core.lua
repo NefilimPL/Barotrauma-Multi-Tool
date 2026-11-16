@@ -78,4 +78,23 @@ function M.ai(targets)
     end
     return 'off',nil
 end
+function M.aimGrab(origin,cursor,targets)
+    -- Native multiplayer sends an aim angle, not the cursor's distance.
+    local dx,dy=cursor.x-origin.x,cursor.y-origin.y
+    local length=math.sqrt(dx*dx+dy*dy)
+    if length<1e-6 then return end
+    dx,dy=dx/length,dy/length
+    local best,nearest
+    for _,t in ipairs(targets) do
+        if M.choose('grab',{t},t.id) then
+            local x,y=t.point.x-origin.x,t.point.y-origin.y
+            local along=x*dx+y*dy
+            local across=math.abs(x*dy-y*dx)
+            if along>=0 and across<40 and (not nearest or along<nearest) then
+                best,nearest=t,along
+            end
+        end
+    end
+    return best
+end
 return M
