@@ -1,5 +1,12 @@
 # Barotrauma-Multi-Tool
 
+Wersja robocza zawiera **kombinezon serwomanipulacyjny Descendants** z jednym
+ramieniem do automatycznej naprawy i spawania, obrony lub chwytania celu.
+Ma oddzielne pojemniki tlenu i baterii/pręta oraz obsługę AI.
+[Podgląd tekstur, animacji i dźwięków](docs/descendant-suit/index.html) ·
+[Używanie i rzeczywisty zakres weryfikacji](docs/DESCENDANT-SUIT.md).
+Końcowe dopasowanie pancerza w kliencie i pełny multiplayer pozostają do sprawdzenia.
+
 Wersja **1.3.15** zatrzymuje także lokalnie przewidywane trafienie pocisku
 w tarczę. W 1.3.14 serwer blokował obrażenia i smuga kończyła się na tarczy,
 ale klient nadal chwilowo naliczał ranę i ból, po czym synchronizacja

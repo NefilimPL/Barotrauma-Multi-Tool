@@ -7,6 +7,10 @@
   <Item file="%ModDir%/tool.xml" />
   <Item file="%ModDir%/combat_tool.xml" />
   <Sounds file="%ModDir%/combat_sounds.xml" />
+  <Item file="%ModDir%/descendant_suit.xml" />
+  <Sounds file="%ModDir%/descendant_sounds.xml" />
+  <Text file="%ModDir%/descendant_English.xml" />
+  <Text file="%ModDir%/descendant_Polish.xml" />
   <Afflictions file="%ModDir%/multitool_afflictions.xml" />
   <Text file="%ModDir%/Silmplifieldchinese.xml" />
   <Text file="%ModDir%/Russian.xml" />

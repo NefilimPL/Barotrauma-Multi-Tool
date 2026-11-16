@@ -37,6 +37,13 @@ class PassageCollisionTests(LuaCase):
             assert(hit and hit.x==80,'platform or stairs blocked the passage before the real wall')
         ''')
 
+    def test_wall_cast_returns_the_actual_blocking_structure(self):
+        self.lua.execute('''
+            local f=fixture(2,60);fixtures={f}
+            local hit=G.cast({x=0,y=0},{x=100,y=0},0,nil,true)
+            assert(hit.blocker==f.Body.UserData)
+        ''')
+
     def test_repair_target_for_destroyed_wall_does_not_close_its_hole(self):
         self.lua.execute('''
             fixtures={fixture(256,15)}

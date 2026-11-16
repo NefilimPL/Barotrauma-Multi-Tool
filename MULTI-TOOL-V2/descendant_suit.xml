@@ -1,0 +1,74 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Items>
+  <Item identifier="descendantservosuit" category="Diving,Equipment" tags="diving,deepdiving,human,descendantservosuit,divinggear_wearableindoors" scale="0.18" fireproof="true" allowdroppingonswapwith="diving" impactsoundtag="impact_metal_heavy">
+    <Price baseprice="4500" sold="true" minavailable="1" maxavailable="1">
+      <Price storeidentifier="merchantresearch" />
+      <Price storeidentifier="merchantmilitary" />
+    </Price>
+    <Fabricate suitablefabricators="fabricator" requiredtime="60">
+      <RequiredSkill identifier="mechanical" level="65" />
+      <RequiredSkill identifier="electrical" level="55" />
+      <RequiredItem identifier="abyssdivingsuit" />
+      <RequiredItem identifier="titaniumaluminiumalloy" amount="4" />
+      <RequiredItem identifier="fpgacircuit" amount="2" />
+      <RequiredItem identifier="copper" amount="2" />
+    </Fabricate>
+    <Deconstruct time="20">
+      <Item identifier="titaniumaluminiumalloy" amount="2" />
+      <Item identifier="copper" />
+    </Deconstruct>
+    <InventoryIcon texture="%ModDir%/Assets/DescendantSuit/suit.png" sourcerect="0,0,335,1015" origin="0.5,0.5" compress="false" />
+    <Sprite texture="%ModDir%/Assets/DescendantSuit/suit.png" sourcerect="0,0,335,1015" origin="0.5,0.5" depth="0.55" compress="false" />
+    <Body radius="120" width="70" density="20" />
+    <Wearable slots="OuterClothes" msg="ItemMsgEquipSelect" displaycontainedstatus="true" canbeselected="false" canbepicked="true" pickkey="Select">
+      <sprite name="Descendant seal Torso" texture="Content/Items/Diving/Abyss_DivingSuit.png" limb="Torso" hidelimb="true" hideotherwearables="true" inherittexturescale="true" inheritorigin="true" inheritsourcerect="true" depth="0.6" />
+      <sprite name="Descendant seal Waist" texture="Content/Items/Diving/Abyss_DivingSuit.png" limb="Waist" hidelimb="true" hideotherwearables="true" inherittexturescale="true" inheritorigin="true" inheritsourcerect="true" depth="0.6" />
+      <sprite name="Descendant seal RightArm" texture="Content/Items/Diving/Abyss_DivingSuit.png" limb="RightArm" hidelimb="true" hideotherwearables="true" inherittexturescale="true" inheritorigin="true" inheritsourcerect="true" depth="0.6" />
+      <sprite name="Descendant seal LeftArm" texture="Content/Items/Diving/Abyss_DivingSuit.png" limb="LeftArm" hidelimb="true" hideotherwearables="true" inherittexturescale="true" inheritorigin="true" inheritsourcerect="true" depth="0.6" />
+      <sprite name="Descendant seal RightForearm" texture="Content/Items/Diving/Abyss_DivingSuit.png" limb="RightForearm" hidelimb="true" hideotherwearables="true" inherittexturescale="true" inheritorigin="true" inheritsourcerect="true" depth="0.6" />
+      <sprite name="Descendant seal LeftForearm" texture="Content/Items/Diving/Abyss_DivingSuit.png" limb="LeftForearm" hidelimb="true" hideotherwearables="true" inherittexturescale="true" inheritorigin="true" inheritsourcerect="true" depth="0.6" />
+      <sprite name="Descendant seal RightHand" texture="Content/Items/Diving/Abyss_DivingSuit.png" limb="RightHand" hidelimb="true" hideotherwearables="true" inherittexturescale="true" inheritorigin="true" inheritsourcerect="true" depth="0.6" />
+      <sprite name="Descendant seal LeftHand" texture="Content/Items/Diving/Abyss_DivingSuit.png" limb="LeftHand" hidelimb="true" hideotherwearables="true" inherittexturescale="true" inheritorigin="true" inheritsourcerect="true" depth="0.6" />
+      <sprite name="Descendant seal RightThigh" texture="Content/Items/Diving/Abyss_DivingSuit.png" limb="RightThigh" hidelimb="true" hideotherwearables="true" inherittexturescale="true" inheritorigin="true" inheritsourcerect="true" depth="0.6" />
+      <sprite name="Descendant seal LeftThigh" texture="Content/Items/Diving/Abyss_DivingSuit.png" limb="LeftThigh" hidelimb="true" hideotherwearables="true" inherittexturescale="true" inheritorigin="true" inheritsourcerect="true" depth="0.6" />
+      <sprite name="Descendant seal RightLeg" texture="Content/Items/Diving/Abyss_DivingSuit.png" limb="RightLeg" hidelimb="true" hideotherwearables="true" inherittexturescale="true" inheritorigin="true" inheritsourcerect="true" depth="0.6" />
+      <sprite name="Descendant seal LeftLeg" texture="Content/Items/Diving/Abyss_DivingSuit.png" limb="LeftLeg" hidelimb="true" hideotherwearables="true" inherittexturescale="true" inheritorigin="true" inheritsourcerect="true" depth="0.6" />
+      <sprite name="Descendant seal RightFoot" texture="Content/Items/Diving/Abyss_DivingSuit.png" limb="RightFoot" hidelimb="true" hideotherwearables="true" inherittexturescale="true" inheritorigin="true" inheritsourcerect="true" depth="0.6" />
+      <sprite name="Descendant seal LeftFoot" texture="Content/Items/Diving/Abyss_DivingSuit.png" limb="LeftFoot" hidelimb="true" hideotherwearables="true" inherittexturescale="true" inheritorigin="true" inheritsourcerect="true" depth="0.6" />
+      <sprite name="Descendant Head" texture="%ModDir%/Assets/DescendantSuit/suit.png" sourcerect="1040,60,250,245" limb="Head" scale="0.34" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="false" depth="0.5" canbehiddenbyotherwearables="false" alphaclipotherwearables="true" />
+      <StatusEffect type="OnWearing" target="Character" PressureProtection="10000" setvalue="true" disabledeltatime="true">
+        <TriggerAnimation Type="Walk" FileName="HumanWalkDivingSuit" priority="1" ExpectedSpecies="Human" />
+        <TriggerAnimation Type="Run" FileName="HumanRunDivingSuit" priority="10" ExpectedSpecies="Human" />
+      </StatusEffect>
+      <damagemodifier armorsector="0,360" afflictionidentifiers="blunttrauma,gunshotwound,bitewounds,lacerations,bleeding,explosiondamage" damagemultiplier="0.6" damagesound="LimbArmor" />
+      <damagemodifier armorsector="0,360" afflictiontypes="burn" damagemultiplier="0.7" />
+      <StatValue stattype="WalkingSpeed" value="-0.1" />
+    </Wearable>
+    <Wearable slots="OuterClothes" msg="ItemMsgEquipSelect" displaycontainedstatus="true" canbeselected="false" canbepicked="true" pickkey="Select">
+      <sprite name="Descendant Torso" texture="%ModDir%/Assets/DescendantSuit/suit.png" sourcerect="785,100,255,320" limb="Torso" scale="0.6" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="false" depth="0.5" canbehiddenbyotherwearables="false" />
+      <sprite name="Descendant Waist" texture="%ModDir%/Assets/DescendantSuit/suit.png" sourcerect="795,410,235,125" limb="Waist" scale="0.5" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="false" depth="0.5" canbehiddenbyotherwearables="false" />
+      <sprite name="Descendant RightArm" texture="%ModDir%/Assets/DescendantSuit/suit.png" sourcerect="1055,300,175,185" limb="RightArm" scale="0.54" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="false" depth="0.5" canbehiddenbyotherwearables="false" />
+      <sprite name="Descendant LeftArm" texture="%ModDir%/Assets/DescendantSuit/suit.png" sourcerect="1055,300,175,185" limb="LeftArm" scale="0.54" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="false" depth="0.5" canbehiddenbyotherwearables="false" />
+      <sprite name="Descendant RightForearm" texture="%ModDir%/Assets/DescendantSuit/suit.png" sourcerect="1080,495,165,160" limb="RightForearm" scale="0.5" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="false" depth="0.5" canbehiddenbyotherwearables="false" />
+      <sprite name="Descendant LeftForearm" texture="%ModDir%/Assets/DescendantSuit/suit.png" sourcerect="1080,495,165,160" limb="LeftForearm" scale="0.5" rotation="180" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="false" depth="0.5" canbehiddenbyotherwearables="false" />
+      <sprite name="Descendant RightHand" texture="%ModDir%/Assets/DescendantSuit/suit.png" sourcerect="1100,640,150,115" limb="RightHand" scale="0.5" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="false" depth="0.5" canbehiddenbyotherwearables="false" />
+      <sprite name="Descendant LeftHand" texture="%ModDir%/Assets/DescendantSuit/suit.png" sourcerect="1100,640,150,115" limb="LeftHand" scale="0.5" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="false" depth="0.5" canbehiddenbyotherwearables="false" />
+      <sprite name="Descendant RightThigh" texture="%ModDir%/Assets/DescendantSuit/suit.png" sourcerect="745,600,200,280" limb="RightThigh" scale="0.47" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="false" depth="0.5" canbehiddenbyotherwearables="false" />
+      <sprite name="Descendant LeftThigh" texture="%ModDir%/Assets/DescendantSuit/suit.png" sourcerect="745,600,200,280" limb="LeftThigh" scale="0.47" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="false" depth="0.5" canbehiddenbyotherwearables="false" />
+      <sprite name="Descendant RightLeg" texture="%ModDir%/Assets/DescendantSuit/suit.png" sourcerect="945,690,140,220" limb="RightLeg" scale="0.58" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="false" depth="0.5" canbehiddenbyotherwearables="false" />
+      <sprite name="Descendant LeftLeg" texture="%ModDir%/Assets/DescendantSuit/suit.png" sourcerect="945,690,140,220" limb="LeftLeg" scale="0.58" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="false" depth="0.5" canbehiddenbyotherwearables="false" />
+      <sprite name="Descendant RightFoot" texture="%ModDir%/Assets/DescendantSuit/suit.png" sourcerect="940,890,190,120" limb="RightFoot" scale="0.38" rotation="90" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="false" depth="0.5" canbehiddenbyotherwearables="false" />
+      <sprite name="Descendant LeftFoot" texture="%ModDir%/Assets/DescendantSuit/suit.png" sourcerect="940,890,190,120" limb="LeftFoot" scale="0.38" rotation="90" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="false" depth="0.5" canbehiddenbyotherwearables="false" />
+    </Wearable>
+    <Holdable slots="RightHand+LeftHand" controlpose="true" holdpos="0,-50" handle1="-10,-20" handle2="10,-20" holdangle="45" msg="ItemMsgPickUpUse" canbeselected="false" canbepicked="true" pickkey="Use" />
+    <ItemContainer capacity="1" maxstacksize="1" hideitems="true" keepopenwhenequipped="true" containedstateindicatorstyle="tank">
+      <SlotIcon slotindex="0" texture="Content/UI/StatusMonitorUI.png" sourcerect="64,448,64,64" origin="0.5,0.5" />
+      <Containable items="oxygensource" />
+    </ItemContainer>
+    <ItemContainer capacity="1" maxstacksize="1" hideitems="true" keepopenwhenequipped="true" containedstateindicatorstyle="battery">
+      <SlotIcon slotindex="0" texture="Content/UI/StatusMonitorUI.png" sourcerect="128,448,128,64" origin="0.5,0.5" />
+      <Containable items="mobilebattery,reactorfuel" />
+    </ItemContainer>
+    <AiTarget sightrange="1500" />
+  </Item>
+</Items>

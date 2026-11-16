@@ -1,0 +1,11 @@
+PASS real wearable, two separate containers and native power
+PASS visual plates do not duplicate functional armor modifiers
+PASS oxygen cannot replace electrical or fission source
+PASS repair laser repairs an actual native junction box
+PASS a real reactor rod supplies the same repair function
+PASS empty rod stops repair without changing the device
+PASS native air state and tank debit properties are writable
+PASS native target enumeration and LOS raycasts run
+PASS native wall section welding reduces damage
+PASS native living-target grab applies force through its collider
+PASS native continuous combat beam causes damage

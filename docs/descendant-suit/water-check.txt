@@ -1,0 +1,1 @@
+wet=true open=false oxygen=99.16666412353516 tank=199.3944091796875 pressure=10000 swimming=true energy=99.69810485839844 dead=false

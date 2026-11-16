@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<infotexts language="English" nowhitespace="false" translatedname="English">
+  <entityname.descendantservosuit>Descendant servo suit</entityname.descendantservosuit>
+  <entitydescription.descendantservosuit>A 10,000 m pressure suit with an autonomous third arm. Select one function: blue repair/welding, red defense or orange tractor beam. Aim and use to acquire a grab target; switch mode to release. Breathable air retracts the helmet and saves oxygen. Oxygen and battery/reactor rod occupy separate containers. LuaCs required.</entitydescription.descendantservosuit>
+  <descendant.title>Servo arm</descendant.title>
+  <descendant.off>Arm off</descendant.off>
+  <descendant.repair>Repair / weld</descendant.repair>
+  <descendant.combat>Defense</descendant.combat>
+  <descendant.grab>Tractor beam</descendant.grab>
+  <descendant.power>Power</descendant.power>
+  <descendant.air>Room air</descendant.air>
+  <descendant.tank>Oxygen tank</descendant.tank>
+</infotexts>
