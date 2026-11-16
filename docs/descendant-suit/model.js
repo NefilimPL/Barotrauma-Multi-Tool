@@ -25,7 +25,7 @@ function setMode(state,mode){
 }
 function breathing(e){
   const open=e.hasHull===true&&e.wetHead!==true&&e.oxygen>=50&&e.pressure<20;
-  return {open,useTank:!open};
+  return {open,useTank:false,closedLoop:!open};
 }
 function energy(source){
   if(!source||!Array.isArray(source.tags)||!source.tags.some(t=>t==="mobilebattery"||t==="reactorfuel")
@@ -37,7 +37,7 @@ function chooseAction(mode,targets,options={}){
   const list=targets.filter(t=>{
     if(t.visible!==true||!Number.isFinite(t.distance)||t.distance<0)return false;
     if(mode==="repair")return ["device","wall"].includes(t.kind)&&t.health<1&&t.distance<=180;
-    if(mode==="combat")return t.kind==="enemy"&&t.hostile===true&&t.alive===true&&t.distance<=420;
+    if(mode==="combat")return options.ammo!==false&&t.kind==="enemy"&&t.hostile===true&&t.alive===true&&t.distance<=1800;
     return t.id===(options.indicatedId??options.pinnedId)&&!t.parentInventory&&t.distance<=320
       &&["object","ally","enemy"].includes(t.kind);
   });
@@ -58,25 +58,7 @@ function chooseAI(targets,options={}){
   const action=rescue&&chooseAction("grab",targets,{...options,indicatedId:rescue.id});
   return action?{mode:"grab",action}:{mode:"off",action:null};
 }
-const sprites={
-  assembled:{sheet:"suit",rect:[0,0,335,1015]},
-  torso:{sheet:"suit",rect:[785,100,255,320]},waist:{sheet:"suit",rect:[795,410,235,125]},
-  helmetClosed:{sheet:"suit",rect:[1040,60,250,245]},helmetOpen:{sheet:"suit",rect:[1295,45,240,260]},
-  upperArm:{sheet:"suit",rect:[1055,300,175,185]},forearm:{sheet:"suit",rect:[1080,495,165,160]},
-  hand:{sheet:"suit",rect:[1100,640,150,115]},thigh:{sheet:"suit",rect:[745,600,200,280]},
-  calf:{sheet:"suit",rect:[945,690,140,220]},boot:{sheet:"suit",rect:[940,890,190,120]},
-  backpack:{sheet:"suit",rect:[1240,305,290,435]},
-  upperLink:{sheet:"arm",rect:[270,60,435,145]},lowerLink:{sheet:"arm",rect:[730,50,325,145]},
-  wrist:{sheet:"arm",rect:[1060,75,210,100]},claw:{sheet:"arm",rect:[1290,20,235,185]},
-  red:{sheet:"arm",rect:[160,215,290,190]},blue:{sheet:"arm",rect:[615,215,290,190]},
-  orange:{sheet:"arm",rect:[1075,215,290,190]},
-  redBeam:{sheet:"arm",rect:[40,425,1460,55]},blueBeam:{sheet:"arm",rect:[40,490,1460,55]},
-  orangeBeam:{sheet:"arm",rect:[40,565,1460,65]},
-  redSpark:{sheet:"arm",rect:[265,640,110,110]},blueSpark:{sheet:"arm",rect:[725,640,125,115]},
-  orangeRing:{sheet:"arm",rect:[1195,625,115,120]},
-  rotor0:{sheet:"arm",rect:[20,755,275,260]},rotor1:{sheet:"arm",rect:[325,755,275,260]},
-  rotor2:{sheet:"arm",rect:[615,755,275,260]},rotor3:{sheet:"arm",rect:[910,755,275,260]}
-};
+const sprites={"assembled": {"sheet": "suit", "rect": [1285, 769, 108, 255]}, "torso": {"sheet": "suit", "rect": [113, 5, 179, 251]}, "waist": {"sheet": "suit", "rect": [467, 80, 219, 151]}, "helmetClosed": {"sheet": "suit", "rect": [850, 10, 220, 241]}, "helmetOpen": {"sheet": "suit", "rect": [1234, 10, 220, 242]}, "upperArm": {"sheet": "suit", "rect": [120, 263, 144, 240]}, "forearm": {"sheet": "suit", "rect": [518, 267, 111, 238]}, "hand": {"sheet": "suit", "rect": [907, 308, 124, 171]}, "thigh": {"sheet": "suit", "rect": [1273, 257, 143, 255]}, "calf": {"sheet": "suit", "rect": [136, 515, 117, 253]}, "boot": {"sheet": "suit", "rect": [456, 568, 239, 158]}, "upperLink": {"sheet": "arm", "rect": [792, 590, 336, 101]}, "lowerLink": {"sheet": "arm", "rect": [1185, 598, 319, 81]}, "emitter": {"sheet": "arm", "rect": [45, 841, 293, 113]}, "rotor": {"sheet": "arm", "rect": [461, 777, 229, 247]}, "backpack": {"sheet": "arm", "rect": [461, 777, 229, 247]}, "redEmitter": {"sheet": "arm", "rect": [45, 841, 293, 113]}, "blueEmitter": {"sheet": "arm", "rect": [45, 841, 293, 113]}, "orangeEmitter": {"sheet": "arm", "rect": [45, 841, 293, 113]}, "redBeam": {"sheet": "arm", "rect": [45, 841, 293, 113]}, "blueBeam": {"sheet": "arm", "rect": [45, 841, 293, 113]}, "orangeBeam": {"sheet": "arm", "rect": [45, 841, 293, 113]}, "redSpark": {"sheet": "arm", "rect": [45, 841, 293, 113]}, "blueSpark": {"sheet": "arm", "rect": [45, 841, 293, 113]}, "orangeRing": {"sheet": "arm", "rect": [45, 841, 293, 113]}, "rotor0": {"sheet": "arm", "rect": [461, 777, 229, 247]}, "rotor1": {"sheet": "arm", "rect": [461, 777, 229, 247]}, "rotor2": {"sheet": "arm", "rect": [461, 777, 229, 247]}, "rotor3": {"sheet": "arm", "rect": [461, 777, 229, 247]}, "red": {"sheet": "arm", "rect": [45, 841, 293, 113]}, "blue": {"sheet": "arm", "rect": [45, 841, 293, 113]}, "orange": {"sheet": "arm", "rect": [45, 841, 293, 113]}};
 root.DescendantPreview={modes,armPose,repairContact,setMode,breathing,energy,chooseAction,chooseAI,sprites};
 })(globalThis);
 

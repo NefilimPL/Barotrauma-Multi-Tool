@@ -1,5 +1,15 @@
 # Asset sources
 
+## V2 selected atlas — 16 November 2026
+
+The current suit and browser preview use `MULTI-TOOL-V2/Assets/DescendantSuit/suit-v2.png`. Generated with the built-in `image_gen` tool, not the CLI/API fallback; copied unchanged from `exec-264932a8-bfaa-4036-8dce-818c72b979a6.png`. Inspection: 1536 × 1024 RGBA, alpha 0..254, 1,144,640 pixels with zero alpha. No scripted colour-keying, repainting or background removal. The JSON/Lua source rectangles are rendering metadata only.
+
+The [full production prompt](suit-v2-prompt.txt) specifies sixteen separated components in a four-by-four atlas, a slim graphite/crimson/cyan futuristic suit, covered cabling and compact servo links, with a genuine transparent background. The old brass/ivory art below remains archival and is not selected by V2.
+
+In-game V2 pulse shots reference the base game's `WEAPONS_laserGunShot1.ogg`, `tracerpulselaser`, `muzzleflashpulselaser` and `weldspark` resources. These are referenced, not redistributed. The additional browser `pulse.ogg` is original procedural synthesis, reproducible with `python tools/generate_descendant_audio.py --only pulse`.
+
+## First prototype — archived sources
+
 Generated with the built-in `image_gen` tool on 15 November 2026; the CLI/API fallback was not used. Source sheets were copied into the mod unchanged. Both PNGs are 1536 × 1024 RGBA, with an inspected alpha range of 0..254. Their brown RGB values in transparent pixels are not an opaque background and must not be removed with color-keying.
 
 ## Selected files

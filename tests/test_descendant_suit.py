@@ -16,9 +16,9 @@ class DescendantSuitTests(LuaCase):
         for x, y in [(1000, 0), (-1000, 0), (0, 1000), (0, -1000), (0, 0)]:
             pose = self.suit.pose(self.t(x=0, y=0), self.t(x=x, y=y), -1)
             elbow, tip = pose['elbow'], pose['tip']
-            self.assertAlmostEqual((elbow['x']**2+elbow['y']**2)**.5, 64)
-            self.assertAlmostEqual(((tip['x']-elbow['x'])**2+(tip['y']-elbow['y'])**2)**.5, 56)
-            self.assertLessEqual((tip['x']**2+tip['y']**2)**.5, 120.00001)
+            self.assertAlmostEqual((elbow['x']**2+elbow['y']**2)**.5, 50)
+            self.assertAlmostEqual(((tip['x']-elbow['x'])**2+(tip['y']-elbow['y'])**2)**.5, 42)
+            self.assertLessEqual((tip['x']**2+tip['y']**2)**.5, 92.00001)
 
     def test_one_mode_releases_the_previous_grab(self):
         self.lua.execute("s={mode='grab',target={id=1}};assert(require('DescendantSuit.core').setMode(s,'repair'));assert(s.target==nil and s.mode=='repair');assert(not require('DescendantSuit.core').setMode(s,'repair+combat'))")
@@ -129,11 +129,14 @@ class DescendantAdapterTests(LuaCase):
             E={SERVER=true,Game={IsSingleplayer=false},InvSlotType={OuterClothes=9}}
             E.Vector2=function(x,y) return {X=x,Y=y} end
             E.LuaUserData={IsTargetType=function(v,t) return v.isCharacter==true end}
+            E.LuaUserData.CreateEnumTable=function(name)
+                assert(name=='FarseerPhysics.BodyType');return {Dynamic=2,Kinematic=1,Static=0}
+            end
             battery={Condition=50,MaxCondition=100,HasTag=function(t) return t=='mobilebattery' end}
             tank={Condition=80,MaxCondition=100,HasTag=function(t) return t=='oxygensource' end}
+            ammo={Condition=100,MaxCondition=100,HasTag=function(t) return t=='pulselaserammo' end}
             suit={Condition=100,Prefab={Identifier={Value='descendantservosuit'}},Components={
-                {Name='ItemContainer',Inventory={GetItemAt=function() return tank end}},
-                {Name='ItemContainer',Inventory={GetItemAt=function() return battery end}}}}
+                {Name='ItemContainer',Inventory={GetItemAt=function(n) if n==0 then return battery else return ammo end end}}}}
             wearer={isCharacter=true,NeedsAir=true,Inventory={GetItemInLimbSlot=function() return suit end},
                 AnimController={HeadInWater=false,CurrentHull={OxygenPercentage=100,LethalPressure=0}}}
             suit.ParentInventory={Owner=wearer}
@@ -168,21 +171,21 @@ class DescendantAdapterTests(LuaCase):
             assert(updated and math.abs(p.x-40)<.00001 and math.abs(p.y-42)<.00001)
         """)
 
-    def test_air_does_not_drain_tank_and_water_resumes_consumption(self):
+    def test_safe_air_is_free_and_closed_loop_breathing_uses_power_without_a_tank(self):
         self.lua.execute("""
             G.breathe(wearer,suit,.1);assert(tank.Condition==80 and wearer.UseHullOxygen and G.state(suit).open)
             wearer.AnimController.HeadInWater=true
             G.breathe(wearer,suit,.1)
-            assert(tank.Condition<80 and not wearer.UseHullOxygen and not G.state(suit).open)
+            assert(tank.Condition==80 and battery.Condition<50 and not wearer.UseHullOxygen and not G.state(suit).open)
             assert(wearer.OxygenAvailable>0)
-            tank.Condition=0;G.breathe(wearer,suit,.1);assert(wearer.OxygenAvailable==0)
+            battery.Condition=0;G.breathe(wearer,suit,.1);assert(wearer.OxygenAvailable==0)
         """)
 
-    def test_client_supplies_breathing_properties_without_consuming_tank(self):
+    def test_client_supplies_breathing_properties_without_duplicating_power_debit(self):
         self.lua.execute("""
             G.authoritative=false;wearer.AnimController.HeadInWater=true
             G.breathe(wearer,suit,.1)
-            assert(wearer.OxygenAvailable>0 and not wearer.UseHullOxygen and tank.Condition==80)
+            assert(wearer.OxygenAvailable>0 and not wearer.UseHullOxygen and battery.Condition==50)
         """)
 
     def test_underwater_breathing_does_not_read_nonexistent_character_properties(self):
@@ -192,7 +195,7 @@ class DescendantAdapterTests(LuaCase):
             end})
             wearer.AnimController.HeadInWater=true
             G.breathe(wearer,suit,.1)
-            assert(math.abs(tank.Condition-79.97)<.00001)
+            assert(battery.Condition<50 and tank.Condition==80)
         """)
 
     def test_welding_uses_the_selected_wall_surface_and_rejects_another_wall(self):
@@ -220,6 +223,12 @@ class DescendantAdapterTests(LuaCase):
         self.lua.execute("""
             local device={Condition=10,MaxCondition=100}
             local target={kind='repair',entity=device}
+            G.repairDevice=function(owner,item,t,dt)
+                local fraction=G.spend(item,.4*dt)
+                if fraction==0 then return false end
+                t.entity.Condition=t.entity.Condition+dt*fraction
+                return true
+            end
             assert(G.perform(wearer,suit,target,.1))
             assert(device.Condition>10 and battery.Condition<50)
             battery.HasTag=function(t) return t=='reactorfuel' end
@@ -243,7 +252,7 @@ class DescendantAdapterTests(LuaCase):
                 return v.isCharacter==true
             end
             local pick={Name='MeleeWeapon',pickable=true,CanBePicked=true,PickingTime=0}
-            local item={AllowedSlots={'RightHand'},Components={pick},body={Enabled=true}}
+            local item={AllowedSlots={'RightHand'},Components={pick},body={Enabled=true,BodyType=2,Mass=5}}
             assert(G.portable(item))
             pick.IsAttached=true;assert(not G.portable(item));pick.IsAttached=false
             item.Components[2]={Name='Wire',Connections={[2]={}},GetNodes=function() return {} end}
@@ -255,4 +264,51 @@ class DescendantAdapterTests(LuaCase):
             local torso={Enabled=true,Mass=10}
             local patient={isCharacter=true,AnimController={Collider={Enabled=false},MainLimb={body=torso}}}
             assert(G.body(patient)==torso)
+        """)
+
+    def test_grab_accepts_loose_dynamic_props_without_pickable_or_inventory_slots(self):
+        self.lua.execute("""
+            local prop={Components={},AllowedSlots={'None'},body={Enabled=true,BodyType=2,Mass=12}}
+            assert(G.portable(prop))
+            assert(G.grabbable(prop))
+            prop.ParentInventory={};assert(not G.grabbable(prop))
+        """)
+
+    def test_grab_rejects_static_kinematic_and_disabled_world_objects(self):
+        self.lua.execute("""
+            E.LuaUserData.IsTargetType=function(v,t) return v.pickable==true end
+            local pick={Name='Holdable',pickable=true,CanBePicked=true,PickingTime=0}
+            local prop={AllowedSlots={'RightHand'},Components={pick},body={Enabled=true,BodyType=0,Mass=12}}
+            assert(not G.portable(prop))
+            prop.body.BodyType=1;assert(not G.portable(prop))
+            prop.body.BodyType=2;assert(G.portable(prop))
+            prop.body.Enabled=false;assert(not G.portable(prop))
+        """)
+
+    def test_grab_checks_whole_creature_mass_instead_of_its_light_collider(self):
+        self.lua.execute("""
+            local body={Enabled=true,BodyType=2,Mass=4}
+            local creature={isCharacter=true,Mass=40,AnimController={Collider=body}}
+            assert(G.grabbable(creature))
+            creature.Mass=500;assert(not G.grabbable(creature))
+            creature.Mass=80;assert(G.grabbable(creature))
+            creature.IsDead=true;assert(G.grabbable(creature))
+            creature.Removed=true;assert(not G.grabbable(creature))
+        """)
+
+    def test_grab_rejects_heavy_massless_and_nonphysical_items(self):
+        self.lua.execute("""
+            local prop={Components={},body={Enabled=true,BodyType=2,Mass=81}}
+            assert(not G.grabbable(prop))
+            prop.body.Mass=80;assert(G.grabbable(prop))
+            prop.body.Mass=0;assert(not G.grabbable(prop))
+            prop.body.Mass=0/0;assert(not G.grabbable(prop))
+        """)
+
+    def test_retained_massive_creature_is_rejected_before_charging_power(self):
+        self.lua.execute("""
+            local creature={isCharacter=true,Mass=500,AnimController={Collider={Enabled=true,Mass=4}}}
+            local before=battery.Condition
+            assert(not G.perform(wearer,suit,{kind='grab',entity=creature,point={x=20,y=20}},.1))
+            assert(battery.Condition==before)
         """)

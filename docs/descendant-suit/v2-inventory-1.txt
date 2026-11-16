@@ -1,0 +1,1 @@
+slot=1 native client extraction=true reinsertion=true

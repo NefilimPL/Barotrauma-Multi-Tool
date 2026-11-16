@@ -39,16 +39,16 @@ globalThis.runDescendantPreviewChecks=function(C){
   });
   test("submersion closes the helmet even with room oxygen",()=>{
     const s=C.breathing({hasHull:true,wetHead:true,oxygen:100,pressure:0});
-    ok(!s.open&&s.useTank);
+    ok(!s.open&&s.closedLoop&&!s.useTank);
   });
   test("breathable room air opens the helmet without tank consumption",()=>{
     const s=C.breathing({hasHull:true,wetHead:false,oxygen:100,pressure:0});
-    ok(s.open&&!s.useTank);
+    ok(s.open&&!s.useTank&&!s.closedLoop);
   });
   test("vacuum and dangerous pressure keep the helmet closed",()=>{
-    ok(C.breathing({hasHull:true,wetHead:false,oxygen:0,pressure:0}).useTank);
-    ok(C.breathing({hasHull:true,wetHead:false,oxygen:100,pressure:90}).useTank);
-    ok(C.breathing({hasHull:false,wetHead:false,oxygen:100,pressure:0}).useTank);
+    ok(C.breathing({hasHull:true,wetHead:false,oxygen:0,pressure:0}).closedLoop);
+    ok(C.breathing({hasHull:true,wetHead:false,oxygen:100,pressure:90}).closedLoop);
+    ok(C.breathing({hasHull:false,wetHead:false,oxygen:100,pressure:0}).closedLoop);
   });
   test("battery and reactor rod are accepted but an oxygen tank is not",()=>{
     near(C.energy({tags:["mobilebattery"],condition:25,maxCondition:50}),50);
@@ -82,6 +82,11 @@ globalThis.runDescendantPreviewChecks=function(C){
       {...targets[2],alive:false}
     ],{powered:true});
     ok(a===null);
+  });
+  test("pulse defence requires ammunition",()=>{
+    const enemy={id:1,kind:"enemy",distance:650,visible:true,hostile:true,alive:true};
+    ok(!C.chooseAction("combat",[enemy],{powered:true,ammo:false}));
+    ok(C.chooseAction("combat",[enemy],{powered:true,ammo:true}));
   });
   test("grab selects one indicated living target",()=>{
     const a=C.chooseAction("grab",targets,{powered:true,indicatedId:4});

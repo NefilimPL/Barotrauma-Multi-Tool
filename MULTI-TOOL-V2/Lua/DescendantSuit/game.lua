@@ -5,6 +5,11 @@ local M={}
 function M.new(E)
     local G={env=E,authoritative=E.SERVER or E.Game.IsSingleplayer,states={},now=0,alive=true,patches={}}
     local humanAI
+    local dynamicBodyType
+    local function movable(body)
+        dynamicBodyType=dynamicBodyType or E.LuaUserData.CreateEnumTable('FarseerPhysics.BodyType').Dynamic
+        return body.BodyType==dynamicBodyType
+    end
     function G.ally(a,b)
         humanAI=humanAI or E.LuaUserData.CreateStatic('Barotrauma.HumanAIController')
         return humanAI.IsFriendly(a,b,false,false)
@@ -28,10 +33,15 @@ function M.new(E)
         return c and c.Inventory
     end
     function G.source(item)
-        local inv=G.container(item,2)
+        local inv=G.container(item,1)
         local source=inv and inv.GetItemAt(0)
         if source and not source.Removed and source.MaxCondition>0 and
             (source.HasTag('mobilebattery') or source.HasTag('reactorfuel')) then return source end
+    end
+    function G.ammo(item)
+        local inv=G.container(item,1)
+        local box=inv and inv.GetItemAt(1)
+        if box and not box.Removed and box.MaxCondition>0 and box.HasTag('pulselaserammo') then return box end
     end
     function G.energy(item)
         local s=G.source(item)
@@ -57,12 +67,10 @@ function M.new(E)
         s.open=Core.breathable(air)
         owner.UseHullOxygen=s.open
         if s.open then owner.OxygenAvailable=air.oxygen;return end
-        local inv=G.container(item,1)
-        local tank=inv and inv.GetItemAt(0)
-        local usable=tank and not tank.Removed and tank.Condition>0 and tank.HasTag('oxygensource')
+        local usable=G.energy(item)>0
         owner.OxygenAvailable=usable and 100 or 0
         if G.authoritative and usable and owner.NeedsAir and not owner.IsDead then
-            tank.Condition=math.max(0,tank.Condition-C.oxygenRate*math.min(dt,.1))
+            G.spend(item,C.lifeSupportRate*math.min(dt,.1))
         end
     end
     function G.attachment(owner,x,y,draw)
@@ -115,12 +123,7 @@ function M.new(E)
     end
     function G.portable(item)
         if not item or item.Removed or item.ParentInventory or not item.body or not item.body.Enabled then return false end
-        local slotted=false
-        U.each(item.AllowedSlots,function(slot)
-            local name=tostring(slot):lower()
-            if name~='none' and name~='0' and name~='' then slotted=true end
-        end)
-        if not slotted or U.component(item,'Door') then return false end
+        if not movable(item.body) or U.component(item,'Door') then return false end
         local wire=U.component(item,'Wire')
         if wire then
             local connected=false
@@ -130,11 +133,20 @@ function M.new(E)
             U.each(wire.GetNodes(),function() connected=true end)
             if connected then return false end
         end
-        local pick
+        local attached=false
         U.each(item.Components,function(component)
-            if E.LuaUserData.IsTargetType(component,'Barotrauma.Items.Components.Pickable') then pick=component end
+            if E.LuaUserData.IsTargetType(component,'Barotrauma.Items.Components.Pickable') and component.IsAttached then attached=true end
         end)
-        return pick and pick.CanBePicked and not pick.IsAttached and pick.PickingTime<2147483647 or false
+        return not attached
+    end
+    function G.grabbable(target)
+        if not target or target.Removed then return false end
+        local body=G.body(target)
+        if not body or not body.Enabled or not movable(body) then return false end
+        local character=E.LuaUserData.IsTargetType(target,'Barotrauma.Character')
+        if not character and not G.portable(target) then return false end
+        local mass=character and target.Mass or body.Mass
+        return type(mass)=='number' and mass>0 and mass<=C.maxGrabMass
     end
     function G.gather(owner,s)
         local targets,base={},G.mount(owner)
@@ -184,8 +196,7 @@ function M.new(E)
                         add({id='c'..other.ID,kind='combat',entity=other,point=position(other),hostile=true,alive=true},C.combatRange)
                     end
                     if automatic or s.mode=='grab' then
-                        local body=G.body(other)
-                        if body and body.Mass<=C.maxGrabMass then
+                        if G.grabbable(other) then
                             add({id='g'..other.ID,kind='grab',entity=other,point=position(other),free=true,
                                 rescue=friendly and other.IsUnconscious},C.grabRange)
                         end
@@ -196,31 +207,31 @@ function M.new(E)
         if s.mode=='grab' and not automatic then
             -- World-item enumeration is only needed when acquiring an indicated grab.
             if not s.target then U.each(E.Item.ItemList,function(item)
-                if G.portable(item) and item.body.Mass<=C.maxGrabMass then
+                if G.grabbable(item) then
                     add({id='g'..item.ID,kind='grab',entity=item,point=position(item),free=true},C.grabRange)
                 end
             end)
             elseif s.target.kind=='grab' and not s.target.entity.Removed then
                 local t=s.target
-                t.point=position(t.entity);t.free=E.LuaUserData.IsTargetType(t.entity,'Barotrauma.Character') or not t.entity.ParentInventory
+                t.point=position(t.entity);t.free=G.grabbable(t.entity)
                 add(t,C.grabRange)
             end
         end
         return targets
     end
     function G.perform(owner,item,target,dt)
+        if target.kind=='repair' then return G.repairDevice and G.repairDevice(owner,item,target,dt) or false end
+        if target.kind=='combat' then return G.firePulse and G.firePulse(owner,item,target) or false end
+        if target.kind=='grab' and not G.grabbable(target.entity) then return false end
         local fraction=G.spend(item,(C.rates[target.kind] or 0)*dt)
         if fraction<=0 then return false end
         local elapsed=dt*fraction
-        if target.kind=='repair' then
-            target.entity.Condition=math.min(target.entity.MaxCondition,target.entity.Condition+C.repairRate*elapsed)
-        elseif target.kind=='weld' then
-            target.entity.AddDamage(target.section,-C.weldRate*elapsed,owner,false,false)
-        elseif target.kind=='combat' then
-            G.damage(target.entity,target.point,owner,C.burnRate*elapsed,0,0)
+        if target.kind=='weld' then
+            if G.weld then G.weld(owner,item,target,elapsed)
+            else target.entity.AddDamage(target.section,-C.weldRate*elapsed,owner,false,false) end
         elseif target.kind=='grab' then
             local body=G.body(target.entity)
-            if not body or body.Mass>C.maxGrabMass then return false end
+            if not body then return false end
             local p=owner.WorldPosition
             local dx,dy=(p.X-target.point.x)/100,(p.Y-target.point.y)/100
             local distance=math.sqrt(dx*dx+dy*dy)
@@ -241,6 +252,7 @@ function M.new(E)
     end
     function G.setMode(item,mode,owner)
         if G.equipped(owner)~=item or owner.IsUnconscious then return false end
+        if mode=='toggle' then return Core.toggle(G.state(item)) end
         return Core.setMode(G.state(item),mode)
     end
     function G.authorize(client,item,mode)
@@ -259,12 +271,17 @@ function M.new(E)
             end
             for item,s in pairs(G.states) do
                 local owner=G.owner(item)
-                if G.equipped(owner)~=item then G.states[item]=nil
+                if G.equipped(owner)~=item then
+                    if G.cancelSupplies then G.cancelSupplies(s) end
+                    G.states[item]=nil
                 else
+                    if s.owner and s.owner~=owner and G.cancelSupplies then G.cancelSupplies(s) end
                     s.owner=owner;s.active=false;s.swimming=false
+                    if G.updateSupplies then G.updateSupplies(owner,item,s) end
                     if owner.IsUnconscious then s.target=nil
                     else
                         local powered=G.energy(item)>0
+                        if powered then G.spend(item,C.lightRate*dt) end
                         Core.expireGrab(s,G.now)
                         local held=not owner.IsBot and s.mode=='grab' and owner.IsKeyDown(E.InputType.Aim) and owner.IsKeyDown(E.InputType.Use)
                         if Core.grabPress(s,held) then
@@ -303,7 +320,7 @@ function M.new(E)
                             if target.kind=='weld' then target.damaged=target.entity.SectionDamage(target.section)>.01 end
                             if target.kind=='combat' then target.alive=not target.entity.IsDead;target.hostile=not G.ally(owner,target.entity) end
                             if target.kind=='grab' then
-                                target.free=E.LuaUserData.IsTargetType(target.entity,'Barotrauma.Character') or not target.entity.ParentInventory
+                                target.free=G.grabbable(target.entity)
                                 s.grabStarted=s.grabStarted or G.now
                             end
                             if target and Core.choose(s.mode,{target},target.id) then
@@ -327,16 +344,21 @@ function M.new(E)
                 end
             end
             if G.sendSnapshot then G.sendSnapshot() end
+            if G.pruneRepairs then G.pruneRepairs() end
         end
         if G.updateClient then G.updateClient(dt) end
     end
     function G.clear()
-        G.states={};G.nextOwners=0
+        if G.clearRepairs then G.clearRepairs() end
+        if G.clearSupplies then G.clearSupplies() end
         if G.clearClient then G.clearClient() end
+        G.states={};G.nextOwners=0
     end
     function G.dispose()
+        if not G.alive then return end
         G.alive=false;G.clear()
         E.Hook.Remove('think','bmt.descendant.update');E.Hook.Remove('roundEnd','bmt.descendant.reset')
+        E.Hook.Remove('stop','bmt.descendant.dispose')
         for _,p in ipairs(G.patches) do
             if p[5] then E.Hook.RemovePatch(p[1],p[2],p[3],p[5],p[4]) else E.Hook.RemovePatch(p[1],p[2],p[3],p[4]) end
         end
@@ -352,6 +374,7 @@ function M.new(E)
         end)
         E.Hook.Add('think','bmt.descendant.update',function() if G.alive then G.update(1/60) end end)
         E.Hook.Add('roundEnd','bmt.descendant.reset',G.clear)
+        E.Hook.Add('stop','bmt.descendant.dispose',G.dispose)
     end
     return G
 end

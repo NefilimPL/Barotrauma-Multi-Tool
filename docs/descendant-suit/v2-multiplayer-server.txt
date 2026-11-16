@@ -1,0 +1,14 @@
+WAITING for client
+READY real-client=true skill=20 range=1800 pulseDamage=25
+PASS 1 client={mode=repair active=true lights=420 ammo=100 shots=0 renderer=ok} server={mode=repair device=57.5675163269043 skill=20 rewards=0 power=99.08372497558594 ammo=100 shots=0}
+PASS 2 client={mode=repair active=false lights=420 ammo=100 shots=0 renderer=ok} server={mode=repair device=100 skill=22 rewards=1 power=98.20356750488281 ammo=100 shots=0}
+PASS 3 client={mode=combat active=true lights=420 ammo=93.25 shots=3 renderer=ok} server={mode=combat device=100 skill=22 rewards=1 power=96.98274993896484 ammo=93.25 shots=3}
+PASS 4 client={mode=combat active=false lights=420 ammo=0 shots=3 renderer=ok} server={mode=combat device=100 skill=22 rewards=1 power=96.95623016357422 ammo=0 shots=3}
+PASS 5 client={mode=grab active=true lights=420 ammo=0 shots=3 renderer=ok} server={mode=grab device=100 skill=22 rewards=1 power=96.36385345458984 ammo=0 shots=3}
+PASS 6 client={mode=off active=false lights=420 ammo=0 shots=3 renderer=ok} server={mode=off device=100 skill=22 rewards=1 power=95.99971771240234 ammo=0 shots=3}
+PASS 7 client={mode=repair active=false lights=420 ammo=0 shots=3 renderer=ok} server={mode=repair device=100 skill=22 rewards=1 power=95.0305404663086 ammo=0 shots=3}
+PASS 8 client={mode=off active=false lights=420 ammo=0 shots=3 renderer=ok} server={mode=off device=100 skill=22 rewards=1 power=94.98253631591797 ammo=0 shots=3}
+PASS 9 client={mode=off active=false lights=420 ammo=0 shots=3 renderer=ok} server={mode=off device=100 skill=22 rewards=1 power=94.75812530517578 ammo=0 shots=3}
+PASS 10 client={mode=off active=false lights=0 ammo=0 shots=3 renderer=ok} server={mode=off device=100 skill=22 rewards=1 power=0 ammo=0 shots=3}
+PASS 11 client={mode=repair active=true lights=420 ammo=0 shots=3 renderer=ok} server={mode=repair device=39.508182525634766 skill=22 rewards=1 power=99.43168640136719 ammo=0 shots=3}
+RESULT passed=11 failed=0 real_joined_client=true

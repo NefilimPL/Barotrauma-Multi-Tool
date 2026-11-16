@@ -1,5 +1,6 @@
 """Original synthetic servo-suit audio. Requires ffmpeg; no external samples."""
 import math
+import argparse
 import random
 import shutil
 import struct
@@ -12,7 +13,7 @@ ROOT = Path(__file__).resolve().parents[1]
 RATE = 44100
 SOUNDS = {'repair': (1.5, True), 'weld': (1.5, True), 'combat': (2, True),
           'grab': (2, True), 'impeller': (2, True), 'servo': (.3, False),
-          'helmet': (.55, False), 'switch': (.09, False)}
+          'helmet': (.55, False), 'switch': (.09, False), 'pulse': (.26, False)}
 
 
 def synth(kind, duration):
@@ -30,6 +31,9 @@ def synth(kind, duration):
         elif kind == 'combat':
             v = .24 * tone(110) + .13 * tone(330) + .08 * tone(1760) + .12 * low
             v *= .85 + .15 * tone(20)
+        elif kind == 'pulse':
+            v = .35 * math.sin(2 * math.pi * (1600*t-2500*t*t)) * math.exp(-12*t)
+            v += .16 * noise * math.exp(-55*t) + .18 * tone(120) * math.exp(-9*t)
         elif kind == 'grab':
             v = .22 * tone(160) + .12 * tone(320) + .08 * tone(640)
             v *= .72 + .28 * tone(4)
@@ -56,7 +60,7 @@ def synth(kind, duration):
     return [v * .65 / peak for v in data]
 
 
-def generate():
+def generate(only=None):
     encoder = shutil.which('ffmpeg')
     if not encoder:
         raise SystemExit('ffmpeg with libvorbis is required')
@@ -65,6 +69,7 @@ def generate():
     with tempfile.TemporaryDirectory() as temporary:
         pcm = Path(temporary) / 'sound.wav'
         for kind, (duration, _) in SOUNDS.items():
+            if only and kind not in only:continue
             with wave.open(str(pcm), 'wb') as stream:
                 stream.setparams((1, 2, RATE, 0, 'NONE', ''))
                 stream.writeframes(b''.join(struct.pack('<h', round(v * 32767)) for v in synth(kind, duration)))
@@ -74,4 +79,6 @@ def generate():
 
 
 if __name__ == '__main__':
-    generate()
+    parser=argparse.ArgumentParser()
+    parser.add_argument('--only',nargs='+',choices=list(SOUNDS))
+    generate(parser.parse_args().only)

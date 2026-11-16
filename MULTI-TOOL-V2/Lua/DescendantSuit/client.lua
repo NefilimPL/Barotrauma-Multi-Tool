@@ -5,15 +5,14 @@ local M={}
 function M.install(G,E,root)
     local UI=E.GUI
     local gui=UI.GUI
-    local atlas=E.Sprite(root..'/Assets/DescendantSuit/arm.png',E.Vector2(.5,.5))
-    local sort=E.LuaUserData.CreateEnumTable('Microsoft.Xna.Framework.Graphics.SpriteSortMode')
-    E.LuaUserData.RegisterType('Microsoft.Xna.Framework.Graphics.BlendState')
-    local blend=E.LuaUserData.CreateStatic('Microsoft.Xna.Framework.Graphics.BlendState')
-    local rects={upper={270,60,435,145},lower={730,50,325,145},red={160,215,290,190},
-        blue={615,215,290,190},orange={1075,215,290,190},rotor0={20,755,275,260},
-        rotor1={325,755,275,260},rotor2={615,755,275,260},rotor3={910,755,275,260}}
+    local atlas=E.Sprite(root..'/Assets/DescendantSuit/suit-v2.png',E.Vector2(.5,.5))
+    local A=require('DescendantSuit.atlas')
+    local rects={upper=A.upperLink,lower=A.lowerLink,red=A.emitter,blue=A.emitter,orange=A.emitter,
+        rotor0=A.rotor,rotor1=A.rotor,rotor2=A.rotor,rotor3=A.rotor}
+    require('DescendantSuit.lights').install(G,E)
     local colors={repair={75,190,255},weld={75,190,255},combat={255,45,45},grab={255,153,35}}
-    local panel=UI.Frame(UI.RectTransform(E.Vector2(.22,.23),gui.Canvas,UI.Anchor.CenterRight),'GUIFrame')
+    local panel=UI.Frame(UI.RectTransform(E.Vector2(.24,.28),gui.Canvas,UI.Anchor.CenterRight),'GUIFrame')
+    G.panel=panel
     local function box(x,y,w,h)
         local t=UI.RectTransform(E.Vector2(w,h),panel.RectTransform,UI.Anchor.TopLeft,UI.Pivot.TopLeft)
         t.RelativeOffset=E.Vector2(x,y);return t
@@ -25,12 +24,15 @@ function M.install(G,E,root)
         local b=UI.Button(box(.05,.18+(n-1)*.15,.9,.14),text(mode))
         b.OnClicked=function()
             local owner=E.Character.Controlled;local item=G.equipped(owner)
-            if item then G.requestMode(item,mode) end
+            if item then G.requestMode(item,mode=='off' and 'toggle' or mode) end
             return true
         end
         buttons[mode]=b
     end
-    local status=UI.TextBlock(box(.05,.80,.9,.16),'')
+    local status=UI.TextBlock(box(.05,.78,.9,.20),'')
+    local panelMode,grabHint,nextHint=nil,'',0
+    buttons.grab.ToolTip=E.InputTypeLString(E.TextManager.Get('descendant.grab_help'),false)
+    G.panelButtons=buttons;G.panelStatus=status
     panel.Visible=false
     local channels={}
     local function stop(ch) if ch then ch.FadeOutAndDispose() end end
@@ -43,15 +45,16 @@ function M.install(G,E,root)
         entry[key],entry[key..'Kind']=ch,kind
         if ch then local p=owner.WorldPosition;ch.Position=E.Vector3(p.X,p.Y,0) end
     end
-    local function screen(cam,p) return cam.WorldToScreen(E.Vector2(p.x,p.y)) end
+    -- Character.Draw already has the world transform and is lit afterwards.
+    local function screen(cam,p) return E.Vector2(p.x,-p.y) end
     local function line(batch,cam,a,b,color,width)
-        gui.DrawLine(batch,screen(cam,a),screen(cam,b),color,0,width*cam.Zoom)
+        gui.DrawLine(batch,screen(cam,a),screen(cam,b),color,0,width)
     end
     local function sprite(batch,cam,key,point,rotation,scale,origin)
         local r=rects[key]
         atlas.SourceRect=E.Rectangle(r[1],r[2],r[3],r[4])
         atlas.Origin=origin or E.Vector2(r[3]/2,r[4]/2)
-        atlas.Draw(batch,screen(cam,point),E.Color.White,atlas.Origin,rotation or 0,E.Vector2(scale*cam.Zoom,scale*cam.Zoom))
+        atlas.Draw(batch,screen(cam,point),E.Color.White,atlas.Origin,rotation or 0,E.Vector2(scale,scale))
     end
     local function link(batch,cam,key,a,b,span,origin)
         local dx,dy=b.x-a.x,b.y-a.y
@@ -63,7 +66,7 @@ function M.install(G,E,root)
         U.each(owner.AnimController.Limbs,function(limb)
             if limb.type==E.LimbType.Head then U.each(limb.WearingItems,function(w)
                 if w.WearableComponent and w.WearableComponent.Item==item then
-                    local r=open and {1295,45,240,260} or {1040,60,250,245}
+                    local r=open and A.helmetOpen or A.helmetClosed
                     w.Sprite.SourceRect=E.Rectangle(r[1],r[2],r[3],r[4]);w.Sprite.Origin=E.Vector2(r[3]/2,r[4]/2)
                 end
             end) end
@@ -76,8 +79,21 @@ function M.install(G,E,root)
         panel.Visible=equipped~=nil
         if equipped then
             local s=G.state(equipped)
+            if panelMode~=s.mode then
+                panel.RectTransform.Resize(E.Vector2(.24,s.mode=='grab' and .34 or .28))
+                panelMode=s.mode
+            end
+            if s.mode=='grab' and G.now>=nextHint then
+                grabHint=tostring(E.InputTypeLString(E.TextManager.Get('descendant.grab_short'),false))
+                buttons.grab.ToolTip=E.InputTypeLString(E.TextManager.Get('descendant.grab_help'),false)
+                nextHint=G.now+1
+            end
             for mode,b in pairs(buttons) do b.Selected=s.mode==mode end
-            status.Text=text('power')..': '..math.floor(s.charge or G.energy(equipped))..'%  |  '..text(s.open and 'air' or 'tank')
+            buttons.off.Text=text(s.mode=='off' and 'off' or 'on')
+            local ammo=G.ammo(equipped)
+            status.Text=text('power')..': '..math.floor(s.charge or G.energy(equipped))..'%  |  '..
+                text('ammo')..': '..math.floor((ammo and ammo.Condition or 0)/C.ammoCost)..'\n'..text(s.open and 'air' or 'closedloop')..
+                (s.mode=='grab' and '\n'..grabHint or '')
             panel.AddToGUIUpdateList(false,8)
         end
         for item,s in pairs(G.states) do
@@ -86,12 +102,16 @@ function M.install(G,E,root)
                 (not G.authoritative and s.received and G.now-s.received>.6) then
                 local entry=channels[item]
                 if entry then stop(entry.beam);stop(entry.motor);channels[item]=nil end
+                G.removeLights(s)
                 G.states[item]=nil
             else
                 helmet(owner,item,s.open==true)
-                local entry=channels[item] or {};channels[item]=entry
+                local entry=channels[item] or {};channels[item]=entry;entry.state=s
                 local active=s.active and s.target and s.target.kind
-                loop(entry,'beam',active,owner);loop(entry,'motor',s.swimming and 'impeller' or nil,owner)
+                loop(entry,'beam',active~='combat' and active or nil,owner);loop(entry,'motor',s.swimming and 'impeller' or nil,owner)
+                if entry.shots~=nil and entry.shots~=(s.shots or 0) then sound('pulse',owner);s.shotTime=G.now end
+                entry.shots=s.shots or 0
+                G.updateLights(s)
                 if entry.open~=nil and entry.open~=s.open then sound('helmet',owner) end
                 if entry.mode and entry.mode~=s.mode then sound('switch',owner) end
                 local id=s.target and s.target.entity and s.target.entity.ID
@@ -116,14 +136,16 @@ function M.install(G,E,root)
                 else s.sparkBudget=0 end
             end
         end
-        for item,entry in pairs(channels) do if not G.states[item] then stop(entry.beam);stop(entry.motor);channels[item]=nil end end
+        for item,entry in pairs(channels) do if not G.states[item] then
+            stop(entry.beam);stop(entry.motor);G.removeLights(entry.state);channels[item]=nil
+        end end
     end
-    local function draw(batch,cam)
+    local function draw(batch,cam,drawOwner)
         for item,s in pairs(G.states) do
             local owner=s.owner or G.owner(item)
-            if owner and G.equipped(owner)==item then
+            if owner==drawOwner and G.equipped(owner)==item then
                 local base,bodyRotation,facing=G.mount(owner,true)
-                local sp=screen(cam,base)
+                local sp=cam.WorldToScreen(E.Vector2(base.x,base.y))
                 local viewport=gui.Canvas.Rect
                 if sp.X> -300 and sp.Y> -300 and sp.X<viewport.Width+300 and sp.Y<viewport.Height+300 then
                     local goal=G.attachment(owner,6,30,true)
@@ -140,17 +162,17 @@ function M.install(G,E,root)
                     local old=s.drawGoal or goal
                     s.drawGoal={x=old.x+(goal.x-old.x)*weight,y=old.y+(goal.y-old.y)*weight};s.drawTime=G.now
                     local pose=Core.pose(base,s.drawGoal,facing)
-                    link(batch,cam,'upper',base,pose.elbow,310,E.Vector2(65,75))
-                    link(batch,cam,'lower',pose.elbow,pose.tip,230,E.Vector2(65,75))
+                    link(batch,cam,'upper',base,pose.elbow,250,E.Vector2(44,50))
+                    link(batch,cam,'lower',pose.elbow,pose.tip,247,E.Vector2(39,41))
                     local point=target and target.point or {x=pose.tip.x+facing*math.cos(bodyRotation),y=pose.tip.y+facing*math.sin(bodyRotation)}
                     local angle=-math.atan2(point.y-pose.tip.y,point.x-pose.tip.x)
                     local colorKey=target and (target.kind=='combat' and 'red' or target.kind=='grab' and 'orange' or 'blue') or 'blue'
-                    sprite(batch,cam,colorKey,pose.tip,angle,.12,E.Vector2(82,95))
+                    sprite(batch,cam,colorKey,pose.tip,angle,.10,E.Vector2(37,54))
                     local motor=G.attachment(owner,-20,-18,true)
-                    sprite(batch,cam,'rotor'..(s.swimming and math.floor(G.now*18)%4 or 0),motor,-bodyRotation,.12)
+                    sprite(batch,cam,'rotor0',motor,-bodyRotation+(s.swimming and G.now*14 or 0),.12)
                     local short=not target or (target.kind~='repair' and target.kind~='weld') or
                         (target.point.x-pose.tip.x)^2+(target.point.y-pose.tip.y)^2<=(C.repairBeam+2)^2
-                    if target and s.active and short then
+                    if target and target.kind~='combat' and s.active and short then
                         local col=colors[target.kind]
                         line(batch,cam,pose.tip,target.point,E.Color(col[1],col[2],col[3],40),7)
                         line(batch,cam,pose.tip,target.point,E.Color(col[1],col[2],col[3],210),2)
@@ -166,10 +188,9 @@ function M.install(G,E,root)
             end
         end
     end
-    G.patch('draw','Barotrauma.GameScreen','DrawMap',function(screenObj,p)
+    G.patch('draw','Barotrauma.Character','Draw',function(owner,p)
         if G.drawError then return end
-        local batch=p['spriteBatch'];batch.Begin(sort.Deferred,blend.NonPremultiplied)
-        local ok,err=pcall(draw,batch,screenObj.Cam);batch.End()
+        local ok,err=pcall(draw,p['spriteBatch'],p['cam'],owner)
         if not ok then G.drawError=tostring(err);E.printerror('[Descendant suit] Render: '..tostring(err)) end
     end,true)
     function G.pauseClient()
@@ -177,7 +198,8 @@ function M.install(G,E,root)
         channels={}
     end
     function G.clearClient()
-        for _,entry in pairs(channels) do stop(entry.beam);stop(entry.motor) end
+        for _,s in pairs(G.states) do G.removeLights(s) end
+        for _,entry in pairs(channels) do stop(entry.beam);stop(entry.motor);G.removeLights(entry.state) end
         channels={};panel.Visible=false
     end
     function G.disposeClient()

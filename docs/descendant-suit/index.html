@@ -11,20 +11,21 @@
 <section>
 <canvas id="scene" width="1180" height="800" aria-label="Animowany podgląd kombinezonu i ramienia"></canvas>
 <aside>
-<div><strong>Funkcja ramienia</strong><div class="modes"><button data-mode="off">Wyłączone</button><button data-mode="repair" class="repair selected">Naprawa / spawanie</button><button data-mode="combat" class="combat">Obrona 360°</button><button data-mode="grab" class="grab">Chwytak</button></div></div>
+<div><strong>Funkcja ramienia</strong><div class="modes"><button data-mode="off">Wyłączone</button><button data-mode="repair" class="repair selected">Naprawa / spawanie</button><button data-mode="combat" class="combat">Laser pulsacyjny 360°</button><button data-mode="grab" class="grab">Chwytak</button></div></div>
 <label><input id="ai" type="checkbox"> Sterowanie przez AI</label>
 <label><input id="water" type="checkbox"> Zanurzenie / napęd wirnikowy</label>
 <label><input id="enemy" type="checkbox"> Widoczny przeciwnik</label>
 <label><input id="blocked" type="checkbox"> Zasłoń cel przeszkodą</label>
 <label>Źródło zasilania<select id="source"><option value="battery">Bateria</option><option value="rod">Pręt reaktora</option><option value="none">Brak źródła</option></select></label>
 <label>Naładowanie <output id="chargeLabel">100%</output><input id="charge" type="range" min="0" max="100" step="any" value="100"></label>
+<label>Amunicja pulsacyjna<input id="ammo" type="range" min="0" max="100" step="any" value="100"></label>
 <label>Tlen w pomieszczeniu <output id="airLabel">100%</output><input id="air" type="range" min="0" max="100" value="100"></label>
 <div id="state" role="status"></div>
 <button id="reset">Przywróć cele</button>
 </aside>
 </section>
 <div class="actions"><button id="device">Cel naprawy: urządzenie</button><button id="wall">Cel naprawy: ściana</button><button id="rescue">Cel chwytu: nurek</button></div>
-<div class="files"><a href="../../MULTI-TOOL-V2/Assets/DescendantSuit/suit.png">Arkusz kombinezonu PNG</a><a href="../../MULTI-TOOL-V2/Assets/DescendantSuit/arm.png">Ramię i efekty PNG</a><a href="../../MULTI-TOOL-V2/Assets/DescendantSuit/sprites.json">Mapa wycinków</a><a href="../DESCENDANT-SUIT.md">Instrukcja i zakres weryfikacji</a></div>
+<div class="files"><a href="../../MULTI-TOOL-V2/Assets/DescendantSuit/suit-v2.png">Arkusz kombinezonu PNG</a><a href="../../MULTI-TOOL-V2/Assets/DescendantSuit/sprites.json">Mapa wycinków</a><a href="../DESCENDANT-SUIT.md">Instrukcja i zakres weryfikacji</a></div>
 <details><summary>Odsłuch poszczególnych dźwięków</summary><div class="actions" id="sounds"></div></details>
 <details><summary>Sprawdzenia podglądu</summary><div id="checks"></div></details>
 <footer>Ten podgląd pokazuje zasoby i zachowanie demonstracyjne. Wyniki prób w Barotraumie są opisane osobno w instrukcji.</footer>

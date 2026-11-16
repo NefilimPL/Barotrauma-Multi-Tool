@@ -1,12 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <infotexts language="Polish" nowhitespace="false" translatedname="Polski">
   <entityname.descendantservosuit>Kombinezon serwomanipulacyjny Descendants</entityname.descendantservosuit>
-  <entitydescription.descendantservosuit>Kombinezon do 10 000 m z autonomicznym trzecim ramieniem. Wybierz jedną funkcję: niebieska naprawa/spawanie, czerwona obrona lub pomarańczowy chwytak. Celuj i użyj, aby chwycić wskazany cel; zmień tryb, aby go zwolnić. Oddychalne powietrze odsłania hełm i oszczędza tlen. Butla i bateria/pręt reaktora mają osobne pojemniki. Wymaga LuaCs.</entitydescription.descendantservosuit>
+  <entitydescription.descendantservosuit>Egzoszkielet do 10 000 m z kompaktowym trzecim ramieniem i latarkami. Wybierz naprawę/spawanie, obronę pulsacyjną lub chwytak. Dwa widoczne sloty mieszczą baterię/pręt oraz skrzynkę amunicji lasera pulsacyjnego. Obieg oddechowy potrzebuje zasilania, bez butli. AI wymienia puste zapasy. Naprawy uwzględniają umiejętności i talenty ukończenia naprawy. Wymaga LuaCs.</entitydescription.descendantservosuit>
   <descendant.title>Ramię serwomanipulacyjne</descendant.title>
   <descendant.off>Ramię wyłączone</descendant.off>
+  <descendant.on>Ramię włączone</descendant.on>
+  <descendant.ammo>Strzały</descendant.ammo>
+  <descendant.closedloop>Zamknięty obieg oddechowy</descendant.closedloop>
   <descendant.repair>Naprawa / spawanie</descendant.repair>
   <descendant.combat>Obrona</descendant.combat>
   <descendant.grab>Chwytak</descendant.grab>
+  <descendant.grab_short>[InputType.Aim] + [InputType.Use]: złap / puść</descendant.grab_short>
+  <descendant.grab_help>Wskaż cel kursorem. Przytrzymaj [InputType.Aim] i naciśnij [InputType.Use], aby złapać lub puścić. Jeden luźny przedmiot albo istota, z wyjątkiem masywnych. Zasięg 300, chwyt do 5 s. Po wygaśnięciu chwytu: 2 s przerwy dla tego samego celu.</descendant.grab_help>
   <descendant.power>Zasilanie</descendant.power>
   <descendant.air>Powietrze</descendant.air>
   <descendant.tank>Butla tlenowa</descendant.tank>

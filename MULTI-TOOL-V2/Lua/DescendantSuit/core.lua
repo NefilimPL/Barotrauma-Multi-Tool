@@ -16,7 +16,17 @@ end
 function M.setMode(s,mode)
     if not M.modes[mode] then return false end
     if s.mode~=mode then s.mode=mode;s.target=nil;s.grabStarted=nil end
+    if mode~='off' then s.resumeMode=mode end
     return true
+end
+function M.toggle(s)
+    return M.setMode(s,s.mode=='off' and (s.resumeMode or 'repair') or 'off')
+end
+function M.payPulse(s,power,ammo,now,powerCost)
+    powerCost=powerCost or C.shotPower
+    if now<(s.nextPulse or 0) or power<powerCost or ammo<C.ammoCost then return false end
+    s.nextPulse=now+C.shotInterval
+    return true,power-powerCost,ammo-C.ammoCost
 end
 function M.grabPress(s,held)
     local pressed=held and not s.grabHeld

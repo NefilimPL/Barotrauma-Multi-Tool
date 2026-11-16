@@ -2,10 +2,11 @@
 
 Wersja robocza zawiera **kombinezon serwomanipulacyjny Descendants** z jednym
 ramieniem do automatycznej naprawy i spawania, obrony lub chwytania celu.
-Ma oddzielne pojemniki tlenu i baterii/pręta oraz obsługę AI.
+Wersja V2 ma widoczne sloty baterii/pręta i skrzynki pulsacyjnej, obieg
+oddechowy bez butli, latarki i automatyczną wymianę zapasów przez AI.
 [Podgląd tekstur, animacji i dźwięków](docs/descendant-suit/index.html) ·
 [Używanie i rzeczywisty zakres weryfikacji](docs/DESCENDANT-SUIT.md).
-Pancerz sprawdzono w kliencie GPU; osiem etapów lokalnej sesji z podłączonym
+Pancerz sprawdzono w kliencie GPU; jedenaście etapów lokalnej sesji z podłączonym
 klientem multiplayer przeszło. Szczegóły i granice próby opisano w dokumentacji.
 
 Wersja **1.3.15** zatrzymuje także lokalnie przewidywane trafienie pocisku
@@ -190,6 +191,30 @@ Następnie użyj wybranej komendy. `inventory` tworzy przedmiot w ekwipunku
 kontrolowanej postaci. Na serwerze potrzebujesz uprawnień do tych komend.
 Komendy kopiuj przyciskiem kopiowania bloku kodu. Dostępne są też w
 [zwykłym pliku tekstowym](docs/spawn-commands.txt).
+
+Kombinezon serwomanipulacyjny Descendants V2 z baterią i amunicją do testowania:
+
+```text
+spawnitem descendantservosuit inventory 1
+spawnitem batterycell inventory 1
+spawnitem pulselaserammobox inventory 1
+```
+
+Załóż kombinezon w slocie ubrania zewnętrznego. Do pierwszego slotu włóż
+baterię albo pręt reaktora (`spawnitem fuelrod inventory 1`), do drugiego
+skrzynkę amunicji lasera pulsacyjnego. Butla nie jest potrzebna — obieg
+oddechowy korzysta z zasilania kombinezonu. Po aktualizacji z pierwszego
+prototypu utwórz nowy egzemplarz, aby otrzymać nowy układ slotów.
+W panelu po prawej wybierz naprawę/spawanie, obronę lub chwytak.
+Przycisk „Ramię włączone/wyłączone” przełącza funkcję ramienia.
+Chwytak: wybierz ten tryb, wskaż cel kursorem, przytrzymaj **PPM (Celuj)**
+i naciśnij **E (Użyj)**. Ponowne E przy trzymanym PPM puszcza cel.
+Przy zmienionym sterowaniu użyj przycisków pokazanych w panelu kombinezonu.
+Łapie jeden luźny, ruchomy przedmiot albo istotę poniżej limitu masy;
+nie wyrywa zamocowanych urządzeń ani rzeczy z ekwipunków.
+Zasięg wynosi 300 jednostek gry, chwyt trwa do 5 s. Po wygaśnięciu chwytu
+odczekaj 2 s na ponowne złapanie tego samego celu. Nie trzeba trzymać narzędzia w ręce.
+[Pełna instrukcja kombinezonu](docs/DESCENDANT-SUIT.md).
 
 Odkurzacz Aegis:
 

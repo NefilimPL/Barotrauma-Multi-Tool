@@ -2,8 +2,8 @@ local C=require('DescendantSuit.config')
 local U=require('CombatTool.util')
 local M={}
 function M.install(G,E)
-    local modes={off=0,repair=1,combat=2,grab=3}
-    local names={[0]='off','repair','combat','grab'}
+    local modes={off=0,repair=1,combat=2,grab=3,toggle=4}
+    local names={[0]='off','repair','combat','grab','toggle'}
     local kinds={repair=1,weld=2,combat=3,grab=4}
     local kindNames={'repair','weld','combat','grab'}
     local nextSend,hadStates,lastRequest=0,false,{}
@@ -36,6 +36,7 @@ function M.install(G,E)
             m.WriteUInt16(s.item.ID);m.WriteUInt16(s.owner.ID);m.WriteByte(modes[s.mode] or 0)
             m.WriteBoolean(s.open==true);m.WriteBoolean(s.swimming==true);m.WriteSingle(G.energy(s.item))
             m.WriteBoolean(s.active==true)
+            m.WriteUInt16(s.shots or 0)
             local target=s.target
             m.WriteByte(target and kinds[target.kind] or 0)
             if target then
@@ -53,6 +54,7 @@ function M.install(G,E)
                 local id,ownerId,mode=m.ReadUInt16(),m.ReadUInt16(),names[m.ReadByte()]
                 local open,swimming,charge=m.ReadBoolean(),m.ReadBoolean(),m.ReadSingle()
                 local active=m.ReadBoolean()
+                local shots=m.ReadUInt16()
                 local kind=kindNames[m.ReadByte()]
                 local target
                 if kind then
@@ -63,7 +65,7 @@ function M.install(G,E)
                 if G.is(item) and owner and mode and charge==charge then
                     local s=G.state(item);seen[item]=true
                     s.owner=owner;s.mode=mode;s.open=open;s.swimming=swimming;s.charge=charge
-                    s.active=active and target~=nil;s.target=target;s.received=G.now
+                    s.active=active and target~=nil;s.target=target;s.received=G.now;s.shots=shots
                 end
             end
             for item in pairs(G.states) do if not seen[item] then G.states[item]=nil end end

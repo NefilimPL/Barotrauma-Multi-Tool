@@ -7,6 +7,9 @@ BMTDescendantSuit=G
 local ok,err=pcall(function()
     require('CombatTool.physics').install(G,_G)
     require('DescendantSuit.network').install(G,_G)
+    require('DescendantSuit.repair').install(G,_G)
+    require('DescendantSuit.supplies').install(G,_G)
+    require('DescendantSuit.pulse').install(G,_G)
     if CLIENT then require('DescendantSuit.client').install(G,_G,root) end
     G.install()
 end)

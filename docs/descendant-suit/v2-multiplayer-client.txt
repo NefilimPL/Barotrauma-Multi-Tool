@@ -1,0 +1,13 @@
+HELLO real joined client
+PASS 1 mode=repair active=true lights=420 ammo=100 shots=0 renderer=ok
+PASS 2 mode=repair active=false lights=420 ammo=100 shots=0 renderer=ok
+PASS 3 mode=combat active=true lights=420 ammo=93.25 shots=3 renderer=ok
+PASS 4 mode=combat active=false lights=420 ammo=0 shots=3 renderer=ok
+PASS 5 mode=grab active=true lights=420 ammo=0 shots=3 renderer=ok
+PASS 6 mode=off active=false lights=420 ammo=0 shots=3 renderer=ok
+PASS 7 mode=repair active=false lights=420 ammo=0 shots=3 renderer=ok
+PASS 8 mode=off active=false lights=420 ammo=0 shots=3 renderer=ok
+PASS 9 mode=off active=false lights=420 ammo=0 shots=3 renderer=ok
+PASS 10 mode=off active=false lights=0 ammo=0 shots=3 renderer=ok
+PASS 11 mode=repair active=true lights=420 ammo=0 shots=3 renderer=ok
+DONE

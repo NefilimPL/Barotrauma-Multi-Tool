@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version='1.0' encoding='utf-8'?>
 <Sounds>
   <descendant_repair file="%ModDir%/Assets/DescendantSuit/Audio/repair.ogg" range="350" volume="0.25" />
   <descendant_weld file="%ModDir%/Assets/DescendantSuit/Audio/weld.ogg" range="350" volume="0.25" />
@@ -8,4 +8,5 @@
   <descendant_servo file="%ModDir%/Assets/DescendantSuit/Audio/servo.ogg" range="350" volume="0.25" />
   <descendant_helmet file="%ModDir%/Assets/DescendantSuit/Audio/helmet.ogg" range="350" volume="0.35" />
   <descendant_switch file="%ModDir%/Assets/DescendantSuit/Audio/switch.ogg" range="350" volume="0.25" />
+  <descendant_pulse file="Content/Items/Weapons/WEAPONS_laserGunShot1.ogg" range="1800" volume="0.7" />
 </Sounds>
