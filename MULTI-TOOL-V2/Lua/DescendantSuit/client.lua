@@ -148,7 +148,7 @@ function M.install(G,E,root)
                 local sp=cam.WorldToScreen(E.Vector2(base.x,base.y))
                 local viewport=gui.Canvas.Rect
                 if sp.X> -300 and sp.Y> -300 and sp.X<viewport.Width+300 and sp.Y<viewport.Height+300 then
-                    local goal=G.attachment(owner,6,30,true)
+                    local goal=G.restGoal(owner,true)
                     local target=s.target
                     if target then
                         if target.entity and not target.entity.Removed and target.kind~='weld' then target.point=U.point(target.entity.WorldPosition) end
@@ -167,9 +167,9 @@ function M.install(G,E,root)
                     local point=target and target.point or {x=pose.tip.x+facing*math.cos(bodyRotation),y=pose.tip.y+facing*math.sin(bodyRotation)}
                     local angle=-math.atan2(point.y-pose.tip.y,point.x-pose.tip.x)
                     local colorKey=target and (target.kind=='combat' and 'red' or target.kind=='grab' and 'orange' or 'blue') or 'blue'
-                    sprite(batch,cam,colorKey,pose.tip,angle,.10,E.Vector2(37,54))
+                    sprite(batch,cam,colorKey,pose.tip,angle,.16,E.Vector2(37,54))
                     local motor=G.attachment(owner,-20,-18,true)
-                    sprite(batch,cam,'rotor0',motor,-bodyRotation+(s.swimming and G.now*14 or 0),.12)
+                    sprite(batch,cam,'rotor0',motor,-bodyRotation+(s.swimming and G.now*14 or 0),.10)
                     local short=not target or (target.kind~='repair' and target.kind~='weld') or
                         (target.point.x-pose.tip.x)^2+(target.point.y-pose.tip.y)^2<=(C.repairBeam+2)^2
                     if target and target.kind~='combat' and s.active and short then

@@ -22,9 +22,10 @@ function M.install(G,E)
         end
         local powered=G.energy(s.item)>0
         local head=G.attachment(owner,8,48)
-        local base=G.mount(owner)
-        local point=s.target and s.target.point or G.attachment(owner,6,30)
-        local tip=Core.pose(base,point,-1).tip
+        local base,_,facing=G.mount(owner)
+        local point=s.target and s.target.point or G.restGoal(owner)
+        facing=facing or 1
+        local tip=Core.pose(base,point,facing<0 and -1 or 1).tip
         move(s.lights.helmet,owner,head,powered and 420 or 0,E.Color(190,220,255,170))
         local repairing=s.active and s.target and (s.target.kind=='repair' or s.target.kind=='weld')
         local flash=G.now-(s.shotTime or -100)<.12

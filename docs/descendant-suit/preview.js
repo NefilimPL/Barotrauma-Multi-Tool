@@ -8,7 +8,7 @@ await Promise.all(["suit","arm"].map(key=>new Promise((resolve,reject)=>{
   const im=new Image();im.onload=()=>{images[key]=im;resolve();};im.onerror=()=>reject(new Error("Nie można wczytać "+key));im.src=asset+"suit-v2.png";
 })));
 const state={mode:"repair",targetId:1,action:null};
-const at={x:480,y:390},base={x:420,y:282};
+const at={x:480,y:390},base={x:436,y:296};
 let targets=[],sparks=[],time=0,last=0,helmetOpen=1,tip={x:455,y:320},audioEnabled=false;
 const loops={},oneshots={},colors={repair:"#71ccff",weld:"#71ccff",combat:"#ff4545",grab:"#ffad42"};
 function reset(){targets=[
@@ -50,23 +50,23 @@ function line(a,b,color,width){ctx.strokeStyle=color;ctx.lineWidth=width;ctx.beg
 function suit(swim){
   const sway=swim?Math.sin(time*5)*.07:Math.sin(time*1.8)*.008;
   ctx.fillStyle="#182329";
-  ctx.beginPath();ctx.roundRect(at.x-24,at.y-108,52,163,19);ctx.fill();
+  ctx.beginPath();ctx.roundRect(at.x-19,at.y-108,42,163,16);ctx.fill();
   ctx.fillRect(at.x-3,at.y-128,26,40);
-  for(const offset of [-10,15]){ctx.beginPath();ctx.roundRect(at.x+offset-13,at.y+48,29,153,12);ctx.fill();}
+  for(const offset of [-10,15]){ctx.beginPath();ctx.roundRect(at.x+offset-10,at.y+48,24,153,10);ctx.fill();}
   for(const [offset,shade]of [[-10,.6],[15,1]]){
-    sprite("thigh",at.x+offset,at.y+80,51,91,sway*(offset<0?-1:1),shade);
-    sprite("calf",at.x+offset+4,at.y+158,33,71,-sway,shade);
-    sprite("boot",at.x+offset+12,at.y+207,65,41,0,shade);
+    sprite("thigh",at.x+offset,at.y+80,41,82,sway*(offset<0?-1:1),shade);
+    sprite("calf",at.x+offset+4,at.y+158,28,67,-sway,shade);
+    sprite("boot",at.x+offset+12,at.y+207,55,35,0,shade);
   }
-  sprite("waist",at.x,at.y+38,70,48);
-  sprite("torso",at.x,at.y-43,99,139);
+  sprite("waist",at.x,at.y+38,56,39);
+  sprite("torso",at.x,at.y-43,73,102);
   ctx.fillStyle="#bd9f86";ctx.beginPath();ctx.ellipse(at.x+10,at.y-143,25,35,0,0,Math.PI*2);ctx.fill();
-  sprite("helmetClosed",at.x+12,at.y-144,116,114,-helmetOpen*.1,1-helmetOpen);
-  sprite("helmetOpen",at.x+10,at.y-148-helmetOpen*4,111,120,0,helmetOpen);
-  sprite("upperArm",at.x-3,at.y-41,36,61,.03);
-  sprite("forearm",at.x+5,at.y+12,27,58,-.07);
-  sprite("hand",at.x+8,at.y+54,25,35);
-  sprite("rotor"+(swim?Math.floor(time*18)%4:0),at.x-80,at.y+5,52,50);
+  sprite("helmetClosed",at.x+12,at.y-144,93,91,-helmetOpen*.1,1-helmetOpen);
+  sprite("helmetOpen",at.x+10,at.y-148-helmetOpen*4,89,96,0,helmetOpen);
+  sprite("upperArm",at.x-3,at.y-41,27,46,.03);
+  sprite("forearm",at.x+5,at.y+12,22,47,-.07);
+  sprite("hand",at.x+8,at.y+54,22,31);
+  sprite("rotor"+(swim?Math.floor(time*18)%4:0),at.x-53,at.y+5,43,42);
 }
 function target(t){
   ctx.save();ctx.translate(t.x,t.y);
@@ -109,10 +109,10 @@ function frame(now){
   document.querySelectorAll("[data-mode]").forEach(b=>b.classList.toggle("selected",state.mode===b.dataset.mode));
   document.querySelector('[data-mode="off"]').textContent=state.mode==="off"?"Ramię wyłączone":"Ramię włączone";
   const t=action&&targets.find(t=>t.id===action.target.id),kind=action&&action.kind;
-  const goal=t?(kind==="repair"||kind==="weld"?C.repairContact(base,t,162,18).tip:{x:t.x,y:t.y}):{x:455,y:320};
+  const goal=t?(kind==="repair"||kind==="weld"?C.repairContact(base,t,184,100).tip:{x:t.x,y:t.y}):{x:500,y:156};
   const blend=1-Math.exp(-dt*12);tip.x+=(goal.x-tip.x)*blend;tip.y+=(goal.y-tip.y)*blend;
-  const pose=C.armPose(base,tip,86,76,-1);
-  const close=!t||!(kind==="repair"||kind==="weld")||Math.hypot(t.x-pose.tip.x,t.y-pose.tip.y)<=31;
+  const pose=C.armPose(base,tip,136,120,-1,184);
+  const close=!t||!(kind==="repair"||kind==="weld")||Math.hypot(t.x-pose.tip.x,t.y-pose.tip.y)<=100;
   const working=action&&close;
   let energyRate=water&&powered?.12:0;
   if(t&&working){
@@ -137,7 +137,7 @@ function frame(now){
   drawLink("upperLink",base,pose.elbow,250,[44,50]);drawLink("lowerLink",pose.elbow,pose.tip,247,[39,41]);
   const angle=t?Math.atan2(t.y-pose.tip.y,t.x-pose.tip.x):.5;
   const head=kind==="combat"?"red":kind==="grab"?"orange":"blue";
-  const r=C.sprites[head].rect;ctx.save();ctx.translate(pose.tip.x,pose.tip.y);ctx.rotate(angle);ctx.drawImage(images.arm,...r,-37*.17,-54*.17,r[2]*.17,r[3]*.17);ctx.restore();
+  const r=C.sprites[head].rect;ctx.save();ctx.translate(pose.tip.x,pose.tip.y);ctx.rotate(angle);ctx.drawImage(images.arm,...r,-37*.32,-54*.32,r[2]*.32,r[3]*.32);ctx.restore();
   if(working){
     const color=colors[kind];ctx.save();ctx.shadowBlur=12;ctx.shadowColor=color;if(kind!=="combat"||time<pulseUntil){line(pose.tip,t,color,3);line(pose.tip,t,"#effaff",.9);}ctx.restore();
     if(kind==="repair"||kind==="weld"){

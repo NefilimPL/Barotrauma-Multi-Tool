@@ -4,10 +4,10 @@
 const modes=["off","repair","combat","grab"];
 const finite=n=>Number.isFinite(n)?n:0;
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
-function armPose(base,goal,a=86,b=76,bend=-1){
+function armPose(base,goal,a=86,b=76,bend=-1,reach=a+b){
   const dx=finite(goal.x-base.x),dy=finite(goal.y-base.y);
   const raw=Math.hypot(dx,dy),direction=raw>1e-6?Math.atan2(dy,dx):0;
-  const d=clamp(raw,Math.abs(a-b)+.001,a+b-.001);
+  const d=clamp(raw,Math.abs(a-b)+.001,Math.min(reach,a+b)-.001);
   const offset=Math.acos(clamp((a*a+d*d-b*b)/(2*a*d),-1,1))*(bend<0?-1:1);
   return {base:{...base},elbow:{x:base.x+a*Math.cos(direction+offset),y:base.y+a*Math.sin(direction+offset)},
     tip:{x:base.x+d*Math.cos(direction),y:base.y+d*Math.sin(direction)}};

@@ -6,6 +6,8 @@ Druga wersja robocza dla Barotrauma 1.13.5.0 / LuaCs c6e8829. Identyfikator prze
 
 ## Używanie
 
+Aktualna korekta sylwetki zmniejsza płyty tułowia, hełm i osłony kończyn. Ramię ma dłuższe segmenty, większy chwytak i pozycję spoczynkową ponad barkiem. [Wygląd z prawej](descendant-suit/slim-right.png), [z lewej](descendant-suit/slim-left.png), [podczas chwytania](descendant-suit/slim-working.png). To natywne zrzuty ze zbliżeniem kamery 2×, bez obróbki obrazu. Nowa paczka: `output/MULTI-TOOL-V2-descendant-slim-2026-11-16.zip`.
+
 Załóż kombinezon w slocie ubrania zewnętrznego. Jeden widoczny panel ma dwa ograniczone sloty: pierwszy na baterię/pręt reaktora, drugi na skrzynkę amunicji lasera pulsacyjnego. Butla nie jest potrzebna. Zasilanie ramienia nie wymaga trzymania narzędzia w ręce. Przycisk „Ramię włączone / Ramię wyłączone” pokazuje stan i przełącza funkcję; ponowne włączenie przywraca ostatni tryb.
 
 Komendy F3 (na serwerze wymagają uprawnień):
@@ -43,6 +45,13 @@ Przedmiot jest dostępny u sprzedawców badawczych i wojskowych oraz w fabrykato
 - V2 w grze odwołuje się do natywnego dźwięku lasera; nie skopiowano go do moda. Podgląd ma dodatkowy oryginalny krótki odsłuch `pulse.ogg`, generowany przez `python tools/generate_descendant_audio.py --only pulse`.
 - Natywna warstwa uszczelniająca korzysta z istniejącej tekstury kombinezonu głębinowego gry; nie skopiowano jej do moda.
 - [Pochodzenie i prompty](descendant-suit/ASSET-SOURCES.md).
+
+## Korekta sylwetki i ramienia — 16 listopada 2026
+
+- **528 testów**, **21/21 sprawdzeń w rzeczywistym Chrome**, walidacja **17 XML / 54 Lua 5.2** — poprawne.
+- **3/3 prób natywnego klienta**: podniesione ramię w spoczynku z prawej strony, lustrzany widok z lewej oraz aktywne przyciąganie przedmiotu z widocznym ramieniem. [Wyniki](descendant-suit/slim-native.txt), [środowisko i sumy plików](descendant-suit/slim-verification.txt).
+- Skala tułowia 0,82 → 0,60, hełmu 0,50 → 0,40; pozostałe płyty również zmniejszone. Segmenty ramienia 50/42 → 68/60, większa głowica. Dłuższe segmenty składają się w dotychczasowym promieniu roboczym 92; zasięgi funkcji nie zostały zwiększone.
+- Wspólna pozycja spoczynkowa steruje rysowaniem i latarką narzędzia. Tekstura atlasu pozostała bez zmian; korekta dotyczy skali i ułożenia części. Przegląd nie znalazł problemów Critical/Important. Te próby wizualne dotyczą singleplayer; wcześniejsze wyniki multiplayer pozostają osobnym zapisem.
 
 ## Poprawka chwytaka — 16 listopada 2026
 

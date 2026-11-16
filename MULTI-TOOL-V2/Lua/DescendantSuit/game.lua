@@ -91,7 +91,10 @@ function M.new(E)
             y=p.Y+rx*math.sin(rotation)+y*math.cos(rotation)},rotation,facing
     end
     function G.mount(owner,draw)
-        return G.attachment(owner,-18,10,draw)
+        return G.attachment(owner,-22,18,draw)
+    end
+    function G.restGoal(owner,draw)
+        return G.attachment(owner,10,88,draw)
     end
     local function position(entity)
         local p=entity.WorldPosition;return {x=p.X,y=p.Y}

@@ -16,8 +16,8 @@ class DescendantSuitTests(LuaCase):
         for x, y in [(1000, 0), (-1000, 0), (0, 1000), (0, -1000), (0, 0)]:
             pose = self.suit.pose(self.t(x=0, y=0), self.t(x=x, y=y), -1)
             elbow, tip = pose['elbow'], pose['tip']
-            self.assertAlmostEqual((elbow['x']**2+elbow['y']**2)**.5, 50)
-            self.assertAlmostEqual(((tip['x']-elbow['x'])**2+(tip['y']-elbow['y'])**2)**.5, 42)
+            self.assertAlmostEqual((elbow['x']**2+elbow['y']**2)**.5, 68)
+            self.assertAlmostEqual(((tip['x']-elbow['x'])**2+(tip['y']-elbow['y'])**2)**.5, 60)
             self.assertLessEqual((tip['x']**2+tip['y']**2)**.5, 92.00001)
 
     def test_one_mode_releases_the_previous_grab(self):
@@ -155,9 +155,9 @@ class DescendantAdapterTests(LuaCase):
             local torso={WorldPosition={X=10,Y=20},body={Rotation=math.pi/2,Dir=1}}
             wearer.AnimController.GetLimb=function(kind) assert(kind==1);return torso end
             local p=G.mount(wearer)
-            assert(math.abs(p.x)<.00001 and math.abs(p.y-2)<.00001)
+            assert(math.abs(p.x+8)<.00001 and math.abs(p.y+2)<.00001)
             torso.body.Dir=-1;p=G.mount(wearer)
-            assert(math.abs(p.x)<.00001 and math.abs(p.y-38)<.00001)
+            assert(math.abs(p.x+8)<.00001 and math.abs(p.y-42)<.00001)
         """)
 
     def test_visible_mount_uses_interpolated_torso_position_and_rotation(self):
@@ -168,7 +168,7 @@ class DescendantAdapterTests(LuaCase):
                 DrawPosition={X=50,Y=60},UpdateDrawPosition=function() updated=true end}}
             wearer.AnimController.GetLimb=function() return torso end
             local p=G.mount(wearer,true)
-            assert(updated and math.abs(p.x-40)<.00001 and math.abs(p.y-42)<.00001)
+            assert(updated and math.abs(p.x-32)<.00001 and math.abs(p.y-38)<.00001)
         """)
 
     def test_safe_air_is_free_and_closed_loop_breathing_uses_power_without_a_tank(self):

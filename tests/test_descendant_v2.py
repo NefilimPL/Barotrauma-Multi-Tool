@@ -232,6 +232,7 @@ class DescendantLightTests(LuaCase):
             end}
             G={now=0,owner=function() return owner end,energy=function() return 100 end,
                 attachment=function(c) assert(c);return {x=1,y=2} end,
+                restGoal=function(c) assert(c);return {x=1,y=2} end,
                 mount=function(c) assert(c);return {x=1,y=2} end}
             require('DescendantSuit.lights').install(G,E)
             local s={item={}}
@@ -248,6 +249,7 @@ class DescendantLightTests(LuaCase):
             end}
             local owner={};local suit={}
             G={now=0,attachment=function() return {x=10,y=20} end,
+                restGoal=function() return {x=10,y=20} end,
                 mount=function() return {x=10,y=20} end,energy=function() return 100 end}
             require('DescendantSuit.lights').install(G,E)
             local s={item=suit,owner=owner,mode='off'}
