@@ -2,11 +2,11 @@ local C=require('DescendantSuit.config')
 local U=require('CombatTool.util')
 local M={}
 function M.install(G,E)
-    local modes={off=0,repair=1,combat=2,grab=3,toggle=4}
-    local names={[0]='off','repair','combat','grab','toggle'}
+    local modes={off=0,repair=1,combat=2,grab=3,toggle=4,sonar=5,sonaractive=6,sonarpassive=7}
+    local names={[0]='off','repair','combat','grab','toggle','sonar','sonaractive','sonarpassive'}
     local kinds={repair=1,weld=2,combat=3,grab=4}
     local kindNames={'repair','weld','combat','grab'}
-    local nextSend,hadStates,lastRequest=0,false,{}
+    local nextSend,hadStates,requests=0,false,setmetatable({},{__mode='k'})
     function G.requestMode(item,mode)
         if not modes[mode] then return end
         if G.authoritative then return G.setMode(item,mode,E.Character.Controlled) end
@@ -16,8 +16,13 @@ function M.install(G,E)
     if E.SERVER then
         E.Networking.Receive(C.protocol..'.mode',function(m,client)
             local id,mode=m.ReadUInt16(),names[m.ReadByte()]
-            if not G.alive or not mode or not client or G.now-(lastRequest[client] or -100)<.1 then return end
-            lastRequest[client]=G.now
+            if not G.alive or not mode or not client then return end
+            -- Independent sonar/arm controls can arrive in the same packet burst.
+            local budget=requests[client] or {at=G.now,tokens=C.controlBurst}
+            budget.tokens=math.min(C.controlBurst,budget.tokens+math.max(0,G.now-budget.at)*C.controlRate)
+            budget.at=G.now;requests[client]=budget
+            if budget.tokens<1 then return end
+            budget.tokens=budget.tokens-1
             local item=E.Entity.FindEntityByID(id)
             if G.is(item) then G.authorize(client,item,mode) end
         end)
@@ -37,6 +42,9 @@ function M.install(G,E)
             m.WriteBoolean(s.open==true);m.WriteBoolean(s.swimming==true);m.WriteSingle(G.energy(s.item))
             m.WriteBoolean(s.active==true)
             m.WriteUInt16(s.shots or 0)
+            m.WriteBoolean(s.sonar==true);m.WriteBoolean(s.sonarActive~=false)
+            m.WriteBoolean(s.lastPulse~=nil)
+            if s.lastPulse then m.WriteSingle(s.lastPulse.x);m.WriteSingle(s.lastPulse.y) end
             local target=s.target
             m.WriteByte(target and kinds[target.kind] or 0)
             if target then
@@ -55,6 +63,12 @@ function M.install(G,E)
                 local open,swimming,charge=m.ReadBoolean(),m.ReadBoolean(),m.ReadSingle()
                 local active=m.ReadBoolean()
                 local shots=m.ReadUInt16()
+                local sonar,sonarActive=m.ReadBoolean(),m.ReadBoolean()
+                local lastPulse
+                if m.ReadBoolean() then
+                    local x,y=m.ReadSingle(),m.ReadSingle()
+                    if x==x and y==y and math.abs(x)<1e8 and math.abs(y)<1e8 then lastPulse={x=x,y=y} end
+                end
                 local kind=kindNames[m.ReadByte()]
                 local target
                 if kind then
@@ -66,9 +80,13 @@ function M.install(G,E)
                     local s=G.state(item);seen[item]=true
                     s.owner=owner;s.mode=mode;s.open=open;s.swimming=swimming;s.charge=charge
                     s.active=active and target~=nil;s.target=target;s.received=G.now;s.shots=shots
+                    s.sonar=sonar;s.sonarActive=sonarActive;s.lastPulse=lastPulse
                 end
             end
-            for item in pairs(G.states) do if not seen[item] then G.states[item]=nil end end
+            for item,s in pairs(G.states) do if not seen[item] then
+                if G.stopSonar then G.stopSonar(item,s) end
+                G.states[item]=nil
+            end end
         end)
     end
 end

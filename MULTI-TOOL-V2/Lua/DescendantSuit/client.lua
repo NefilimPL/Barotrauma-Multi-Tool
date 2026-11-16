@@ -10,30 +10,8 @@ function M.install(G,E,root)
     local rects={upper=A.upperLink,lower=A.lowerLink,red=A.emitter,blue=A.emitter,orange=A.emitter,
         rotor0=A.rotor,rotor1=A.rotor,rotor2=A.rotor,rotor3=A.rotor}
     require('DescendantSuit.lights').install(G,E)
+    require('DescendantSuit.ui').install(G,E)
     local colors={repair={75,190,255},weld={75,190,255},combat={255,45,45},grab={255,153,35}}
-    local panel=UI.Frame(UI.RectTransform(E.Vector2(.24,.28),gui.Canvas,UI.Anchor.CenterRight),'GUIFrame')
-    G.panel=panel
-    local function box(x,y,w,h)
-        local t=UI.RectTransform(E.Vector2(w,h),panel.RectTransform,UI.Anchor.TopLeft,UI.Pivot.TopLeft)
-        t.RelativeOffset=E.Vector2(x,y);return t
-    end
-    local function text(id) return tostring(E.TextManager.Get('descendant.'..id)) end
-    UI.TextBlock(box(.05,.02,.9,.15),text('title'))
-    local buttons={}
-    for n,mode in ipairs({'off','repair','combat','grab'}) do
-        local b=UI.Button(box(.05,.18+(n-1)*.15,.9,.14),text(mode))
-        b.OnClicked=function()
-            local owner=E.Character.Controlled;local item=G.equipped(owner)
-            if item then G.requestMode(item,mode=='off' and 'toggle' or mode) end
-            return true
-        end
-        buttons[mode]=b
-    end
-    local status=UI.TextBlock(box(.05,.78,.9,.20),'')
-    local panelMode,grabHint,nextHint=nil,'',0
-    buttons.grab.ToolTip=E.InputTypeLString(E.TextManager.Get('descendant.grab_help'),false)
-    G.panelButtons=buttons;G.panelStatus=status
-    panel.Visible=false
     local channels={}
     local function stop(ch) if ch then ch.FadeOutAndDispose() end end
     local function sound(id,owner) return E.SoundPlayer.PlaySound('descendant_'..id,owner.WorldPosition) end
@@ -74,28 +52,7 @@ function M.install(G,E,root)
         s.drawOpen=open
     end
     function G.updateClient(dt)
-        local controlled=E.Character.Controlled
-        local equipped=G.equipped(controlled)
-        panel.Visible=equipped~=nil
-        if equipped then
-            local s=G.state(equipped)
-            if panelMode~=s.mode then
-                panel.RectTransform.Resize(E.Vector2(.24,s.mode=='grab' and .34 or .28))
-                panelMode=s.mode
-            end
-            if s.mode=='grab' and G.now>=nextHint then
-                grabHint=tostring(E.InputTypeLString(E.TextManager.Get('descendant.grab_short'),false))
-                buttons.grab.ToolTip=E.InputTypeLString(E.TextManager.Get('descendant.grab_help'),false)
-                nextHint=G.now+1
-            end
-            for mode,b in pairs(buttons) do b.Selected=s.mode==mode end
-            buttons.off.Text=text(s.mode=='off' and 'off' or 'on')
-            local ammo=G.ammo(equipped)
-            status.Text=text('power')..': '..math.floor(s.charge or G.energy(equipped))..'%  |  '..
-                text('ammo')..': '..math.floor((ammo and ammo.Condition or 0)/C.ammoCost)..'\n'..text(s.open and 'air' or 'closedloop')..
-                (s.mode=='grab' and '\n'..grabHint or '')
-            panel.AddToGUIUpdateList(false,8)
-        end
+        G.updateSuitUI(dt)
         for item,s in pairs(G.states) do
             local owner=s.owner or G.owner(item)
             if item.Removed or not owner or G.equipped(owner)~=item or
@@ -103,9 +60,11 @@ function M.install(G,E,root)
                 local entry=channels[item]
                 if entry then stop(entry.beam);stop(entry.motor);channels[item]=nil end
                 G.removeLights(s)
+                G.stopSonar(item,s)
                 G.states[item]=nil
             else
                 helmet(owner,item,s.open==true)
+                G.syncSonar(item,s)
                 local entry=channels[item] or {};channels[item]=entry;entry.state=s
                 local active=s.active and s.target and s.target.kind
                 loop(entry,'beam',active~='combat' and active or nil,owner);loop(entry,'motor',s.swimming and 'impeller' or nil,owner)
@@ -148,35 +107,25 @@ function M.install(G,E,root)
                 local sp=cam.WorldToScreen(E.Vector2(base.x,base.y))
                 local viewport=gui.Canvas.Rect
                 if sp.X> -300 and sp.Y> -300 and sp.X<viewport.Width+300 and sp.Y<viewport.Height+300 then
-                    local goal=G.restGoal(owner,true)
                     local target=s.target
-                    if target then
-                        if target.entity and not target.entity.Removed and target.kind~='weld' then target.point=U.point(target.entity.WorldPosition) end
-                        local dx,dy=target.point.x-base.x,target.point.y-base.y
-                        local d=math.sqrt(dx*dx+dy*dy)
-                        local distance=math.max(8,math.min(C.reach,d-8))
-                        if d>1e-5 then goal={x=base.x+dx/d*distance,y=base.y+dy/d*distance} end
-                    end
-                    local elapsed=math.min(.1,math.max(0,G.now-(s.drawTime or G.now)))
-                    local weight=s.drawGoal and (1-math.exp(-12*elapsed)) or 1
-                    local old=s.drawGoal or goal
-                    s.drawGoal={x=old.x+(goal.x-old.x)*weight,y=old.y+(goal.y-old.y)*weight};s.drawTime=G.now
-                    local pose=Core.pose(base,s.drawGoal,facing)
+                    if target and target.entity and not target.entity.Removed and target.kind~='weld' then target.point=U.point(target.entity.WorldPosition) end
+                    local flash=s.lastPulse and G.now-(s.shotTime or -100)<C.pulseDuration
+                    local pose=G.toolPose(owner,s,true,flash and s.lastPulse or nil)
                     link(batch,cam,'upper',base,pose.elbow,250,E.Vector2(44,50))
                     link(batch,cam,'lower',pose.elbow,pose.tip,247,E.Vector2(39,41))
-                    local point=target and target.point or {x=pose.tip.x+facing*math.cos(bodyRotation),y=pose.tip.y+facing*math.sin(bodyRotation)}
-                    local angle=-math.atan2(point.y-pose.tip.y,point.x-pose.tip.x)
-                    local colorKey=target and (target.kind=='combat' and 'red' or target.kind=='grab' and 'orange' or 'blue') or 'blue'
-                    sprite(batch,cam,colorKey,pose.tip,angle,.16,E.Vector2(37,54))
+                    local colorKey=flash and 'red' or target and (target.kind=='combat' and 'red' or target.kind=='grab' and 'orange' or 'blue') or 'blue'
+                    sprite(batch,cam,colorKey,pose.tip,-pose.angle,.16,E.Vector2(37,54))
                     local motor=G.attachment(owner,-20,-18,true)
                     sprite(batch,cam,'rotor0',motor,-bodyRotation+(s.swimming and G.now*14 or 0),.10)
                     local short=not target or (target.kind~='repair' and target.kind~='weld') or
-                        (target.point.x-pose.tip.x)^2+(target.point.y-pose.tip.y)^2<=(C.repairBeam+2)^2
-                    if target and target.kind~='combat' and s.active and short then
-                        local col=colors[target.kind]
-                        line(batch,cam,pose.tip,target.point,E.Color(col[1],col[2],col[3],40),7)
-                        line(batch,cam,pose.tip,target.point,E.Color(col[1],col[2],col[3],210),2)
-                        line(batch,cam,pose.tip,target.point,E.Color(235,250,255,240),.6)
+                        (target.point.x-pose.muzzle.x)^2+(target.point.y-pose.muzzle.y)^2<=(C.repairBeam+C.contactSlack+2)^2
+                    local beam=flash and s.lastPulse or (target and target.kind~='combat' and s.active and short and target.point)
+                    if beam then
+                        local repairing=not flash and target and (target.kind=='repair' or target.kind=='weld')
+                        local col=flash and colors.combat or colors[target.kind]
+                        line(batch,cam,pose.muzzle,beam,E.Color(col[1],col[2],col[3],70),repairing and 12 or 8)
+                        line(batch,cam,pose.muzzle,beam,E.Color(col[1],col[2],col[3],220),repairing and 4 or 2.5)
+                        line(batch,cam,pose.muzzle,beam,E.Color(235,250,255,240),repairing and 1.2 or .7)
                     end
                     for _,p in ipairs(s.sparks or {}) do
                         local tail={x=p.x-p.vx*.022,y=p.y-p.vy*.022}
@@ -200,10 +149,10 @@ function M.install(G,E,root)
     function G.clearClient()
         for _,s in pairs(G.states) do G.removeLights(s) end
         for _,entry in pairs(channels) do stop(entry.beam);stop(entry.motor);G.removeLights(entry.state) end
-        channels={};panel.Visible=false
+        channels={};G.clearSuitUI()
     end
     function G.disposeClient()
-        panel.Visible=false;panel.RemoveFromGUIUpdateList();panel.RectTransform.Parent=nil;atlas.Remove()
+        G.disposeSuitUI();atlas.Remove()
     end
 end
 return M

@@ -1,5 +1,9 @@
 # Asset sources
 
+## Folded suit item — 16 November 2026
+
+`MULTI-TOOL-V2/Assets/DescendantSuit/packed-suit.png` is a new transparent sprite generated with built-in `image_gen` (no API/CLI fallback). Original `exec-648f1fd1-b312-49b4-bb01-a39ce6964d20.png` was copied unchanged from the Codex generated-images directory. RGBA 1635 × 962; the native XML selects source rectangle `96,173,1428,586` and item scale 0.06. These metadata settings do not resample or repaint the raster. Worn atlas/scales are independent. [Full prompt and source path](packed-suit-prompt.txt).
+
 ## V2 selected atlas — 16 November 2026
 
 The current suit and browser preview use `MULTI-TOOL-V2/Assets/DescendantSuit/suit-v2.png`. Generated with the built-in `image_gen` tool, not the CLI/API fallback; copied unchanged from `exec-264932a8-bfaa-4036-8dce-818c72b979a6.png`. Inspection: 1536 × 1024 RGBA, alpha 0..254, 1,144,640 pixels with zero alpha. No scripted colour-keying, repainting or background removal. The JSON/Lua source rectangles are rendering metadata only.

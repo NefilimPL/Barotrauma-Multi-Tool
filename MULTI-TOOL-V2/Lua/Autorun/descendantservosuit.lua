@@ -6,6 +6,8 @@ G.modPath=root
 BMTDescendantSuit=G
 local ok,err=pcall(function()
     require('CombatTool.physics').install(G,_G)
+    require('DescendantSuit.grip').install(G,_G)
+    require('DescendantSuit.sonar').install(G,_G)
     require('DescendantSuit.network').install(G,_G)
     require('DescendantSuit.repair').install(G,_G)
     require('DescendantSuit.supplies').install(G,_G)

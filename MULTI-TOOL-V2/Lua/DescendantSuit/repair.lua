@@ -66,7 +66,8 @@ function M.install(G,E)
         for r,s in pairs(sessions) do
             local state=G.states[s.item]
             if G.equipped(s.owner)~=s.item or not state or state.mode~='repair' or not state.target or
-                state.target.entity~=r.Item or r.CurrentFixer~=s.owner or G.now-(s.used or 0)>.1 then stop(r,s) end
+                state.target.entity~=r.Item or r.CurrentFixer~=s.owner or
+                G.now-(s.used or 0)>C.contactGrace+.15 then stop(r,s) end
         end
     end
     function G.clearRepairs() for r,s in pairs(sessions) do stop(r,s) end end

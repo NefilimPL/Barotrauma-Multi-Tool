@@ -198,6 +198,15 @@ class DescendantNativeRepairTests(LuaCase):
             assert(repairs==0 and repairable.CurrentFixer==other)
         """)
 
+    def test_brief_contact_gap_keeps_native_session_without_applying_hidden_repair(self):
+        self.lua.execute("""
+            assert(G.repairDevice(owner,suit,target,.1))
+            local before=device.Condition
+            G.now=.3;G.pruneRepairs()
+            assert(stops==0 and repairable.CurrentFixer==owner and device.Condition==before)
+            G.now=.8;G.pruneRepairs();assert(stops==1 and not repairable.CurrentFixer)
+        """)
+
     def test_repair_session_is_stopped_on_mode_change_and_round_cleanup(self):
         self.lua.execute("""
             assert(G.repairDevice(owner,suit,target,.1));G.states[suit].mode='combat'
@@ -233,6 +242,7 @@ class DescendantLightTests(LuaCase):
             G={now=0,owner=function() return owner end,energy=function() return 100 end,
                 attachment=function(c) assert(c);return {x=1,y=2} end,
                 restGoal=function(c) assert(c);return {x=1,y=2} end,
+                toolPose=function(c) assert(c);return {muzzle={x=1,y=2}} end,
                 mount=function(c) assert(c);return {x=1,y=2} end}
             require('DescendantSuit.lights').install(G,E)
             local s={item={}}
@@ -250,6 +260,7 @@ class DescendantLightTests(LuaCase):
             local owner={};local suit={}
             G={now=0,attachment=function() return {x=10,y=20} end,
                 restGoal=function() return {x=10,y=20} end,
+                toolPose=function() return {muzzle={x=10,y=20}} end,
                 mount=function() return {x=10,y=20} end,energy=function() return 100 end}
             require('DescendantSuit.lights').install(G,E)
             local s={item=suit,owner=owner,mode='off'}

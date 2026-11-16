@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
 <Items>
-  <Item identifier="descendantservosuit" category="Diving,Equipment" tags="diving,deepdiving,human,descendantservosuit,divinggear_wearableindoors" scale="0.18" fireproof="true" allowdroppingonswapwith="diving" impactsoundtag="impact_metal_heavy" addedrepairspeedmultiplier="3" cannotrepairfail="true">
+  <Item identifier="descendantservosuit" category="Diving,Equipment" tags="diving,deepdiving,human,descendantservosuit,divinggear_wearableindoors" scale="0.06" fireproof="true" allowdroppingonswapwith="diving" impactsoundtag="impact_metal_heavy" addedrepairspeedmultiplier="6" cannotrepairfail="true">
     <Price baseprice="4500" sold="true" minavailable="1" maxavailable="1">
       <Price storeidentifier="merchantresearch" />
       <Price storeidentifier="merchantmilitary" />
@@ -17,9 +17,9 @@
       <Item identifier="titaniumaluminiumalloy" amount="2" />
       <Item identifier="copper" />
     </Deconstruct>
-    <InventoryIcon texture="%ModDir%/Assets/DescendantSuit/suit-v2.png" sourcerect="1285,769,108,255" origin="0.5,0.5" compress="false" />
-    <Sprite texture="%ModDir%/Assets/DescendantSuit/suit-v2.png" sourcerect="1285,769,108,255" origin="0.5,0.5" depth="0.55" compress="false" />
-    <Body radius="120" width="70" density="20" />
+    <InventoryIcon texture="%ModDir%/Assets/DescendantSuit/packed-suit.png" sourcerect="96,173,1428,586" origin="0.5,0.5" compress="false" />
+    <Sprite texture="%ModDir%/Assets/DescendantSuit/packed-suit.png" sourcerect="96,173,1428,586" origin="0.5,0.5" depth="0.55" compress="false" />
+    <Body width="1200" height="430" density="20" />
     <Wearable slots="OuterClothes" msg="ItemMsgEquipSelect" displaycontainedstatus="true" canbeselected="false" canbepicked="true" pickkey="Select">
       <sprite name="Descendant seal Torso" texture="Content/Items/Diving/Abyss_DivingSuit.png" limb="Torso" hidelimb="true" hideotherwearables="true" inherittexturescale="true" inheritorigin="true" inheritsourcerect="true" depth="0.6" color="65,70,80,255" />
       <sprite name="Descendant seal Waist" texture="Content/Items/Diving/Abyss_DivingSuit.png" limb="Waist" hidelimb="true" hideotherwearables="true" inherittexturescale="true" inheritorigin="true" inheritsourcerect="true" depth="0.6" color="65,70,80,255" />
@@ -67,6 +67,27 @@
         <Containable items="pulselaserammo" />
       </SubContainer>
     </ItemContainer>
+    <Sonar range="6000" powerconsumption="1" minvoltage="0.5" drawhudwhenequipped="false" detectsubmarinewalls="true" displaybordersize="-0.1" characterusable="false" hasmineralscanner="false" allowuioverlap="true">
+      <sound file="Content/Items/Command/SonarPing.ogg" type="OnUse" range="1000.0" frequencymultiplier="1.5" />
+      <GuiFrame relativesize="0.37,0.50" anchor="CenterLeft" relativeoffset="0.01,0" />
+      <PingCircle texture="Content/Items/Command/pingCircle.png" origin="0.5,0.5" />
+      <DirectionalPingCircle texture="Content/Items/Command/directionalPingCircle.png" origin="0.0,0.5" />
+      <ScreenOverlay texture="Content/Items/Command/sonarOverlay.png" origin="0.5,0.5" />
+      <ScreenBackground texture="Content/Items/Command/sonarBackground.png" origin="0.5,0.5" />
+      <DirectionalPingBackground texture="Content/Items/Command/directionalPingBackground.png" origin="0.5,0.5" />
+      <DirectionalPingButton index="0" texture="Content/Items/Command/directionalPingButton.png" sourcerect="0,0,91,266" origin="-4.5275,0.5" />
+      <DirectionalPingButton index="1" texture="Content/Items/Command/directionalPingButton.png" sourcerect="133,0,91,266" origin="-4.5275,0.5" />
+      <DirectionalPingButton index="2" texture="Content/Items/Command/directionalPingButton.png" sourcerect="266,0,91,266" origin="-4.5275,0.5" />
+      <Blip texture="Content/Items/Command/sonarBlip.png" origin="0.5,0.5" />
+      <LineSprite texture="Content/Items/Command/NavUI.png" sourcerect="181,141,109,4" origin="0,0.5" />
+      <icon identifier="outpost" texture="Content/UI/MainIconsAtlas.png" sourcerect="352,398,16,8" origin="0.5,0.5" />
+      <icon identifier="submarine" texture="Content/UI/MainIconsAtlas.png" sourcerect="353,407,14,6" origin="0.5,0.5" />
+      <icon identifier="shuttle" texture="Content/UI/MainIconsAtlas.png" sourcerect="336,407,8,6" origin="0.5,0.5" />
+      <icon identifier="artifact" texture="Content/UI/MainIconsAtlas.png" sourcerect="336,414,8,8" origin="0.5,0.5" />
+      <icon identifier="location" texture="Content/UI/MainIconsAtlas.png" sourcerect="349,435,11,11" origin="0.5,0.5" />
+      <icon identifier="mineral" texture="Content/UI/MainIconsAtlas.png" sourcerect="336,434,7,12" origin="0.5,0.5" />
+      <icon identifier="" texture="Content/UI/MainIconsAtlas.png" sourcerect="346,416,4,4" origin="0.5,0.5" />
+    </Sonar>
   </Item>
   <Item identifier="descendantpulsebolt" category="Weapon" scale="0.18" hideinmenus="true">
     <Sprite texture="Content/Items/Weapons/weapons_new.png" sourcerect="143,414,113,9" depth="0.55" />

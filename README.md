@@ -4,10 +4,13 @@ Wersja robocza zawiera **kombinezon serwomanipulacyjny Descendants** z jednym
 ramieniem do automatycznej naprawy i spawania, obrony lub chwytania celu.
 Wersja V2 ma widoczne sloty baterii/pręta i skrzynki pulsacyjnej, obieg
 oddechowy bez butli, latarki i automatyczną wymianę zapasów przez AI.
+W **1.3.16** chwyt podtrzymuje cel po puszczeniu klawiszy, oba panele można
+schować, a opcjonalny natywny sonar ma własny widok po lewej. Naprawa ma
+większy zasięg i tolerancję ruchu, a promienie wychodzą z końcówki narzędzia.
 [Podgląd tekstur, animacji i dźwięków](docs/descendant-suit/index.html) ·
 [Używanie i rzeczywisty zakres weryfikacji](docs/DESCENDANT-SUIT.md).
-Pancerz sprawdzono w kliencie GPU; jedenaście etapów lokalnej sesji z podłączonym
-klientem multiplayer przeszło. Szczegóły i granice próby opisano w dokumentacji.
+Poprawkę sprawdzono w kliencie GPU: 16 prób singleplayer i 9 etapów lokalnego
+multiplayera przeszło. Szczegóły i granice próby opisano w dokumentacji.
 
 Wersja **1.3.15** zatrzymuje także lokalnie przewidywane trafienie pocisku
 w tarczę. W 1.3.14 serwer blokował obrażenia i smuga kończyła się na tarczy,
@@ -203,17 +206,24 @@ spawnitem pulselaserammobox inventory 1
 Załóż kombinezon w slocie ubrania zewnętrznego. Do pierwszego slotu włóż
 baterię albo pręt reaktora (`spawnitem fuelrod inventory 1`), do drugiego
 skrzynkę amunicji lasera pulsacyjnego. Butla nie jest potrzebna — obieg
-oddechowy korzysta z zasilania kombinezonu. Po aktualizacji z pierwszego
-prototypu utwórz nowy egzemplarz, aby otrzymać nowy układ slotów.
+oddechowy korzysta z zasilania kombinezonu. Po aktualizacji utwórz nowy egzemplarz,
+aby otrzymać aktualne komponenty i skalę złożonego przedmiotu na ziemi.
 W panelu po prawej wybierz naprawę/spawanie, obronę lub chwytak.
 Przycisk „Ramię włączone/wyłączone” przełącza funkcję ramienia.
 Chwytak: wybierz ten tryb, wskaż cel kursorem, przytrzymaj **PPM (Celuj)**
-i naciśnij **E (Użyj)**. Ponowne E przy trzymanym PPM puszcza cel.
+i naciśnij **E (Użyj)**, potem puść klawisze. Cel pozostaje zawieszony,
+a osoba staje się chwilowo bezwładna. Ponowne E przy trzymanym PPM puszcza cel.
 Przy zmienionym sterowaniu użyj przycisków pokazanych w panelu kombinezonu.
 Łapie jeden luźny, ruchomy przedmiot albo istotę poniżej limitu masy;
 nie wyrywa zamocowanych urządzeń ani rzeczy z ekwipunków.
-Zasięg wynosi 300 jednostek gry, chwyt trwa do 5 s. Po wygaśnięciu chwytu
-odczekaj 2 s na ponowne złapanie tego samego celu. Nie trzeba trzymać narzędzia w ręce.
+Zasięg wynosi 300 jednostek gry. Chwyt gracza nie ma limitu 5 sekund;
+zmiana trybu, przeszkoda, wyjście poza zasięg, brak energii lub zdjęcie
+kombinezonu zwalnia cel. Nie trzeba trzymać narzędzia w ręce.
+Przycisk `»` chowa prawy panel; zakładka **Ramię** otwiera go ponownie.
+**Sonar** otwiera niezależny panel po lewej. Jego przycisk zasilania oraz
+tryby aktywny/pasywny sterują natywnym sonarem. `«` chowa widok, a zakładka
+**Sonar** przywraca go. Schowanie panelu nie wyłącza funkcji; sonar wyłącz
+jego przyciskiem zasilania, jeśli ma przestać pobierać energię i nadawać impulsy.
 [Pełna instrukcja kombinezonu](docs/DESCENDANT-SUIT.md).
 
 Odkurzacz Aegis:

@@ -1,4 +1,4 @@
-local Core=require('DescendantSuit.core')
+local C=require('DescendantSuit.config')
 local M={}
 function M.install(G,E)
     E.LuaUserData.RegisterType('Barotrauma.Lights.LightSource')
@@ -22,15 +22,13 @@ function M.install(G,E)
         end
         local powered=G.energy(s.item)>0
         local head=G.attachment(owner,8,48)
-        local base,_,facing=G.mount(owner)
-        local point=s.target and s.target.point or G.restGoal(owner)
-        facing=facing or 1
-        local tip=Core.pose(base,point,facing<0 and -1 or 1).tip
+        local flash=s.lastPulse and G.now-(s.shotTime or -100)<C.pulseDuration
+        local muzzle=G.toolPose(owner,s,true,flash and s.lastPulse or nil).muzzle
+        local point=s.target and s.target.point or muzzle
         move(s.lights.helmet,owner,head,powered and 420 or 0,E.Color(190,220,255,170))
         local repairing=s.active and s.target and (s.target.kind=='repair' or s.target.kind=='weld')
-        local flash=G.now-(s.shotTime or -100)<.12
         local color=flash and E.Color(255,60,65,230) or repairing and E.Color(60,175,255,210) or E.Color(185,220,255,110)
-        move(s.lights.tool,owner,repairing and point or tip,powered and (flash and 300 or 220) or 0,color)
+        move(s.lights.tool,owner,repairing and point or muzzle,powered and (flash and 300 or 220) or 0,color)
     end
 end
 return M

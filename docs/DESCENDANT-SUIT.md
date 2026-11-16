@@ -1,12 +1,14 @@
 # Kombinezon serwomanipulacyjny Descendants V2
 
-Druga wersja robocza dla Barotrauma 1.13.5.0 / LuaCs c6e8829. Identyfikator przedmiotu: `descendantservosuit`. Po aktualizacji pierwszego prototypu **utwórz nowy egzemplarz**, aby otrzymać nowy układ slotów. Obie strony multiplayera muszą mieć tę samą wersję moda.
+Wersja **1.3.16** dla Barotrauma 1.13.5.0 / LuaCs c6e8829. Identyfikator przedmiotu: `descendantservosuit`. Po aktualizacji **utwórz nowy egzemplarz**, aby otrzymać aktualne komponenty sonaru i skalę przedmiotu na ziemi. Obie strony multiplayera muszą mieć tę samą wersję moda; komunikaty kombinezonu używają teraz protokołu v3.
 
 [Otwórz animowany podgląd V2](descendant-suit/index.html). Działa lokalnie, bez instalowania bibliotek. Pokazuje nowy pancerz, oba stany hełmu, ramię, impulsy, iskry, wirniki i dźwięki. To demonstracja zasobów; nie zastępuje próby w grze.
 
 ## Używanie
 
-Aktualna korekta sylwetki zmniejsza płyty tułowia, hełm i osłony kończyn. Ramię ma dłuższe segmenty, większy chwytak i pozycję spoczynkową ponad barkiem. [Wygląd z prawej](descendant-suit/slim-right.png), [z lewej](descendant-suit/slim-left.png), [podczas chwytania](descendant-suit/slim-working.png). To natywne zrzuty ze zbliżeniem kamery 2×, bez obróbki obrazu. Nowa paczka: `output/MULTI-TOOL-V2-descendant-slim-2026-11-16.zip`.
+Kombinezon zachowuje smukłe proporcje. Obecna poprawka dodaje trwałe podtrzymywanie celu, wspólną końcówkę promieni, tolerancję ruchu podczas naprawy, chowane panele i natywny sonar. [Zawieszenie osoby i schowane panele](descendant-suit/controls-hold.png), [osobny sonar](descendant-suit/controls-sonar.png), [szersza naprawa](descendant-suit/controls-repair.png), [przedmiot na ziemi](descendant-suit/controls-ground.png), [impuls z końcówki](descendant-suit/controls-pulse.png). Zrzuty pochodzą z gry, z włączonym oświetleniem i bez obróbki obrazu.
+
+Aktualna paczka: `output/MULTI-TOOL-V2-1.3.16-descendant-controls-2026-11-16.zip`. Poprzednie paczki zachowano.
 
 Załóż kombinezon w slocie ubrania zewnętrznego. Jeden widoczny panel ma dwa ograniczone sloty: pierwszy na baterię/pręt reaktora, drugi na skrzynkę amunicji lasera pulsacyjnego. Butla nie jest potrzebna. Zasilanie ramienia nie wymaga trzymania narzędzia w ręce. Przycisk „Ramię włączone / Ramię wyłączone” pokazuje stan i przełącza funkcję; ponowne włączenie przywraca ostatni tryb.
 
@@ -21,9 +23,11 @@ spawnitem pulselaserammobox inventory 1
 
 Pręt zamiast baterii: `spawnitem fuelrod inventory 1`. Obsługiwane są też baterie fulgurium oraz pręty torowe i fulgurium. Panel po prawej stronie pozwala wybrać jedną funkcję:
 
-- **Naprawa / spawanie**: automatycznie wybiera pobliskie urządzenie albo sekcję ściany. Ramię dosuwa emiter, potem uruchamia krótki niebieski promień i mocne iskry w punkcie naprawy. Natywna naprawa uwzględnia umiejętności, statystyki szybkości, jakość urządzenia, nadnaprawę, zdobywanie umiejętności i `OnRepairComplete`. Kombinezon daje narzędziową premię +300% szybkości. Nie przejmuje urządzenia naprawianego przez inną postać. Spawanie ma bazową siłę 48 na sekundę, uwzględnia premię postaci do spawania i wywołuje natywny talent po zamknięciu zewnętrznego przecieku. Nie symuluje QTE ani nagród za ręczne trafienia w QTE.
+- **Naprawa / spawanie**: automatycznie wybiera pobliskie urządzenie albo sekcję ściany. Ramię ma promień ruchu 118, końcówkę wysuniętą o 24 i promień naprawczy długości do 68; podstawowy zasięg od mocowania wynosi 210 jednostek. Rozpoczęta naprawa ma dodatkowe 32 jednostki tolerancji ruchu. Krótkie zasłonięcie zachowuje cel do 0,4 s, ale w tym czasie nie naprawia przez przeszkodę. Szerszy niebieski promień i mocne iskry wychodzą z końcówki narzędzia. Natywna naprawa uwzględnia umiejętności, statystyki szybkości, jakość urządzenia, nadnaprawę, zdobywanie umiejętności i `OnRepairComplete`; narzędziowa premia wynosi +600%. Nie przejmuje urządzenia naprawianego przez inną postać. Spawanie ma bazową siłę 80 na sekundę, uwzględnia premię postaci i wywołuje natywny talent po zamknięciu zewnętrznego przecieku. Nie symuluje QTE ani nagród za ręczne trafienia w QTE.
 - **Obrona pulsacyjna**: krótkie czerwone impulsy atakują jeden widoczny wrogi cel, 360°. Zasięg 1800 jednostek gry, odstęp 0,4 s, bazowe trafienie 20 poparzeń + 5 obrażeń od eksplozji przed odpornościami celu. Wcześniej było to 420 i 4 obrażenia/s. Każdy impuls zużywa 2,25 stanu skrzynki i energię; pełna zwykła skrzynka daje 44 impulsy. Pocisk używa natywnego śladu, rozbłysków, iskier trafienia i dźwięku lasera pulsacyjnego. Natywne zasady AI rozpoznają przyjazne cele; przeszkody i postacie na linii celowania blokują wybór celu.
-- **Chwytak**: wybierz tryb, wskaż cel kursorem, przytrzymaj **PPM (Celuj)** i naciśnij **E (Użyj)**. Ponowne E podczas celowania albo zmiana trybu puszcza cel. Panel i podpowiedź pokazują aktualnie przypisane klawisze, także po zmianie sterowania. Łapie pierwszy poprawny widoczny cel wzdłuż kierunku celowania: jeden luźny, dynamiczny przedmiot (również bez standardowego komponentu podnoszenia) albo żywą istotę/ciało. Wyklucza masywne cele — limit 80 jednostek masy silnika jest sprawdzany dla całej postaci, nie samego collidera. Nie wyrywa zamocowanych urządzeń, nie porusza statycznych dekoracji i nie zabiera rzeczy z ekwipunków ani podłączonych przewodów. Zasięg 300 jednostek gry; chwyt do 5 s, po wygaśnięciu 2 s przerwy dla tego samego celu.
+- **Chwytak**: wybierz tryb, wskaż cel kursorem, przytrzymaj **PPM (Celuj)** i naciśnij **E (Użyj)**, potem puść klawisze. Podtrzymuje cel przed graczem w powietrzu, z tłumieniem ruchu i kompensacją grawitacji. Osoba jest chwilowo bezwładna; po puszczeniu wraca jej wcześniejszy stan ragdolla. Ponowne E podczas celowania puszcza cel. Chwyt gracza trwa do puszczenia, zmiany trybu, przeszkody, wyjścia poza zasięg, utraty energii, utraty przytomności lub zdjęcia kombinezonu. Panel pokazuje własne przypisania klawiszy. Łapie jeden luźny dynamiczny przedmiot albo istotę/ciało; limit wynosi 80 jednostek masy silnika dla całej istoty. Nie wyrywa zamocowanych urządzeń ani rzeczy z ekwipunków i nie chwyta podłączonych przewodów. Zasięg wynosi 300 jednostek gry. Automat ratunkowy AI zachowuje ograniczony 5-sekundowy chwyt z przerwą 2 s dla tego samego celu.
+
+Prawy panel chowa się przyciskiem `»`; zakładka **Ramię** przywraca go bez zmiany wybranej funkcji. **Sonar** otwiera niezależny lewy panel z własnym przyciskiem zasilania, trybem aktywnym i pasywnym oraz natywnymi echami gry do 6000 jednostek. Przycisk `«` chowa lewy widok, zakładka **Sonar** go przywraca. Schowanie panelu nie wyłącza sonaru ani ramienia. Aktywny sonar pobiera bazowo 0,12 stanu zwykłej baterii/s, pasywny 0,03/s, z normalnym mnożnikiem prętów reaktora. Impulsy i reakcje AI wynikają z natywnego sonaru; to nie radar wszystkich obiektów. Sonar działa niezależnie od pojedynczej funkcji ramienia. Bez energii przestaje działać, a po wymianie źródła może wznowić żądany tryb.
 
 Wszystkie funkcje ramienia są wzajemnie wykluczające. Wirniki i układ oddechowy działają osobno. Nienaruszona powłoka daje ochronę ustawioną na **10 000 m**, także bez baterii. To parametr natywnej ochrony, nie nieśmiertelność ani potwierdzony test na każdej głębokości.
 
@@ -39,6 +43,8 @@ Przedmiot jest dostępny u sprzedawców badawczych i wojskowych oraz w fabrykato
 
 ## Zasoby
 
+- [Złożony kombinezon — PNG](../MULTI-TOOL-V2/Assets/DescendantSuit/packed-suit.png): osobna ikona ekwipunku i sprite przedmiotu na ziemi, około 86 × 35 jednostek. Wbudowany `image_gen`, oryginalny raster bez zmian; [pełny prompt](descendant-suit/packed-suit-prompt.txt).
+
 - [Nowy arkusz V2 — PNG](../MULTI-TOOL-V2/Assets/DescendantSuit/suit-v2.png): grafitowe płyty, czerwone panele, osłonięte przewody, cyjanowe optyki, kompaktowe ramię i wirnik. Starsze arkusze `suit.png` i `arm.png` zachowano jako źródła pierwszego prototypu.
 - [Mapa wycinków](../MULTI-TOOL-V2/Assets/DescendantSuit/sprites.json). Gra i podgląd korzystają z prostokątów źródłowych, zachowując arkusze bez utraty przezroczystości.
 - Osiem oryginalnych dźwięków OGG w `MULTI-TOOL-V2/Assets/DescendantSuit/Audio`: naprawa, spawanie, bojowy promień, chwytak, wirnik, serwo, hełm i przełącznik. Ponowne generowanie: `python tools/generate_descendant_audio.py` z dostępnym ffmpeg.
@@ -46,7 +52,16 @@ Przedmiot jest dostępny u sprzedawców badawczych i wojskowych oraz w fabrykato
 - Natywna warstwa uszczelniająca korzysta z istniejącej tekstury kombinezonu głębinowego gry; nie skopiowano jej do moda.
 - [Pochodzenie i prompty](descendant-suit/ASSET-SOURCES.md).
 
-## Korekta sylwetki i ramienia — 16 listopada 2026
+## Weryfikacja 1.3.16 — 16 listopada 2026
+
+- **560 testów**, walidacja **17 XML / 57 modułów Lua 5.2**, **21/21 sprawdzeń w rzeczywistym Chrome**, bez wyjątków podglądu.
+- **16/16 prób w rzeczywistym kliencie singleplayer**: sprzęt, bezwład żywego celu po puszczeniu klawiszy, niezależne chowanie paneli, prawdziwy sonar, podtrzymywanie ponad 5 s, puszczenie drugim naciśnięciem, ruch podczas naprawy, natywne nagrody, przedmiot na ziemi i początek impulsu. [Wyniki](descendant-suit/controls-native-client.txt).
+- **9/9 etapów rzeczywistego lokalnego multiplayera** po końcowych poprawkach: podtrzymywanie bez klawiszy przez ponad 7 s, oba tryby sonaru i oba panele, zwolnienie ragdolla, pełna naprawa po ruchu gracza, impulsy oraz automatyczne zwolnienie po wyczerpaniu baterii. [Serwer](descendant-suit/controls-mp-server.txt), [klient](descendant-suit/controls-mp-client.txt).
+- Natywna naprawa podniosła umiejętność **20 → 22** i wywołała ukończenie dokładnie raz. Początek natywnego strzału różnił się od wspólnej pozycji końcówki o mniej niż 0,01 jednostki w próbach SP i MP. Widoczna wiązka jest rysowana od tej samej końcówki.
+- Przegląd znalazł usunięty cel blokujący kolejną naprawę i pomijanie sprzątania podczas zmiany właściciela. Oba przypadki mają regresje RED/GREEN i poprawki. Próba MP wykryła dodatkowo gubienie szybkiej serii niezależnych poleceń; ograniczony budżet żądań obsługuje serię i nadal ogranicza spam. Naprawiono też odczyt serwerowego pola kompensacji trafień w klienckim kodzie tarczy, ujawniony przez laser.
+- [Środowisko, pomiary i sumy plików](descendant-suit/controls-verification.txt). Multiplayer obejmuje jeden klient na tym samym komputerze; nie zastępuje próby Steam P2P ani długiej kampanii.
+
+## Korekta sylwetki i ramienia — archiwum, 16 listopada 2026
 
 - **528 testów**, **21/21 sprawdzeń w rzeczywistym Chrome**, walidacja **17 XML / 54 Lua 5.2** — poprawne.
 - **3/3 prób natywnego klienta**: podniesione ramię w spoczynku z prawej strony, lustrzany widok z lewej oraz aktywne przyciąganie przedmiotu z widocznym ramieniem. [Wyniki](descendant-suit/slim-native.txt), [środowisko i sumy plików](descendant-suit/slim-verification.txt).

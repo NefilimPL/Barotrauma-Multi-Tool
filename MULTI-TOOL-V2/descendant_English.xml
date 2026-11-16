@@ -11,7 +11,15 @@
   <descendant.combat>Defense</descendant.combat>
   <descendant.grab>Tractor beam</descendant.grab>
   <descendant.grab_short>[InputType.Aim] + [InputType.Use]: grab / release</descendant.grab_short>
-  <descendant.grab_help>Point at the target. Hold [InputType.Aim] and press [InputType.Use] to grab or release. One loose object or creature, excluding massive targets. Range 300, grip up to 5 s. After expiry: 2 s before grabbing the same target again.</descendant.grab_help>
+  <descendant.grab_help>Point at the target. Hold [InputType.Aim] and press [InputType.Use], then release the keys. The target stays suspended. Press again while aiming to release. Creatures become temporarily limp. One loose object or creature, excluding massive targets; range 300. Changing mode, an obstacle, power loss or removing the suit releases the grip.</descendant.grab_help>
+  <descendant.arm_tab>Arm</descendant.arm_tab>
+  <descendant.hide_panel>Hide panel; the function stays enabled</descendant.hide_panel>
+  <descendant.sonar>Sonar</descendant.sonar>
+  <descendant.sonar_on>Sonar on</descendant.sonar_on>
+  <descendant.sonar_off>Sonar off</descendant.sonar_off>
+  <descendant.sonar_active>Active</descendant.sonar_active>
+  <descendant.sonar_passive>Passive</descendant.sonar_passive>
+  <descendant.no_power>No power</descendant.no_power>
   <descendant.power>Power</descendant.power>
   <descendant.air>Room air</descendant.air>
   <descendant.tank>Oxygen tank</descendant.tank>

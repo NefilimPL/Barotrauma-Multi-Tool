@@ -96,6 +96,10 @@ function M.new(E)
     function G.restGoal(owner,draw)
         return G.attachment(owner,10,88,draw)
     end
+    function G.toolPose(owner,state,draw,point)
+        local base,rotation,facing=G.mount(owner,draw)
+        return Core.toolPose(base,point or (state.target and state.target.point),G.restGoal(owner,draw),facing,rotation)
+    end
     local function position(entity)
         local p=entity.WorldPosition;return {x=p.X,y=p.Y}
     end
@@ -155,6 +159,8 @@ function M.new(E)
         local targets,base={},G.mount(owner)
         local automatic=owner.IsBot
         local function add(t,range)
+            if s.target and s.target.id==t.id and (t.kind=='repair' or t.kind=='weld') then range=range+C.contactSlack end
+            if t.kind=='grab' and G.canHold and not G.canHold(t.entity,s) then t.free=false end
             local dx,dy=t.point.x-base.x,t.point.y-base.y
             t.distance=math.sqrt(dx*dx+dy*dy)
             local bound=range
@@ -172,19 +178,19 @@ function M.new(E)
             U.each(E.Util.GetItemGroup('bmt.descendant.repairables'),function(item)
                 if not item.Removed and item.Condition<item.MaxCondition-.01 and not item.ParentInventory
                     and (not item.HasAccess or item.HasAccess(owner)) then
-                    add({id='i'..item.ID,kind='repair',entity=item,point=position(item),damaged=true},C.reach+C.repairBeam)
+                    add({id='i'..item.ID,kind='repair',entity=item,point=position(item),damaged=true},Core.repairRange())
                 end
             end)
             U.each(E.Structure.WallList,function(wall)
                 if not wall.Removed and wall.HasBody and not wall.Indestructible and not wall.Prefab.Platform then
                     local p=wall.WorldPosition
-                    if math.abs(p.X-base.x)<C.reach+C.repairBeam+wall.Rect.Width and
-                        math.abs(p.Y-base.y)<C.reach+C.repairBeam+wall.Rect.Height then
+                    if math.abs(p.X-base.x)<Core.repairRange()+C.contactSlack+wall.Rect.Width and
+                        math.abs(p.Y-base.y)<Core.repairRange()+C.contactSlack+wall.Rect.Height then
                         for section=0,wall.SectionCount-1 do
                             if wall.SectionDamage(section)>.01 then
                                 local q=wall.SectionPosition(section,true)
                                 add({id='w'..wall.ID..':'..section,kind='weld',entity=wall,section=section,
-                                    point={x=q.X,y=q.Y},damaged=true,emergency=wall.GetSection(section).gap~=nil},C.reach+C.repairBeam)
+                                    point={x=q.X,y=q.Y},damaged=true,emergency=wall.GetSection(section).gap~=nil},Core.repairRange())
                             end
                         end
                     end
@@ -226,24 +232,13 @@ function M.new(E)
         if target.kind=='repair' then return G.repairDevice and G.repairDevice(owner,item,target,dt) or false end
         if target.kind=='combat' then return G.firePulse and G.firePulse(owner,item,target) or false end
         if target.kind=='grab' and not G.grabbable(target.entity) then return false end
+        if target.kind=='grab' then return G.hold and G.hold(owner,item,target,dt) or false end
         local fraction=G.spend(item,(C.rates[target.kind] or 0)*dt)
         if fraction<=0 then return false end
         local elapsed=dt*fraction
         if target.kind=='weld' then
             if G.weld then G.weld(owner,item,target,elapsed)
             else target.entity.AddDamage(target.section,-C.weldRate*elapsed,owner,false,false) end
-        elseif target.kind=='grab' then
-            local body=G.body(target.entity)
-            if not body then return false end
-            local p=owner.WorldPosition
-            local dx,dy=(p.X-target.point.x)/100,(p.Y-target.point.y)/100
-            local distance=math.sqrt(dx*dx+dy*dy)
-            if distance>.6 then
-                local v=body.LinearVelocity
-                local magnitude=math.min(C.grabForce,distance*C.grabForce)*body.Mass*fraction
-                body.ApplyForce(E.Vector2(dx/distance*magnitude-v.X*body.Mass*2,
-                    dy/distance*magnitude-v.Y*body.Mass*2),C.grabSpeed)
-            end
         end
         return true
     end
@@ -255,8 +250,14 @@ function M.new(E)
     end
     function G.setMode(item,mode,owner)
         if G.equipped(owner)~=item or owner.IsUnconscious then return false end
-        if mode=='toggle' then return Core.toggle(G.state(item)) end
-        return Core.setMode(G.state(item),mode)
+        if mode=='sonar' then return G.toggleSonar and G.toggleSonar(owner,item) or false end
+        if mode=='sonaractive' or mode=='sonarpassive' then
+            return G.setSonarMode and G.setSonarMode(owner,item,mode=='sonaractive') or false
+        end
+        local s=G.state(item);local previous=s.mode
+        local ok=mode=='toggle' and Core.toggle(s) or Core.setMode(s,mode)
+        if s.mode~=previous and G.releaseGrip then G.releaseGrip(s) end
+        return ok
     end
     function G.authorize(client,item,mode)
         return client and client.Character and G.setMode(item,mode,client.Character) or false
@@ -269,26 +270,36 @@ function M.new(E)
                 G.nextOwners=G.now+.25
                 U.each(E.Util.GetItemsById(C.identifier),function(item)
                     local owner=G.owner(item)
-                    if G.equipped(owner)==item then local s=G.state(item);s.owner=owner end
+                    if G.equipped(owner)==item then G.state(item) end
                 end)
             end
             for item,s in pairs(G.states) do
                 local owner=G.owner(item)
                 if G.equipped(owner)~=item then
                     if G.cancelSupplies then G.cancelSupplies(s) end
+                    if G.stopSonar then G.stopSonar(item,s) end
                     G.states[item]=nil
                 else
-                    if s.owner and s.owner~=owner and G.cancelSupplies then G.cancelSupplies(s) end
+                    if s.owner and s.owner~=owner then
+                        if G.cancelSupplies then G.cancelSupplies(s) end
+                        if G.releaseGrip then G.releaseGrip(s) end
+                        s.target=nil;s.sonar=false
+                    end
                     s.owner=owner;s.active=false;s.swimming=false
+                    s.grabAutomatic=owner.IsBot
+                    if G.updateSonar then G.updateSonar(owner,item,s,dt) end
                     if G.updateSupplies then G.updateSupplies(owner,item,s) end
                     if owner.IsUnconscious then s.target=nil
                     else
                         local powered=G.energy(item)>0
                         if powered then G.spend(item,C.lightRate*dt) end
+                        if s.target and s.target.entity.Removed then s.target=nil end
                         Core.expireGrab(s,G.now)
                         local held=not owner.IsBot and s.mode=='grab' and owner.IsKeyDown(E.InputType.Aim) and owner.IsKeyDown(E.InputType.Use)
                         if Core.grabPress(s,held) then
-                            if s.target then s.target=nil;s.grabStarted=nil
+                            if s.target then
+                                if G.releaseGrip then G.releaseGrip(s) end
+                                s.target=nil;s.grabStarted=nil
                             else s.acquireGrab=true;s.nextScan=0 end
                         end
                         if G.now>=s.nextScan and (owner.IsBot or s.mode~='off') and powered then
@@ -299,7 +310,10 @@ function M.new(E)
                                 local mode,target=Core.ai(candidates)
                                 Core.setMode(s,mode);s.target=target
                                 if target and target.kind=='grab' and (not old or old.id~=target.id) then s.grabStarted=G.now end
-                            elseif s.mode~='grab' then s.target=Core.choose(s.mode,candidates,s.target and s.target.id)
+                            elseif s.mode~='grab' then
+                                local selected=Core.choose(s.mode,candidates,s.target and s.target.id)
+                                -- A missing scan candidate gets a per-frame contact/grace check.
+                                if s.mode~='repair' or not s.target or (selected and selected.id==s.target.id) then s.target=selected end
                             elseif s.target then s.target=Core.choose('grab',candidates,s.target.id)
                             else
                                 if s.acquireGrab then
@@ -323,11 +337,12 @@ function M.new(E)
                             if target.kind=='weld' then target.damaged=target.entity.SectionDamage(target.section)>.01 end
                             if target.kind=='combat' then target.alive=not target.entity.IsDead;target.hostile=not G.ally(owner,target.entity) end
                             if target.kind=='grab' then
-                                target.free=G.grabbable(target.entity)
+                                target.free=G.grabbable(target.entity) and (not G.canHold or G.canHold(target.entity,s))
                                 s.grabStarted=s.grabStarted or G.now
                             end
-                            if target and Core.choose(s.mode,{target},target.id) then
-                                if Core.ready(s,target.id,G.now) then s.active=G.perform(owner,item,target,dt) end
+                            local retained,contact=Core.contact(s,target,G.now)
+                            if retained then
+                                if contact and Core.ready(s,target.id,G.now) then s.active=G.perform(owner,item,target,dt) end
                             else s.target=nil end
                         elseif not powered then s.target=nil end
                         if not s.target then Core.ready(s,nil,G.now) end
@@ -348,10 +363,13 @@ function M.new(E)
             end
             if G.sendSnapshot then G.sendSnapshot() end
             if G.pruneRepairs then G.pruneRepairs() end
+            if G.pruneGrips then G.pruneGrips() end
         end
         if G.updateClient then G.updateClient(dt) end
     end
     function G.clear()
+        if G.clearGrips then G.clearGrips() end
+        if G.clearSonars then G.clearSonars() end
         if G.clearRepairs then G.clearRepairs() end
         if G.clearSupplies then G.clearSupplies() end
         if G.clearClient then G.clearClient() end

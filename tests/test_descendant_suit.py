@@ -16,9 +16,9 @@ class DescendantSuitTests(LuaCase):
         for x, y in [(1000, 0), (-1000, 0), (0, 1000), (0, -1000), (0, 0)]:
             pose = self.suit.pose(self.t(x=0, y=0), self.t(x=x, y=y), -1)
             elbow, tip = pose['elbow'], pose['tip']
-            self.assertAlmostEqual((elbow['x']**2+elbow['y']**2)**.5, 68)
-            self.assertAlmostEqual(((tip['x']-elbow['x'])**2+(tip['y']-elbow['y'])**2)**.5, 60)
-            self.assertLessEqual((tip['x']**2+tip['y']**2)**.5, 92.00001)
+            self.assertAlmostEqual((elbow['x']**2+elbow['y']**2)**.5, 76)
+            self.assertAlmostEqual(((tip['x']-elbow['x'])**2+(tip['y']-elbow['y'])**2)**.5, 66)
+            self.assertLessEqual((tip['x']**2+tip['y']**2)**.5, 118.00001)
 
     def test_one_mode_releases_the_previous_grab(self):
         self.lua.execute("s={mode='grab',target={id=1}};assert(require('DescendantSuit.core').setMode(s,'repair'));assert(s.target==nil and s.mode=='repair');assert(not require('DescendantSuit.core').setMode(s,'repair+combat'))")
@@ -32,7 +32,7 @@ class DescendantSuitTests(LuaCase):
             assert(C.choose('repair',{wall,device},2).id==2)
             device.visible=false
             assert(C.choose('repair',{wall,device},2).id==1)
-            wall.distance=151
+            wall.distance=C.repairRange()+1
             assert(C.choose('repair',{wall,device})==nil)
         """)
 
@@ -75,7 +75,7 @@ class DescendantSuitTests(LuaCase):
     def test_grab_has_a_cooldown_and_held_input_is_not_a_new_press(self):
         self.lua.execute("""
             local C=require('DescendantSuit.core')
-            local s={mode='grab',target={id='g1'},grabStarted=0}
+            local s={mode='grab',target={id='g1'},grabStarted=0,grabAutomatic=true}
             assert(C.grabPress(s,true));assert(not C.grabPress(s,true))
             assert(C.expireGrab(s,6));assert(s.target==nil and s.grabStarted==nil)
             assert(not C.grabAllowed(s,'g1',6.5));assert(C.grabAllowed(s,'g1',8.1))
@@ -117,7 +117,7 @@ class DescendantSuitTests(LuaCase):
     def test_beam_waits_for_the_arm_to_approach_a_new_target(self):
         self.lua.execute("""
             local C=require('DescendantSuit.core');local s={}
-            assert(not C.ready(s,'a',0));assert(not C.ready(s,'a',.2));assert(C.ready(s,'a',.3))
+            assert(not C.ready(s,'a',0));assert(not C.ready(s,'a',.05));assert(C.ready(s,'a',.2))
             assert(not C.ready(s,'b',.3));assert(not C.ready(s,nil,.4));assert(not C.ready(s,'a',.5))
         """)
 
@@ -148,6 +148,47 @@ class DescendantAdapterTests(LuaCase):
 
     def test_paused_singleplayer_does_not_advance_suit_simulation(self):
         self.lua.execute("E.Game.Paused=true;G.now=5;G.update(.1);assert(G.now==5 and battery.Condition==50)")
+
+    def test_temporary_occlusion_does_not_switch_to_another_device_during_grace(self):
+        self.lua.execute("""
+            E.Game.RoundStarted=true;G.nextOwners=1
+            wearer.WorldPosition={X=0,Y=0};wearer.IsKeyDown=function() return false end
+            local first={Condition=10,MaxCondition=100,WorldPosition={X=40,Y=0}}
+            local second={Condition=10,MaxCondition=100,WorldPosition={X=50,Y=0}}
+            local old={id='i1',kind='repair',entity=first,point={x=40,y=0},damaged=true,distance=40,visible=true}
+            local alternative={id='i2',kind='repair',entity=second,point={x=50,y=0},damaged=true,distance=50,visible=true}
+            local s=G.state(suit);s.mode='repair';s.target=old;s.contactId=old.id;s.contactAt=0
+            G.gather=function() return {alternative} end;G.visible=function() return false end
+            G.update(.1)
+            assert(s.target and s.target.id=='i1' and not s.active,'brief occlusion switched devices')
+        """)
+
+    def test_removed_repair_target_is_replaced_by_a_visible_device(self):
+        self.lua.execute("""
+            E.Game.RoundStarted=true;G.nextOwners=1
+            wearer.WorldPosition={X=0,Y=0};wearer.IsKeyDown=function() return false end
+            local removed={Removed=true,WorldPosition={X=40,Y=0}}
+            local device={Condition=10,MaxCondition=100,WorldPosition={X=50,Y=0}}
+            local alternative={id='i2',kind='repair',entity=device,point={x=50,y=0},damaged=true,distance=50,visible=true}
+            local s=G.state(suit);s.mode='repair';s.target={id='i1',kind='repair',entity=removed}
+            G.gather=function() return {alternative} end;G.visible=function() return true end
+            G.update(.1)
+            assert(s.target and s.target.id=='i2','removed target blocked reacquisition')
+        """)
+
+    def test_discovery_preserves_old_owner_until_transfer_cleanup_runs(self):
+        self.lua.execute("""
+            E.Game.RoundStarted=true;wearer.WorldPosition={X=0,Y=0}
+            local nextOwner={isCharacter=true,WorldPosition={X=0,Y=0},AnimController=wearer.AnimController,
+                Inventory={GetItemInLimbSlot=function() return suit end},IsKeyDown=function() return false end}
+            local s=G.state(suit);s.owner=wearer;s.mode='off';s.sonar=true
+            suit.ParentInventory.Owner=nextOwner
+            E.Util={GetItemsById=function() return {suit} end}
+            local cancelled,released=false,false
+            G.cancelSupplies=function() cancelled=true end;G.releaseGrip=function() released=true end
+            G.update(.1)
+            assert(cancelled and released and s.owner==nextOwner and not s.sonar,'discovery bypassed transfer cleanup')
+        """)
 
     def test_mount_rotates_with_the_torso_when_swimming(self):
         self.lua.execute("""

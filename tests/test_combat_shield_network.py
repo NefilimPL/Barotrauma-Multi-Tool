@@ -5,7 +5,7 @@ class ShieldFriendlyFireTests(LuaCase):
     def setUp(self):
         super().setUp()
         self.lua.execute('''
-            env={Game={IsSingleplayer=false,ServerSettings={AllowFriendlyFire=true}},Entity={}}
+            env={SERVER=true,Game={IsSingleplayer=false,ServerSettings={AllowFriendlyFire=true}},Entity={}}
             G=require('CombatTool.game').new(env)
             require('CombatTool.physics').install(G,env)
             hooks={};G.patch=function(id,_,_,fn) hooks[id]=fn end
@@ -33,7 +33,7 @@ class ShieldFriendlyFireTests(LuaCase):
         self.assertTrue(self.lua.eval('params.PreventExecution'))
         self.assertEqual(self.lua.eval('battery.Condition'), 98)
 
-    def lag_compensated_collision(self, rear=False, ghost=True):
+    def lag_compensated_collision(self, rear=False, ghost=True, client=False):
         self.lua.execute('''
             env.LuaUserData={IsTargetType=function(value,name) return name=='Barotrauma.Limb' and value==limb end}
             env.ConvertUnits={ToDisplayUnits=function(v) return {X=v.X*100,Y=v.Y*100} end}
@@ -51,6 +51,13 @@ class ShieldFriendlyFireTests(LuaCase):
             self.lua.execute('fixture={Body={UserData=limb}}')
         if rear:
             self.lua.execute('projectile.Item.WorldPosition={X=-300,Y=0}')
+        if client:
+            self.lua.execute('''
+                env.SERVER=false;limb.LagCompensatedBody=nil
+                setmetatable(limb,{__index=function(_,key)
+                    if key=='LagCompensatedBody' then error('server-only limb field accessed on client') end
+                end})
+            ''')
         self.lua.execute('''
             hooks['hitscan'](projectile,{dir={X=projectile.Item.WorldPosition.X>0 and -1 or 1,Y=0}})
             projectile.Item.WorldPosition={X=150,Y=0}
@@ -63,6 +70,10 @@ class ShieldFriendlyFireTests(LuaCase):
         self.assertFalse(self.lua.eval('projectile.IsActive'))
         self.assertEqual(self.lua.eval('battery.Condition'), 98)
         self.assertEqual(self.lua.eval('state.shield.x'), 0)
+
+    def test_native_client_collision_never_reads_server_only_lag_compensated_body(self):
+        self.lag_compensated_collision(ghost=False, client=True)
+        self.assertFalse(self.lua.eval('params.PreventExecution or false'))
 
     def test_historical_collision_does_not_add_rear_protection(self):
         self.lag_compensated_collision(rear=True)

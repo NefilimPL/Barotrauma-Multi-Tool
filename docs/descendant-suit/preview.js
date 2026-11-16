@@ -109,16 +109,14 @@ function frame(now){
   document.querySelectorAll("[data-mode]").forEach(b=>b.classList.toggle("selected",state.mode===b.dataset.mode));
   document.querySelector('[data-mode="off"]').textContent=state.mode==="off"?"Ramię wyłączone":"Ramię włączone";
   const t=action&&targets.find(t=>t.id===action.target.id),kind=action&&action.kind;
-  const goal=t?(kind==="repair"||kind==="weld"?C.repairContact(base,t,184,100).tip:{x:t.x,y:t.y}):{x:500,y:156};
-  const blend=1-Math.exp(-dt*12);tip.x+=(goal.x-tip.x)*blend;tip.y+=(goal.y-tip.y)*blend;
-  const pose=C.armPose(base,tip,136,120,-1,184);
-  const close=!t||!(kind==="repair"||kind==="weld")||Math.hypot(t.x-pose.tip.x,t.y-pose.tip.y)<=100;
+  const pose=C.toolPose(base,t,{x:500,y:156});
+  const close=!t||!(kind==="repair"||kind==="weld")||Math.hypot(t.x-pose.muzzle.x,t.y-pose.muzzle.y)<=136;
   const working=action&&close;
   let energyRate=water&&powered?.12:0;
   if(t&&working){
-    if(kind==="repair"||kind==="weld")t.health=Math.min(1,t.health+dt*(kind==="weld"?.48:.24));
+    if(kind==="repair"||kind==="weld")t.health=Math.min(1,t.health+dt*(kind==="weld"?.80:.42));
     if(kind==="combat"&&time>=nextPulse){nextPulse=time+.4;pulseUntil=time+.09;t.health=Math.max(0,t.health-.25);$("ammo").value=String(Math.max(0,Number($("ammo").value)-2.25));one("pulse");}
-    if(kind==="grab"&&drag!==t){const d=Math.hypot(t.x-at.x,t.y-at.y);if(d>120){t.x+=(at.x-t.x)*dt*.7;t.y+=(at.y-t.y)*dt*.7;}}
+    if(kind==="grab"&&drag!==t){const blend=1-Math.exp(-dt*12);t.x+=(at.x+180-t.x)*blend;t.y+=(at.y-60-t.y)*blend;}
     const costs={repair:.4,weld:.6,combat:1,grab:.5};
     energyRate+=costs[kind];
   }
@@ -135,11 +133,11 @@ function frame(now){
   targets.filter(t=>t.kind!=="enemy"||hasEnemy).forEach(target);
   if(blocked){ctx.fillStyle="#38474e";ctx.fillRect(622,170,20,320);ctx.strokeStyle="#728791";ctx.strokeRect(622,170,20,320);}
   drawLink("upperLink",base,pose.elbow,250,[44,50]);drawLink("lowerLink",pose.elbow,pose.tip,247,[39,41]);
-  const angle=t?Math.atan2(t.y-pose.tip.y,t.x-pose.tip.x):.5;
+  const angle=pose.angle;
   const head=kind==="combat"?"red":kind==="grab"?"orange":"blue";
   const r=C.sprites[head].rect;ctx.save();ctx.translate(pose.tip.x,pose.tip.y);ctx.rotate(angle);ctx.drawImage(images.arm,...r,-37*.32,-54*.32,r[2]*.32,r[3]*.32);ctx.restore();
   if(working){
-    const color=colors[kind];ctx.save();ctx.shadowBlur=12;ctx.shadowColor=color;if(kind!=="combat"||time<pulseUntil){line(pose.tip,t,color,3);line(pose.tip,t,"#effaff",.9);}ctx.restore();
+    const color=colors[kind];ctx.save();ctx.shadowBlur=16;ctx.shadowColor=color;if(kind!=="combat"||time<pulseUntil){line(pose.muzzle,t,color,kind==="repair"||kind==="weld"?8:5);line(pose.muzzle,t,"#effaff",kind==="repair"||kind==="weld"?2.4:1.4);}ctx.restore();
     if(kind==="repair"||kind==="weld"){
       for(let n=0;n<Math.ceil(dt*150);n++){const a=Math.random()*Math.PI*2,v=120+Math.random()*260;sparks.push({x:t.x,y:t.y,vx:Math.cos(a)*v,vy:Math.sin(a)*v,life:.15+Math.random()*.2,age:0});}
       const glow=ctx.createRadialGradient(t.x,t.y,0,t.x,t.y,30);glow.addColorStop(0,"#eaffffdd");glow.addColorStop(.15,"#67caff88");glow.addColorStop(1,"#67caff00");ctx.fillStyle=glow;ctx.fillRect(t.x-30,t.y-30,60,60);

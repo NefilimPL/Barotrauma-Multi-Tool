@@ -15,7 +15,7 @@ function M.debit(charge,cost)
 end
 function M.setMode(s,mode)
     if not M.modes[mode] then return false end
-    if s.mode~=mode then s.mode=mode;s.target=nil;s.grabStarted=nil end
+    if s.mode~=mode then s.mode=mode;s.target=nil;s.grabStarted=nil;s.contactId=nil;s.contactAt=nil end
     if mode~='off' then s.resumeMode=mode end
     return true
 end
@@ -42,12 +42,27 @@ function M.grabAllowed(s,id,now)
     return id~=s.blockedGrab or now>=(s.grabBlockedUntil or 0)
 end
 function M.expireGrab(s,now)
+    if not s.grabAutomatic then return false end
     if s.target and s.target.kind~='repair' and s.mode=='grab' and s.grabStarted and now-s.grabStarted>=C.grabDuration then
         s.blockedGrab=s.target.id;s.grabBlockedUntil=now+2
         s.target=nil;s.grabStarted=nil;s.acquireGrab=false
         return true
     end
     return false
+end
+function M.repairRange() return C.reach+C.toolOffset+C.repairBeam end
+function M.holdOffset(owner,point)
+    local dx,dy=point.x-owner.x,point.y-owner.y
+    local distance=math.sqrt(dx*dx+dy*dy)
+    local scale=distance>1e-6 and math.min(C.grabHoldDistance,distance)/distance or 0
+    return {x=dx*scale,y=clamp(dy*scale,45,120)}
+end
+function M.holdAcceleration(error,relativeVelocity,gravity)
+    local x=error.x*C.grabSpring-relativeVelocity.x*C.grabDamping
+    local y=error.y*C.grabSpring-relativeVelocity.y*C.grabDamping
+    local length=math.sqrt(x*x+y*y)
+    if length>C.grabAcceleration then x=x/length*C.grabAcceleration;y=y/length*C.grabAcceleration end
+    return {x=x-gravity.x,y=y-gravity.y}
 end
 function M.pose(base,goal,bend)
     local dx,dy=goal.x-base.x,goal.y-base.y
@@ -58,11 +73,28 @@ function M.pose(base,goal,bend)
     return {elbow={x=base.x+C.upper*math.cos(angle+offset),y=base.y+C.upper*math.sin(angle+offset)},
         tip={x=base.x+distance*math.cos(angle),y=base.y+distance*math.sin(angle)}}
 end
+function M.toolPose(base,target,rest,facing,rotation)
+    local goal=rest
+    if target then
+        local dx,dy=target.x-base.x,target.y-base.y
+        local length=math.sqrt(dx*dx+dy*dy)
+        local x,y=math.cos(rotation or 0)*(facing or 1),math.sin(rotation or 0)*(facing or 1)
+        if length>1e-6 then x,y=dx/length,dy/length end
+        goal={x=target.x-x*(C.toolOffset+C.toolStandOff),y=target.y-y*(C.toolOffset+C.toolStandOff)}
+    end
+    local pose=M.pose(base,goal,facing)
+    local angle=(rotation or 0)+((facing or 1)<0 and math.pi or 0)
+    if target then angle=math.atan2(target.y-pose.tip.y,target.x-pose.tip.x) end
+    pose.angle=angle;pose.base=base
+    pose.muzzle={x=pose.tip.x+math.cos(angle)*C.toolOffset,y=pose.tip.y+math.sin(angle)*C.toolOffset}
+    return pose
+end
 function M.choose(mode,targets,pinned)
     local best
     for _,t in ipairs(targets) do
         local valid=t.visible and t.distance and t.distance>=0
-        if mode=='repair' then valid=valid and (t.kind=='repair' or t.kind=='weld') and t.damaged and t.distance<=C.reach+C.repairBeam
+        if mode=='repair' then valid=valid and (t.kind=='repair' or t.kind=='weld') and t.damaged and
+            t.distance<=M.repairRange()+(t.id==pinned and C.contactSlack or 0)
         elseif mode=='combat' then valid=valid and t.kind=='combat' and t.alive and t.hostile and t.distance<=C.combatRange
         elseif mode=='grab' then valid=valid and t.kind=='grab' and t.free and t.id==pinned and t.distance<=C.grabRange
         else valid=false end
@@ -77,6 +109,15 @@ function M.choose(mode,targets,pinned)
         end
     end
     return best
+end
+function M.contact(s,target,now)
+    if M.choose(s.mode,{target},target.id) then
+        s.contactId=target.id;s.contactAt=now;return true,true
+    end
+    if s.mode=='repair' and (target.kind=='repair' or target.kind=='weld') and target.damaged and
+        not target.visible and s.contactId==target.id and now-(s.contactAt or -100)<=C.contactGrace and
+        target.distance and target.distance<=M.repairRange()+C.contactSlack then return true,false end
+    return false,false
 end
 function M.ai(targets)
     local combat=M.choose('combat',targets)

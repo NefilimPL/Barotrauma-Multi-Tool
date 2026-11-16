@@ -12,10 +12,8 @@ function M.install(G,E)
         if s.pendingPulse then return false end
         if G.now<(s.nextPulse or 0) then return true end
         s.pendingPulse=true
-        local base=G.mount(owner)
-        local delta=E.Vector2(target.point.x-base.x,target.point.y-base.y)
-        local pose=Core.pose(base,target.point,-1)
-        local world=E.Vector2(pose.tip.x,pose.tip.y)
+        local pose=G.toolPose(owner,s)
+        local world=E.Vector2(pose.muzzle.x,pose.muzzle.y)
         local function spawned(projectileItem)
             E.Timer.Wait(function()
                 s.pendingPulse=false
@@ -27,21 +25,23 @@ function M.install(G,E)
                 local p=target.entity.WorldPosition;target.point={x=p.X,y=p.Y}
                 local mount=G.mount(owner)
                 if (p.X-mount.x)^2+(p.Y-mount.y)^2>C.combatRange^2 or not G.visible(owner,mount,target) then remove(projectileItem);return end
+                local muzzle=G.toolPose(owner,s).muzzle
+                if not G.visible(owner,muzzle,target) then remove(projectileItem);return end
+                local projectile=U.component(projectileItem,'Projectile')
+                if not projectile then remove(projectileItem);return end
                 local source,box=G.source(item),G.ammo(item)
                 local cost=C.shotPower*(source and source.HasTag('reactorfuel') and C.rodMultiplier or 1)
                 local ok,power,remaining=Core.payPulse(s,G.energy(item),box and box.Condition or 0,G.now,cost)
                 if not ok then remove(projectileItem);return end
-                local projectile=U.component(projectileItem,'Projectile')
-                if not projectile then remove(projectileItem);return end
                 source.Condition=power*source.MaxCondition/100;box.Condition=remaining
-                local tip=Core.pose(mount,target.point,-1).tip
                 local sub=owner.Submarine
-                local pos=E.Vector2(tip.x,tip.y)-(sub and sub.Position or E.Vector2.Zero)
+                local pos=E.Vector2(muzzle.x,muzzle.y)-(sub and sub.Position or E.Vector2.Zero)
                 projectileItem.Submarine=sub
                 projectile.Launcher=item
                 local sim=E.ConvertUnits.ToSimUnits(pos)
-                projectile.Shoot(owner,sim,sim,math.atan2(p.Y-tip.y,p.X-tip.x),nil,true)
+                projectile.Shoot(owner,sim,sim,math.atan2(p.Y-muzzle.y,p.X-muzzle.x),nil,true)
                 s.shots=((s.shots or 0)+1)%65536
+                s.lastPulse={x=p.X,y=p.Y};s.shotTime=G.now
             end,20)
         end
         local prefab=E.ItemPrefab.Prefabs['descendantpulsebolt']
