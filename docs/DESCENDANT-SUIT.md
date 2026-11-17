@@ -1,14 +1,16 @@
 # Kombinezon serwomanipulacyjny Descendants V2
 
-Wersja **1.3.19** dla Barotrauma 1.13.5.0 / LuaCs c6e8829. Identyfikator przedmiotu: `descendantservosuit`. Po aktualizacji **utwórz nowy egzemplarz**, aby otrzymać aktualne komponenty sonaru i grafiki stojaków. Obie strony multiplayera muszą mieć tę samą wersję moda; komunikaty kombinezonu używają protokołu v5. [Poprawiona grafika szafki i porównanie z grą](DESCENDANT-RACK.md). [Próby funkcji i zmierzone prędkości pływania1.3.18](DESCENDANT-SERVICE.md).
+Wersja **1.3.20** dla Barotrauma 1.13.5.0 / LuaCs c6e8829. Identyfikator przedmiotu: `descendantservosuit`. Po aktualizacji **utwórz nowy egzemplarz**, aby otrzymać aktualne komponenty sonaru i grafiki stojaków. Obie strony multiplayera muszą mieć tę samą wersję moda; komunikaty kombinezonu używają protokołu v5. [Poprawiona grafika szafki i porównanie z grą](DESCENDANT-RACK.md). [Próby funkcji i zmierzone prędkości pływania1.3.18](DESCENDANT-SERVICE.md).
 
 [Otwórz animowany podgląd V2](descendant-suit/index.html). Działa lokalnie, bez instalowania bibliotek. Pokazuje nowy pancerz, oba stany hełmu, ramię, impulsy, iskry, wirniki i dźwięki. To demonstracja zasobów; nie zastępuje próby w grze.
+
+[Oryginalny miniaturowy laser i nowe promienie1.3.20](DESCENDANT-BEAMS.md).
 
 ## Używanie
 
 Kombinezon zachowuje smukłe proporcje. Obecna poprawka dodaje trwałe podtrzymywanie celu, wspólną końcówkę promieni, tolerancję ruchu podczas naprawy, chowane panele i natywny sonar. [Zawieszenie osoby i schowane panele](descendant-suit/controls-hold.png), [osobny sonar](descendant-suit/controls-sonar.png), [szersza naprawa](descendant-suit/controls-repair.png), [przedmiot na ziemi](descendant-suit/controls-ground.png), [impuls z końcówki](descendant-suit/controls-pulse.png). Zrzuty pochodzą z gry, z włączonym oświetleniem i bez obróbki obrazu.
 
-Aktualna paczka: `output/MULTI-TOOL-V2-1.3.19-descendant-rack-2026-11-17.zip`. Poprzednie paczki zachowano.
+Aktualna paczka: `output/MULTI-TOOL-V2-1.3.20-descendant-beams-2026-11-17.zip`. Poprzednie paczki zachowano.
 
 Załóż kombinezon w slocie ubrania zewnętrznego. Jeden widoczny panel ma dwa ograniczone sloty: pierwszy na baterię/pręt reaktora, drugi na skrzynkę amunicji lasera pulsacyjnego. Butla nie jest potrzebna. Zasilanie ramienia nie wymaga trzymania narzędzia w ręce. Przycisk „Ramię włączone / Ramię wyłączone” pokazuje stan i przełącza funkcję; ponowne włączenie przywraca ostatni tryb.
 

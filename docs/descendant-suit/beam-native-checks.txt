@@ -1,0 +1,5 @@
+BEGIN native 1.3.20 beam check; tracer must retain full ray length
+PASS native mini pulse fires full-length tracer shots=5 ammo=88.75 actualTracerLength=395.6861572265625
+PASS soft tractor attached to live target live grip=true
+PASS soft repair and sparks condition=32.389347076416016
+DONE native GPU pulse/grab/repair; lighting enabled

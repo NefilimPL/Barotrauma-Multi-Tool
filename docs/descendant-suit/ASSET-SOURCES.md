@@ -1,5 +1,11 @@
 # Asset sources
 
+## Original miniaturized pulse laser and soft beams — 1.3.20
+
+The combat head directly references the base game's `Content/Items/Weapons/Turrets.png`: native RailSprite904,592,120,287, BarrelSprite779,592,125,333, and both ChargeSprites570,692,59,150 /642,692,59,150. Uniform scale0.11; origins include the original firing offset so the visible nozzle is anchored to the actual shot muzzle. No generated substitute or altered copy of these textures is used.
+
+The pulse particle references the original `ParticleAtlas.png` sprite144,440,1,68, with original additive blending, color and0.4s lifetime. Only vertical initial size and vertical shrink rate are reduced by0.22; emitter scale1 preserves native ray length. Repair/tractor beams use the neutral feathered native trail130,383,225,40, tinted blue/orange. Native textures are referenced, not redistributed. [GPU evidence and validation](../DESCENDANT-BEAMS.md).
+
 ## Front-facing locker window correction — 1.3.19
 
 `rack-window-v2.png` is a new762×2063 RGBA output from built-in `image_gen`, copied byte-for-byte from `C:/Users/kamil/.codex/generated_images/01a1e12e-c367-7941-a93a-422015faf3a7/exec-02621b4d-f2cc-4796-a4ce-c10e75cfdcb3.png`. The previous custom side-view suit was the edit target; the game's containers atlas was a composition reference. No native PNG is redistributed in the mod.

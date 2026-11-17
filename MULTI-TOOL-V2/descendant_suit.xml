@@ -97,7 +97,7 @@
     <Sprite texture="Content/Items/Weapons/weapons_new.png" sourcerect="143,414,113,9" depth="0.55" />
     <Body width="50" height="4" density="20" />
     <Projectile characterusable="false" hitscan="true" removeonhit="true" friendlyfire="false" maxTargetsToHit="1" penetration="0" damagedoors="false">
-      <ParticleEmitter particle="tracerpulselaser" particleamount="1" scalemin="0.45" scalemax="0.45" colormultiplier="255,80,80,255" />
+      <ParticleEmitter particle="descendantpulsetracer" particleamount="1" scalemin="1" scalemax="1" velocitymin="0" velocitymax="0" />
       <ParticleEmitter particle="FlareBubbles" emitacrossrayinterval="80" scalemin="0.3" scalemax="0.5" />
       <Attack structuredamage="0" itemdamage="0" severlimbsprobability="0" penetration="0.15">
         <Affliction identifier="burn" strength="16" />
@@ -105,10 +105,10 @@
         <Affliction identifier="stun" strength="0.15" />
       </Attack>
       <StatusEffect type="OnUse" target="This">
-        <ParticleEmitter particle="muzzleflashpulselaser" particleamount="3" scalemin="0.2" scalemax="0.35" />
+        <ParticleEmitter particle="muzzleflashpulselaser" particleamount="1" scalemin="0.02" scalemax="0.03" />
       </StatusEffect>
       <StatusEffect type="OnImpact" target="UseTarget">
-        <ParticleEmitter particle="muzzleflashpulselaser" particleamount="4" anglemin="0" anglemax="360" scalemin="0.2" scalemax="0.4" />
+        <ParticleEmitter particle="muzzleflashpulselaser" particleamount="1" anglemin="0" anglemax="360" scalemin="0.025" scalemax="0.04" />
         <ParticleEmitter particle="weldspark" particleamount="5" anglemin="0" anglemax="360" velocitymin="80" velocitymax="150" scalemin="0.3" scalemax="0.5" colormultiplier="255,100,100,220" />
       </StatusEffect>
     </Projectile>

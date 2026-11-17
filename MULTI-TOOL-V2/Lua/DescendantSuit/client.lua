@@ -8,6 +8,12 @@ function M.install(G,E,root)
     local atlas=E.Sprite(root..'/Assets/DescendantSuit/suit-v2.png',E.Vector2(.5,.5))
     local impeller=E.Sprite(root..'/Assets/DescendantSuit/impeller.png',E.Vector2(.5,.5))
     local housing=E.Sprite(root..'/Assets/DescendantSuit/impeller-housing.png',E.Vector2(.54,.5))
+    local pulseHead=E.Sprite('Content/Items/Weapons/Turrets.png',E.Vector2(.5,.5))
+    local beamSprite=E.Sprite('Content/Particles/ParticleAtlas.png',E.Vector2(0,.5))
+    -- Native neutral, feathered trail. The pulse itself is rendered only by
+    -- Projectile's native pulse texture; never overlay another red beam.
+    beamSprite.SourceRect=E.Rectangle(130,383,225,40)
+    beamSprite.Origin=E.Vector2(0,20)
     local A=require('DescendantSuit.atlas')
     local rects={upper=A.upperLink,lower=A.lowerLink,red=A.emitter,blue=A.emitter,orange=A.emitter,
         rotor0=A.rotor,rotor1=A.rotor,rotor2=A.rotor,rotor3=A.rotor}
@@ -45,6 +51,39 @@ function M.install(G,E,root)
     local function link(batch,cam,key,a,b,span,origin)
         local dx,dy=b.x-a.x,b.y-a.y
         sprite(batch,cam,key,a,-math.atan2(dy,dx),math.sqrt(dx*dx+dy*dy)/span,origin)
+    end
+    local function drawPulseHead(batch,cam,pose)
+        -- Original pulse-laser rail/barrel, uniformly miniaturized. Origins
+        -- include native firingoffset=(-10,-220), so its nozzle is exactly
+        -- the shared physical muzzle, including while the arm rotates.
+        local point=screen(cam,pose.muzzle)
+        local angle=math.pi/2-pose.angle
+        pulseHead.SourceRect=E.Rectangle(904,592,120,287)
+        pulseHead.Origin=E.Vector2(50,-16.23)
+        pulseHead.Draw(batch,point,E.Color.White,pulseHead.Origin,angle,E.Vector2(.11,.11))
+        pulseHead.SourceRect=E.Rectangle(779,592,125,333)
+        pulseHead.Origin=E.Vector2(52.5,46.4)
+        pulseHead.Draw(batch,point,E.Color.White,pulseHead.Origin,angle,E.Vector2(.11,.11))
+        -- The two native charging panels complete the original gun silhouette.
+        pulseHead.SourceRect=E.Rectangle(570,692,59,150)
+        pulseHead.Origin=E.Vector2(49,20)
+        pulseHead.Draw(batch,point,E.Color.White,pulseHead.Origin,angle,E.Vector2(.11,.11))
+        pulseHead.SourceRect=E.Rectangle(642,692,59,150)
+        pulseHead.Origin=E.Vector2(-10,20)
+        pulseHead.Draw(batch,point,E.Color.White,pulseHead.Origin,angle,E.Vector2(.11,.11))
+    end
+    local function softBeam(batch,cam,a,b,col,repairing)
+        local dx,dy=b.x-a.x,b.y-a.y
+        local length=math.sqrt(dx*dx+dy*dy)
+        if length<.1 then return end
+        local angle=-math.atan2(dy,dx)
+        local p=screen(cam,a)
+        -- Premultiplied tints preserve soft alpha edges in the world batch.
+        local glow=E.Color(math.floor(col[1]*.38),math.floor(col[2]*.38),math.floor(col[3]*.38),97)
+        local core=E.Color(math.floor((col[1]*.25+191.25)*.85),
+            math.floor((col[2]*.25+191.25)*.85),math.floor((col[3]*.25+191.25)*.85),217)
+        beamSprite.Draw(batch,p,glow,beamSprite.Origin,angle,E.Vector2(length/225,(repairing and 9 or 7)/40))
+        beamSprite.Draw(batch,p,core,beamSprite.Origin,angle,E.Vector2(length/225,(repairing and 2.4 or 1.8)/40))
     end
     local function helmet(owner,item,open)
         local s=G.state(item)
@@ -141,21 +180,17 @@ function M.install(G,E,root)
                     local pose=G.toolPose(owner,s,true,flash and s.lastPulse or nil)
                     link(batch,cam,'upper',base,pose.elbow,250,E.Vector2(44,50))
                     link(batch,cam,'lower',pose.elbow,pose.tip,247,E.Vector2(39,41))
-                    local colorKey=flash and 'red' or target and (target.kind=='combat' and 'red' or target.kind=='grab' and 'orange' or 'blue') or 'blue'
-                    sprite(batch,cam,colorKey,pose.tip,-pose.angle,.16,E.Vector2(37,54))
+                    if s.mode=='combat' then drawPulseHead(batch,cam,pose)
+                    else sprite(batch,cam,target and target.kind=='grab' and 'orange' or 'blue',pose.tip,-pose.angle,.16,E.Vector2(37,54)) end
                     local motor=G.attachment(owner,-20,-18,true)
                     housing.Draw(batch,screen(cam,motor),E.Color.White,housing.Origin,-bodyRotation,E.Vector2(.022,.022))
                     impeller.Draw(batch,screen(cam,motor),E.Color.White,impeller.Origin,
                         -bodyRotation+(s.swimming and G.now*14 or 0),E.Vector2(.0135,.0135))
                     local short=not target or (target.kind~='repair' and target.kind~='weld') or
                         (target.point.x-pose.muzzle.x)^2+(target.point.y-pose.muzzle.y)^2<=(C.repairBeam+C.contactSlack+2)^2
-                    local beam=flash and s.lastPulse or (target and target.kind~='combat' and s.active and short and target.point)
+                    local beam=target and target.kind~='combat' and s.active and short and target.point
                     if beam then
-                        local repairing=not flash and target and (target.kind=='repair' or target.kind=='weld')
-                        local col=flash and colors.combat or colors[target.kind]
-                        line(batch,cam,pose.muzzle,beam,E.Color(col[1],col[2],col[3],90),12)
-                        line(batch,cam,pose.muzzle,beam,E.Color(col[1],col[2],col[3],230),4)
-                        line(batch,cam,pose.muzzle,beam,E.Color(235,250,255,240),repairing and 1.2 or .7)
+                        softBeam(batch,cam,pose.muzzle,beam,colors[target.kind],target.kind~='grab')
                     end
                     for _,p in ipairs(s.sparks or {}) do
                         local tail={x=p.x-p.vx*.022,y=p.y-p.vy*.022}
@@ -183,7 +218,7 @@ function M.install(G,E,root)
         channels={};G.clearSuitUI()
     end
     function G.disposeClient()
-        G.disposeSuitUI();atlas.Remove();impeller.Remove();housing.Remove()
+        G.disposeSuitUI();atlas.Remove();impeller.Remove();housing.Remove();pulseHead.Remove();beamSprite.Remove()
     end
 end
 return M
