@@ -16,6 +16,7 @@ function M.install(G,E)
         powered=powered==true
         sonar.Voltage=powered and 1 or 0;sonar.IsActive=powered
         local mode=state.sonarActive==false and modes.Passive or modes.Active
+        sonar.UseMineralScanner=powered and state.minerals==true and state.sonarActive~=false
         if state.sonar and sonar.CurrentMode~=mode then sonar.CurrentMode=mode end
         state.sonarPowered=powered
         return sonar,powered
@@ -25,6 +26,7 @@ function M.install(G,E)
         local sonar=entry and entry.component or (not item.Removed and U.component(item,'Sonar'))
         if sonar and not item.Removed then
             sonar.IsActive=false;sonar.Voltage=0;sonar.CurrentMode=modes.Passive
+            sonar.UseMineralScanner=false
         end
         if state then state.sonar=false;state.sonarPowered=false end
         watched[item]=nil
@@ -42,6 +44,15 @@ function M.install(G,E)
             G.energy(item)<=0 or not U.component(item,'Sonar') then return false end
         local state=G.state(item);state.sonar=true;state.sonarActive=active==true
         G.syncSonar(item,state);return true
+    end
+    function G.toggleMinerals(owner,item)
+        local sonar=U.component(item,'Sonar')
+        if not G.authoritative or G.equipped(owner)~=item or owner.IsUnconscious or G.energy(item)<=0 or
+            not sonar or not sonar.HasMineralScanner then return false end
+        local s=G.state(item)
+        s.minerals=not (s.minerals==true and s.sonarActive~=false)
+        s.sonar=true;s.sonarActive=true
+        G.syncSonar(item,s);return true
     end
     function G.updateSonar(owner,item,state,dt)
         local _,powered=G.syncSonar(item,state)

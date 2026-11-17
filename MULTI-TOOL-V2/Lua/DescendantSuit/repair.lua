@@ -76,6 +76,15 @@ function M.install(G,E)
         local s=G.repairScope
         if s and s.owner==owner and p['item']==s.repairable.Item then p.PreventExecution=true;return true end
     end,false,{'Barotrauma.Item','System.Boolean'})
+    G.patch('native-repair-access-distance','Barotrauma.Character','CanInteractWith',function(owner,p)
+        local s=G.repairScope
+        if s and s.owner==owner and p['item']==s.repairable.Item then
+            -- Leave the native out-float untouched. Assigning a Lua number
+            -- stores a boxed double in LuaCs' by-ref patch, which cannot be
+            -- unboxed as System.Single when the prefix returns.
+            p.PreventExecution=true;return true
+        end
+    end,false,{'Barotrauma.Item','System.Single&','System.Boolean'})
     G.patch('native-repair-selection','Barotrauma.Character','set_SelectedItem',function(owner,p)
         if G.repairScope and G.repairScope.owner==owner then p.PreventExecution=true end
     end)

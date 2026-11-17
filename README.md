@@ -4,7 +4,14 @@ Wersja robocza zawiera **kombinezon serwomanipulacyjny Descendants** z jednym
 ramieniem do automatycznej naprawy i spawania, obrony lub chwytania celu.
 Wersja V2 ma widoczne sloty baterii/pręta i skrzynki pulsacyjnej, obieg
 oddechowy bez butli, latarki i automatyczną wymianę zapasów przez AI.
-W **1.3.17** ramię płynnie ustawia przeguby, a chwyt dostosowuje punkt
+W **1.3.18** chwyt utrzymuje ciało wyżej podczas biegu i przepuszcza je przez
+schody i podesty. Zasilany stojak ładuje baterię lub pręt. Mały sonar ma
+skaner minerałów, a podświetlenie wskazuje aktywną funkcję. Obudowa wirnika
+pozostaje nieruchoma, obracają się łopatki; podczas pływania powstają bąbelki.
+[Aktualne próby i porównanie pływania](docs/DESCENDANT-SERVICE.md).
+Paczka: [MULTI-TOOL-V2 1.3.18](output/MULTI-TOOL-V2-1.3.18-descendant-service-2026-11-17.zip).
+
+Od **1.3.17** ramię płynnie ustawia przeguby, a chwyt dostosowuje punkt
 podtrzymania przy przeszkodach. Naprawa jest nieco wolniejsza, obrażenia
 impulsu zmniejszono o 20%, a automatyczna naprawa nie wymusza kucania
 ani ruchu postaci, również podczas oglądania panelu urządzenia.
@@ -15,7 +22,7 @@ większy zasięg i tolerancję ruchu, a promienie wychodzą z końcówki narzęd
 [Używanie i rzeczywisty zakres weryfikacji](docs/DESCENDANT-SUIT.md).
 Weryfikacja obejmuje testy regresji, klienta GPU i lokalny multiplayer.
 Szczegóły i granice próby opisano w dokumentacji. Po aktualizacji zrestartuj
-grę i serwer; obie strony potrzebują protokołu kombinezonu v4.
+grę i serwer; obie strony potrzebują protokołu kombinezonu v5.
 
 [Pomiar FPS na dwóch rzeczywistych klientach](docs/DESCENDANT-PERFORMANCE.md)
 wykazał wyraźny narzut wielu napraw naraz: około 65% niższe FPS przy ośmiu
@@ -231,8 +238,9 @@ zmiana trybu, przeszkoda, wyjście poza zasięg, brak energii lub zdjęcie
 kombinezonu zwalnia cel. Nie trzeba trzymać narzędzia w ręce.
 Przycisk `»` chowa prawy panel; zakładka **Ramię** otwiera go ponownie.
 **Sonar** otwiera niezależny panel po lewej. Jego przycisk zasilania oraz
-tryby aktywny/pasywny sterują natywnym sonarem. `«` chowa widok, a zakładka
-**Sonar** przywraca go. Schowanie panelu nie wyłącza funkcji; sonar wyłącz
+tryby aktywny/pasywny sterują natywnym sonarem. `«` zwija go do małego radaru,
+a `+` rozwija ustawienia. Wyłączony i zwinięty sonar jest niewidoczny.
+**Minerały** włącza skaner w trybie aktywnym. Sonar wyłącz
 jego przyciskiem zasilania, jeśli ma przestać pobierać energię i nadawać impulsy.
 [Pełna instrukcja kombinezonu](docs/DESCENDANT-SUIT.md).
 

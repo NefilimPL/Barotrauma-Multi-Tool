@@ -1,0 +1,16 @@
+PASS equipment and native mineral scanner protocol=bmt.descendant.v5
+PASS off minimized sonar is completely hidden expanded controls enabled sonar+minerals
+PASS native mineral scan and compact powered radar radarWidth=216 mineral=true
+PASS active mode has a distinct selected tint grab highlighted; powered-off radar hidden; single grab press scheduled
+PASS human held higher with scoped platform handling initialLift=45.0625
+PASS running keeps body airborne without collision injury moved=873.34423828125 minLift=44.984375 maxError=44.314727783203125 vitality=100
+PASS release restores platform flags restore=true
+PASS loose item grip setup restore=true; loose wrench indicated
+PASS loose item follows actual claw clawError=0.016105880960822105
+PASS wired suit holder setup real battery power_out -> rack power_in
+PASS upright rack sprite and real powered charging voltage=0.9833333492279053 charge=21 spriteHeight=1774
+PASS disconnected rack stops charging no power charge=21.375; ladder selected
+PASS native repair while on ladder preserves secondary selection ladderCondition=83.74160766601562
+PASS seated repair setup chair selected
+PASS native repair while seated preserves chair seatedCondition=84.22468566894531
+RESULT passed=15 failed=0 native=true

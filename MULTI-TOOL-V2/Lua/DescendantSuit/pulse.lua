@@ -25,7 +25,8 @@ function M.install(G,E)
                 local p=target.entity.WorldPosition;target.point={x=p.X,y=p.Y}
                 if G.armReady and not G.armReady(owner,s,target) then remove(projectileItem);return end
                 local mount=G.mount(owner)
-                if (p.X-mount.x)^2+(p.Y-mount.y)^2>C.combatRange^2 or not G.visible(owner,mount,target) then remove(projectileItem);return end
+                if (p.X-mount.x)^2+(p.Y-mount.y)^2>C.combatRange^2 or
+                    (G.visibleFromTool and not G.visibleFromTool(owner,s,target,false)) then remove(projectileItem);return end
                 local muzzle=G.toolPose(owner,s).muzzle
                 if not G.visible(owner,muzzle,target) then remove(projectileItem);return end
                 local projectile=U.component(projectileItem,'Projectile')

@@ -1,0 +1,3 @@
+PASS held body crosses native platform nativeCallback=false; body crossed from +150 to -252.546875; vitality=100
+PASS held body crosses native stairsright nativeCallback=false; body crossed from +150 to -245; vitality=100
+RESULT passed=2 failed=0 real_physics=true

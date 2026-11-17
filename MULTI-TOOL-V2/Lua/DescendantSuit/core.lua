@@ -73,14 +73,15 @@ function M.pose(base,goal,bend)
     return {elbow={x=base.x+C.upper*math.cos(angle+offset),y=base.y+C.upper*math.sin(angle+offset)},
         tip={x=base.x+distance*math.cos(angle),y=base.y+distance*math.sin(angle)}}
 end
-function M.toolPose(base,target,rest,facing,rotation)
+function M.toolPose(base,target,rest,facing,rotation,standOff)
     local goal=rest
     if target then
         local dx,dy=target.x-base.x,target.y-base.y
         local length=math.sqrt(dx*dx+dy*dy)
         local x,y=math.cos(rotation or 0)*(facing or 1),math.sin(rotation or 0)*(facing or 1)
         if length>1e-6 then x,y=dx/length,dy/length end
-        goal={x=target.x-x*(C.toolOffset+C.toolStandOff),y=target.y-y*(C.toolOffset+C.toolStandOff)}
+        local gap=standOff==nil and C.toolStandOff or standOff
+        goal={x=target.x-x*(C.toolOffset+gap),y=target.y-y*(C.toolOffset+gap)}
     end
     local pose=M.pose(base,goal,facing)
     local angle=(rotation or 0)+((facing or 1)<0 and math.pi or 0)
@@ -111,6 +112,10 @@ function M.choose(mode,targets,pinned)
     return best
 end
 function M.contact(s,target,now)
+    if s.mode=='combat' and target.trackable and target.alive and target.hostile and
+        target.distance and target.distance<=C.combatRange then
+        return true,target.visible==true
+    end
     if s.mode=='grab' and s.grip then
         if not target.free or not target.distance or target.distance>C.gripReleaseRange then return false,false end
         if target.visible then s.contactId=target.id;s.contactAt=now;return true,true end

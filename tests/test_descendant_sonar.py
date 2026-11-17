@@ -112,6 +112,13 @@ class DescendantSnapshotTests(LuaCase):
             assert(s.drawAngles.upper==.1,'network packet snapped displayed joints')
         """)
 
+    def test_minerals_and_torso_reference_rotation_round_trip(self):
+        self.lua.execute("""
+            local s=S.state(suit);s.minerals=true;s.toolAngles={upper=.2,lower=.3,head=.4};s.toolRotation=1.3
+            S.sendSnapshot();clientHandlers[protocol..'.snapshot'](sent)
+            assert(C.state(suit).minerals and C.state(suit).toolRotation==1.3)
+        """)
+
     def test_pulse_endpoint_remains_when_target_dies_before_snapshot(self):
         self.lua.execute("""
             S.state(suit).target=nil;S.state(suit).active=false

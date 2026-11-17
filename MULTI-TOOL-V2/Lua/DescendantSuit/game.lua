@@ -121,6 +121,17 @@ function M.new(E)
         end
         return false
     end
+    function G.visibleFromTool(owner,state,target,planned)
+        local base,rotation,facing=G.mount(owner)
+        local muzzle
+        if planned then
+            muzzle=Core.toolPose(base,target.point,G.restGoal(owner),facing,rotation).muzzle
+        else muzzle=G.toolPose(owner,state).muzzle end
+        -- Bodies may be below the tool, but a solid wall may not be between
+        -- its mounting point and nozzle. The final ray still blocks allies.
+        if G.cast(base,muzzle,0,owner,true) then return false end
+        return G.visible(owner,muzzle,target)
+    end
     function G.body(target)
         if not target then return end
         if E.LuaUserData.IsTargetType(target,'Barotrauma.Character') then
@@ -168,7 +179,8 @@ function M.new(E)
             local bound=range
             if t.kind=='weld' then bound=bound+math.sqrt(t.entity.Rect.Width^2+t.entity.Rect.Height^2) end
             if t.distance<=bound then
-                t.visible=G.visible(owner,base,t)
+                t.visible=t.kind=='combat' and G.visibleFromTool(owner,s,t,true) or
+                    (t.kind~='combat' and G.visible(owner,base,t))
                 t.distance=math.sqrt((t.point.x-base.x)^2+(t.point.y-base.y)^2)
                 if t.distance<=range then
                     if t.kind=='grab' and not Core.grabAllowed(s,t.id,G.now) then t.free=false end
@@ -254,6 +266,7 @@ function M.new(E)
     function G.setMode(item,mode,owner)
         if G.equipped(owner)~=item or owner.IsUnconscious then return false end
         if mode=='sonar' then return G.toggleSonar and G.toggleSonar(owner,item) or false end
+        if mode=='minerals' then return G.toggleMinerals and G.toggleMinerals(owner,item) or false end
         if mode=='sonaractive' or mode=='sonarpassive' then
             return G.setSonarMode and G.setSonarMode(owner,item,mode=='sonaractive') or false
         end
@@ -272,6 +285,7 @@ function M.new(E)
             if G.now>=(G.nextOwners or 0) then
                 G.nextOwners=G.now+.25
                 U.each(E.Util.GetItemsById(C.identifier),function(item)
+                    if G.updateDocked then G.updateDocked(item,.25) end
                     local owner=G.owner(item)
                     if G.equipped(owner)==item then G.state(item) end
                 end)
@@ -336,7 +350,10 @@ function M.new(E)
                             if target.kind~='weld' then target.point=position(target.entity)
                             else local q=target.entity.SectionPosition(target.section,true);target.point={x=q.X,y=q.Y} end
                             local base=G.mount(owner)
-                            target.visible=G.visible(owner,base,target)
+                            if target.kind=='combat' then
+                                target.trackable=G.visibleFromTool(owner,s,target,true)
+                                target.visible=G.visibleFromTool(owner,s,target,false)
+                            else target.visible=G.visible(owner,base,target) end
                             target.distance=math.sqrt((target.point.x-base.x)^2+(target.point.y-base.y)^2)
                             if target.kind=='repair' then target.damaged=target.entity.Condition<target.entity.MaxCondition-.01 end
                             if target.kind=='weld' then target.damaged=target.entity.SectionDamage(target.section)>.01 end

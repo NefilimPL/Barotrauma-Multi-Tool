@@ -19,8 +19,10 @@ function M.anchor(owner,offset,body,character,cast,blocked)
     local normal=world(offset)
     if not blocked and fits(normal) and clear(body,normal,8) then return offset,false end
     local side=offset.x<0 and -1 or 1
-    for _,candidate in ipairs({{x=side*55,y=0},{x=side*35,y=-12},
-        {x=side*70,y=-20},{x=0,y=0},{x=-side*35,y=-10}}) do
+    local candidates=character and {{x=side*80,y=65},{x=side*60,y=45},{x=side*35,y=45},{x=0,y=45},{x=-side*35,y=45},
+        {x=side*80,y=25},{x=side*60,y=25},{x=side*35,y=25},{x=0,y=25},{x=-side*35,y=25}} or
+        {{x=side*55,y=0},{x=side*35,y=-12},{x=side*70,y=-20},{x=0,y=0},{x=-side*35,y=-10}}
+    for _,candidate in ipairs(candidates) do
         local p=world(candidate)
         if fits(p) and clear(body,p,8) then return candidate,true end
     end
@@ -34,11 +36,24 @@ function M.anchor(owner,offset,body,character,cast,blocked)
         if length<.01 then tx,ty=-ny,nx;if ty<0 then tx,ty=-tx,-ty end
         else tx,ty=tx/length,ty/length end
         local p={x=hit.x+nx*22+tx*60,y=hit.y+ny*22+ty*60}
-        if fits(p) and clear(body,p,8) then return {x=p.x-owner.x,y=p.y-owner.y},true end
+        if (not character or p.y>=math.min(body.y,owner.y+45)) and fits(p) and clear(body,p,8) then return {x=p.x-owner.x,y=p.y-owner.y},true end
     end
-    return {x=body.x-owner.x,y=body.y-owner.y},true
+    return {x=body.x-owner.x,y=body.y-owner.y},true,true
 end
 function M.install(G,E)
+    local held={};G.heldCharacters=held
+    if G.patch and E.LuaUserData.RegisterType then
+        local descriptor=E.LuaUserData.RegisterType('Barotrauma.Ragdoll')
+        E.LuaUserData.MakeFieldAccessible(descriptor,'character')
+        local none=E.LuaUserData.CreateEnumTable('Barotrauma.Direction').None
+        G.patch('held-body-passable','Barotrauma.Ragdoll','OnLimbCollision',function(anim,p)
+            if not held[anim.character] then return end
+            local fixture=p['f2']
+            local wall=fixture and fixture.Body and fixture.Body.UserData
+            if wall and E.LuaUserData.IsTargetType(wall,'Barotrauma.Structure') and
+                (wall.IsPlatform or wall.StairDirection~=none) then p.PreventExecution=true;return false end
+        end)
+    end
     if not G.authoritative then return end
     local leases={}
     function G.releaseGrip(state)
@@ -46,8 +61,10 @@ function M.install(G,E)
         if not lease then return end
         local entity=lease.entity
         if lease.character then
+            held[entity]=nil
             entity.IsForceRagdolled=lease.forced
             entity.IsRagdolled=lease.ragdolled
+            entity.AnimController.IgnorePlatforms=lease.platforms
         end
         leases[entity]=nil;state.grip=nil
     end
@@ -68,27 +85,49 @@ function M.install(G,E)
             lease.originalOffset=lease.offset
             if lease.character then
                 lease.forced=entity.IsForceRagdolled==true;lease.ragdolled=entity.IsRagdolled==true
+                lease.platforms=entity.AnimController.IgnorePlatforms==true
+                lease.offset.y=math.max(C.gripLift,lease.offset.y)
             end
             leases[entity]=lease;state.grip=lease
         end
-        if lease.character then entity.IsForceRagdolled=true;entity.IsRagdolled=true end
+        if lease.character then
+            held[entity]=true
+            entity.IsForceRagdolled=true;entity.IsRagdolled=true
+            entity.AnimController.IgnorePlatforms=true
+            entity.DisableImpactDamageTimer=math.max(entity.DisableImpactDamageTimer or 0,.25)
+        end
         lease.used=G.now
         local p,q=owner.WorldPosition,entity.WorldPosition
         if G.cast and G.now>=(lease.nextProbe or 0) then
             lease.nextProbe=G.now+C.gripProbeInterval
-            lease.wantedOffset,lease.recovering=M.anchor({x=p.X,y=p.Y},lease.originalOffset,
+            local waiting
+            lease.wantedOffset,lease.recovering,waiting=M.anchor({x=p.X,y=p.Y},lease.originalOffset,
                 {x=q.X,y=q.Y},lease.character,function(a,b,radius)
                     return G.cast(a,b,radius,owner,true)
                 end,target.visible==false)
+            if waiting then
+                lease.refuge=lease.refuge or {x=q.X,y=q.Y}
+                lease.wantedOffset={x=lease.refuge.x-p.X,y=lease.refuge.y-p.Y}
+            else lease.refuge=nil end
         end
         if lease.wantedOffset then
             local a=1-math.exp(-10*math.min(dt,.1))
             lease.offset={x=lease.offset.x+(lease.wantedOffset.x-lease.offset.x)*a,
                 y=lease.offset.y+(lease.wantedOffset.y-lease.offset.y)*a}
         end
-        local error={x=(p.X+lease.offset.x-q.X)/100,y=(p.Y+lease.offset.y-q.Y)/100}
+        local goal={x=p.X+lease.offset.x,y=p.Y+lease.offset.y}
+        if not lease.character and G.toolPose then goal=G.toolPose(owner,state).muzzle end
+        local error={x=(goal.x-q.X)/100,y=(goal.y-q.Y)/100}
         local ownerBody=G.body(owner)
         local carrier=ownerBody and ownerBody.LinearVelocity
+        local vx,vy=carrier and carrier.X or 0,carrier and carrier.Y or 0
+        local feed={x=0,y=0}
+        if lease.carrier and dt>0 then
+            feed.x=math.max(-60,math.min(60,(vx-lease.carrier.x)/dt))
+            feed.y=math.max(-60,math.min(60,(vy-lease.carrier.y)/dt))
+        end
+        lease.carrier={x=vx,y=vy}
+        local speed=math.sqrt(vx*vx+vy*vy)+(lease.recovering and 6 or C.grabSpeed)
         local seen={}
         local function pull(body)
             if not body or not body.Enabled or body.Mass<=0 or seen[body] then return end
@@ -102,8 +141,8 @@ function M.install(G,E)
             local acceleration=Core.holdAcceleration(error,
                 {x=velocity.X-(carrier and carrier.X or 0),y=velocity.Y-(carrier and carrier.Y or 0)},
                 {x=(gravity and gravity.X or 0)*(scale or 1),y=(gravity and gravity.Y or 0)*(scale or 1)})
-            body.ApplyForce(E.Vector2(acceleration.x*body.Mass*fraction,acceleration.y*body.Mass*fraction),
-                lease.recovering and math.min(3,C.grabSpeed) or C.grabSpeed)
+            body.ApplyForce(E.Vector2((acceleration.x+feed.x)*body.Mass*fraction,
+                (acceleration.y+feed.y)*body.Mass*fraction),speed)
         end
         pull(G.body(entity))
         if lease.character then U.each(entity.AnimController.Limbs,function(limb)

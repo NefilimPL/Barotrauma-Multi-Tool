@@ -1,5 +1,21 @@
 # Asset sources
 
+## Rack and independent impeller — 17 November 2026
+
+Three new transparent PNGs generated using the built-in `image_gen` tool via the [imagegen skill](C:/Users/kamil/.codex/skills/.system/imagegen/SKILL.md), copied unchanged into `MULTI-TOOL-V2/Assets/DescendantSuit`. No external image API, scripted repainting, cropping, background removal or raster resizing was used. XML source rectangles, origins and draw scales are rendering metadata.
+
+| Production asset | Dimensions | Original built-in output |
+|---|---|---|
+| `rack-suit.png` | 887 × 1774 | `exec-104423c7-581a-4f21-8d47-820e293ccc7f.png` |
+| `impeller.png` | 1254 × 1254 | `exec-64572d4c-baeb-4933-b2ff-fcdc5a31b1e6.png` |
+| `impeller-housing.png` | 1254 × 1254 | `exec-d2c62826-fcbe-4037-a824-b920bb14c56a.png` |
+
+Original directory: `C:/Users/kamil/.codex/generated_images/01a1e12e-c367-7941-a93a-422015faf3a7/`.
+
+Generation briefs: slim upright empty graphite/crimson futuristic pressure suit in right-facing side view, with a compact folded backpack and no long projecting manipulator, for a suit rack; separately, an isolated four-bladed curved metal rotor and hub with alpha gaps and no housing; separately, an empty matching metal/red circular housing with a small cyan side module, transparent center and no blades. All requested true transparent backgrounds, consistent side-view game art, no text, logos or watermark. These are briefs, not verbatim transcripts of generation prompts.
+
+Only `impeller.png` rotates. Housing remains aligned to the wearer. The native game's `bubbles` particle is referenced, not redistributed.
+
 ## Folded suit item — 16 November 2026
 
 `MULTI-TOOL-V2/Assets/DescendantSuit/packed-suit.png` is a new transparent sprite generated with built-in `image_gen` (no API/CLI fallback). Original `exec-648f1fd1-b312-49b4-bb01-a39ce6964d20.png` was copied unchanged from the Codex generated-images directory. RGBA 1635 × 962; the native XML selects source rectangle `96,173,1428,586` and item scale 0.06. These metadata settings do not resample or repaint the raster. Worn atlas/scales are independent. [Full prompt and source path](packed-suit-prompt.txt).

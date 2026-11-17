@@ -1,0 +1,11 @@
+PASS native water setup clear water; repair target at 160/30
+METRICS targetTicks=288 workTicks=281 maxWorldStep=0.19432166296139108 gain=137.49650764465332
+PASS repair tracks native swimming turns without steering wearer targetTicks=288 workTicks=281 samples=301 maxWorldStep=0.19432166296139108 repairGain=137.49650764465332 hands=0
+PASS swim bubble setup native right+run in water
+PASS swimming emits native bubbles native live bubbles=48
+PASS combat setup crawler spawn scheduled
+PASS ally blocks torso ray while planned nozzle is clear native ally between torso and enemy
+PASS native pulse fires from exposed tool above ally shots=4 friendlyVitality=100
+PASS block actual muzzle with ally native ally in muzzle ray
+PASS ally in muzzle ray stops firing shots unchanged=4
+RESULT passed=9 failed=0 native=true

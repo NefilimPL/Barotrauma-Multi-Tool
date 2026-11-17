@@ -6,6 +6,8 @@ function M.install(G,E,root)
     local UI=E.GUI
     local gui=UI.GUI
     local atlas=E.Sprite(root..'/Assets/DescendantSuit/suit-v2.png',E.Vector2(.5,.5))
+    local impeller=E.Sprite(root..'/Assets/DescendantSuit/impeller.png',E.Vector2(.5,.5))
+    local housing=E.Sprite(root..'/Assets/DescendantSuit/impeller-housing.png',E.Vector2(.54,.5))
     local A=require('DescendantSuit.atlas')
     local rects={upper=A.upperLink,lower=A.lowerLink,red=A.emitter,blue=A.emitter,orange=A.emitter,
         rotor0=A.rotor,rotor1=A.rotor,rotor2=A.rotor,rotor3=A.rotor}
@@ -13,6 +15,12 @@ function M.install(G,E,root)
     require('DescendantSuit.ui').install(G,E)
     local colors={repair={75,190,255},weld={75,190,255},combat={255,45,45},grab={255,153,35}}
     local channels={}
+    local heldPlatforms={}
+    local function restoreHeld(entity,old)
+        if not entity.Removed then entity.AnimController.IgnorePlatforms=old end
+        if G.heldCharacters then G.heldCharacters[entity]=nil end
+        heldPlatforms[entity]=nil
+    end
     local function stop(ch) if ch then ch.FadeOutAndDispose() end end
     local function sound(id,owner) return E.SoundPlayer.PlaySound('descendant_'..id,owner.WorldPosition) end
     local function loop(entry,key,kind,owner)
@@ -53,6 +61,7 @@ function M.install(G,E,root)
     end
     function G.updateClient(dt)
         G.updateSuitUI(dt)
+        local holding={}
         for item,s in pairs(G.states) do
             local owner=s.owner or G.owner(item)
             if item.Removed or not owner or G.equipped(owner)~=item or
@@ -64,10 +73,27 @@ function M.install(G,E,root)
                 G.states[item]=nil
             else
                 helmet(owner,item,s.open==true)
-                if G.interpolateTool then G.interpolateTool(s,dt) end
+                if G.interpolateTool then G.interpolateTool(s,dt,owner) end
                 G.syncSonar(item,s)
                 local entry=channels[item] or {};channels[item]=entry;entry.state=s
                 local active=s.active and s.target and s.target.kind
+                if not G.authoritative and active=='grab' then
+                    local entity=s.target.entity
+                    if entity and E.LuaUserData.IsTargetType(entity,'Barotrauma.Character') then
+                        if heldPlatforms[entity]==nil then heldPlatforms[entity]=entity.AnimController.IgnorePlatforms==true end
+                        holding[entity]=true;G.heldCharacters[entity]=true
+                        entity.AnimController.IgnorePlatforms=true
+                        entity.DisableImpactDamageTimer=math.max(entity.DisableImpactDamageTimer,.25)
+                    end
+                end
+                if s.swimming and owner.AnimController.InWater then
+                    s.bubbleBudget=(s.bubbleBudget or 0)+dt*24
+                    while s.bubbleBudget>=1 do
+                        s.bubbleBudget=s.bubbleBudget-1
+                        local p=G.attachment(owner,-24,-20)
+                        E.Game.ParticleManager.CreateParticle('bubbles',E.Vector2(p.x,p.y),E.Vector2.Zero)
+                    end
+                else s.bubbleBudget=0 end
                 loop(entry,'beam',active~='combat' and active or nil,owner);loop(entry,'motor',s.swimming and 'impeller' or nil,owner)
                 if entry.shots~=nil and entry.shots~=(s.shots or 0) then sound('pulse',owner);s.shotTime=G.now end
                 entry.shots=s.shots or 0
@@ -96,6 +122,7 @@ function M.install(G,E,root)
                 else s.sparkBudget=0 end
             end
         end
+        for entity,old in pairs(heldPlatforms) do if not holding[entity] then restoreHeld(entity,old) end end
         for item,entry in pairs(channels) do if not G.states[item] then
             stop(entry.beam);stop(entry.motor);G.removeLights(entry.state);channels[item]=nil
         end end
@@ -117,15 +144,17 @@ function M.install(G,E,root)
                     local colorKey=flash and 'red' or target and (target.kind=='combat' and 'red' or target.kind=='grab' and 'orange' or 'blue') or 'blue'
                     sprite(batch,cam,colorKey,pose.tip,-pose.angle,.16,E.Vector2(37,54))
                     local motor=G.attachment(owner,-20,-18,true)
-                    sprite(batch,cam,'rotor0',motor,-bodyRotation+(s.swimming and G.now*14 or 0),.10)
+                    housing.Draw(batch,screen(cam,motor),E.Color.White,housing.Origin,-bodyRotation,E.Vector2(.022,.022))
+                    impeller.Draw(batch,screen(cam,motor),E.Color.White,impeller.Origin,
+                        -bodyRotation+(s.swimming and G.now*14 or 0),E.Vector2(.0135,.0135))
                     local short=not target or (target.kind~='repair' and target.kind~='weld') or
                         (target.point.x-pose.muzzle.x)^2+(target.point.y-pose.muzzle.y)^2<=(C.repairBeam+C.contactSlack+2)^2
                     local beam=flash and s.lastPulse or (target and target.kind~='combat' and s.active and short and target.point)
                     if beam then
                         local repairing=not flash and target and (target.kind=='repair' or target.kind=='weld')
                         local col=flash and colors.combat or colors[target.kind]
-                        line(batch,cam,pose.muzzle,beam,E.Color(col[1],col[2],col[3],70),repairing and 12 or 8)
-                        line(batch,cam,pose.muzzle,beam,E.Color(col[1],col[2],col[3],220),repairing and 4 or 2.5)
+                        line(batch,cam,pose.muzzle,beam,E.Color(col[1],col[2],col[3],90),12)
+                        line(batch,cam,pose.muzzle,beam,E.Color(col[1],col[2],col[3],230),4)
                         line(batch,cam,pose.muzzle,beam,E.Color(235,250,255,240),repairing and 1.2 or .7)
                     end
                     for _,p in ipairs(s.sparks or {}) do
@@ -148,12 +177,13 @@ function M.install(G,E,root)
         channels={}
     end
     function G.clearClient()
+        for entity,old in pairs(heldPlatforms) do restoreHeld(entity,old) end
         for _,s in pairs(G.states) do G.removeLights(s) end
         for _,entry in pairs(channels) do stop(entry.beam);stop(entry.motor);G.removeLights(entry.state) end
         channels={};G.clearSuitUI()
     end
     function G.disposeClient()
-        G.disposeSuitUI();atlas.Remove()
+        G.disposeSuitUI();atlas.Remove();impeller.Remove();housing.Remove()
     end
 end
 return M

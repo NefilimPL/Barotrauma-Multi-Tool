@@ -4,8 +4,8 @@
 const C=DescendantPreview,canvas=document.getElementById("scene"),ctx=canvas.getContext("2d");
 const $=id=>document.getElementById(id),asset="../../MULTI-TOOL-V2/Assets/DescendantSuit/";
 const images={};
-await Promise.all(["suit","arm"].map(key=>new Promise((resolve,reject)=>{
-  const im=new Image();im.onload=()=>{images[key]=im;resolve();};im.onerror=()=>reject(new Error("Nie można wczytać "+key));im.src=asset+"suit-v2.png";
+await Promise.all(Object.entries({suit:"suit-v2.png",arm:"suit-v2.png",motorHousing:"impeller-housing.png",motorBlades:"impeller.png"}).map(([key,file])=>new Promise((resolve,reject)=>{
+  const im=new Image();im.onload=()=>{images[key]=im;resolve();};im.onerror=()=>reject(new Error("Nie można wczytać "+key));im.src=asset+file;
 })));
 const state={mode:"repair",targetId:1,action:null};
 const at={x:480,y:390},base={x:436,y:296};
@@ -66,7 +66,7 @@ function suit(swim){
   sprite("upperArm",at.x-3,at.y-41,27,46,.03);
   sprite("forearm",at.x+5,at.y+12,22,47,-.07);
   sprite("hand",at.x+8,at.y+54,22,31);
-  sprite("rotor"+(swim?Math.floor(time*18)%4:0),at.x-53,at.y+5,43,42);
+  ctx.save();ctx.translate(at.x-53,at.y+5);ctx.drawImage(images.motorHousing,-25,-23,46,46);ctx.rotate(swim?time*14:0);ctx.drawImage(images.motorBlades,-14,-14,28,28);ctx.restore();
 }
 function target(t){
   ctx.save();ctx.translate(t.x,t.y);

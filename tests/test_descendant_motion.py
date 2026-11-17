@@ -95,7 +95,8 @@ class DescendantGripAnchorPlannerTests(LuaCase):
                 if b.y>90 then return {t=.5,x=b.x,y=90,nx=0,ny=-1} end
             end
             local goal,recovering=M.anchor({x=0,y=60},{x=120,y=45},{x=120,y=80},true,cast,false)
-            assert(recovering and goal.y<45 and math.abs(goal.x)<120)
+            assert(recovering and goal.y<=45,'low ceiling was ignored')
+            assert(goal.y>=0,'blocked body was forced toward the floor')
         """)
 
     def test_obstructed_tether_guides_around_wall_instead_of_pulling_through_it(self):

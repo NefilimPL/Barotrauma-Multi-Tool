@@ -33,23 +33,52 @@ function M.install(G,E)
         local base,rotation,facing=G.mount(owner)
         local rest=G.restGoal(owner)
         local point=state.target and state.target.point
+        local gap
+        if state.grip and not state.grip.character then
+            local p=owner.WorldPosition
+            local offset=state.grip.wantedOffset or state.grip.offset
+            point={x=p.X+offset.x,y=p.Y+offset.y};gap=0
+        end
         if state.lastPulse and G.now-(state.shotTime or -100)<C.pulseDuration then point=state.lastPulse end
-        local wanted=M.angles(Core.toolPose(base,point,rest,facing,rotation),rotation)
         if not state.toolAngles then state.toolAngles=M.angles(Core.toolPose(base,nil,rest,facing,rotation),rotation) end
+        if state.toolRotation then
+            state.toolAngles={upper=M.delta(state.toolAngles.upper+M.delta(state.toolRotation,rotation),0),
+                lower=state.toolAngles.lower,head=state.toolAngles.head}
+        end
+        local wanted=M.angles(Core.toolPose(base,point,rest,facing,rotation,gap),rotation)
+        if point then
+            local other=M.angles(Core.toolPose(base,point,rest,-facing,rotation,gap),rotation)
+            local function cost(a)
+                return M.delta(a.upper,state.toolAngles.upper)^2+M.delta(a.lower,state.toolAngles.lower)^2
+            end
+            if cost(other)<cost(wanted) then wanted=other end
+        end
         state.toolAngles=M.step(state.toolAngles,wanted,dt)
+        state.toolRotation=rotation
     end
-    function G.interpolateTool(state,dt)
+    function G.interpolateTool(state,dt,owner)
         if G.authoritative or not state.toolAngles then return end
-        state.drawAngles=state.drawAngles and M.step(state.drawAngles,state.toolAngles,dt,C.replicaEase,C.headSpeed) or state.toolAngles
+        local wanted=state.toolAngles
+        if owner and state.toolRotation then
+            local _,rotation=G.mount(owner,true)
+            wanted={upper=M.delta(wanted.upper+M.delta(state.toolRotation,rotation),0),lower=wanted.lower,head=wanted.head}
+            if state.drawAngles and state.drawRotation then
+                state.drawAngles={upper=M.delta(state.drawAngles.upper+M.delta(state.drawRotation,rotation),0),
+                    lower=state.drawAngles.lower,head=state.drawAngles.head}
+            end
+            state.drawRotation=rotation
+        end
+        state.drawAngles=state.drawAngles and M.step(state.drawAngles,wanted,dt,C.replicaEase,C.headSpeed) or wanted
     end
     function G.armReady(owner,state,target)
         local pose=G.toolPose(owner,state)
         local dx,dy=target.point.x-pose.muzzle.x,target.point.y-pose.muzzle.y
-        if math.abs(M.delta(math.atan2(dy,dx),pose.angle))>C.toolAngleTolerance then return false end
         if target.kind=='repair' or target.kind=='weld' then
-            return dx*dx+dy*dy<=(C.repairBeam+C.contactSlack)^2
+            local forward=dx*math.cos(pose.angle)+dy*math.sin(pose.angle)
+            local side=math.abs(dy*math.cos(pose.angle)-dx*math.sin(pose.angle))
+            return forward>=-2 and side<=C.repairTrackingWidth and dx*dx+dy*dy<=(C.repairBeam+C.contactSlack)^2
         end
-        return true
+        return math.abs(M.delta(math.atan2(dy,dx),pose.angle))<=C.toolAngleTolerance
     end
 end
 return M

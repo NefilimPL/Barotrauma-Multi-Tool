@@ -19,6 +19,10 @@
     </Deconstruct>
     <InventoryIcon texture="%ModDir%/Assets/DescendantSuit/packed-suit.png" sourcerect="96,173,1428,586" origin="0.5,0.5" compress="false" />
     <Sprite texture="%ModDir%/Assets/DescendantSuit/packed-suit.png" sourcerect="96,173,1428,586" origin="0.5,0.5" depth="0.55" compress="false" />
+    <ContainedSprite name="Descendant upright suit" allowedcontainertags="divingsuitcontainervertical" texture="%ModDir%/Assets/DescendantSuit/rack-suit.png" sourcerect="0,0,887,1774" origin="0.5,0.5" depth="0.55" compress="false" />
+    <ContainedSprite name="Descendant window suit" allowedcontainertags="divingsuitcontainerwindow" texture="%ModDir%/Assets/DescendantSuit/rack-suit.png" sourcerect="0,0,887,1774" origin="-0.12,-0.13" depth="0.55" compress="false" />
+    <ContainedSprite name="Descendant horizontal suit" allowedcontainertags="divingsuitcontainerhorizontal" texture="%ModDir%/Assets/DescendantSuit/packed-suit.png" sourcerect="96,173,1428,586" origin="0.5,0.5" depth="0.55" compress="false" />
+    <ContainedSprite name="Descendant suit holder" allowedcontainertags="divingsuitcontainer" texture="%ModDir%/Assets/DescendantSuit/rack-suit.png" sourcerect="0,0,887,1774" origin="0.5,0.5" depth="0.55" compress="false" />
     <Body width="1200" height="430" density="20" />
     <Wearable slots="OuterClothes" msg="ItemMsgEquipSelect" displaycontainedstatus="true" canbeselected="false" canbepicked="true" pickkey="Select">
       <sprite name="Descendant seal Torso" texture="Content/Items/Diving/Abyss_DivingSuit.png" limb="Torso" hidelimb="true" hideotherwearables="true" inherittexturescale="true" inheritorigin="true" inheritsourcerect="true" depth="0.6" color="65,70,80,255" />
@@ -67,7 +71,7 @@
         <Containable items="pulselaserammo" />
       </SubContainer>
     </ItemContainer>
-    <Sonar range="6000" powerconsumption="1" minvoltage="0.5" drawhudwhenequipped="false" detectsubmarinewalls="true" displaybordersize="-0.1" characterusable="false" hasmineralscanner="false" allowuioverlap="true">
+    <Sonar range="6000" powerconsumption="1" minvoltage="0.5" drawhudwhenequipped="false" detectsubmarinewalls="true" displaybordersize="-0.1" characterusable="false" hasmineralscanner="true" allowuioverlap="true">
       <sound file="Content/Items/Command/SonarPing.ogg" type="OnUse" range="1000.0" frequencymultiplier="1.5" />
       <GuiFrame relativesize="0.37,0.50" anchor="CenterLeft" relativeoffset="0.01,0" />
       <PingCircle texture="Content/Items/Command/pingCircle.png" origin="0.5,0.5" />

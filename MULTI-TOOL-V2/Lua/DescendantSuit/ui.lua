@@ -1,5 +1,10 @@
 local C=require('DescendantSuit.config')
 local M={}
+function M.layout(powered,expanded,width,height)
+    local side=math.floor(math.min(240,width*.22,height*.27))
+    return {visible=expanded or powered,controls=expanded,width=expanded and math.min(340,width*.28) or side,
+        height=expanded and math.min(400,height*.50) or side}
+end
 function M.install(G,E)
     local UI=E.GUI;local gui=UI.GUI
     local function text(id) return tostring(E.TextManager.Get('descendant.'..id)) end
@@ -9,6 +14,7 @@ function M.install(G,E)
     end
     local function button(parent,x,y,w,h,label,fn)
         local b=UI.Button(rect(parent,x,y,w,h),label)
+        b.SelectedColor=E.Color(95,150,125,255)
         b.OnClicked=function() fn();return true end
         return b
     end
@@ -38,6 +44,7 @@ function M.install(G,E)
     local sonarPanel=UI.Frame(UI.RectTransform(E.Vector2(.37,.54),gui.Canvas,UI.Anchor.CenterLeft),'GUIFrame')
     sonarPanel.RectTransform.RelativeOffset=E.Vector2(.008,0)
     G.sonarPanel=sonarPanel
+    local panelColor=sonarPanel.Color
     local leftTab=UI.Button(UI.RectTransform(E.Vector2(.075,.052),gui.Canvas,UI.Anchor.CenterLeft),text('sonar'))
     G.sonarShowButton=leftTab
     leftTab.OnClicked=function() sonarOpen=true;return true end
@@ -52,7 +59,12 @@ function M.install(G,E)
     G.sonarPassiveButton=button(sonarPanel,.52,.15,.44,.09,text('sonar_passive'),function()
         local item=equipped();if item then G.requestMode(item,'sonarpassive') end
     end)
-    local sonarBody=UI.Frame(rect(sonarPanel,.025,.27,.95,.70),nil)
+    G.sonarMineralButton=button(sonarPanel,.04,.26,.92,.08,text('minerals'),function()
+        local item=equipped();if item then G.requestMode(item,'minerals') end
+    end)
+    local sonarBody=UI.Frame(rect(sonarPanel,.025,.36,.95,.62),nil)
+    local expand=button(sonarPanel,.88,0,.12,.12,'+',function() sonarOpen=true end)
+    G.sonarExpandButton=expand
     local sonarStatus=UI.TextBlock(rect(sonarBody,.04,.35,.92,.30),text('sonar_off'))
     G.sonarStatus=sonarStatus
     local descriptor=E.LuaUserData.RegisterType('Barotrauma.Items.Components.Sonar')
@@ -85,7 +97,7 @@ function M.install(G,E)
     function G.updateSuitUI(dt)
         local item=equipped()
         panel.Visible=item~=nil and panelOpen;rightTab.Visible=item~=nil and not panelOpen
-        sonarPanel.Visible=item~=nil and sonarOpen;leftTab.Visible=item~=nil and not sonarOpen
+        sonarPanel.Visible=false;leftTab.Visible=false
         if not item then detach();return end
         local s=G.state(item)
         if panelMode~=s.mode then
@@ -96,26 +108,37 @@ function M.install(G,E)
             buttons.grab.ToolTip=E.InputTypeLString(E.TextManager.Get('descendant.grab_help'),false)
             nextHint=G.now+1
         end
-        for _,mode in ipairs({'off','repair','combat','grab'}) do buttons[mode].Selected=s.mode==mode end
-        buttons.off.Text=text(s.mode=='off' and 'off' or 'on');buttons.sonar.Selected=sonarOpen
+        for _,mode in ipairs({'repair','combat','grab'}) do buttons[mode].Selected=s.mode==mode end
+        buttons.off.Selected=s.mode~='off'
+        buttons.off.Text=text(s.mode=='off' and 'off' or 'on');buttons.sonar.Selected=s.sonar==true
         local ammo=G.ammo(item)
         status.Text=text('power')..': '..math.floor(s.charge or G.energy(item))..'%  |  '..
             text('ammo')..': '..math.floor((ammo and ammo.Condition or 0)/C.ammoCost)..'\n'..
             text(s.open and 'air' or 'closedloop')..(s.mode=='grab' and '\n'..grabHint or '')
         local sonar,powered=G.syncSonar(item,s)
+        local bounds=gui.Canvas.Rect
+        local layout=M.layout(powered,sonarOpen,bounds.Width,bounds.Height)
+        sonarPanel.Visible=layout.visible
+        sonarPanel.RectTransform.Resize(E.Vector2(layout.width/bounds.Width,layout.height/bounds.Height))
+        sonarPanel.Color=sonarOpen and panelColor or E.Color.Transparent
+        sonarBody.RectTransform.RelativeOffset=sonarOpen and E.Vector2(.025,.36) or E.Vector2.Zero
+        sonarBody.RectTransform.Resize(sonarOpen and E.Vector2(.95,.62) or E.Vector2.One)
+        expand.Visible=not sonarOpen and powered
+        for _,b in ipairs({G.sonarPowerButton,G.sonarHideButton,G.sonarActiveButton,G.sonarPassiveButton,G.sonarMineralButton}) do b.Visible=sonarOpen end
         if sonar then attach(item,sonar) else detach() end
         G.sonarPowerButton.Text=text(s.sonar and 'sonar_on' or 'sonar_off')
-        G.sonarPowerButton.Selected=s.sonar==true
+        G.sonarPowerButton.Selected=powered
         G.sonarActiveButton.Selected=s.sonar==true and s.sonarActive~=false
         G.sonarPassiveButton.Selected=s.sonar==true and s.sonarActive==false
+        G.sonarMineralButton.Selected=powered and s.minerals==true and s.sonarActive~=false
         sonarStatus.Visible=not powered
         sonarStatus.Text=text(s.sonar and 'no_power' or 'sonar_off')
         if hosted then
-            hosted.frame.Visible=sonarOpen and powered
-            if sonarOpen and powered then sonar.UpdateHUDComponentSpecific(E.Character.Controlled,dt,E.Game.GameScreen.Cam) end
+            hosted.frame.Visible=layout.visible and powered
+            if layout.visible and powered then sonar.UpdateHUDComponentSpecific(E.Character.Controlled,dt,E.Game.GameScreen.Cam) end
         end
         if panel.Visible then panel.AddToGUIUpdateList(false,8) else rightTab.AddToGUIUpdateList(false,9) end
-        if sonarPanel.Visible then sonarPanel.AddToGUIUpdateList(false,8) else leftTab.AddToGUIUpdateList(false,9) end
+        if sonarPanel.Visible then sonarPanel.AddToGUIUpdateList(false,8) end
     end
     function G.clearSuitUI()
         detach()
