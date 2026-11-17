@@ -1,5 +1,11 @@
 # Asset sources
 
+## Front-facing locker window correction — 1.3.19
+
+`rack-window-v2.png` is a new762×2063 RGBA output from built-in `image_gen`, copied byte-for-byte from `C:/Users/kamil/.codex/generated_images/01a1e12e-c367-7941-a93a-422015faf3a7/exec-02621b4d-f2cc-4796-a4ce-c10e75cfdcb3.png`. The previous custom side-view suit was the edit target; the game's containers atlas was a composition reference. No native PNG is redistributed in the mod.
+
+This replaces the old full-body side view behind the window with a large frontal helmet and partial torso fading into scratched dark glass. The XML source rectangle50,63,657,1742 selects the pane without margins and excess empty lower glass to match the physical size of native window sprites. The raster itself was not resized, repainted or background-removed. Vertical-holder source rectangles now omit the lower legs and boots. [Spec and prompt](rack-window-v2-prompt.txt); [native comparison](../DESCENDANT-RACK.md).
+
 ## Rack and independent impeller — 17 November 2026
 
 Three new transparent PNGs generated using the built-in `image_gen` tool via the [imagegen skill](C:/Users/kamil/.codex/skills/.system/imagegen/SKILL.md), copied unchanged into `MULTI-TOOL-V2/Assets/DescendantSuit`. No external image API, scripted repainting, cropping, background removal or raster resizing was used. XML source rectangles, origins and draw scales are rendering metadata.

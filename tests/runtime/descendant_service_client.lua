@@ -136,7 +136,7 @@ add(2,'upright rack sprite and real powered charging',function()
     local powered=R.rack.GetComponentString('Powered')
     assert(powered.Voltage>.1,'rack not powered: '..powered.Voltage)
     assert(R.rackCell.Condition>20,'docked battery did not recharge')
-    assert(R.rackSuit.Sprite.SourceRect.Height==1774,'folded sprite still in rack')
+    assert(R.rackSuit.Sprite.SourceRect.Width==657 and R.rackSuit.Sprite.SourceRect.Height==1742,'front window sprite missing')
     capture('rack');R.rackBefore=R.rackCell.Condition;R.input.DisconnectWire(R.wire)
     return 'voltage='..powered.Voltage..' charge='..R.rackCell.Condition..' spriteHeight='..R.rackSuit.Sprite.SourceRect.Height
 end)
