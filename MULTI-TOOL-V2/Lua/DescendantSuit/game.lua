@@ -98,6 +98,8 @@ function M.new(E)
     end
     function G.toolPose(owner,state,draw,point)
         local base,rotation,facing=G.mount(owner,draw)
+        local angles=draw and not G.authoritative and (state.drawAngles or state.toolAngles) or state.toolAngles
+        if angles then return require('DescendantSuit.motion').pose(base,rotation,angles) end
         return Core.toolPose(base,point or (state.target and state.target.point),G.restGoal(owner,draw),facing,rotation)
     end
     local function position(entity)
@@ -229,6 +231,7 @@ function M.new(E)
         return targets
     end
     function G.perform(owner,item,target,dt)
+        if target.kind~='grab' and G.armReady and not G.armReady(owner,G.state(item),target) then return false end
         if target.kind=='repair' then return G.repairDevice and G.repairDevice(owner,item,target,dt) or false end
         if target.kind=='combat' then return G.firePulse and G.firePulse(owner,item,target) or false end
         if target.kind=='grab' and not G.grabbable(target.entity) then return false end
@@ -314,7 +317,8 @@ function M.new(E)
                                 local selected=Core.choose(s.mode,candidates,s.target and s.target.id)
                                 -- A missing scan candidate gets a per-frame contact/grace check.
                                 if s.mode~='repair' or not s.target or (selected and selected.id==s.target.id) then s.target=selected end
-                            elseif s.target then s.target=Core.choose('grab',candidates,s.target.id)
+                            elseif s.target then
+                                if not s.grip then s.target=Core.choose('grab',candidates,s.target.id) end
                             else
                                 if s.acquireGrab then
                                     s.acquireGrab=false
@@ -327,6 +331,7 @@ function M.new(E)
                             end
                         end
                         local target=s.target
+                        local advanced=false
                         if target and not target.entity.Removed and powered then
                             if target.kind~='weld' then target.point=position(target.entity)
                             else local q=target.entity.SectionPosition(target.section,true);target.point={x=q.X,y=q.Y} end
@@ -342,9 +347,11 @@ function M.new(E)
                             end
                             local retained,contact=Core.contact(s,target,G.now)
                             if retained then
+                                if G.advanceTool then G.advanceTool(owner,s,dt);advanced=true end
                                 if contact and Core.ready(s,target.id,G.now) then s.active=G.perform(owner,item,target,dt) end
                             else s.target=nil end
                         elseif not powered then s.target=nil end
+                        if not advanced and G.advanceTool then G.advanceTool(owner,s,dt) end
                         if not s.target then Core.ready(s,nil,G.now) end
                         local anim=owner.AnimController
                         if powered and anim.InWater and anim.TargetMovement then

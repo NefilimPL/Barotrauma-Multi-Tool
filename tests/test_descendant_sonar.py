@@ -102,12 +102,32 @@ class DescendantSnapshotTests(LuaCase):
             assert(s.shots==5 and s.target.entity==enemy and s.target.point.x==401 and s.active)
         """)
 
+    def test_smoothed_joint_angles_round_trip_without_overwriting_current_draw_pose(self):
+        self.lua.execute("""
+            S.state(suit).toolAngles={upper=.4,lower=-1.2,head=.8}
+            C.state(suit).drawAngles={upper=.1,lower=-1,head=.2}
+            S.sendSnapshot();clientHandlers[protocol..'.snapshot'](sent)
+            local s=C.state(suit)
+            assert(s.toolAngles.upper==.4 and s.toolAngles.lower==-1.2 and s.toolAngles.head==.8)
+            assert(s.drawAngles.upper==.1,'network packet snapped displayed joints')
+        """)
+
     def test_pulse_endpoint_remains_when_target_dies_before_snapshot(self):
         self.lua.execute("""
             S.state(suit).target=nil;S.state(suit).active=false
             S.sendSnapshot();clientHandlers[protocol..'.snapshot'](sent)
             local s=C.state(suit);assert(not s.target and not s.active)
             assert(s.lastPulse.x==400 and s.lastPulse.y==500)
+        """)
+
+    def test_automatic_repair_ownership_round_trips_and_clears_on_the_next_snapshot(self):
+        self.lua.execute("""
+            S.state(suit).repairing=enemy
+            S.sendSnapshot();clientHandlers[protocol..'.snapshot'](sent)
+            assert(C.state(suit).repairing==enemy)
+            S.state(suit).repairing=nil;S.now=S.now+1
+            S.sendSnapshot();clientHandlers[protocol..'.snapshot'](sent)
+            assert(not C.state(suit).repairing)
         """)
 
     def test_sonar_request_is_forwarded_to_the_server_authorization_boundary(self):

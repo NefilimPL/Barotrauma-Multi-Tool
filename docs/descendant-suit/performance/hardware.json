@@ -1,0 +1,19 @@
+{
+    "vsync":  false,
+    "ram_bytes":  68464066560,
+    "same_host":  true,
+    "inactive_sleep_disabled":  true,
+    "cpu":  {
+                "Name":  "13th Gen Intel(R) Core(TM) i5-13600KF",
+                "NumberOfCores":  13,
+                "NumberOfLogicalProcessors":  18
+            },
+    "resolution":  "1280x800",
+    "clients":  2,
+    "extra_npc_wearers":  6,
+    "gpu":  {
+                "Name":  "NVIDIA GeForce RTX 4080",
+                "DriverVersion":  "32.0.16.1088"
+            },
+    "frame_limit":  0
+}

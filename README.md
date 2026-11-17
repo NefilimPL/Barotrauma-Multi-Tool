@@ -4,13 +4,23 @@ Wersja robocza zawiera **kombinezon serwomanipulacyjny Descendants** z jednym
 ramieniem do automatycznej naprawy i spawania, obrony lub chwytania celu.
 Wersja V2 ma widoczne sloty baterii/pręta i skrzynki pulsacyjnej, obieg
 oddechowy bez butli, latarki i automatyczną wymianę zapasów przez AI.
-W **1.3.16** chwyt podtrzymuje cel po puszczeniu klawiszy, oba panele można
+W **1.3.17** ramię płynnie ustawia przeguby, a chwyt dostosowuje punkt
+podtrzymania przy przeszkodach. Naprawa jest nieco wolniejsza, obrażenia
+impulsu zmniejszono o 20%, a automatyczna naprawa nie wymusza kucania
+ani ruchu postaci, również podczas oglądania panelu urządzenia.
+Chwyt podtrzymuje cel po puszczeniu klawiszy, oba panele można
 schować, a opcjonalny natywny sonar ma własny widok po lewej. Naprawa ma
 większy zasięg i tolerancję ruchu, a promienie wychodzą z końcówki narzędzia.
 [Podgląd tekstur, animacji i dźwięków](docs/descendant-suit/index.html) ·
 [Używanie i rzeczywisty zakres weryfikacji](docs/DESCENDANT-SUIT.md).
-Poprawkę sprawdzono w kliencie GPU: 16 prób singleplayer i 9 etapów lokalnego
-multiplayera przeszło. Szczegóły i granice próby opisano w dokumentacji.
+Weryfikacja obejmuje testy regresji, klienta GPU i lokalny multiplayer.
+Szczegóły i granice próby opisano w dokumentacji. Po aktualizacji zrestartuj
+grę i serwer; obie strony potrzebują protokołu kombinezonu v4.
+
+[Pomiar FPS na dwóch rzeczywistych klientach](docs/DESCENDANT-PERFORMANCE.md)
+wykazał wyraźny narzut wielu napraw naraz: około 65% niższe FPS przy ośmiu
+włączonych naprawach w scenie testowej. Raport zawiera również czasy klatek,
+pojedyncze przycięcia, obciążenie serwera i ograniczenia porównania.
 
 Wersja **1.3.15** zatrzymuje także lokalnie przewidywane trafienie pocisku
 w tarczę. W 1.3.14 serwer blokował obrażenia i smuga kończyła się na tarczy,

@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
 <Items>
-  <Item identifier="descendantservosuit" category="Diving,Equipment" tags="diving,deepdiving,human,descendantservosuit,divinggear_wearableindoors" scale="0.06" fireproof="true" allowdroppingonswapwith="diving" impactsoundtag="impact_metal_heavy" addedrepairspeedmultiplier="6" cannotrepairfail="true">
+  <Item identifier="descendantservosuit" category="Diving,Equipment" tags="diving,deepdiving,human,descendantservosuit,divinggear_wearableindoors" scale="0.06" fireproof="true" allowdroppingonswapwith="diving" impactsoundtag="impact_metal_heavy" addedrepairspeedmultiplier="4.5" cannotrepairfail="true">
     <Price baseprice="4500" sold="true" minavailable="1" maxavailable="1">
       <Price storeidentifier="merchantresearch" />
       <Price storeidentifier="merchantmilitary" />
@@ -96,8 +96,8 @@
       <ParticleEmitter particle="tracerpulselaser" particleamount="1" scalemin="0.45" scalemax="0.45" colormultiplier="255,80,80,255" />
       <ParticleEmitter particle="FlareBubbles" emitacrossrayinterval="80" scalemin="0.3" scalemax="0.5" />
       <Attack structuredamage="0" itemdamage="0" severlimbsprobability="0" penetration="0.15">
-        <Affliction identifier="burn" strength="20" />
-        <Affliction identifier="explosiondamage" strength="5" />
+        <Affliction identifier="burn" strength="16" />
+        <Affliction identifier="explosiondamage" strength="4" />
         <Affliction identifier="stun" strength="0.15" />
       </Attack>
       <StatusEffect type="OnUse" target="This">

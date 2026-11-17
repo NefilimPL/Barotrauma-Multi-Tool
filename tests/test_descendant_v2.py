@@ -198,6 +198,17 @@ class DescendantNativeRepairTests(LuaCase):
             assert(repairs==0 and repairable.CurrentFixer==other)
         """)
 
+    def test_native_manual_command_hands_back_the_device_and_clears_servo_ownership(self):
+        self.lua.execute("""
+            assert(G.repairDevice(owner,suit,target,.1))
+            assert(G.states[suit].repairing==device)
+            hooks.StartRepairing(repairable,{character=owner})
+            assert(stops==1 and not G.states[suit].repairing)
+            repairable.StartRepairing(owner)
+            local p={};hooks.Update(repairable,p);assert(not p.PreventExecution)
+            assert(not G.repairDevice(owner,suit,target,.1),'servo took manual repair back')
+        """)
+
     def test_brief_contact_gap_keeps_native_session_without_applying_hidden_repair(self):
         self.lua.execute("""
             assert(G.repairDevice(owner,suit,target,.1))

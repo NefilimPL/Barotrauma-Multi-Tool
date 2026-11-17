@@ -43,8 +43,11 @@ function M.install(G,E)
             m.WriteBoolean(s.active==true)
             m.WriteUInt16(s.shots or 0)
             m.WriteBoolean(s.sonar==true);m.WriteBoolean(s.sonarActive~=false)
+            m.WriteUInt16(s.repairing and not s.repairing.Removed and s.repairing.ID or 0)
             m.WriteBoolean(s.lastPulse~=nil)
             if s.lastPulse then m.WriteSingle(s.lastPulse.x);m.WriteSingle(s.lastPulse.y) end
+            m.WriteBoolean(s.toolAngles~=nil)
+            if s.toolAngles then m.WriteSingle(s.toolAngles.upper);m.WriteSingle(s.toolAngles.lower);m.WriteSingle(s.toolAngles.head) end
             local target=s.target
             m.WriteByte(target and kinds[target.kind] or 0)
             if target then
@@ -64,10 +67,19 @@ function M.install(G,E)
                 local active=m.ReadBoolean()
                 local shots=m.ReadUInt16()
                 local sonar,sonarActive=m.ReadBoolean(),m.ReadBoolean()
+                local repairing=E.Entity.FindEntityByID(m.ReadUInt16())
                 local lastPulse
                 if m.ReadBoolean() then
                     local x,y=m.ReadSingle(),m.ReadSingle()
                     if x==x and y==y and math.abs(x)<1e8 and math.abs(y)<1e8 then lastPulse={x=x,y=y} end
+                end
+                local toolAngles
+                if m.ReadBoolean() then
+                    local upper,lower,head=m.ReadSingle(),m.ReadSingle(),m.ReadSingle()
+                    if upper==upper and lower==lower and head==head and
+                        math.abs(upper)<=math.pi+.001 and math.abs(lower)<=math.pi+.001 and math.abs(head)<=math.pi+.001 then
+                        toolAngles={upper=upper,lower=lower,head=head}
+                    end
                 end
                 local kind=kindNames[m.ReadByte()]
                 local target
@@ -81,6 +93,9 @@ function M.install(G,E)
                     s.owner=owner;s.mode=mode;s.open=open;s.swimming=swimming;s.charge=charge
                     s.active=active and target~=nil;s.target=target;s.received=G.now;s.shots=shots
                     s.sonar=sonar;s.sonarActive=sonarActive;s.lastPulse=lastPulse
+                    s.repairing=repairing
+                    s.toolAngles=toolAngles
+                    if not toolAngles then s.drawAngles=nil end
                 end
             end
             for item,s in pairs(G.states) do if not seen[item] then

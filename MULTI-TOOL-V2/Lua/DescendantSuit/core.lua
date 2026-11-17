@@ -111,6 +111,12 @@ function M.choose(mode,targets,pinned)
     return best
 end
 function M.contact(s,target,now)
+    if s.mode=='grab' and s.grip then
+        if not target.free or not target.distance or target.distance>C.gripReleaseRange then return false,false end
+        if target.visible then s.contactId=target.id;s.contactAt=now;return true,true end
+        if s.contactId==target.id and now-(s.contactAt or -100)<=C.gripOcclusionGrace then return true,true end
+        return false,false
+    end
     if M.choose(s.mode,{target},target.id) then
         s.contactId=target.id;s.contactAt=now;return true,true
     end

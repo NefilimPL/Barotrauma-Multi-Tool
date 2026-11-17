@@ -30,6 +30,21 @@ function toolPose(base,target,rest){
   pose.muzzle={x:pose.tip.x+Math.cos(pose.angle)*48,y:pose.tip.y+Math.sin(pose.angle)*48};
   return pose;
 }
+const angleDelta=(to,from)=>((to-from+Math.PI)%(2*Math.PI)+2*Math.PI)%(2*Math.PI)-Math.PI;
+function smoothToolPose(base,wanted,current,dt){
+  const upper=Math.atan2(wanted.elbow.y-base.y,wanted.elbow.x-base.x);
+  const lower=Math.atan2(wanted.tip.y-wanted.elbow.y,wanted.tip.x-wanted.elbow.x);
+  const desired={upper,lower:angleDelta(lower,upper),head:angleDelta(wanted.angle,lower)};
+  const angles={};
+  for(const key of ["upper","lower","head"]){
+    const old=current?.[key]??desired[key],limit=(key==="head"?7:4)*Math.min(.1,dt);
+    angles[key]=angleDelta(old+clamp(angleDelta(desired[key],old)*(1-Math.exp(-dt/.12)),-limit,limit),0);
+  }
+  const a=angles.upper,b=a+angles.lower,head=b+angles.head;
+  const elbow={x:base.x+Math.cos(a)*152,y:base.y+Math.sin(a)*152};
+  const tip={x:elbow.x+Math.cos(b)*132,y:elbow.y+Math.sin(b)*132};
+  return {base,elbow,tip,angle:head,angles,muzzle:{x:tip.x+Math.cos(head)*48,y:tip.y+Math.sin(head)*48}};
+}
 function setMode(state,mode){
   if(!modes.includes(mode))return false;
   if(state.mode!==mode){state.mode=mode;state.targetId=null;state.action=null;}
@@ -71,6 +86,6 @@ function chooseAI(targets,options={}){
   return action?{mode:"grab",action}:{mode:"off",action:null};
 }
 const sprites={"assembled": {"sheet": "suit", "rect": [1285, 769, 108, 255]}, "torso": {"sheet": "suit", "rect": [113, 5, 179, 251]}, "waist": {"sheet": "suit", "rect": [467, 80, 219, 151]}, "helmetClosed": {"sheet": "suit", "rect": [850, 10, 220, 241]}, "helmetOpen": {"sheet": "suit", "rect": [1234, 10, 220, 242]}, "upperArm": {"sheet": "suit", "rect": [120, 263, 144, 240]}, "forearm": {"sheet": "suit", "rect": [518, 267, 111, 238]}, "hand": {"sheet": "suit", "rect": [907, 308, 124, 171]}, "thigh": {"sheet": "suit", "rect": [1273, 257, 143, 255]}, "calf": {"sheet": "suit", "rect": [136, 515, 117, 253]}, "boot": {"sheet": "suit", "rect": [456, 568, 239, 158]}, "upperLink": {"sheet": "arm", "rect": [792, 590, 336, 101]}, "lowerLink": {"sheet": "arm", "rect": [1185, 598, 319, 81]}, "emitter": {"sheet": "arm", "rect": [45, 841, 293, 113]}, "rotor": {"sheet": "arm", "rect": [461, 777, 229, 247]}, "backpack": {"sheet": "arm", "rect": [461, 777, 229, 247]}, "redEmitter": {"sheet": "arm", "rect": [45, 841, 293, 113]}, "blueEmitter": {"sheet": "arm", "rect": [45, 841, 293, 113]}, "orangeEmitter": {"sheet": "arm", "rect": [45, 841, 293, 113]}, "redBeam": {"sheet": "arm", "rect": [45, 841, 293, 113]}, "blueBeam": {"sheet": "arm", "rect": [45, 841, 293, 113]}, "orangeBeam": {"sheet": "arm", "rect": [45, 841, 293, 113]}, "redSpark": {"sheet": "arm", "rect": [45, 841, 293, 113]}, "blueSpark": {"sheet": "arm", "rect": [45, 841, 293, 113]}, "orangeRing": {"sheet": "arm", "rect": [45, 841, 293, 113]}, "rotor0": {"sheet": "arm", "rect": [461, 777, 229, 247]}, "rotor1": {"sheet": "arm", "rect": [461, 777, 229, 247]}, "rotor2": {"sheet": "arm", "rect": [461, 777, 229, 247]}, "rotor3": {"sheet": "arm", "rect": [461, 777, 229, 247]}, "red": {"sheet": "arm", "rect": [45, 841, 293, 113]}, "blue": {"sheet": "arm", "rect": [45, 841, 293, 113]}, "orange": {"sheet": "arm", "rect": [45, 841, 293, 113]}};
-root.DescendantPreview={modes,armPose,repairContact,toolPose,setMode,breathing,energy,chooseAction,chooseAI,sprites};
+root.DescendantPreview={modes,armPose,repairContact,toolPose,smoothToolPose,angleDelta,setMode,breathing,energy,chooseAction,chooseAI,sprites};
 })(globalThis);
 

@@ -2,10 +2,23 @@ local U=require('CombatTool.util')
 local C=require('DescendantSuit.config')
 local M={}
 function M.install(G,E)
-    if not G.authoritative then return end
     local descriptor=E.LuaUserData.RegisterType('Barotrauma.Items.Components.Repairable')
-    E.LuaUserData.MakeFieldAccessible(descriptor,'currentRepairItem')
     E.LuaUserData.MakeMethodAccessible(descriptor,'UpdateFixAnimation')
+    -- Replicated CurrentFixer also runs this animation on the client. It calls
+    -- UpdateUseItem(false), which can steer, move hands and force crouching.
+    G.patch('native-repair-animation','Barotrauma.Items.Components.Repairable','UpdateFixAnimation',function(r,p)
+        local owner=p['character'] or r.CurrentFixer
+        local scope=G.repairScope
+        local suit=owner and G.equipped(owner)
+        local state=suit and G.states and G.states[suit]
+        if (scope and scope.repairable==r and scope.owner==owner) or
+            (owner and r.CurrentFixer==owner and suit and
+                ((state and state.repairing==r.Item) or owner.SelectedItem~=r.Item)) then
+            p.PreventExecution=true
+        end
+    end)
+    if not G.authoritative then return end
+    E.LuaUserData.MakeFieldAccessible(descriptor,'currentRepairItem')
     E.LuaUserData.MakeFieldAccessible(E.LuaUserData.RegisterType('Barotrauma.Character'),'_selectedItem')
     E.LuaUserData.MakeFieldAccessible(E.LuaUserData.RegisterType('Barotrauma.AICharacter'),'_selectedItem')
     local actions=E.LuaUserData.CreateEnumTable('Barotrauma.Items.Components.Repairable+FixActions')
@@ -25,8 +38,16 @@ function M.install(G,E)
     end
     local function stop(r,s)
         sessions[r]=nil
+        local state=G.states[s.item]
+        if state and state.repairing==r.Item then state.repairing=nil end
         if r.CurrentFixer==s.owner and not r.Item.Removed then scoped(s,function() r.StopRepairing(s.owner) end) end
     end
+    -- An actual native Repair/Sabotage/Tinker command hands the device back to
+    -- normal gameplay. Merely selecting its UI does not end a servo session.
+    G.patch('native-repair-manual','Barotrauma.Items.Components.Repairable','StartRepairing',function(r)
+        local s=sessions[r]
+        if s and G.repairScope~=s then stop(r,s) end
+    end)
     function G.repairDevice(owner,item,target,dt)
         local r=U.component(target.entity,'Repairable')
         if not r or (r.CurrentFixer and (r.CurrentFixer~=owner or not sessions[r])) then return false end
@@ -35,6 +56,8 @@ function M.install(G,E)
             if not scoped(s,function() return r.StartRepairing(owner,actions.Repair) end) then return false end
             r.currentRepairItem=item;sessions[r]=s
         end
+        local state=G.states[item]
+        if state then state.repairing=r.Item end
         local fraction=G.spend(item,C.rates.repair*dt)
         if fraction<=0 then stop(r,s);return false end
         s.used=G.now
@@ -48,9 +71,6 @@ function M.install(G,E)
     end)
     G.patch('native-repair-tool','Barotrauma.Items.Components.Repairable','CheckCharacterSuccess',function(r,p)
         if G.repairScope and G.repairScope.repairable==r then p['bestRepairItem']=G.repairScope.item end
-    end)
-    G.patch('native-repair-animation','Barotrauma.Items.Components.Repairable','UpdateFixAnimation',function(r,p)
-        if G.repairScope and G.repairScope.repairable==r then p.PreventExecution=true end
     end)
     G.patch('native-repair-access','Barotrauma.Character','CanInteractWith',function(owner,p)
         local s=G.repairScope

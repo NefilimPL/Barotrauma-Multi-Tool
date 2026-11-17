@@ -1,0 +1,22 @@
+PASS native equipment and folded item metadata pressure=10000 scale=0.05999999865889549 repairBonus=4.5
+PASS start latched human grip single Aim+Use press scheduled
+PASS native human ragdoll acquired with released keys mass=10.75822639465332 forced=true keys=false
+PASS right menu collapses without releasing grip mode=grab
+PASS enable optional left native sonar requested=true
+PASS left sonar draws real native HUD while arm stays latched voltage=0.9833333492279053 viewWidth=302
+PASS left sonar panel collapses independently both panels collapsed; sonar stays powered
+PASS human stays airborne beyond old 5-second limit duration=6.8000000000054115 anchorError=1.2187691926956177 lift=43.78125
+PASS move latched body under a real low ceiling ceiling=120426.1640625 owner=120354.1640625
+PASS native wall probes lower hold anchor without dropping body originalY=45 minimumY=0.8242037499930395 recoverySamples=24 adjustedY=44.96590108194274 maxJointStep=0.06666666666666687
+PASS return wearer and body to the open room home restored independently of ceiling assertion
+PASS request release with second press second Aim+Use scheduled
+TRACE release mode=grab target=g11958 visible=true distance=97.76822937379652 unconscious=false energy=94.51492309570312
+PASS second press releases native ragdoll released=true; repair skill=20
+TRACE repair condition=19.960359573364258 target=Junction Box (ID: 11942) device=Junction Box (ID: 11942) distance=154.1109909658117 ready=true useCalls=0
+PASS native repair starts from wider nozzle beam condition=19.960359573364258 moved wearer 25 units
+PASS repair keeps contact across a small range movement condition=30.25322723388672 completionEvents=0
+PASS native faster completion retains skill reward peakCondition=100 currentCondition=99.88752746582031 skill=22 completions=1
+PASS dropped suit uses folded ground sprite displayWidth=85.67999808490276
+PASS prepare native pulse in water outside submarine
+PASS native pulse starts at common tool muzzle shots=3 nativeOriginError=0.0078125
+RESULT passed=19 failed=0 native=true

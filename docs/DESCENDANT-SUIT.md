@@ -1,6 +1,6 @@
 # Kombinezon serwomanipulacyjny Descendants V2
 
-Wersja **1.3.16** dla Barotrauma 1.13.5.0 / LuaCs c6e8829. Identyfikator przedmiotu: `descendantservosuit`. Po aktualizacji **utwórz nowy egzemplarz**, aby otrzymać aktualne komponenty sonaru i skalę przedmiotu na ziemi. Obie strony multiplayera muszą mieć tę samą wersję moda; komunikaty kombinezonu używają teraz protokołu v3.
+Wersja **1.3.17** dla Barotrauma 1.13.5.0 / LuaCs c6e8829. Identyfikator przedmiotu: `descendantservosuit`. Po aktualizacji **utwórz nowy egzemplarz**, aby otrzymać aktualne komponenty sonaru i skalę przedmiotu na ziemi. Obie strony multiplayera muszą mieć tę samą wersję moda; komunikaty kombinezonu używają teraz protokołu v3.
 
 [Otwórz animowany podgląd V2](descendant-suit/index.html). Działa lokalnie, bez instalowania bibliotek. Pokazuje nowy pancerz, oba stany hełmu, ramię, impulsy, iskry, wirniki i dźwięki. To demonstracja zasobów; nie zastępuje próby w grze.
 
@@ -8,7 +8,7 @@ Wersja **1.3.16** dla Barotrauma 1.13.5.0 / LuaCs c6e8829. Identyfikator przedmi
 
 Kombinezon zachowuje smukłe proporcje. Obecna poprawka dodaje trwałe podtrzymywanie celu, wspólną końcówkę promieni, tolerancję ruchu podczas naprawy, chowane panele i natywny sonar. [Zawieszenie osoby i schowane panele](descendant-suit/controls-hold.png), [osobny sonar](descendant-suit/controls-sonar.png), [szersza naprawa](descendant-suit/controls-repair.png), [przedmiot na ziemi](descendant-suit/controls-ground.png), [impuls z końcówki](descendant-suit/controls-pulse.png). Zrzuty pochodzą z gry, z włączonym oświetleniem i bez obróbki obrazu.
 
-Aktualna paczka: `output/MULTI-TOOL-V2-1.3.16-descendant-controls-2026-11-16.zip`. Poprzednie paczki zachowano.
+Aktualna paczka: `output/MULTI-TOOL-V2-1.3.17-descendant-motion-2026-11-17.zip`. Poprzednie paczki zachowano.
 
 Załóż kombinezon w slocie ubrania zewnętrznego. Jeden widoczny panel ma dwa ograniczone sloty: pierwszy na baterię/pręt reaktora, drugi na skrzynkę amunicji lasera pulsacyjnego. Butla nie jest potrzebna. Zasilanie ramienia nie wymaga trzymania narzędzia w ręce. Przycisk „Ramię włączone / Ramię wyłączone” pokazuje stan i przełącza funkcję; ponowne włączenie przywraca ostatni tryb.
 
@@ -41,6 +41,10 @@ AI samo wymienia puste zasilanie i amunicję: najpierw z własnego ekwipunku, po
 
 Przedmiot jest dostępny u sprzedawców badawczych i wojskowych oraz w fabrykatorze. Integracja z rzeczywistymi sklepami i reputacją Descendants pozostaje do dopasowania po udostępnieniu DLC; obecna wersja nie wymaga Home & Harbor.
 
+Rami? porusza przegubami z wyg?adzaniem i ograniczon? pr?dko?ci? obrotu, tak?e na klientach multiplayera. Naprawa i obrona czekaj? na ustawienie narz?dzia; trwaj?cy chwyt zachowuje si?? podczas obrotu. ?wiat?o i promienie pozostaj? przy jego ko?c?wce. Du?a zmiana celu zajmuje chwil? zamiast powodowa? natychmiastowy przeskok.
+
+Automatyczna naprawa nie uruchamia natywnej animacji pracy zwyk?ymi r?kami, kt?ra wymusza?a ruch i kucanie. Mo?na ogl?da? panel naprawianego urz?dzenia. R?czne chodzenie i kucanie pozostaj? dost?pne; rzeczywiste naci?ni?cie natywnej komendy naprawy oddaje urz?dzenie normalnemu sterowaniu. Premia +450% oznacza bazowy mno?nik narz?dzia 5,5? zamiast wcze?niejszego 7?; rzeczywisty czas nadal zale?y od postaci i urz?dzenia.
+
 ## Zasoby
 
 - [Złożony kombinezon — PNG](../MULTI-TOOL-V2/Assets/DescendantSuit/packed-suit.png): osobna ikona ekwipunku i sprite przedmiotu na ziemi, około 86 × 35 jednostek. Wbudowany `image_gen`, oryginalny raster bez zmian; [pełny prompt](descendant-suit/packed-suit-prompt.txt).
@@ -52,7 +56,19 @@ Przedmiot jest dostępny u sprzedawców badawczych i wojskowych oraz w fabrykato
 - Natywna warstwa uszczelniająca korzysta z istniejącej tekstury kombinezonu głębinowego gry; nie skopiowano jej do moda.
 - [Pochodzenie i prompty](descendant-suit/ASSET-SOURCES.md).
 
-## Weryfikacja 1.3.16 — 16 listopada 2026
+## Weryfikacja 1.3.17 — 17 listopada 2026
+
+[Oddzielny test wydajności na dwóch klientach](DESCENDANT-PERFORMANCE.md): 22 scenariusze na każdym kliencie, ramiona i sonary oraz sześciu dodatkowych nosicieli. Wiele napraw powoduje duży mierzalny koszt; wyniki funkcjonalne poniżej nie oznaczają braku spadków FPS.
+
+- **575 testów — OK**, walidacja **17 XML / 58 modułów Lua 5.2**, **21/21 sprawdzeń w Chrome**, bez wyjątków podglądu.
+- **19/19 prób w natywnym singleplayerze**: ograniczona prędkość przegubów, utrzymanie osoby bez klawiszy, korekta punktu podtrzymania przy prawdziwym suficie, panele i sonar, pełna naprawa oraz impuls z poruszającej się końcówki. Maksymalny krok górnego przegubu przy 60 Hz wyniósł 0,06667 rad; punkt chwytu obniżył się z +45 do około +0,82 bez zwolnienia ragdolla. [Wyniki](descendant-suit/motion-native-client.txt).
+- **9/9 etapów rzeczywistego multiplayera lokalnego**: klient otrzymał nowe kąty przegubów i jawny znacznik automatycznej naprawy. Podczas oglądania naprawianego urządzenia zarejestrowano **0** wywołań `UpdateUseItem` i **0** wymuszeń kucania; ręczny ruch i ręczne kucanie zadziałały po 30 próbek. Naprawa osiągnęła 100, umiejętność wzrosła **20 → 22**, `OnRepairComplete` wystąpił raz. [Serwer](descendant-suit/motion-mp-server.txt), [klient](descendant-suit/motion-mp-client.txt).
+- Natywny pocisk i narzędzie miały ten sam początek promienia z błędem poniżej **0,008 jednostki** w SP i MP. W ciasnym pomieszczeniu multiplayera chwyt wybrał niższą kotwicę i pozostał aktywny przez ponad 7 s, z błędem podtrzymania około 0,58 jednostki.
+- Niezależny przegląd wykrył przypadek otwarcia panelu podczas naprawy. Dodano regresję RED/GREEN, znacznik sesji przesyłany w v4 oraz oddawanie urządzenia po prawdziwej ręcznej komendzie naprawy. Powtórny przegląd nie znalazł pozostałych problemów Critical/Important.
+- Próby początkowe wymagały usunięcia konkurujących urządzeń pozostawionych w scenie, znalezienia rzeczywistego sufitu zamiast granicy obszaru powietrza oraz użycia natywnej akcji `Crouch`. Pełny stan naprawy mierzono przed późniejszym zużyciem urządzenia. Są to korekty scenariuszy, uwzględnione w finalnych plikach `tests/runtime/descendant_motion_*`.
+- [Manifest plików i zakres weryfikacji](descendant-suit/motion-verification.txt). Starsze paczki i pomiary zachowano. Zestaw obejmuje jeden lokalny klient; nie obejmuje Steam P2P, dużych opóźnień ani wszystkich modowych ciał i talentów. Próba sufitu potwierdza kontakt z geometrią, a regułę krótkiej utraty widoczności i prowadzenie przy ścianie sprawdzają również regresje Lua.
+
+## Archiwum weryfikacji 1.3.16 — 16 listopada 2026
 
 - **560 testów**, walidacja **17 XML / 57 modułów Lua 5.2**, **21/21 sprawdzeń w rzeczywistym Chrome**, bez wyjątków podglądu.
 - **16/16 prób w rzeczywistym kliencie singleplayer**: sprzęt, bezwład żywego celu po puszczeniu klawiszy, niezależne chowanie paneli, prawdziwy sonar, podtrzymywanie ponad 5 s, puszczenie drugim naciśnięciem, ruch podczas naprawy, natywne nagrody, przedmiot na ziemi i początek impulsu. [Wyniki](descendant-suit/controls-native-client.txt).

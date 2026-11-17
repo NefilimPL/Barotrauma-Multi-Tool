@@ -93,7 +93,7 @@ function pointer(e){const r=canvas.getBoundingClientRect();return {x:(e.clientX-
 canvas.onpointerdown=e=>{const p=pointer(e);drag=targets.find(t=>Math.hypot(t.x-p.x,t.y-p.y)<50);if(drag){canvas.setPointerCapture(e.pointerId);state.targetId=drag.id;}};
 canvas.onpointermove=e=>{if(drag){const p=pointer(e);drag.x=p.x;drag.y=p.y;}};
 canvas.onpointerup=()=>drag=null;canvas.onpointercancel=()=>drag=null;
-let oldOpen=true,oldTarget=null,nextPulse=0,pulseUntil=0;
+let oldOpen=true,oldTarget=null,nextPulse=0,pulseUntil=0,armAngles=null;
 function frame(now){
   const dt=Math.min(.05,(now-last)/1000||1/60);last=now;time+=dt;
   const water=$("water").checked,blocked=$("blocked").checked,hasEnemy=$("enemy").checked;
@@ -109,13 +109,14 @@ function frame(now){
   document.querySelectorAll("[data-mode]").forEach(b=>b.classList.toggle("selected",state.mode===b.dataset.mode));
   document.querySelector('[data-mode="off"]').textContent=state.mode==="off"?"Ramię wyłączone":"Ramię włączone";
   const t=action&&targets.find(t=>t.id===action.target.id),kind=action&&action.kind;
-  const pose=C.toolPose(base,t,{x:500,y:156});
+  const pose=C.smoothToolPose(base,C.toolPose(base,t,{x:500,y:156}),armAngles,dt);armAngles=pose.angles;
   const close=!t||!(kind==="repair"||kind==="weld")||Math.hypot(t.x-pose.muzzle.x,t.y-pose.muzzle.y)<=136;
-  const working=action&&close;
+  const aligned=!t||Math.abs(C.angleDelta(Math.atan2(t.y-pose.muzzle.y,t.x-pose.muzzle.x),pose.angle))<=.07;
+  const working=action&&close&&(kind==="grab"||aligned);
   let energyRate=water&&powered?.12:0;
   if(t&&working){
-    if(kind==="repair"||kind==="weld")t.health=Math.min(1,t.health+dt*(kind==="weld"?.80:.42));
-    if(kind==="combat"&&time>=nextPulse){nextPulse=time+.4;pulseUntil=time+.09;t.health=Math.max(0,t.health-.25);$("ammo").value=String(Math.max(0,Number($("ammo").value)-2.25));one("pulse");}
+    if(kind==="repair"||kind==="weld")t.health=Math.min(1,t.health+dt*(kind==="weld"?.64:.33));
+    if(kind==="combat"&&time>=nextPulse){nextPulse=time+.4;pulseUntil=time+.09;t.health=Math.max(0,t.health-.20);$("ammo").value=String(Math.max(0,Number($("ammo").value)-2.25));one("pulse");}
     if(kind==="grab"&&drag!==t){const blend=1-Math.exp(-dt*12);t.x+=(at.x+180-t.x)*blend;t.y+=(at.y-60-t.y)*blend;}
     const costs={repair:.4,weld:.6,combat:1,grab:.5};
     energyRate+=costs[kind];

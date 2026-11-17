@@ -1,0 +1,69 @@
+WAITING clients=2 actors=8 protocol=bmt.descendant.v4
+BEGIN idle_observer
+phase=idle_observer seconds=25.016 updates=1501 ups=60.00 controller_mean_ms=1.1237 controller_p95_ms=2.1239 controller_p99_ms=2.8597 controller_max_ms=3.9729 active_mean=0.000 grip_mean=0.000 shots=0 repaired=0.000
+BEGIN repair_1
+phase=repair_1 seconds=25.012 updates=1501 ups=60.01 controller_mean_ms=1.6038 controller_p95_ms=3.4333 controller_p99_ms=4.6228 controller_max_ms=8.1294 active_mean=0.141 grip_mean=0.000 shots=0 repaired=131.171
+BEGIN combat_1
+phase=combat_1 seconds=25.004 updates=1500 ups=59.99 controller_mean_ms=1.5953 controller_p95_ms=3.1391 controller_p99_ms=3.9096 controller_max_ms=4.9233 active_mean=0.807 grip_mean=0.000 shots=63 repaired=0.000
+BEGIN grip_1
+phase=grip_1 seconds=25.010 updates=1501 ups=60.02 controller_mean_ms=1.7826 controller_p95_ms=8.4050 controller_p99_ms=10.5219 controller_max_ms=18.2953 active_mean=0.000 grip_mean=0.000 shots=0 repaired=0.000
+BEGIN idle_1
+phase=idle_1 seconds=25.005 updates=1500 ups=59.99 controller_mean_ms=1.1051 controller_p95_ms=2.1623 controller_p99_ms=3.1637 controller_max_ms=4.2126 active_mean=0.000 grip_mean=0.000 shots=0 repaired=0.000
+BEGIN repair_2a
+phase=repair_2a seconds=25.015 updates=1501 ups=60.00 controller_mean_ms=2.0991 controller_p95_ms=4.0692 controller_p99_ms=5.6437 controller_max_ms=17.3555 active_mean=1.717 grip_mean=0.000 shots=0 repaired=1607.070
+BEGIN idle_2
+phase=idle_2 seconds=25.014 updates=1501 ups=60.01 controller_mean_ms=1.1708 controller_p95_ms=2.1460 controller_p99_ms=2.8534 controller_max_ms=3.9160 active_mean=0.000 grip_mean=0.000 shots=0 repaired=0.000
+BEGIN combat_2a
+phase=combat_2a seconds=25.005 updates=1500 ups=59.99 controller_mean_ms=1.8641 controller_p95_ms=3.3388 controller_p99_ms=4.4944 controller_max_ms=6.9669 active_mean=1.743 grip_mean=0.000 shots=128 repaired=0.000
+BEGIN idle_3
+phase=idle_3 seconds=25.017 updates=1501 ups=60.00 controller_mean_ms=1.1992 controller_p95_ms=2.1444 controller_p99_ms=3.0472 controller_max_ms=6.8054 active_mean=0.000 grip_mean=0.000 shots=0 repaired=0.000
+BEGIN grip_2a
+phase=grip_2a seconds=25.012 updates=1501 ups=60.01 controller_mean_ms=2.6259 controller_p95_ms=16.3573 controller_p99_ms=23.0411 controller_max_ms=35.0451 active_mean=0.000 grip_mean=0.000 shots=0 repaired=0.000
+BEGIN idle_4
+phase=idle_4 seconds=25.012 updates=1501 ups=60.01 controller_mean_ms=1.1918 controller_p95_ms=2.2613 controller_p99_ms=3.3601 controller_max_ms=4.9992 active_mean=0.000 grip_mean=0.000 shots=0 repaired=0.000
+BEGIN sonar_2
+phase=sonar_2 seconds=25.001 updates=1501 ups=60.04 controller_mean_ms=1.2490 controller_p95_ms=2.3377 controller_p99_ms=3.0126 controller_max_ms=4.8346 active_mean=0.000 grip_mean=0.000 shots=0 repaired=0.000
+BEGIN idle_5
+phase=idle_5 seconds=25.001 updates=1500 ups=60.00 controller_mean_ms=1.1543 controller_p95_ms=2.0560 controller_p99_ms=2.8793 controller_max_ms=3.6122 active_mean=0.000 grip_mean=0.000 shots=0 repaired=0.000
+BEGIN repair_2b
+phase=repair_2b seconds=25.015 updates=1501 ups=60.00 controller_mean_ms=1.8227 controller_p95_ms=3.7096 controller_p99_ms=5.6341 controller_max_ms=15.9321 active_mean=0.838 grip_mean=0.000 shots=0 repaired=787.562
+BEGIN idle_6
+phase=idle_6 seconds=25.015 updates=1501 ups=60.00 controller_mean_ms=1.0687 controller_p95_ms=1.9763 controller_p99_ms=2.6813 controller_max_ms=3.2241 active_mean=0.000 grip_mean=0.000 shots=0 repaired=0.000
+BEGIN combat_2b
+phase=combat_2b seconds=25.019 updates=1501 ups=59.99 controller_mean_ms=2.0807 controller_p95_ms=3.7296 controller_p99_ms=5.2801 controller_max_ms=10.2240 active_mean=1.739 grip_mean=0.000 shots=127 repaired=0.000
+BEGIN idle_7
+phase=idle_7 seconds=25.011 updates=1501 ups=60.01 controller_mean_ms=1.4667 controller_p95_ms=2.6812 controller_p99_ms=3.4091 controller_max_ms=4.4491 active_mean=0.000 grip_mean=0.000 shots=0 repaired=0.000
+BEGIN repair_8
+phase=repair_8 seconds=25.021 updates=1501 ups=59.99 controller_mean_ms=2.0448 controller_p95_ms=4.8106 controller_p99_ms=8.0052 controller_max_ms=11.4195 active_mean=0.839 grip_mean=0.000 shots=0 repaired=789.703
+BEGIN idle_8
+phase=idle_8 seconds=25.004 updates=1500 ups=59.99 controller_mean_ms=1.3772 controller_p95_ms=2.4987 controller_p99_ms=3.2909 controller_max_ms=7.6502 active_mean=0.000 grip_mean=0.000 shots=0 repaired=0.000
+BEGIN combat_8
+phase=combat_8 seconds=25.003 updates=1501 ups=60.03 controller_mean_ms=2.1814 controller_p95_ms=4.7274 controller_p99_ms=6.8657 controller_max_ms=9.2042 active_mean=1.754 grip_mean=0.000 shots=127 repaired=0.000
+BEGIN combat_8_sonar
+phase=combat_8_sonar seconds=25.008 updates=1501 ups=60.02 controller_mean_ms=2.2360 controller_p95_ms=4.6927 controller_p99_ms=6.6826 controller_max_ms=10.0450 active_mean=1.738 grip_mean=0.000 shots=128 repaired=0.000
+BEGIN idle_final
+phase=idle_final seconds=25.010 updates=1501 ups=60.02 controller_mean_ms=1.3178 controller_p95_ms=2.3278 controller_p99_ms=2.9674 controller_max_ms=5.7907 active_mean=0.000 grip_mean=0.000 shots=0 repaired=0.000
+BEGIN idle_1
+phase=idle_1 seconds=25.019 updates=1502 ups=60.03 controller_mean_ms=1.0695 controller_p95_ms=2.0101 controller_p99_ms=2.6474 controller_max_ms=4.4653 active_mean=0.000 grip_mean=0.000 shots=0 repaired=0.000
+BEGIN grip_1
+phase=grip_1 seconds=25.017 updates=1501 ups=60.00 controller_mean_ms=1.8363 controller_p95_ms=3.4204 controller_p99_ms=4.4754 controller_max_ms=5.9739 active_mean=1.000 grip_mean=1.000 shots=0 repaired=0.000
+BEGIN grip_2a
+phase=grip_2a seconds=25.003 updates=1500 ups=59.99 controller_mean_ms=2.2421 controller_p95_ms=4.1768 controller_p99_ms=5.8066 controller_max_ms=8.1248 active_mean=2.000 grip_mean=2.000 shots=0 repaired=0.000
+BEGIN idle_7
+phase=idle_7 seconds=25.005 updates=1501 ups=60.03 controller_mean_ms=1.3123 controller_p95_ms=2.4113 controller_p99_ms=3.3703 controller_max_ms=8.8181 active_mean=0.000 grip_mean=0.000 shots=0 repaired=0.000
+BEGIN repair_8
+phase=repair_8 seconds=25.013 updates=1501 ups=60.01 controller_mean_ms=4.2266 controller_p95_ms=14.6059 controller_p99_ms=18.3088 controller_max_ms=30.0824 active_mean=6.741 grip_mean=0.000 shots=0 repaired=6121.235
+BEGIN combat_8
+phase=combat_8 seconds=25.013 updates=1501 ups=60.01 controller_mean_ms=4.7193 controller_p95_ms=14.1219 controller_p99_ms=19.9691 controller_max_ms=33.1262 active_mean=6.846 grip_mean=0.000 shots=510 repaired=0.000
+BEGIN combat_8_sonar
+phase=combat_8_sonar seconds=25.003 updates=1500 ups=59.99 controller_mean_ms=4.8651 controller_p95_ms=14.8554 controller_p99_ms=22.0437 controller_max_ms=72.2941 active_mean=6.806 grip_mean=0.000 shots=513 repaired=0.000
+BEGIN idle_final
+phase=idle_final seconds=25.008 updates=1501 ups=60.02 controller_mean_ms=1.3924 controller_p95_ms=2.5834 controller_p99_ms=3.2685 controller_max_ms=3.8563 active_mean=0.000 grip_mean=0.000 shots=0 repaired=0.000
+RESULT phases=22 clients=2 production=1.3.17
+BEGIN sonar_2
+phase=sonar_2 seconds=25.013 updates=1501 ups=60.01 controller_mean_ms=1.2144 controller_p95_ms=2.1812 controller_p99_ms=2.8733 controller_max_ms=3.3695 active_mean=0.000 grip_mean=0.000 shots=0 repaired=0.000
+BEGIN combat_8_sonar
+phase=combat_8_sonar seconds=25.005 updates=1500 ups=59.99 controller_mean_ms=4.7328 controller_p95_ms=14.1877 controller_p99_ms=19.2937 controller_max_ms=34.2863 active_mean=3.969 grip_mean=0.000 shots=504 repaired=0.000
+BEGIN idle_final
+phase=idle_final seconds=25.008 updates=1501 ups=60.02 controller_mean_ms=1.2704 controller_p95_ms=2.2890 controller_p99_ms=2.9033 controller_max_ms=3.7729 active_mean=0.000 grip_mean=0.000 shots=0 repaired=0.000
+RESULT phases=22 clients=2 production=1.3.17

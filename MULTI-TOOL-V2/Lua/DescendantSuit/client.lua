@@ -64,6 +64,7 @@ function M.install(G,E,root)
                 G.states[item]=nil
             else
                 helmet(owner,item,s.open==true)
+                if G.interpolateTool then G.interpolateTool(s,dt) end
                 G.syncSonar(item,s)
                 local entry=channels[item] or {};channels[item]=entry;entry.state=s
                 local active=s.active and s.target and s.target.kind
