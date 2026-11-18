@@ -4,6 +4,10 @@ Wersja robocza zawiera **kombinezon serwomanipulacyjny Descendants** z jednym
 ramieniem do automatycznej naprawy i spawania, obrony lub chwytania celu.
 Wersja V2 ma widoczne sloty baterii/pręta i skrzynki pulsacyjnej, obieg
 oddechowy bez butli, latarki i automatyczną wymianę zapasów przez AI.
+W **1.3.22** wyłączono automatyczne chwytanie postaci przez AI. Bot nadal
+naprawia i broni, ale nie podnosi już nieprzytomnych sojuszników chwytakiem.
+Ręczny chwyt gracza działa jak wcześniej.
+
 W **1.3.21** ramię na lądzie próbuje strzelać ponad sojusznikiem lub niską
 przeszkodą: płynnie unosi lufę i czeka na bezpieczny prześwit. Ściana lub
 zbyt niski sufit nadal blokują ogień. Po usunięciu przeszkody wraca do
@@ -23,7 +27,7 @@ schody i podesty. Zasilany stojak ładuje baterię lub pręt. Mały sonar ma
 skaner minerałów, a podświetlenie wskazuje aktywną funkcję. Obudowa wirnika
 pozostaje nieruchoma, obracają się łopatki; podczas pływania powstają bąbelki.
 [Aktualne próby i porównanie pływania](docs/DESCENDANT-SERVICE.md).
-Paczka: [MULTI-TOOL-V2 1.3.21](output/MULTI-TOOL-V2-1.3.21-descendant-raised-aim-2026-11-18.zip).
+Paczka: [MULTI-TOOL-V2 1.3.22](output/MULTI-TOOL-V2-1.3.22.zip).
 
 Od **1.3.17** ramię płynnie ustawia przeguby, a chwyt dostosowuje punkt
 podtrzymania przy przeszkodach. Naprawa jest nieco wolniejsza, obrażenia
