@@ -1,4 +1,7 @@
 enablecheats
+spawnitem descendantservosuit inventory 1
+spawnitem batterycell inventory 1
+spawnitem pulselaserammobox inventory 1
 spawnitem aegisvacuumpack inventory 1
 spawnitem aegisvacuum inventory 1
 spawnitem aegisheadset inventory 1

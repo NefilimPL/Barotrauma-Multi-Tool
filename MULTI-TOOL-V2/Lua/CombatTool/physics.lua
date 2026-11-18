@@ -54,7 +54,7 @@ function P.install(G,E)
                 E.Game.World.RayCast(function(fixture,point,normal,fraction)
                     if fixture.IsSensor or fixture.CollidesWith==collisionNone then return -1 end
                     local data=fixture.Body.UserData
-                    local kind,target=nil,nil
+                    local kind,target,blocker=nil,nil,nil
                     if is(data,'Limb') then
                         if not wallsOnly and data.character and data.character.Submarine==sub
                             and not data.character.Removed and not data.character.IsDead
@@ -62,20 +62,20 @@ function P.install(G,E)
                             kind,target='character',data.character
                         end
                     elseif is(data,'Structure') then
-                        if data.Submarine==sub then kind='wall' end
+                        if data.Submarine==sub then kind='wall';blocker=data end
                     else
                         local item=is(data,'Item') and data or is(fixture.UserData,'Item') and fixture.UserData
                         if not item and is(data,'Items.Components.ItemComponent') then item=data.Item end
                         if item then
                             local door=U.component(item,'Door')
-                            if door and item.Submarine==sub and not door.CanBeTraversed then kind='wall' end
+                            if door and item.Submarine==sub and not door.CanBeTraversed then kind='wall';blocker=item end
                         elseif not sub and data and not is(data,'Submarine') and
                             (E.LuaUserData.IsTargetType(data,'Voronoi2.VoronoiCell') or is(data,'LevelObject')) then kind='wall' end
                     end
                     if kind and (not nearest or fraction<nearest.t) then
                         local world=E.ConvertUnits.ToDisplayUnits(point)+offset
                         -- Return the center of the swept ring, not the offset rail.
-                        nearest={t=fraction,x=world.X-rx,y=world.Y-ry,nx=normal.X,ny=normal.Y,kind=kind,target=target}
+                        nearest={t=fraction,x=world.X-rx,y=world.Y-ry,nx=normal.X,ny=normal.Y,kind=kind,target=target,blocker=blocker}
                     end
                     return 1
                 end,va,vb,collisionMask)

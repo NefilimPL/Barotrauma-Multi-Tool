@@ -1,0 +1,44 @@
+READY waiting for joined client probe
+PASS 1 client={mode=repair active=true open=true oxygen=97.08779907226562 sparks=34 renderer=ok} server={server mode=repair energy=99.21983337402344 tank=200}
+PASS 2 client={mode=combat active=true open=true oxygen=95.22736358642578 sparks=0 renderer=ok} server={server mode=combat energy=97.05937194824219 tank=200}
+TRACE grab aim=true use=false cursorDistance=277.89276123046875 portable=true range=249.38721061908728 visible=true across=52.80275937533684 target=nil
+TRACE grab aim=true use=false cursorDistance=288.77093505859375 portable=true range=257.74327113845703 visible=true across=90.46405938281976 target=nil
+TRACE grab aim=true use=false cursorDistance=308.3458557128906 portable=true range=275.1501868866756 visible=true across=137.50164904805285 target=nil
+TRACE grab aim=true use=false cursorDistance=253.54737854003906 portable=true range=277.66661749626815 visible=true across=69.85679184419493 target=nil
+TRACE grab aim=true use=false cursorDistance=235.21051025390625 portable=true range=276.92983994744804 visible=true across=1.9265675810761183 target=nil
+TRACE grab aim=true use=false cursorDistance=235.59461975097656 portable=true range=276.5751279431664 visible=true across=1.1598079340427876 target=nil
+TRACE grab aim=true use=false cursorDistance=235.78587341308594 portable=true range=276.3985395036774 visible=true across=0.5852244155122195 target=nil
+TRACE grab aim=true use=false cursorDistance=235.88262939453125 portable=true range=276.3141327724166 visible=true across=0.29665193519617833 target=nil
+TRACE grab aim=true use=true cursorDistance=235.9125213623047 portable=true range=276.28959460009963 visible=true across=0.119338181498137 target=5554
+TRACE grab aim=true use=true cursorDistance=235.90892028808594 portable=true range=276.28983811258206 visible=true across=0.00809963261003007 target=5554
+TRACE grab aim=true use=true cursorDistance=235.90892028808594 portable=true range=276.28998136521216 visible=true across=0.00809963261003007 target=5554
+TRACE grab aim=true use=false cursorDistance=239.12994384765625 portable=true range=272.98592072989686 visible=true across=1.7920891252556694 target=5554
+TRACE grab aim=true use=false cursorDistance=253.4962921142578 portable=true range=258.54716705125986 visible=true across=9.90414303556657 target=5554
+TRACE grab aim=true use=false cursorDistance=277.7534484863281 portable=true range=235.1999185654647 visible=true across=23.387649488496457 target=5554
+TRACE grab aim=true use=false cursorDistance=306.5510559082031 portable=true range=205.81567867329582 visible=true across=27.683793675116664 target=5554
+TRACE grab aim=true use=false cursorDistance=339.6864929199219 portable=true range=176.03388770746764 visible=true across=44.946128259317945 target=5554
+TRACE grab aim=true use=false cursorDistance=373.467041015625 portable=true range=150.66380166426268 visible=true across=65.40289361925491 target=5554
+TRACE grab aim=true use=false cursorDistance=376.8528747558594 portable=true range=129.9311737830874 visible=true across=40.1932883162325 target=5554
+TRACE grab aim=true use=false cursorDistance=391.7204895019531 portable=true range=113.21441979576612 visible=true across=45.681241301328306 target=5554
+TRACE grab aim=true use=false cursorDistance=402.1351013183594 portable=true range=101.22331419262771 visible=true across=49.38378483358091 target=5554
+TRACE grab aim=true use=false cursorDistance=397.507568359375 portable=true range=91.81298534933666 visible=true across=23.321723800533043 target=5554
+TRACE grab aim=true use=false cursorDistance=403.4439697265625 portable=true range=102.27304074178734 visible=true across=10.101959537036342 target=5554
+TRACE grab aim=true use=false cursorDistance=414.20831298828125 portable=true range=92.38499600361634 visible=true across=1.2210825132706418 target=5554
+TRACE grab aim=true use=false cursorDistance=425.7666320800781 portable=true range=80.38952195052374 visible=true across=8.359934767931037 target=5554
+PASS 3 client={mode=grab active=true open=true oxygen=94.04193115234375 sparks=0 renderer=ok} server={server mode=grab energy=96.40119171142578 tank=200}
+TRACE grab aim=true use=false cursorDistance=2274.396240234375 portable=true range=2614.8976908552822 visible=false across=1837.1930824313758 target=nil
+TRACE grab aim=true use=false cursorDistance=2261.4912109375 portable=true range=2604.7609035460187 visible=false across=1818.8767263165932 target=nil
+TRACE grab aim=true use=false cursorDistance=2248.3720703125 portable=true range=2596.0988608843863 visible=false across=1794.5392761059752 target=nil
+TRACE grab aim=true use=false cursorDistance=2235.376953125 portable=true range=2588.22836205068 visible=false across=1765.394302383491 target=nil
+TRACE grab aim=true use=false cursorDistance=2234.596923828125 portable=true range=2582.1901631699084 visible=false across=1787.2574602157736 target=nil
+TRACE grab aim=true use=false cursorDistance=2064.210693359375 portable=true range=2580.559649290949 visible=false across=11.53341511452388 target=nil
+TRACE grab aim=true use=false cursorDistance=2064.156005859375 portable=true range=2580.737713821404 visible=false across=7.927875575134558 target=nil
+TRACE grab aim=true use=false cursorDistance=2064.119873046875 portable=true range=2580.7344564831546 visible=false across=5.488872339491821 target=nil
+TRACE grab aim=true use=false cursorDistance=2064.09912109375 portable=true range=2580.6723373184805 visible=false across=2.9419220448615033 target=nil
+TRACE grab aim=true use=false cursorDistance=2064.082763671875 portable=true range=2580.6363161252852 visible=false across=1.8616474778262355 target=nil
+PASS 4 client={mode=off active=false open=false oxygen=99.16666412353516 sparks=0 renderer=ok} server={server mode=off energy=96.14733123779297 tank=199.0240478515625}
+PASS 5 client={mode=off active=false open=true oxygen=90.9339828491211 sparks=0 renderer=ok} server={server mode=off energy=100 tank=198.9239501953125}
+PASS 6 client={mode=off active=false open=true oxygen=89.50973510742188 sparks=0 renderer=ok} server={server mode=off energy=100 tank=198.9239501953125}
+PASS 7 client={mode=off active=false open=true oxygen=87.90229797363281 sparks=0 renderer=ok} server={server mode=off energy=100 tank=198.9239501953125}
+PASS 8 client={mode=repair active=true open=true oxygen=92.80307006835938 sparks=35 renderer=ok} server={server mode=repair energy=99.7047119140625 tank=198.9239501953125}
+RESULT passed=8 failed=0 real_client=true

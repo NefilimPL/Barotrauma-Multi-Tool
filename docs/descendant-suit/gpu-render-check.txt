@@ -1,0 +1,2 @@
+air plates=14 device=10 energy=99.50656127929688 tank=200 pressure=10000 open=true active=true swimming=false sparks=34 renderError=nil
+water plates=14 device=9.483341217041016 energy=98.37117004394531 tank=199.3994140625 pressure=10000 open=false active=false swimming=true sparks=5 renderError=nil

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<infotexts language="Polish" nowhitespace="false" translatedname="Polski">
+  <entityname.descendantservosuit>Kombinezon serwomanipulacyjny Descendants</entityname.descendantservosuit>
+  <entitydescription.descendantservosuit>Egzoszkielet do 10 000 m z kompaktowym trzecim ramieniem i latarkami. Wybierz naprawę/spawanie, obronę pulsacyjną lub chwytak. Dwa widoczne sloty mieszczą baterię/pręt oraz skrzynkę amunicji lasera pulsacyjnego. Obieg oddechowy potrzebuje zasilania, bez butli. AI wymienia puste zapasy. Naprawy uwzględniają umiejętności i talenty ukończenia naprawy. Wymaga LuaCs.</entitydescription.descendantservosuit>
+  <descendant.title>Ramię serwomanipulacyjne</descendant.title>
+  <descendant.off>Ramię wyłączone</descendant.off>
+  <descendant.on>Ramię włączone</descendant.on>
+  <descendant.ammo>Strzały</descendant.ammo>
+  <descendant.closedloop>Zamknięty obieg oddechowy</descendant.closedloop>
+  <descendant.repair>Naprawa / spawanie</descendant.repair>
+  <descendant.combat>Obrona</descendant.combat>
+  <descendant.grab>Chwytak</descendant.grab>
+  <descendant.grab_short>[InputType.Aim] + [InputType.Use]: złap / puść</descendant.grab_short>
+  <descendant.grab_help>Wskaż cel kursorem. Przytrzymaj [InputType.Aim] i naciśnij [InputType.Use], potem puść klawisze. Cel pozostaje podtrzymywany w powietrzu. Ponowne naciśnięcie podczas celowania puszcza go. Osoby stają się chwilowo bezwładne. Jeden luźny przedmiot albo istota, z wyjątkiem masywnych; zasięg 300. Zmiana trybu, przeszkoda, utrata zasilania lub zdjęcie kombinezonu zwalnia chwyt.</descendant.grab_help>
+  <descendant.arm_tab>Ramię</descendant.arm_tab>
+  <descendant.hide_panel>Schowaj panel; funkcja pozostaje włączona</descendant.hide_panel>
+  <descendant.sonar>Sonar</descendant.sonar>
+  <descendant.sonar_on>Sonar włączony</descendant.sonar_on>
+  <descendant.sonar_off>Sonar wyłączony</descendant.sonar_off>
+  <descendant.sonar_active>Aktywny</descendant.sonar_active>
+  <descendant.sonar_passive>Pasywny</descendant.sonar_passive>
+  <descendant.no_power>Brak zasilania</descendant.no_power>
+  <descendant.power>Zasilanie</descendant.power>
+  <descendant.air>Powietrze</descendant.air>
+  <descendant.tank>Butla tlenowa</descendant.tank>
+  <descendant.minerals>Skanowanie minerałów</descendant.minerals>
+</infotexts>

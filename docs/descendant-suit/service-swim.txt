@@ -1,0 +1,6 @@
+variant=divingsuit powered=true speed_mean=2.22566 displacement_speed=2.22564 swim_stat=0.000 samples=241 thrust_ticks=0
+variant=abyssdivingsuit powered=true speed_mean=1.81347 displacement_speed=1.81366 swim_stat=-0.200 samples=241 thrust_ticks=0
+variant=pucs powered=true speed_mean=2.32619 displacement_speed=2.32635 swim_stat=0.050 samples=241 thrust_ticks=0
+variant=descendantservosuit powered=true speed_mean=2.33609 displacement_speed=2.33643 swim_stat=0.000 samples=241 thrust_ticks=241
+variant=descendantservosuit powered=false speed_mean=2.22566 displacement_speed=2.22565 swim_stat=0.000 samples=241 thrust_ticks=0
+RESULT variants=5 native=true

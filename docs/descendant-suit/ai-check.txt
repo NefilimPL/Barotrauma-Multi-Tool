@@ -1,0 +1,1 @@
+bot=true mode=repair device=23.500051498413086 energy=99.77546691894531 active=true renderError=nil worn=true dead=false tank=200 pressure=10000 open=true

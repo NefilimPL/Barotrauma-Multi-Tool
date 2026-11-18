@@ -1,0 +1,12 @@
+HELLO real joined client
+PASS 1 native slots + snapshot
+PASS 2 live ragdoll visible, keys released
+PASS 3 native left sonar and collapsed right UI
+PASS 4 passive + compact radar only; minerals inactive
+PASS 5 released snapshot + ragdoll
+PASS 6 full native repair after wearer moved
+PASS 7 pulse endpoint replicated; origin rendered
+PASS 8 second latch acquired
+PASS 9 empty battery release replicated
+PASS 10 native wall welding replicated
+DONE real joined client

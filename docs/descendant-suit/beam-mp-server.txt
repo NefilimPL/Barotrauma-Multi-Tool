@@ -1,0 +1,13 @@
+WAITING for real joined client
+READY real joined client; protocol=bmt.descendant.v5
+PASS 1 server=native inventory replicated client=native slots + snapshot
+PASS 2 server=latch=7.049999999993588s anchorError=0.01746928133070469 client=live ragdoll visible, keys released
+PASS 3 server=native sonar powered while gripping client=native left sonar and collapsed right UI
+PASS 4 server=passive mode authorized; latch retained client=passive + compact radar only; minerals inactive
+PASS 5 server=released by client second press client=released snapshot + ragdoll
+PASS 6 server=condition=100 skill=22 nativeCompletions=1 client=full native repair after wearer moved
+PASS 7 server=shots=4 originError=0.004367320332676172 client=pulse endpoint replicated; origin rendered
+PASS 8 server=power drained during a second live latch client=second latch acquired
+PASS 9 server=power loss safely restored ragdoll client=empty battery release replicated
+PASS 10 server=native remaining wall damage=0 client=native wall welding replicated
+RESULT passed=10 failed=0 real_joined_client=true

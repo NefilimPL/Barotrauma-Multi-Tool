@@ -130,7 +130,8 @@ function M.install(G,E)
         local historical
         local fixture=p['target']
         local limb=fixture and fixture.Body.UserData
-        if scan and limb and E.LuaUserData and E.LuaUserData.IsTargetType(limb,'Barotrauma.Limb') then
+        -- LagCompensatedBody is only compiled into the server's Limb type.
+        if E.SERVER and scan and limb and E.LuaUserData and E.LuaUserData.IsTargetType(limb,'Barotrauma.Limb') then
             local body=limb.LagCompensatedBody
             if body and fixture.Body==body.FarseerBody then
                 local delta=E.ConvertUnits.ToDisplayUnits(E.Vector2(body.SimPosition.X-limb.body.SimPosition.X,

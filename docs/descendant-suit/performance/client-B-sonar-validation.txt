@@ -1,0 +1,2 @@
+phase=sonar_2 samples=1500 powered=1500 visible=1500
+phase=combat_8_sonar samples=1499 powered=1499 visible=1499

@@ -1,0 +1,4 @@
+PASS raised rest pose right tipAboveMount=68.13464760189527 drawError=nil
+PASS left-facing rest render drawError=nil
+PASS working grab render and physical pull drawError=nil
+DONE native visual probe; zoom=2, original lighting enabled

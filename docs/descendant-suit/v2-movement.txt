@@ -1,0 +1,1 @@
+WalkingSpeed modifier=0 MovementSpeed modifier=0 pressure=10000

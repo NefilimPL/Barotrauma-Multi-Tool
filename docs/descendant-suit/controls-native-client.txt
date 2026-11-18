@@ -1,0 +1,17 @@
+PASS native equipment and folded item metadata pressure=10000 scale=0.05999999865889549 repairBonus=6
+PASS start latched human grip single Aim+Use press scheduled
+PASS native human ragdoll acquired with released keys mass=10.75822639465332 forced=true keys=false
+PASS right menu collapses without releasing grip mode=grab
+PASS enable optional left native sonar requested=true
+PASS left sonar draws real native HUD while arm stays latched voltage=1 viewWidth=302
+PASS left sonar panel collapses independently both panels collapsed; sonar stays powered
+PASS human stays airborne beyond old 5-second limit duration=6.899999999999611 anchorError=0.03221176192164421 lift=45.03125
+PASS request release with second press second Aim+Use scheduled
+PASS second press releases native ragdoll released=true; repair skill=20
+PASS native repair starts from wider nozzle beam condition=10.0450439453125 moved wearer 25 units
+PASS repair keeps contact across a small range movement condition=27.70269775390625 completionEvents=0
+PASS native faster completion retains skill reward condition=100 skill=22 completions=1
+PASS dropped suit uses folded ground sprite displayWidth=85.67999808490276
+PASS prepare native pulse in water outside submarine
+PASS native pulse starts at common tool muzzle shots=3 nativeOriginError=0.004367320332676172
+RESULT passed=16 failed=0 native=true

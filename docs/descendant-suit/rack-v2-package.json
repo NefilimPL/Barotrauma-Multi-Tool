@@ -1,0 +1,9 @@
+{
+  "archive": "MULTI-TOOL-V2-1.3.19-descendant-rack-2026-11-17.zip",
+  "files": 127,
+  "bytes": 28515852,
+  "sha256": "adec4029a27b00c3de481ac0db45450e9331488c614e844b44a46f532623fe99",
+  "native_client_files": "byte-identical",
+  "asset": "unaltered built-in image_gen output",
+  "validation": "17XML/59Lua;591 tests; native three-locker visual comparison inspected"
+}

@@ -1,0 +1,11 @@
+HELLO real joined client
+PASS 1 native slots + snapshot
+PASS 2 live ragdoll visible, keys released
+PASS 3 native left sonar and collapsed right UI
+PASS 4 passive + both panels collapsed
+PASS 5 released snapshot + ragdoll
+PASS 6 repair complete; useCalls=0 forced=0 movementSamples=30 manualCrouchSamples=30 jointSamples=360
+PASS 7 pulse endpoint replicated; origin rendered
+PASS 8 second latch acquired
+PASS 9 empty battery release replicated
+DONE real joined client

@@ -1,5 +1,43 @@
 # Barotrauma-Multi-Tool
 
+Wersja robocza zawiera **kombinezon serwomanipulacyjny Descendants** z jednym
+ramieniem do automatycznej naprawy i spawania, obrony lub chwytania celu.
+Wersja V2 ma widoczne sloty baterii/pręta i skrzynki pulsacyjnej, obieg
+oddechowy bez butli, latarki i automatyczną wymianę zapasów przez AI.
+W **1.3.20** tryb obronny używa pomniejszonej oryginalnej lufy lasera
+pulsacyjnego i jego tekstury promienia. Usunięto dublowane czerwone linie;
+chwytak i naprawa mają miękką poświatę zamiast prostokątnych pasów.
+[Wygląd i próby w grze](docs/DESCENDANT-BEAMS.md).
+
+W **1.3.19** szafka z szybą pokazuje duży hełm i fragment tułowia od przodu,
+zanikające w przyciemnionym szkle, zgodnie z grafikami podstawowej gry.
+[Porównanie z natywnymi kombinezonami](docs/DESCENDANT-RACK.md).
+
+W **1.3.18** chwyt utrzymuje ciało wyżej podczas biegu i przepuszcza je przez
+schody i podesty. Zasilany stojak ładuje baterię lub pręt. Mały sonar ma
+skaner minerałów, a podświetlenie wskazuje aktywną funkcję. Obudowa wirnika
+pozostaje nieruchoma, obracają się łopatki; podczas pływania powstają bąbelki.
+[Aktualne próby i porównanie pływania](docs/DESCENDANT-SERVICE.md).
+Paczka: [MULTI-TOOL-V2 1.3.20](output/MULTI-TOOL-V2-1.3.20-descendant-beams-2026-11-17.zip).
+
+Od **1.3.17** ramię płynnie ustawia przeguby, a chwyt dostosowuje punkt
+podtrzymania przy przeszkodach. Naprawa jest nieco wolniejsza, obrażenia
+impulsu zmniejszono o 20%, a automatyczna naprawa nie wymusza kucania
+ani ruchu postaci, również podczas oglądania panelu urządzenia.
+Chwyt podtrzymuje cel po puszczeniu klawiszy, oba panele można
+schować, a opcjonalny natywny sonar ma własny widok po lewej. Naprawa ma
+większy zasięg i tolerancję ruchu, a promienie wychodzą z końcówki narzędzia.
+[Podgląd tekstur, animacji i dźwięków](docs/descendant-suit/index.html) ·
+[Używanie i rzeczywisty zakres weryfikacji](docs/DESCENDANT-SUIT.md).
+Weryfikacja obejmuje testy regresji, klienta GPU i lokalny multiplayer.
+Szczegóły i granice próby opisano w dokumentacji. Po aktualizacji zrestartuj
+grę i serwer; obie strony potrzebują protokołu kombinezonu v5.
+
+[Pomiar FPS na dwóch rzeczywistych klientach](docs/DESCENDANT-PERFORMANCE.md)
+wykazał wyraźny narzut wielu napraw naraz: około 65% niższe FPS przy ośmiu
+włączonych naprawach w scenie testowej. Raport zawiera również czasy klatek,
+pojedyncze przycięcia, obciążenie serwera i ograniczenia porównania.
+
 Wersja **1.3.15** zatrzymuje także lokalnie przewidywane trafienie pocisku
 w tarczę. W 1.3.14 serwer blokował obrażenia i smuga kończyła się na tarczy,
 ale klient nadal chwilowo naliczał ranę i ból, po czym synchronizacja
@@ -182,6 +220,38 @@ Następnie użyj wybranej komendy. `inventory` tworzy przedmiot w ekwipunku
 kontrolowanej postaci. Na serwerze potrzebujesz uprawnień do tych komend.
 Komendy kopiuj przyciskiem kopiowania bloku kodu. Dostępne są też w
 [zwykłym pliku tekstowym](docs/spawn-commands.txt).
+
+Kombinezon serwomanipulacyjny Descendants V2 z baterią i amunicją do testowania:
+
+```text
+spawnitem descendantservosuit inventory 1
+spawnitem batterycell inventory 1
+spawnitem pulselaserammobox inventory 1
+```
+
+Załóż kombinezon w slocie ubrania zewnętrznego. Do pierwszego slotu włóż
+baterię albo pręt reaktora (`spawnitem fuelrod inventory 1`), do drugiego
+skrzynkę amunicji lasera pulsacyjnego. Butla nie jest potrzebna — obieg
+oddechowy korzysta z zasilania kombinezonu. Po aktualizacji utwórz nowy egzemplarz,
+aby otrzymać aktualne komponenty i skalę złożonego przedmiotu na ziemi.
+W panelu po prawej wybierz naprawę/spawanie, obronę lub chwytak.
+Przycisk „Ramię włączone/wyłączone” przełącza funkcję ramienia.
+Chwytak: wybierz ten tryb, wskaż cel kursorem, przytrzymaj **PPM (Celuj)**
+i naciśnij **E (Użyj)**, potem puść klawisze. Cel pozostaje zawieszony,
+a osoba staje się chwilowo bezwładna. Ponowne E przy trzymanym PPM puszcza cel.
+Przy zmienionym sterowaniu użyj przycisków pokazanych w panelu kombinezonu.
+Łapie jeden luźny, ruchomy przedmiot albo istotę poniżej limitu masy;
+nie wyrywa zamocowanych urządzeń ani rzeczy z ekwipunków.
+Zasięg wynosi 300 jednostek gry. Chwyt gracza nie ma limitu 5 sekund;
+zmiana trybu, przeszkoda, wyjście poza zasięg, brak energii lub zdjęcie
+kombinezonu zwalnia cel. Nie trzeba trzymać narzędzia w ręce.
+Przycisk `»` chowa prawy panel; zakładka **Ramię** otwiera go ponownie.
+**Sonar** otwiera niezależny panel po lewej. Jego przycisk zasilania oraz
+tryby aktywny/pasywny sterują natywnym sonarem. `«` zwija go do małego radaru,
+a `+` rozwija ustawienia. Wyłączony i zwinięty sonar jest niewidoczny.
+**Minerały** włącza skaner w trybie aktywnym. Sonar wyłącz
+jego przyciskiem zasilania, jeśli ma przestać pobierać energię i nadawać impulsy.
+[Pełna instrukcja kombinezonu](docs/DESCENDANT-SUIT.md).
 
 Odkurzacz Aegis:
 

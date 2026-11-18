@@ -1,0 +1,1 @@
+pauseClient + clear: expected native LightSource.Remove calls=4 observed=4
