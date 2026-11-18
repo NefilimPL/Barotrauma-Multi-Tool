@@ -36,7 +36,7 @@ class DescendantSuitTests(LuaCase):
             assert(C.choose('repair',{wall,device})==nil)
         """)
 
-    def test_ai_chooses_a_single_function_and_can_rescue_crew(self):
+    def test_ai_chooses_combat_or_repair_without_grabbing_crew(self):
         self.lua.execute("""
             local C=require('DescendantSuit.core')
             local enemy={id=3,kind='combat',distance=200,visible=true,hostile=true,alive=true}
@@ -46,7 +46,8 @@ class DescendantSuitTests(LuaCase):
             local mode,target=C.ai({enemy,wall,device,rescue})
             assert(mode=='combat' and target==enemy)
             mode,target=C.ai({wall,device,rescue});assert(mode=='repair' and target==wall)
-            mode,target=C.ai({rescue});assert(mode=='grab' and target==rescue)
+            mode,target=C.ai({rescue});assert(mode=='off' and target==nil,'AI grabbed an unconscious crewmate')
+            assert(C.choose('grab',{rescue},rescue.id)==rescue,'manual grab is unavailable')
         """)
 
     def test_blocked_allied_dead_and_contained_targets_are_excluded(self):
@@ -148,6 +149,33 @@ class DescendantAdapterTests(LuaCase):
 
     def test_paused_singleplayer_does_not_advance_suit_simulation(self):
         self.lua.execute("E.Game.Paused=true;G.now=5;G.update(.1);assert(G.now==5 and battery.Condition==50)")
+
+    def test_bot_scans_for_threats_without_grabbing_characters(self):
+        self.lua.execute("""
+            local crew={ID=1,isCharacter=true,Mass=70,IsUnconscious=true,WorldPosition={X=40,Y=0},
+                AnimController={Collider={Mass=70,Enabled=true,BodyType=2}}}
+            local enemy={ID=2,isCharacter=true,Mass=70,WorldPosition={X=80,Y=0},
+                AnimController={Collider={Mass=70,Enabled=true,BodyType=2}}}
+            E.Character={CharacterList={wearer,crew,enemy}}
+            E.Structure={WallList={}};E.Item={ItemList={}}
+            E.Util={GetItemGroup=function() return {} end}
+            G.mount=function() return {x=0,y=0} end
+            G.ally=function(a,b) return b==crew end
+            G.visible=function() return true end
+            G.visibleFromTool=function() return true end
+            local s=G.state(suit)
+            wearer.IsBot=true
+            for _,mode in ipairs({'off','grab'}) do
+                s.mode=mode
+                local targets=G.gather(wearer,s)
+                assert(#targets==1 and targets[1].kind=='combat' and targets[1].entity==enemy,
+                    'bot considered a character for automatic grabbing')
+            end
+            wearer.IsBot=false;s.mode='grab'
+            local targets=G.gather(wearer,s)
+            assert(#targets==2 and targets[1].entity==crew and targets[2].entity==enemy)
+            assert(targets[1].kind=='grab' and targets[2].kind=='grab','player cannot grab characters')
+        """)
 
     def test_temporary_occlusion_does_not_switch_to_another_device_during_grace(self):
         self.lua.execute("""

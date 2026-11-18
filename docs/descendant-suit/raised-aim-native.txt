@@ -1,0 +1,8 @@
+PASS dry standing setup room=2480x288 removedCeilings=0
+PASS clear line uses ordinary low aim shots=4
+PASS arm rises before firing over standing ally shots=5 maxMuzzleLift=79.78922192874597 allyVitality=100
+PASS stable clearance returns arm to ordinary aim ordinary aim restored
+PASS articulated arm fires over real low wall shots=4
+PASS full wall blocks all fire ammo unchanged
+PASS low ceiling prevents unsafe overhead shot ammo unchanged
+RESULT passed=7 failed=0 native_dry_npc_and_structures=true

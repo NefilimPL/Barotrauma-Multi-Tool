@@ -135,9 +135,6 @@ function M.ai(targets)
     if combat then return 'combat',combat end
     local repair=M.choose('repair',targets)
     if repair then return 'repair',repair end
-    for _,t in ipairs(targets) do
-        if t.rescue then local grab=M.choose('grab',{t},t.id);if grab then return 'grab',grab end end
-    end
     return 'off',nil
 end
 function M.aimGrab(origin,cursor,targets)

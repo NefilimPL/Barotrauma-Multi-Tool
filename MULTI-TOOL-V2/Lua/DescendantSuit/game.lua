@@ -122,6 +122,12 @@ function M.new(E)
         return false
     end
     function G.visibleFromTool(owner,state,target,planned)
+        if G.planShot then
+            -- A cached plan keeps the target through a brief new obstruction
+            -- until its next bounded probe. Actual fire always rechecks LOS.
+            if planned then return G.planShot(owner,state,target)~=nil end
+            return G.shotPathClear(owner,G.toolPose(owner,state),target)
+        end
         local base,rotation,facing=G.mount(owner)
         local muzzle
         if planned then
@@ -218,10 +224,9 @@ function M.new(E)
                     if not friendly and not other.IsDead and (automatic or s.mode=='combat') then
                         add({id='c'..other.ID,kind='combat',entity=other,point=position(other),hostile=true,alive=true},C.combatRange)
                     end
-                    if automatic or s.mode=='grab' then
+                    if not automatic and s.mode=='grab' then
                         if G.grabbable(other) then
-                            add({id='g'..other.ID,kind='grab',entity=other,point=position(other),free=true,
-                                rescue=friendly and other.IsUnconscious},C.grabRange)
+                            add({id='g'..other.ID,kind='grab',entity=other,point=position(other),free=true},C.grabRange)
                         end
                     end
                 end

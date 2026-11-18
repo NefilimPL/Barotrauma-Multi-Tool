@@ -1,0 +1,6 @@
+HELLO real joined client
+PASS 1 native snapshot shots=6 muzzleLift=-7.112592111006961 frames=181
+PASS 2 native snapshot shots=13 muzzleLift=65.45068484457443 frames=362
+PASS 3 native snapshot shots=20 muzzleLift=-7.154612486294354 frames=543
+PASS 4 native snapshot shots=27 muzzleLift=65.44510251875909 frames=724
+DONE real joined client

@@ -1,0 +1,7 @@
+WAITING real joined client
+READY room=976x288 server_authority=true
+PASS 1 server=shots=6 raised=false allyVitality=100 client=native snapshot shots=6 muzzleLift=-7.112592111006961 frames=181
+PASS 2 server=shots=6 raised=true allyVitality=100 client=native snapshot shots=13 muzzleLift=65.45068484457443 frames=362
+PASS 3 server=shots=6 raised=false allyVitality=100 client=native snapshot shots=20 muzzleLift=-7.154612486294354 frames=543
+PASS 4 server=shots=6 raised=true allyVitality=100 client=native snapshot shots=27 muzzleLift=65.44510251875909 frames=724
+RESULT passed=4 failed=0 real_joined_client=true
