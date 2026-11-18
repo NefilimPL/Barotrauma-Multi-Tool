@@ -6,6 +6,7 @@ return {
     weldRate=64, grabDuration=5,
     shotInterval=.4,shotPower=.4,ammoCost=2.25,shotDamage=20,
     jointEase=.075,jointSpeed=7,headSpeed=12,replicaEase=.045,toolAngleTolerance=.1,repairTrackingWidth=10,
+    aimProbeInterval=.12,aimLowerDelay=.5,aimPositionTolerance=12,
     gripOcclusionGrace=3,gripReleaseRange=380,gripProbeInterval=.12,
     rates={repair=.4,weld=.6,combat=1,grab=.5,swim=.12}, rodMultiplier=.25,
     lifeSupportRate=.03,lightRate=.01,airOxygen=50, airPressure=20,

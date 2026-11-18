@@ -122,6 +122,12 @@ function M.new(E)
         return false
     end
     function G.visibleFromTool(owner,state,target,planned)
+        if G.planShot then
+            -- A cached plan keeps the target through a brief new obstruction
+            -- until its next bounded probe. Actual fire always rechecks LOS.
+            if planned then return G.planShot(owner,state,target)~=nil end
+            return G.shotPathClear(owner,G.toolPose(owner,state),target)
+        end
         local base,rotation,facing=G.mount(owner)
         local muzzle
         if planned then

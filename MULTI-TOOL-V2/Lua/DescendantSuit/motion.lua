@@ -45,8 +45,11 @@ function M.install(G,E)
             state.toolAngles={upper=M.delta(state.toolAngles.upper+M.delta(state.toolRotation,rotation),0),
                 lower=state.toolAngles.lower,head=state.toolAngles.head}
         end
-        local wanted=M.angles(Core.toolPose(base,point,rest,facing,rotation,gap),rotation)
-        if point then
+        local combat=state.target and state.target.kind=='combat' and G.planShot
+        local planned=combat and G.planShot(owner,state,state.target)
+        if not combat then state.combatAim=nil;state.aimCandidate=nil end
+        local wanted=M.angles(planned or Core.toolPose(base,point,rest,facing,rotation,gap),rotation)
+        if point and not planned then
             local other=M.angles(Core.toolPose(base,point,rest,-facing,rotation,gap),rotation)
             local function cost(a)
                 return M.delta(a.upper,state.toolAngles.upper)^2+M.delta(a.lower,state.toolAngles.lower)^2
@@ -72,6 +75,11 @@ function M.install(G,E)
     end
     function G.armReady(owner,state,target)
         local pose=G.toolPose(owner,state)
+        if target.kind=='combat' and G.planShot then
+            local planned,raised=G.planShot(owner,state,target)
+            if not planned then return false end
+            if raised and (planned.tip.x-pose.tip.x)^2+(planned.tip.y-pose.tip.y)^2>C.aimPositionTolerance^2 then return false end
+        end
         local dx,dy=target.point.x-pose.muzzle.x,target.point.y-pose.muzzle.y
         if target.kind=='repair' or target.kind=='weld' then
             local forward=dx*math.cos(pose.angle)+dy*math.sin(pose.angle)

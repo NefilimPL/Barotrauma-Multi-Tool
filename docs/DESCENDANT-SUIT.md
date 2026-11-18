@@ -1,16 +1,17 @@
 # Kombinezon serwomanipulacyjny Descendants V2
 
-Wersja **1.3.20** dla Barotrauma 1.13.5.0 / LuaCs c6e8829. Identyfikator przedmiotu: `descendantservosuit`. Po aktualizacji **utwórz nowy egzemplarz**, aby otrzymać aktualne komponenty sonaru i grafiki stojaków. Obie strony multiplayera muszą mieć tę samą wersję moda; komunikaty kombinezonu używają protokołu v5. [Poprawiona grafika szafki i porównanie z grą](DESCENDANT-RACK.md). [Próby funkcji i zmierzone prędkości pływania1.3.18](DESCENDANT-SERVICE.md).
+Wersja **1.3.21** dla Barotrauma 1.13.5.0 / LuaCs c6e8829. Identyfikator przedmiotu: `descendantservosuit`. Po aktualizacji **utwórz nowy egzemplarz**, aby otrzymać aktualne komponenty sonaru i grafiki stojaków. Obie strony multiplayera muszą mieć tę samą wersję moda; komunikaty kombinezonu używają protokołu v5. [Poprawiona grafika szafki i porównanie z grą](DESCENDANT-RACK.md). [Próby funkcji i zmierzone prędkości pływania1.3.18](DESCENDANT-SERVICE.md).
 
 [Otwórz animowany podgląd V2](descendant-suit/index.html). Działa lokalnie, bez instalowania bibliotek. Pokazuje nowy pancerz, oba stany hełmu, ramię, impulsy, iskry, wirniki i dźwięki. To demonstracja zasobów; nie zastępuje próby w grze.
 
 [Oryginalny miniaturowy laser i nowe promienie1.3.20](DESCENDANT-BEAMS.md).
+[Strzelanie na lądzie nad sojusznikami i niskimi przeszkodami1.3.21](DESCENDANT-RAISED-AIM.md).
 
 ## Używanie
 
 Kombinezon zachowuje smukłe proporcje. Obecna poprawka dodaje trwałe podtrzymywanie celu, wspólną końcówkę promieni, tolerancję ruchu podczas naprawy, chowane panele i natywny sonar. [Zawieszenie osoby i schowane panele](descendant-suit/controls-hold.png), [osobny sonar](descendant-suit/controls-sonar.png), [szersza naprawa](descendant-suit/controls-repair.png), [przedmiot na ziemi](descendant-suit/controls-ground.png), [impuls z końcówki](descendant-suit/controls-pulse.png). Zrzuty pochodzą z gry, z włączonym oświetleniem i bez obróbki obrazu.
 
-Aktualna paczka: `output/MULTI-TOOL-V2-1.3.20-descendant-beams-2026-11-17.zip`. Poprzednie paczki zachowano.
+Aktualna paczka: `output/MULTI-TOOL-V2-1.3.21-descendant-raised-aim-2026-11-18.zip`. Poprzednie paczki zachowano.
 
 Załóż kombinezon w slocie ubrania zewnętrznego. Jeden widoczny panel ma dwa ograniczone sloty: pierwszy na baterię/pręt reaktora, drugi na skrzynkę amunicji lasera pulsacyjnego. Butla nie jest potrzebna. Zasilanie ramienia nie wymaga trzymania narzędzia w ręce. Przycisk „Ramię włączone / Ramię wyłączone” pokazuje stan i przełącza funkcję; ponowne włączenie przywraca ostatni tryb.
 
@@ -30,6 +31,8 @@ Pręt zamiast baterii: `spawnitem fuelrod inventory 1`. Obsługiwane są też ba
 - **Chwytak**: wybierz tryb, wskaż cel kursorem, przytrzymaj **PPM (Celuj)** i naciśnij **E (Użyj)**, potem puść klawisze. Podtrzymuje cel przed graczem w powietrzu, z tłumieniem ruchu i kompensacją grawitacji. Osoba jest chwilowo bezwładna; po puszczeniu wraca jej wcześniejszy stan ragdolla. Ponowne E podczas celowania puszcza cel. Chwyt gracza trwa do puszczenia, zmiany trybu, przeszkody, wyjścia poza zasięg, utraty energii, utraty przytomności lub zdjęcia kombinezonu. Panel pokazuje własne przypisania klawiszy. Łapie jeden luźny dynamiczny przedmiot albo istotę/ciało; limit wynosi 80 jednostek masy silnika dla całej istoty. Nie wyrywa zamocowanych urządzeń ani rzeczy z ekwipunków i nie chwyta podłączonych przewodów. Zasięg wynosi 300 jednostek gry. Automat ratunkowy AI zachowuje ograniczony 5-sekundowy chwyt z przerwą 2 s dla tego samego celu.
 
 Prawy panel chowa się przyciskiem `»`; zakładka **Ramię** przywraca go bez zmiany wybranej funkcji. **Sonar** otwiera niezależny lewy panel z własnym przyciskiem zasilania, trybem aktywnym i pasywnym oraz natywnymi echami gry do 6000 jednostek. Schowanie panelu nie wyłącza sonaru ani ramienia. Aktywny sonar pobiera bazowo 0,12 stanu zwykłej baterii/s, pasywny 0,03/s, z normalnym mnożnikiem prętów reaktora. Impulsy i reakcje AI wynikają z natywnego sonaru; to nie radar wszystkich obiektów. Sonar działa niezależnie od pojedynczej funkcji ramienia. Bez energii przestaje działać, a po wymianie źródła może wznowić żądany tryb.
+
+Na lądzie **Obrona pulsacyjna** sprawdza również drogę od mocowania ramienia do przeciwnika. Gdy sojusznik lub niska przeszkoda blokuje zwykłą pozycję, ramię próbuje unieść lufę. Strzela po ustawieniu przegubów i sprawdzeniu całej drogi ramienia oraz promienia. Brak miejsca pod sufitem albo pełna ściana zatrzymują ogień. Po co najmniej 0,5 s stabilnego prześwitu wraca do zwykłego celowania. Funkcja działa automatycznie, bez nowych przycisków. Zachowanie pod wodą pozostaje dotychczasowe.
 
 Wszystkie funkcje ramienia są wzajemnie wykluczające. Wirniki i układ oddechowy działają osobno. Nienaruszona powłoka daje ochronę ustawioną na **10 000 m**, także bez baterii. To parametr natywnej ochrony, nie nieśmiertelność ani potwierdzony test na każdej głębokości.
 

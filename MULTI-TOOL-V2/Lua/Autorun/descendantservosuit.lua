@@ -7,6 +7,7 @@ BMTDescendantSuit=G
 local ok,err=pcall(function()
     require('CombatTool.physics').install(G,_G)
     require('DescendantSuit.motion').install(G,_G)
+    require('DescendantSuit.aim').install(G,_G)
     require('DescendantSuit.grip').install(G,_G)
     require('DescendantSuit.dock').install(G,_G)
     require('DescendantSuit.sonar').install(G,_G)
