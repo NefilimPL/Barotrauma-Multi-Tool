@@ -8,6 +8,13 @@ function M.install(G,E)
     local settings=E.LuaUserData.CreateStatic('Barotrauma.SkillSettings')
     local flags=E.LuaUserData.CreateEnumTable('Barotrauma.AbilityFlags')
     local skills={'helm','weapons','mechanical','electrical','medical'}
+    -- LuaCs keys its item dictionary by Identifier.Value, preserving XML case.
+    -- Native prefab lookup is case insensitive; resolve that spelling once.
+    local indexedIds={C.identifier,'multi-toolset'}
+    for i,id in ipairs(indexedIds) do
+        local prefab=E.ItemPrefab and E.ItemPrefab.Prefabs[id]
+        if prefab then indexedIds[i]=prefab.Identifier.Value end
+    end
     local progress,owners={},{}
     local discoverAt=0
     local function track(item,character)
@@ -36,7 +43,7 @@ function M.install(G,E)
             for character in pairs(progress) do
                 if character.Removed or character.IsDead then progress[character]=nil end
             end
-            for _,id in ipairs({C.identifier,'multi-toolset'}) do
+            for _,id in ipairs(indexedIds) do
                 U.each(E.Util.GetItemsById(id),function(item)
                     local owner=not item.Removed and item.ParentInventory and item.ParentInventory.Owner
                     if owner and E.LuaUserData.IsTargetType(owner,'Barotrauma.Character') then owners[owner]=true end

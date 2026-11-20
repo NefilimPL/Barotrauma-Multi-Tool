@@ -19,6 +19,7 @@ function M.install(G,E,root)
         rotor0=A.rotor,rotor1=A.rotor,rotor2=A.rotor,rotor3=A.rotor}
     require('DescendantSuit.lights').install(G,E)
     require('DescendantSuit.ui').install(G,E)
+    local emitSparks=require('DescendantSuit.sparks').new(E)
     local colors={repair={75,190,255},weld={75,190,255},combat={255,45,45},grab={255,153,35}}
     local channels={}
     local heldPlatforms={}
@@ -39,9 +40,6 @@ function M.install(G,E,root)
     end
     -- Character.Draw already has the world transform and is lit afterwards.
     local function screen(cam,p) return E.Vector2(p.x,-p.y) end
-    local function line(batch,cam,a,b,color,width)
-        gui.DrawLine(batch,screen(cam,a),screen(cam,b),color,0,width)
-    end
     local function sprite(batch,cam,key,point,rotation,scale,origin)
         local r=rects[key]
         atlas.SourceRect=E.Rectangle(r[1],r[2],r[3],r[4])
@@ -142,23 +140,7 @@ function M.install(G,E,root)
                 local id=s.target and s.target.entity and s.target.entity.ID
                 if id and id~=entry.target then sound('servo',owner) end
                 entry.open,entry.mode,entry.target=s.open,s.mode,id
-                s.sparks=s.sparks or {}
-                for n=#s.sparks,1,-1 do
-                    local p=s.sparks[n];p.age=p.age+dt
-                    if p.age>p.life then table.remove(s.sparks,n)
-                    else p.x=p.x+p.vx*dt;p.y=p.y+p.vy*dt;p.vy=p.vy-160*dt end
-                end
-                if active=='repair' or active=='weld' then
-                    s.sparkBudget=(s.sparkBudget or 0)+dt*150
-                    local point=s.target.point
-                    while s.sparkBudget>=1 and #s.sparks<72 do
-                        s.sparkBudget=s.sparkBudget-1
-                        local angle=math.random()*math.pi*2;local speed=80+math.random()*200
-                        s.sparks[#s.sparks+1]={x=point.x,y=point.y,vx=math.cos(angle)*speed,vy=math.sin(angle)*speed,
-                            age=0,life=.12+math.random()*.18}
-                    end
-                    s.sparkBudget=math.min(s.sparkBudget,2)
-                else s.sparkBudget=0 end
+                emitSparks(s,active,s.target and s.target.point,dt)
             end
         end
         for entity,old in pairs(heldPlatforms) do if not holding[entity] then restoreHeld(entity,old) end end
@@ -191,12 +173,6 @@ function M.install(G,E,root)
                     local beam=target and target.kind~='combat' and s.active and short and target.point
                     if beam then
                         softBeam(batch,cam,pose.muzzle,beam,colors[target.kind],target.kind~='grab')
-                    end
-                    for _,p in ipairs(s.sparks or {}) do
-                        local tail={x=p.x-p.vx*.022,y=p.y-p.vy*.022}
-                        local alpha=math.floor(255*(1-p.age/p.life))
-                        line(batch,cam,tail,p,E.Color(65,170,255,math.floor(alpha*.35)),4)
-                        line(batch,cam,tail,p,E.Color(220,248,255,alpha),1.2)
                     end
                 end
             end

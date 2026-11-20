@@ -6,6 +6,7 @@ function M.new(E)
     local G={env=E,authoritative=E.SERVER or E.Game.IsSingleplayer,states={},now=0,alive=true,patches={}}
     local humanAI
     local dynamicBodyType
+    local transforms
     local function movable(body)
         dynamicBodyType=dynamicBodyType or E.LuaUserData.CreateEnumTable('FarseerPhysics.BodyType').Dynamic
         return body.BodyType==dynamicBodyType
@@ -74,36 +75,65 @@ function M.new(E)
         end
     end
     function G.attachment(owner,x,y,draw)
+        local cached=not draw and transforms and transforms[owner]
+        if cached then
+            local rx=x*cached.facing
+            return {x=cached.x+rx*cached.cosine-y*cached.sine,
+                y=cached.y+rx*cached.sine+y*cached.cosine},cached.rotation,cached.facing
+        end
         local anim=owner.AnimController
         local torso=anim and anim.GetLimb and E.LimbType and anim.GetLimb(E.LimbType.Torso)
-        local p,rotation=owner.WorldPosition,0
-        local facing=anim and anim.Dir or 1
+        local p,rotation,facing=nil,0,anim and anim.Dir or 1
         if torso and torso.body then
             local body=torso.body
             facing=body.Dir
             if draw then
                 body.UpdateDrawPosition();p=body.DrawPosition;rotation=body.DrawRotation
             else p=torso.WorldPosition;rotation=body.Rotation end
-        end
+        else p=owner.WorldPosition end
         facing=facing<0 and -1 or 1
+        local cosine,sine=math.cos(rotation),math.sin(rotation)
+        if not draw and transforms then
+            transforms[owner]={x=p.X,y=p.Y,rotation=rotation,facing=facing,cosine=cosine,sine=sine}
+        end
         local rx=x*facing
-        return {x=p.X+rx*math.cos(rotation)-y*math.sin(rotation),
-            y=p.Y+rx*math.sin(rotation)+y*math.cos(rotation)},rotation,facing
+        return {x=p.X+rx*cosine-y*sine,y=p.Y+rx*sine+y*cosine},rotation,facing
     end
     function G.mount(owner,draw)
         return G.attachment(owner,-22,18,draw)
     end
-    function G.restGoal(owner,draw)
+    function G.restGoal(owner,draw,base,rotation,facing)
+        if base then
+            local x,y=32*facing,70
+            local cosine,sine=math.cos(rotation),math.sin(rotation)
+            return {x=base.x+x*cosine-y*sine,y=base.y+x*sine+y*cosine}
+        end
         return G.attachment(owner,10,88,draw)
     end
     function G.toolPose(owner,state,draw,point)
         local base,rotation,facing=G.mount(owner,draw)
         local angles=draw and not G.authoritative and (state.drawAngles or state.toolAngles) or state.toolAngles
-        if angles then return require('DescendantSuit.motion').pose(base,rotation,angles) end
-        return Core.toolPose(base,point or (state.target and state.target.point),G.restGoal(owner,draw),facing,rotation)
+        if angles then
+            local key=draw and 'drawPose' or 'simPose'
+            local cached=state[key]
+            if cached and cached.owner==owner and cached.x==base.x and cached.y==base.y and
+                cached.rotation==rotation and cached.upper==angles.upper and
+                cached.lower==angles.lower and cached.head==angles.head then return cached.pose end
+            local pose=require('DescendantSuit.motion').pose(base,rotation,angles)
+            cached=cached or {}
+            cached.owner,cached.x,cached.y,cached.rotation=owner,base.x,base.y,rotation
+            cached.upper,cached.lower,cached.head,cached.pose=angles.upper,angles.lower,angles.head,pose
+            state[key]=cached
+            return pose
+        end
+        return Core.toolPose(base,point or (state.target and state.target.point),G.restGoal(owner,draw,base,rotation,facing),facing,rotation)
     end
     local function position(entity)
         local p=entity.WorldPosition;return {x=p.X,y=p.Y}
+    end
+    function G.repairEligible(owner,item)
+        return item and not item.Removed and not item.ParentInventory and
+            (not item.HasAccess or item.HasAccess(owner))
     end
     function G.visible(owner,base,t)
         local hit=G.cast(base,t.point,0,owner,t.kind~='combat',true)
@@ -196,8 +226,7 @@ function M.new(E)
         end
         if automatic or s.mode=='repair' then
             U.each(E.Util.GetItemGroup('bmt.descendant.repairables'),function(item)
-                if not item.Removed and item.Condition<item.MaxCondition-.01 and not item.ParentInventory
-                    and (not item.HasAccess or item.HasAccess(owner)) then
+                if G.repairEligible(owner,item) and item.Condition<item.MaxCondition-.01 then
                     add({id='i'..item.ID,kind='repair',entity=item,point=position(item),damaged=true},Core.repairRange())
                 end
             end)
@@ -220,7 +249,10 @@ function M.new(E)
         if automatic or s.mode=='combat' or s.mode=='grab' then
             U.each(E.Character.CharacterList,function(other)
                 if other~=owner and not other.Removed then
-                    local friendly=G.ally(owner,other)
+                    local p=other.WorldPosition
+                    local range=not automatic and s.mode=='grab' and C.grabRange or C.combatRange
+                    if (p.X-base.x)^2+(p.Y-base.y)^2>range^2 then return end
+                    local friendly=(automatic or s.mode=='combat') and G.ally(owner,other)
                     if not friendly and not other.IsDead and (automatic or s.mode=='combat') then
                         add({id='c'..other.ID,kind='combat',entity=other,point=position(other),hostile=true,alive=true},C.combatRange)
                     end
@@ -235,8 +267,11 @@ function M.new(E)
         if s.mode=='grab' and not automatic then
             -- World-item enumeration is only needed when acquiring an indicated grab.
             if not s.target then U.each(E.Item.ItemList,function(item)
-                if G.grabbable(item) then
-                    add({id='g'..item.ID,kind='grab',entity=item,point=position(item),free=true},C.grabRange)
+                if not item.Removed and not item.ParentInventory then
+                    local p=item.WorldPosition
+                    if (p.X-base.x)^2+(p.Y-base.y)^2<=C.grabRange^2 and G.grabbable(item) then
+                        add({id='g'..item.ID,kind='grab',entity=item,point={x=p.X,y=p.Y},free=true},C.grabRange)
+                    end
                 end
             end)
             elseif s.target.kind=='grab' and not s.target.entity.Removed then
@@ -283,7 +318,7 @@ function M.new(E)
     function G.authorize(client,item,mode)
         return client and client.Character and G.setMode(item,mode,client.Character) or false
     end
-    function G.update(dt)
+    local function update(dt)
         if E.Game.Paused then if G.pauseClient then G.pauseClient() end;return end
         G.now=G.now+dt
         if G.authoritative and E.Game.RoundStarted then
@@ -302,6 +337,7 @@ function M.new(E)
                     if G.stopSonar then G.stopSonar(item,s) end
                     G.states[item]=nil
                 else
+                    if s.mode~='off' or owner.IsBot then transforms=transforms or {} end
                     if s.owner and s.owner~=owner then
                         if G.cancelSupplies then G.cancelSupplies(s) end
                         if G.releaseGrip then G.releaseGrip(s) end
@@ -324,7 +360,11 @@ function M.new(E)
                                 s.target=nil;s.grabStarted=nil
                             else s.acquireGrab=true;s.nextScan=0 end
                         end
-                        if G.now>=s.nextScan and (owner.IsBot or s.mode~='off') and powered then
+                        -- Manual selection keeps a valid pinned target. Track it below
+                        -- every tick; only acquisition needs the world candidate scan.
+                        -- Bots still rescan while working so threats can preempt repair.
+                        local acquire=owner.IsBot or (not s.target and (s.mode~='grab' or s.acquireGrab))
+                        if G.now>=s.nextScan and (owner.IsBot or s.mode~='off') and powered and acquire then
                             s.nextScan=G.now+C.scanInterval
                             local candidates=G.gather(owner,s)
                             if owner.IsBot then
@@ -350,26 +390,37 @@ function M.new(E)
                             end
                         end
                         local target=s.target
+                        if target and target.kind=='repair' and not G.repairEligible(owner,target.entity) then
+                            s.target=nil;target=nil;s.nextScan=0
+                        end
                         local advanced=false
                         if target and not target.entity.Removed and powered then
                             if target.kind~='weld' then target.point=position(target.entity)
                             else local q=target.entity.SectionPosition(target.section,true);target.point={x=q.X,y=q.Y} end
                             local base=G.mount(owner)
-                            if target.kind=='combat' then
-                                target.trackable=G.visibleFromTool(owner,s,target,true)
-                                target.visible=G.visibleFromTool(owner,s,target,false)
-                            else target.visible=G.visible(owner,base,target) end
                             target.distance=math.sqrt((target.point.x-base.x)^2+(target.point.y-base.y)^2)
+                            if target.kind=='combat' then
+                                target.alive=not target.entity.IsDead;target.hostile=not G.ally(owner,target.entity)
+                                target.trackable=target.alive and target.hostile and target.distance<=C.combatRange
+                                    and G.visibleFromTool(owner,s,target,true)
+                                if target.trackable and G.advanceTool then G.advanceTool(owner,s,dt);advanced=true end
+                                -- Visibility and armReady now share the actual advanced
+                                -- firing pose; the async shot still rechecks fresh geometry.
+                                target.visible=target.trackable and G.visibleFromTool(owner,s,target,false)
+                            else
+                                target.visible=G.visible(owner,base,target)
+                                -- Wall visibility resolves the actual near-face contact.
+                                target.distance=math.sqrt((target.point.x-base.x)^2+(target.point.y-base.y)^2)
+                            end
                             if target.kind=='repair' then target.damaged=target.entity.Condition<target.entity.MaxCondition-.01 end
                             if target.kind=='weld' then target.damaged=target.entity.SectionDamage(target.section)>.01 end
-                            if target.kind=='combat' then target.alive=not target.entity.IsDead;target.hostile=not G.ally(owner,target.entity) end
                             if target.kind=='grab' then
                                 target.free=G.grabbable(target.entity) and (not G.canHold or G.canHold(target.entity,s))
                                 s.grabStarted=s.grabStarted or G.now
                             end
                             local retained,contact=Core.contact(s,target,G.now)
                             if retained then
-                                if G.advanceTool then G.advanceTool(owner,s,dt);advanced=true end
+                                if not advanced and G.advanceTool then G.advanceTool(owner,s,dt);advanced=true end
                                 if contact and Core.ready(s,target.id,G.now) then s.active=G.perform(owner,item,target,dt) end
                             else s.target=nil end
                         elseif not powered then s.target=nil end
@@ -395,6 +446,15 @@ function M.new(E)
             if G.pruneGrips then G.pruneGrips() end
         end
         if G.updateClient then G.updateClient(dt) end
+    end
+    function G.update(dt)
+        -- Only the synchronous Lua controller shares a torso sample. Async
+        -- projectile callbacks and render interpolation always read a fresh one.
+        local previous=transforms
+        transforms=nil
+        local ok,err=pcall(update,dt)
+        transforms=previous
+        if not ok then error(err,0) end
     end
     function G.clear()
         if G.clearGrips then G.clearGrips() end

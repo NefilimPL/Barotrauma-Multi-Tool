@@ -83,6 +83,7 @@ function M.install(G,E)
     local scanAt=0
     function G.update(dt)
         G.now=G.now+dt;G.frame=G.frame+1
+        local shieldContacts
         if G.now>=scanAt then
             scanAt=G.now+.5
             U.each(E.Util.GetItemsById(C.identifier),function(item) if G.isWeapon(item) then activate(item) end end)
@@ -116,7 +117,8 @@ function M.install(G,E)
                     if light.IsActive~=lit then light.IsActive=lit end
                 end
                 if G.authoritative then
-                    G.updateShield(s,ctx,dt)
+                    if ctx.valid and ctx.aim and ctx.damage then shieldContacts=shieldContacts or {} end
+                    G.updateShield(s,ctx,dt,shieldContacts)
                     AI.update(s,ctx)
                 end
             end

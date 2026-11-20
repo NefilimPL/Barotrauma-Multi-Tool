@@ -65,6 +65,17 @@ class PassiveSkillTests(LuaCase):
             G.updatePassiveSkills(300);assert(changes==5)
         ''')
 
+    def test_discovery_uses_native_prefab_spelling_for_luacs_case_sensitive_index(self):
+        self.lua.execute('''
+            gun.Prefab.Identifier.Value='Multi-toolSET'
+            source.HasTag=function(tag) return tag=='reactorfuel' end
+            env.ItemPrefab={Prefabs={['multi-toolset']=gun.Prefab}}
+            G.clearPassiveSkills()
+            require('CombatTool.passive_skills').install(G,env)
+            G.updatePassiveSkills(300)
+            assert(changes==5,'case-sensitive LuaCs index omitted the mixed-case multitool prefab')
+        ''')
+
     def test_multiplayer_clients_cannot_grant_skills(self):
         self.lua.execute('G.authoritative=false;G.updatePassiveSkills(600);assert(changes==0)')
 

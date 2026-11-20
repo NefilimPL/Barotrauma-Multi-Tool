@@ -77,7 +77,10 @@ function P.install(G,E)
                         -- Return the center of the swept ring, not the offset rail.
                         nearest={t=fraction,x=world.X-rx,y=world.Y-ry,nx=normal.X,ny=normal.Y,kind=kind,target=target,blocker=blocker}
                     end
-                    return 1
+                    -- Farseer clips subsequent traversal to this fraction.
+                    -- Keep looking for closer hits, without revisiting fixtures
+                    -- beyond an already accepted hit (also across sweep rails).
+                    return nearest and nearest.t or -1
                 end,va,vb,collisionMask)
             end
         end

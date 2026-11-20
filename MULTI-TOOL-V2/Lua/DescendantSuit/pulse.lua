@@ -20,8 +20,9 @@ function M.install(G,E)
                 -- Spawning is asynchronous: recheck authority, ownership, mode,
                 -- target, range and visibility before spending or firing.
                 if not G.alive or item.Removed or owner.Removed or owner.IsDead or owner.IsUnconscious or
+                    G.states[item]~=s or
                     G.equipped(owner)~=item or s.mode~='combat' or not s.target or s.target.entity~=target.entity or
-                    target.entity.Removed or target.entity.IsDead then remove(projectileItem);return end
+                    target.entity.Removed or target.entity.IsDead or G.ally(owner,target.entity) then remove(projectileItem);return end
                 local p=target.entity.WorldPosition;target.point={x=p.X,y=p.Y}
                 if G.armReady and not G.armReady(owner,s,target) then remove(projectileItem);return end
                 local mount=G.mount(owner)

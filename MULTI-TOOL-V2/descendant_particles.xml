@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Particles>
+  <!-- Blue repair sparks: the native manager batches drawing and owns lifetime.
+       This keeps the original 150/s emission, speed and gravity without Lua
+       visiting and drawing every live spark on every rendered frame. -->
+  <descendantrepairspark lifetime="0.3" lifetimemin="0.12"
+    angularvelocitymin="0" angularvelocitymax="0" rotatetodirection="True"
+    drag="0" waterdrag="0" velocitychange="0,-160" velocitychangewater="0,-160"
+    usecollision="False" deleteoncollision="False"
+    startsizemin="0.02,0.15" startsizemax="0.06,0.25" growtime="0"
+    startcolor="220,248,255,255" endcolor="65,170,255,0"
+    drawtarget="Both" drawontop="True" blendstate="Additive" priority="0">
+    <sprite texture="Content/Particles/ParticleAtlas.png" sourcerect="392,83,106,16" />
+  </descendantrepairspark>
   <!-- Native pulse-laser sprite and timing. Narrow only Y: uniformly scaling
        an emitter also shortens the ray-length X assigned by Particle.Init. -->
   <descendantpulsetracer lifetime="0.4" startdelaymin="0" startdelaymax="0"

@@ -2,17 +2,18 @@ local Core=require('DescendantSuit.core')
 local C=Core.config
 local M={}
 function M.delta(to,from) return (to-from+math.pi)%(math.pi*2)-math.pi end
-local function advance(current,wanted,dt,ease,speed)
+local function advance(current,wanted,dt,smoothing,speed)
     local delta=M.delta(wanted,current)
-    local step=delta*(1-math.exp(-dt/ease))
+    local step=delta*smoothing
     local limit=speed*dt
     return M.delta(current+math.max(-limit,math.min(limit,step)),0)
 end
 function M.step(current,wanted,dt,ease,speed)
     dt=math.max(0,math.min(.1,dt))
-    return {upper=advance(current.upper,wanted.upper,dt,ease or C.jointEase,speed or C.jointSpeed),
-        lower=advance(current.lower,wanted.lower,dt,ease or C.jointEase,speed or C.jointSpeed),
-        head=advance(current.head,wanted.head,dt,ease or C.jointEase,speed or C.headSpeed)}
+    local smoothing=1-math.exp(-dt/(ease or C.jointEase))
+    return {upper=advance(current.upper,wanted.upper,dt,smoothing,speed or C.jointSpeed),
+        lower=advance(current.lower,wanted.lower,dt,smoothing,speed or C.jointSpeed),
+        head=advance(current.head,wanted.head,dt,smoothing,speed or C.headSpeed)}
 end
 function M.angles(pose,rotation)
     local upper=math.atan2(pose.elbow.y-pose.base.y,pose.elbow.x-pose.base.x)
@@ -31,7 +32,7 @@ end
 function M.install(G,E)
     function G.advanceTool(owner,state,dt)
         local base,rotation,facing=G.mount(owner)
-        local rest=G.restGoal(owner)
+        local rest=G.restGoal(owner,false,base,rotation,facing)
         local point=state.target and state.target.point
         local gap
         if state.grip and not state.grip.character then
@@ -48,9 +49,26 @@ function M.install(G,E)
         local combat=state.target and state.target.kind=='combat' and G.planShot
         local planned=combat and G.planShot(owner,state,state.target)
         if not combat then state.combatAim=nil;state.aimCandidate=nil end
-        local wanted=M.angles(planned or Core.toolPose(base,point,rest,facing,rotation,gap),rotation)
-        if point and not planned then
-            local other=M.angles(Core.toolPose(base,point,rest,-facing,rotation,gap),rotation)
+        local wanted,other
+        if planned then wanted=M.angles(planned,rotation)
+        else
+            -- Relative geometry is unchanged by translation of the entire rig.
+            -- Cache both bends, but keep selecting the nearest one as joints move.
+            local dx,dy=point and point.x-base.x,point and point.y-base.y
+            local rx,ry=rest.x-base.x,rest.y-base.y
+            local cached=state.ik
+            if not cached or cached.dx~=dx or cached.dy~=dy or cached.rx~=rx or cached.ry~=ry or
+                cached.rotation~=rotation or cached.facing~=facing or cached.gap~=gap then
+                cached=cached or {}
+                cached.dx,cached.dy,cached.rx,cached.ry=dx,dy,rx,ry
+                cached.rotation,cached.facing,cached.gap=rotation,facing,gap
+                cached.wanted=M.angles(Core.toolPose(base,point,rest,facing,rotation,gap),rotation)
+                cached.other=point and M.angles(Core.toolPose(base,point,rest,-facing,rotation,gap),rotation) or nil
+                state.ik=cached
+            end
+            wanted,other=cached.wanted,cached.other
+        end
+        if other then
             local function cost(a)
                 return M.delta(a.upper,state.toolAngles.upper)^2+M.delta(a.lower,state.toolAngles.lower)^2
             end

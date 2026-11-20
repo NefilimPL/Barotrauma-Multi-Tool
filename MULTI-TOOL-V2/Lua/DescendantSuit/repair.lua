@@ -49,6 +49,7 @@ function M.install(G,E)
         if s and G.repairScope~=s then stop(r,s) end
     end)
     function G.repairDevice(owner,item,target,dt)
+        if G.repairEligible and not G.repairEligible(owner,target.entity) then return false end
         local r=U.component(target.entity,'Repairable')
         if not r or (r.CurrentFixer and (r.CurrentFixer~=owner or not sessions[r])) then return false end
         local s=sessions[r] or {owner=owner,item=item,repairable=r}
@@ -95,6 +96,7 @@ function M.install(G,E)
         for r,s in pairs(sessions) do
             local state=G.states[s.item]
             if G.equipped(s.owner)~=s.item or not state or state.mode~='repair' or not state.target or
+                (G.repairEligible and not G.repairEligible(s.owner,r.Item)) or
                 state.target.entity~=r.Item or r.CurrentFixer~=s.owner or
                 G.now-(s.used or 0)>C.contactGrace+.15 then stop(r,s) end
         end

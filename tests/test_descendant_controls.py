@@ -193,6 +193,7 @@ class DescendantPulseOriginTests(LuaCase):
                 spawnedAt=pos;callback(projectile)
             end
             G={authoritative=true,alive=true,now=1,state=function() return state end,
+                states={[suit]=state},ally=function() return friendly or false end,
                 energy=function() return cell.Condition end,source=function() return cell end,
                 ammo=function() return box end,equipped=function() return suit end,
                 mount=function() return {x=10000,y=20000} end,visible=function() return true end,
@@ -213,6 +214,18 @@ class DescendantPulseOriginTests(LuaCase):
             assert(G.firePulse(owner,suit,target));G.equipped=function() return nil end;launch()
             assert(not shot and cell.Condition==100 and box.Condition==100 and projectile.Removed)
             assert(not state.pendingPulse)
+        """)
+
+    def test_async_target_team_change_cancels_without_spending(self):
+        self.lua.execute("""
+            assert(G.firePulse(owner,suit,target));friendly=true;launch()
+            assert(not shot and projectile.Removed and cell.Condition==100 and box.Condition==100)
+        """)
+
+    def test_async_round_clear_cancels_captured_state_without_spending(self):
+        self.lua.execute("""
+            assert(G.firePulse(owner,suit,target));G.states={};launch()
+            assert(not shot and projectile.Removed and cell.Condition==100 and box.Condition==100)
         """)
 
     def test_missing_native_projectile_component_does_not_debit_power_or_ammo(self):
