@@ -21,10 +21,15 @@ class VacuumNetworkTests(VacuumAdapterTests):
                 receive[m.name](reader(m.values),{Character=owner});G.authoritative=old
             end
             local withdrawn,inserted,loose,snapshot
+            local rules={excluded={},protected={},allowed={}}
             G.withdrawBatch=function(ctx,ids,groups) withdrawn={ids=ids,groups=groups};return true end
             G.insertBatch=function(ctx,ids) inserted=ids;return true end
             G.setLooseOnly=function(ctx,value) loose=value;return true end
             G.looseOnly=function() return loose==true end
+            G.filterRules=function() return rules end
+            G.filterCatalog=function() return {{kind='ore',name='Ore',blocked=true}} end
+            G.setProtected=function(ctx,kind,value) rules.protected[kind]=value;return true end
+            G.setAllowed=function(ctx,kind,value) rules.allowed[kind]=value;return true end
             G.onSnapshot=function(value) snapshot=value end
             require('SalvageVacuum.network').install(G,env);G.authoritative=false
             G.request('batch',vacuum,0,{targets={11,11,12},group=1})
@@ -33,6 +38,10 @@ class VacuumNetworkTests(VacuumAdapterTests):
             assert(inserted and #inserted==2 and inserted[1]==21 and inserted[2]==22)
             G.now=G.now+1;G.request('loose',vacuum,1,{})
             assert(loose and snapshot.looseOnly==true)
+            G.now=G.now+1;G.request('protect',vacuum,1,{filters=true,kind='ore',group=200})
+            assert(snapshot.group==200 and snapshot.rows[1].protected and snapshot.rows[1].blocked)
+            G.now=G.now+1;G.request('allow',vacuum,1,{filters=true,kind='ore',group=200})
+            assert(snapshot.rows[1].protected and snapshot.rows[1].allowed and not snapshot.rows[1].blocked)
         ''')
 
     def test_batch_request_validates_access_and_deduplicates_bounded_selection(self):

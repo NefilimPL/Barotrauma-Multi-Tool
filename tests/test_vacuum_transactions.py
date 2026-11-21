@@ -23,6 +23,9 @@ class VacuumTransactionTests(LuaCase):
             G.contents=function() return loot end
             G.children=function(item) return item==source and children or {} end
             G.records=function(items) local out={};for _,i in ipairs(items) do out[#out+1]={kind=i.kind} end;return out end
+            G.canSalvageFit=function() return true end
+            G.hasSpawnRoom=function() return true end
+            G.reserveSpawns=function() return function() end end
             G.ensureSpace=function() return true end
             G.pages=function() return {} end
             G.freeSlots=function() return {{inv={}},{inv={}},{inv={}}} end
@@ -68,11 +71,42 @@ class VacuumTransactionTests(LuaCase):
             assert(removed[source] and not removed[child] and child.parent==pack)
         """)
 
+    def test_protected_container_and_its_contents_stay_out_of_salvage(self):
+        self.lua.execute("""
+            local container={kind='crate',parent=pack}
+            local inside={kind='wrench',parent=container}
+            loot={source,container}
+            G.jobs[pack]=nil
+            G.children=function(item) return item==container and {inside} or {} end
+            G.id=function(item) return item.kind end
+            G.filterRules=function() return {protected={crate=true}} end
+            assert(G.startSalvage(ctx))
+            local items=G.jobs[pack].items
+            assert(#items==1 and items[1]==source)
+        """)
+
     def test_no_space_preserves_original_and_does_not_charge(self):
         self.lua.execute("""
             G.ensureSpace=function() return false end
             G.processSalvage(job)
             assert(#queue==0 and not removed[source] and battery.Condition==50)
+        """)
+
+    def test_no_entity_ids_preserves_source_and_does_not_debit_power(self):
+        self.lua.execute("""
+            G.hasSpawnRoom=function(count) assert(count==2);return false end
+            G.processSalvage(job)
+            assert(#queue==0 and not removed[source] and not G.pending[pack] and battery.Condition==50)
+            assert(G.salvageProgress(pack).phase=='full')
+        """)
+
+    def test_missing_native_output_slots_do_not_reserve_or_debit(self):
+        self.lua.execute("""
+            G.freeSlots=function() return {{inv={}}} end
+            G.reserveSpawns=function() error('unverified native destinations were reserved') end
+            G.processSalvage(job)
+            assert(#queue==0 and not removed[source] and not G.pending[pack] and battery.Condition==50)
+            assert(G.salvageProgress(pack).phase=='full')
         """)
 
     def test_skipped_recipes_advance_in_bounded_batches_with_visible_progress(self):

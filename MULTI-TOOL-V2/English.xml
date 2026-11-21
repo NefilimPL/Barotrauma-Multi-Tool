@@ -3,7 +3,7 @@
   <entityname.aegisvacuum>Aegis salvage vacuum</entityname.aegisvacuum>
   <entitydescription.aegisvacuum>Two-handed suction tool with a replaceable battery. Requires an Aegis salvage backpack in your inventory and LuaCs. Aim and hold use to collect. Press F to open storage. The vacuum battery also powers salvage.</entitydescription.aegisvacuum>
   <entityname.aegisvacuumpack>Aegis salvage backpack</entityname.aegisvacuumpack>
-  <entitydescription.aegisvacuumpack>Equip in the belt bag slot. Open contents with Backpack storage [F], the F key or right-clicking the backpack icon. Holds 100 groups of up to 100 actual items and preserves loaded crates. Craft backpack and vacuum separately. The battery belongs in the vacuum.</entitydescription.aegisvacuumpack>
+  <entitydescription.aegisvacuumpack>Equip in the belt bag slot. Open contents with Backpack storage [F], the F key or right-clicking the backpack icon. Holds 200 groups of up to 200 actual items and preserves loaded crates. Craft backpack and vacuum separately. The battery belongs in the vacuum.</entitydescription.aegisvacuumpack>
   <entityname.aegisvacuumpage>Aegis internal storage</entityname.aegisvacuumpage>
   <vacuum.title>Aegis vacuum storage</vacuum.title>
   <vacuum.salvage>Salvage all contents</vacuum.salvage>
@@ -12,9 +12,17 @@
   <vacuum.stack>Take stack</vacuum.stack>
   <vacuum.stackhelp>Take one stack into one inventory slot, using the game stack limit. Tops up an existing stack. Excess stays in the backpack; different quality or condition will not fill more slots.</vacuum.stackhelp>
   <vacuum.details>Instances</vacuum.details>
-  <vacuum.filters>Pickup filter</vacuum.filters>
+  <vacuum.filters>Filters</vacuum.filters>
   <vacuum.contents>Contents</vacuum.contents>
-  <vacuum.filterhelp>Red / −: excluded from pickup. Click an icon to toggle.</vacuum.filterhelp>
+  <vacuum.filterhelp>Choose a rule below the grid and click an item to toggle it.</vacuum.filterhelp>
+  <vacuum.rule.filter>Ignore (-)</vacuum.rule.filter>
+  <vacuum.rule.protect>Protect (O)</vacuum.rule.protect>
+  <vacuum.rule.allow>Allow (!)</vacuum.rule.allow>
+  <vacuum.rulehelp.filter>Red marks exclude this item type from automatic pickup.</vacuum.rulehelp.filter>
+  <vacuum.rulehelp.protect>Green marks protect this item type from salvaging and trashing.</vacuum.rulehelp.protect>
+  <vacuum.rulehelp.allow>Allow pickup and manual insertion of items like detached ore. Access and attachment checks still apply, as does the Ignore rule during pickup.</vacuum.rulehelp.allow>
+  <vacuum.protected>Protected from salvaging and trashing.</vacuum.protected>
+  <vacuum.allowed>Default filter overridden for this item type.</vacuum.allowed>
   <vacuum.included>Pickup enabled. Click to exclude this item type.</vacuum.included>
   <vacuum.excluded>Excluded from pickup, including inside containers. Click to enable.</vacuum.excluded>
   <vacuum.blocked>Cannot enter inventory — always skipped.</vacuum.blocked>
@@ -34,7 +42,7 @@
   <vacuum.drop>Drop</vacuum.drop>
   <vacuum.groups>Groups</vacuum.groups>
   <vacuum.items>Items</vacuum.items>
-  <vacuum.capacityhelp>Each group holds up to 100 items of one type. A type may occupy several groups. Total: 100 groups and up to 10,000 items, preserving condition and quality.</vacuum.capacityhelp>
+  <vacuum.capacityhelp>Up to 200 groups of 200 items. Items retain condition and quality. The round's entity limit also applies.</vacuum.capacityhelp>
   <vacuum.salvaged>Salvaged</vacuum.salvaged>
   <vacuum.skipped>Skipped</vacuum.skipped>
   <vacuum.salvagestate.working>Checked</vacuum.salvagestate.working>

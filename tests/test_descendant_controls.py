@@ -181,7 +181,8 @@ class DescendantPulseOriginTests(LuaCase):
                 Timer={Wait=function(fn) launch=fn end},ItemPrefab={Prefabs={descendantpulsebolt={}}},
                 Entity={Spawner={AddEntityToRemoveQueue=function(p) p.Removed=true end}}}
             cell={Condition=100,MaxCondition=100,HasTag=function() return false end}
-            box={Condition=100,MaxCondition=100}
+            local Ammo=require('DescendantSuit.ammo')
+            box={Condition=100,MaxCondition=100,Prefab={Identifier={Value='pulselaserammobox'}}}
             owner={Submarine={Position=vec(10000,20000)}};suit={}
             enemy={WorldPosition=vec(10500,20040)}
             target={entity=enemy,point={x=10500,y=20040},kind='combat'}
@@ -190,12 +191,12 @@ class DescendantPulseOriginTests(LuaCase):
                 shot={owner=c,origin=spawn,angle=angle}
             end}}}
             E.Entity.Spawner.AddItemToSpawnQueue=function(prefab,pos,sub,a,b,callback)
-                spawnedAt=pos;callback(projectile)
+                spawnedAt=pos;spawnedPrefab=prefab;callback(projectile)
             end
             G={authoritative=true,alive=true,now=1,state=function() return state end,
                 states={[suit]=state},ally=function() return friendly or false end,
                 energy=function() return cell.Condition end,source=function() return cell end,
-                ammo=function() return box end,equipped=function() return suit end,
+                ammo=function() return box,Ammo.profile(box) end,equipped=function() return suit end,
                 mount=function() return {x=10000,y=20000} end,visible=function() return true end,
                 toolPose=function() return {tip={x=10030,y=20040},muzzle={x=10060,y=20040}} end}
             require('DescendantSuit.pulse').install(G,E)
@@ -207,6 +208,20 @@ class DescendantPulseOriginTests(LuaCase):
             assert(shot and math.abs(shot.origin.X-.6)<1e-6 and math.abs(shot.origin.Y-.4)<1e-6)
             assert(state.lastPulse.x==enemy.WorldPosition.X and state.lastPulse.y==enemy.WorldPosition.Y)
             assert(state.shots==1 and state.shotTime==G.now and not state.pendingPulse)
+        """)
+
+    def test_gauss_box_selects_its_projectile_and_swapping_cancels_the_shot(self):
+        self.lua.execute("""
+            local Ammo=require('DescendantSuit.ammo')
+            local gauss={Condition=100,MaxCondition=100,Prefab={Identifier={Value='coilgunammobox'}}}
+            local pulse={Condition=100,MaxCondition=100,Prefab={Identifier={Value='pulselaserammobox'}}}
+            local loaded=gauss
+            G.ammo=function() return loaded,Ammo.profile(loaded) end
+            E.ItemPrefab.Prefabs.descendantgaussbolt={}
+            assert(G.firePulse(owner,suit,target))
+            assert(spawnedPrefab==E.ItemPrefab.Prefabs.descendantgaussbolt)
+            loaded=pulse;launch()
+            assert(not shot and projectile.Removed and gauss.Condition==100 and pulse.Condition==100 and cell.Condition==100)
         """)
 
     def test_async_owner_loss_cancels_projectile_without_spending_resources(self):
@@ -233,6 +248,13 @@ class DescendantPulseOriginTests(LuaCase):
             projectile.Components={}
             assert(G.firePulse(owner,suit,target));launch()
             assert(not shot and cell.Condition==100 and box.Condition==100 and projectile.Removed)
+        """)
+
+    def test_insufficient_power_does_not_queue_a_projectile(self):
+        self.lua.execute("""
+            cell.Condition=.2
+            assert(not G.firePulse(owner,suit,target))
+            assert(not spawnedAt and not state.pendingPulse and box.Condition==100)
         """)
 
     def test_player_latch_survives_time_without_holding_keys(self):

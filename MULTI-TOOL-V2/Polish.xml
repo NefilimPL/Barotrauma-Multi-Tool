@@ -3,7 +3,7 @@
   <entityname.aegisvacuum>Odkurzacz zbierający Aegis</entityname.aegisvacuum>
   <entitydescription.aegisvacuum>Dwuręczna ssawka z wymienną baterią. Wymaga plecaka zbierającego Aegis we własnym ekwipunku i LuaCs. Celuj i przytrzymaj użycie, aby zbierać. Klawisz F otwiera magazyn. Bateria odkurzacza zasila także rozbiórkę.</entitydescription.aegisvacuum>
   <entityname.aegisvacuumpack>Plecak zbierający Aegis</entityname.aegisvacuumpack>
-  <entitydescription.aegisvacuumpack>Załóż w slocie torby na pasie. Otwórz zawartość przyciskiem Magazyn plecaka [F], klawiszem F lub prawym kliknięciem ikony plecaka. Mieści 100 grup po maksymalnie 100 przedmiotów i zachowuje zawartość skrzynek. Plecak i odkurzacz wytwarza się osobno. Bateria znajduje się w odkurzaczu.</entitydescription.aegisvacuumpack>
+  <entitydescription.aegisvacuumpack>Załóż w slocie torby na pasie. Otwórz zawartość przyciskiem Magazyn plecaka [F], klawiszem F lub prawym kliknięciem ikony plecaka. Mieści 200 grup po maksymalnie 200 przedmiotów i zachowuje zawartość skrzynek. Plecak i odkurzacz wytwarza się osobno. Bateria znajduje się w odkurzaczu.</entitydescription.aegisvacuumpack>
   <entityname.aegisvacuumpage>Wewnętrzny magazyn Aegis</entityname.aegisvacuumpage>
   <vacuum.title>Magazyn odkurzacza Aegis</vacuum.title>
   <vacuum.salvage>Rozłóż całą zawartość</vacuum.salvage>
@@ -12,9 +12,17 @@
   <vacuum.stack>Weź stos</vacuum.stack>
   <vacuum.stackhelp>Pobierz jeden stos do jednego slotu ekwipunku, zgodnie z limitem gry. Uzupełnia istniejący stos. Nadmiar zostaje w plecaku; różna jakość i stan nie zajmą kolejnych slotów.</vacuum.stackhelp>
   <vacuum.details>Egzemplarze</vacuum.details>
-  <vacuum.filters>Filtr zbierania</vacuum.filters>
+  <vacuum.filters>Filtry</vacuum.filters>
   <vacuum.contents>Zawartość</vacuum.contents>
-  <vacuum.filterhelp>Czerwone / −: pomijane przy zbieraniu. Kliknij ikonę, aby przełączyć.</vacuum.filterhelp>
+  <vacuum.filterhelp>Wybierz regułę pod siatką i kliknij przedmiot, aby ją przełączyć.</vacuum.filterhelp>
+  <vacuum.rule.filter>Ignoruj (-)</vacuum.rule.filter>
+  <vacuum.rule.protect>Chroń (O)</vacuum.rule.protect>
+  <vacuum.rule.allow>Odblokuj (!)</vacuum.rule.allow>
+  <vacuum.rulehelp.filter>Czerwone oznaczenie wyklucza ten typ z automatycznego zbierania.</vacuum.rulehelp.filter>
+  <vacuum.rulehelp.protect>Zielone oznaczenie chroni ten typ przed rozbiórką i wyrzuceniem do kosza.</vacuum.rulehelp.protect>
+  <vacuum.rulehelp.allow>Zezwala na zbieranie i wkładanie przedmiotów takich jak odczepiona ruda. Nadal obowiązują dostęp, przytwierdzenie i reguła Ignoruj przy zbieraniu.</vacuum.rulehelp.allow>
+  <vacuum.protected>Chroniony przed rozbiórką i koszem.</vacuum.protected>
+  <vacuum.allowed>Domyślny filtr tego typu jest odblokowany.</vacuum.allowed>
   <vacuum.included>Zbieranie włączone. Kliknij, aby pomijać ten typ.</vacuum.included>
   <vacuum.excluded>Pomijany przy zbieraniu, także wewnątrz pojemników. Kliknij, aby zbierać.</vacuum.excluded>
   <vacuum.blocked>Przedmiot poza ekwipunkiem — zawsze pomijany.</vacuum.blocked>
@@ -34,7 +42,7 @@
   <vacuum.drop>Odłóż</vacuum.drop>
   <vacuum.groups>Grupy</vacuum.groups>
   <vacuum.items>Sztuki</vacuum.items>
-  <vacuum.capacityhelp>Każda grupa mieści do 100 sztuk jednego typu. Ten sam typ może zajmować kilka grup. Łącznie: 100 grup i maksymalnie 10 000 sztuk, z zachowaniem stanu i jakości przedmiotów.</vacuum.capacityhelp>
+  <vacuum.capacityhelp>Do 200 grup po 200 sztuk. Przedmioty zachowują stan i jakość. Maksymalna pojemność zależy także od limitu obiektów w rundzie.</vacuum.capacityhelp>
   <vacuum.salvaged>Rozłożono</vacuum.salvaged>
   <vacuum.skipped>Pominięto</vacuum.skipped>
   <vacuum.salvagestate.working>Sprawdzono</vacuum.salvagestate.working>

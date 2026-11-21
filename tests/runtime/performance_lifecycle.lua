@@ -201,6 +201,16 @@ function L.verifyLegacy(name, saved)
                     'could not equip verified legacy pack in empty bag slot')
             end
             assert(wearer.Inventory.GetItemInLimbSlot(InvSlotType.Bag)==pack,'verified pack not in save owner bag slot')
+            if BMTVacuum.filterRules then
+                local ctx=BMTVacuum.context(pack,wearer)
+                assert(BMTVacuum.setExcluded(ctx,'iron',true),'could not save exclusion')
+                assert(BMTVacuum.setProtected(ctx,'iron',true),'could not save protection')
+                assert(BMTVacuum.setAllowed(ctx,'chalcopyrite',true),'could not save ore allowance')
+            end
+        elseif BMTVacuum.filterRules then
+            local rules=BMTVacuum.filterRules(pack)
+            assert(rules.excluded.iron and rules.protected.iron and rules.allowed.chalcopyrite,'native save lost filter rules')
+            write('METRIC saved_filter_rules=3')
         end
     end) then L.signal('legacy-verified') end
 end

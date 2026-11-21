@@ -78,6 +78,28 @@ class VacuumClientTests(LuaCase):
             b.OnClicked();assert(requests[#requests].action=='open' and requests[#requests].item==pack)
         """)
 
+    def test_filter_controls_protect_and_allow_independently_on_blocked_catalog_rows(self):
+        self.lua.execute("""
+            E.Color=function(r,g,b,a) return {r=r,g=g,b=b,a=a} end
+            G.openPanel(pack);button('vacuum.filters').OnClicked()
+            local ore={id=0,kind='chalcopyrite',name='Chalcopyrite',count=1,group=0,
+                condition=0,quality=0,blocked=true}
+            local snapshot={vacuum=pack.ID,pack=pack.ID,charge=0,groups=0,count=0,busy=false,
+                page=0,pages=1,packs={pack.ID},rows={ore},group=0,filters=true,category='all',search=''}
+            G.onSnapshot(snapshot)
+            local cell
+            for _,w in ipairs(widgets) do
+                if w.kind=='button' and (w.ToolTip or ''):find('Chalcopyrite',1,true) then cell=w end
+            end
+            assert(cell and not cell.Enabled)
+            button('vacuum.rule.protect').OnClicked();assert(cell.Enabled);cell.OnClicked()
+            assert(requests[#requests].action=='protect' and requests[#requests].target==1)
+            ore.protected=true;G.onSnapshot(snapshot)
+            assert(cell.Color.g>cell.Color.r and cell.ToolTip:find('vacuum.protected',1,true))
+            button('vacuum.rule.allow').OnClicked();assert(cell.Enabled);cell.OnClicked()
+            assert(requests[#requests].action=='allow' and requests[#requests].kind=='chalcopyrite')
+        """)
+
     def test_capacity_labels_and_salvage_progress_are_visible_without_hover(self):
         self.lua.execute("""
             G.openPanel(vacuum)
@@ -86,7 +108,7 @@ class VacuumClientTests(LuaCase):
                 salvage={phase='working',processed=9,total=598,done=7,skipped=2}})
             local capacity,progress
             for _,w in ipairs(widgets) do
-                if w.kind=='text' and w.Text and w.Text:find('62 / 100',1,true) then capacity=w.Text end
+                if w.kind=='text' and w.Text and w.Text:find('62 / 200',1,true) then capacity=w.Text end
                 if w.kind=='text' and w.Text and w.Text:find('9 / 598',1,true) then progress=w.Text end
             end
             assert(capacity and capacity:find('vacuum.groups',1,true) and capacity:find('vacuum.items',1,true))

@@ -16,8 +16,10 @@ function M.install(G,E)
         end
         if not roots then return end
         local items=Core.snapshot(roots,G.children)
+        local protected=G.filterRules and G.filterRules(ctx.pack).protected or {}
+        local hasProtection=next(protected)~=nil
         for _,item in ipairs(items) do
-            if item.Removed or G.reserved[item] or not G.has(ctx.pack,item) then return end
+            if item.Removed or G.reserved[item] or not G.has(ctx.pack,item) or (hasProtection and protected[G.id(item)]) then return end
         end
         return items
     end

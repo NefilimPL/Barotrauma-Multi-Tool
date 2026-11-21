@@ -5,6 +5,31 @@ ośmiu przedmiotów, krótką macierz funkcji z powtórkami i półgodzinną pr�
 mieszaną. Sprawdzono też rundy, ponowne dołączenie i zapis kampanii. Bazą
 jest 1.3.22 z commitu `1e14d6d`. Paczka 1.3.23 zawiera zmierzony kod.
 
+## Sprawdzenie wydania 1.3.24
+
+Krótka seria przed końcowym przeglądem potwierdziła pracę wszystkich ośmiu
+przedmiotów w oddzielnych scenach. W scenie walki ośmiu kombinezonów trzy
+stanowiska nie oddały strzału. Tę próbę wyłączono z wyników i powtórzono
+walkę dla dwóch stanowisk. [Surowa seria wszystkich przedmiotów](../output/performance/20261121T121529Z-release-1-3-24-all-items/summary.csv).
+
+Na plikach zgodnych z końcowym ZIP-em wykonano po jednej 12-sekundowej
+próbie z pięciosekundową rozgrzewką. Serwer i dwaj klienci zaliczyli
+24 z 24 wyników faz oraz kontroli. [Surowe pomiary](../output/performance/20261121T123426Z-release-1-3-24-touched-paths/summary.csv).
+
+| Obciążenie | p95 ticka, ms | FPS klienta A | FPS klienta B |
+|---|---:|---:|---:|
+| 8 zbierających odkurzaczy | 10,17 | 146 | 146 |
+| 2 panele plecaków po 1000 sztuk | 4,88 | 696 | 759 |
+| 2 odkurzacze w trybie rozbiórki | 5,66 | 541 | 587 |
+| 2 strzelające kombinezony | 6,09 | 569 | 604 |
+
+W tej serii zbieranie przez osiem odkurzaczy miało najwyższy p95 ticka.
+Stabilny koszt pełnego magazynu 40 000 przedmiotów wymaga porównywalnej
+próby obciążeniowej. Granicę grup i sztuk sprawdzono automatycznie.
+Natywny test potwierdził oba limity inwentarza po 200. Próba kampanii
+zachowała 10 000 przedmiotów i wszystkie trzy reguły po zapisie i ponownym
+odczycie. [Próby w grze](../output/performance/20261121T123308Z-descendant-vacuum-native-complete/native-checks.txt) · [Próba kampanii](../output/performance/20261121T123711Z-backpack-v6-rules-campaign/lifecycle.txt).
+
 ## Pomiary przed i po zmianach
 
 Każda pozycja w tabeli ma trzy zaliczone powtórzenia przed i po zmianach.

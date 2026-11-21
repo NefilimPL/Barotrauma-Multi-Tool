@@ -2,8 +2,8 @@ local Core=require('SalvageVacuum.core')
 local C=Core.config
 local M={}
 function M.install(G,E)
-    local actions={'open','withdraw','salvage','select','stack','filter','preparetrash','trash','batch','loose','insert'}
-    local ids={open=1,withdraw=2,salvage=3,select=4,stack=5,filter=6,preparetrash=7,trash=8,batch=9,loose=10,insert=11}
+    local actions={'open','withdraw','salvage','select','stack','filter','preparetrash','trash','batch','loose','insert','protect','allow'}
+    local ids={};for id,action in ipairs(actions) do ids[action]=id end
     local pageSize=C.viewColumns*C.viewRows
     G.lastPoll=G.lastPoll or {}
     function G.normalizeView(view)
@@ -18,7 +18,7 @@ function M.install(G,E)
         end end
         return {targets=targets,invalid=invalid,page=math.max(0,math.min(65534,math.floor(view.page or 0))),category=category,filters=view.filters==true,
             kind=tostring(view.kind or ''):sub(1,100),confirm=math.max(0,math.min(65535,math.floor(view.confirm or 0))),
-            group=math.max(0,math.min(100,math.floor(view.group or 0))),search=tostring(view.search or ''):sub(1,64)}
+            group=math.max(0,math.min(C.groups,math.floor(view.group or 0))),search=tostring(view.search or ''):sub(1,64)}
     end
     function G.handleRequest(client,action,vacuum,target,view)
         if not G.alive or not G.authoritative or not G.authorize(client,vacuum) or not ids[action] then return false end
@@ -38,9 +38,10 @@ function M.install(G,E)
         if action=='withdraw' then return G.withdraw(ctx,target) end
         if action=='stack' then return G.withdrawStack(ctx,target) end
         if action=='salvage' then return G.startSalvage(ctx) end
-        if action=='filter' then
+        if action=='filter' or action=='protect' or action=='allow' then
             if target~=0 and target~=1 then return false end
-            return G.setExcluded(ctx,view.kind,target==1)
+            local set=action=='filter' and G.setExcluded or action=='protect' and G.setProtected or G.setAllowed
+            return set(ctx,view.kind,target==1)
         end
         if action=='preparetrash' then return G.prepareTrash(ctx,target,view.group>0)~=false end
         if action=='trash' then return G.confirmTrash(ctx,target,view.confirm) end
@@ -64,12 +65,9 @@ function M.install(G,E)
             groups=Core.groups(records);count=#records
         end
         local rows={}
-        local filter=G.filter and G.filter(ctx.pack) or {}
+        local rules=G.filterRules and G.filterRules(ctx.pack) or {excluded={},protected={},allowed={}}
         if view.filters then
-            for _,entry in ipairs(G.filterCatalog(view)) do
-                rows[#rows+1]={id=0,kind=entry.kind,count=1,group=0,name=entry.name,condition=0,quality=0,
-                    excluded=entry.blocked or filter[entry.kind]==true,blocked=entry.blocked}
-            end
+            rows=G.filterCatalog(view)
         elseif view.group>0 and groups[view.group] then
             for _,record in ipairs(groups[view.group].items) do
                 local item=record.item
@@ -87,10 +85,19 @@ function M.install(G,E)
                 end
             end
         end
-        if not view.filters then for _,row in ipairs(rows) do row.excluded=filter[row.kind]==true end end
         local page=math.min(view.page,math.max(0,math.ceil(#rows/pageSize)-1))
         local selected={}
-        for i=page*pageSize+1,math.min(#rows,page*pageSize+pageSize) do selected[#selected+1]=rows[i] end
+        for i=page*pageSize+1,math.min(#rows,page*pageSize+pageSize) do
+            local row=rows[i]
+            local allowed=rules.allowed[row.kind]==true
+            if view.filters then
+                row={id=0,kind=row.kind,count=1,group=0,name=row.name,condition=0,quality=0,blocked=row.blocked and not allowed}
+            end
+            row.excluded=rules.excluded[row.kind]==true
+            row.protected=rules.protected[row.kind]==true
+            row.allowed=allowed
+            selected[#selected+1]=row
+        end
         local available=G.is(ctx.vacuum,C.vacuum) and G.packs(ctx.owner) or G.availablePacks(ctx.owner)
         local packs={};for _,pack in ipairs(available) do packs[#packs+1]=pack.ID end
         local present=false;for _,id in ipairs(packs) do if id==ctx.pack.ID then present=true end end
@@ -123,6 +130,7 @@ function M.install(G,E)
             m.WriteString(r.kind:sub(1,100))
             m.WriteString(r.name:sub(1,100));m.WriteSingle(r.condition);m.WriteByte(math.min(255,r.quality))
             m.WriteBoolean(r.excluded==true);m.WriteBoolean(r.blocked==true)
+            m.WriteBoolean(r.protected==true);m.WriteBoolean(r.allowed==true)
         end
         E.Networking.Send(m,client.Connection)
     end
@@ -159,7 +167,7 @@ function M.install(G,E)
             count=m.ReadByte();if count>pageSize then return end
             for i=1,count do s.rows[i]={id=m.ReadUInt16(),count=m.ReadByte(),group=m.ReadByte(),
                 kind=m.ReadString(),name=m.ReadString(),condition=m.ReadSingle(),quality=m.ReadByte(),
-                excluded=m.ReadBoolean(),blocked=m.ReadBoolean()} end
+                excluded=m.ReadBoolean(),blocked=m.ReadBoolean(),protected=m.ReadBoolean(),allowed=m.ReadBoolean()} end
             if G.onSnapshot then G.onSnapshot(s) end
         end)
     end

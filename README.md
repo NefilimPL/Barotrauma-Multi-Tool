@@ -2,7 +2,7 @@
 
 Mod zawiera **kombinezon serwomanipulacyjny Descendants** z jednym
 ramieniem do automatycznej naprawy i spawania, obrony lub chwytania celu.
-Wersja V2 ma widoczne sloty baterii/pręta i skrzynki pulsacyjnej, obieg
+Wersja V2 ma widoczne sloty baterii/pręta i skrzynki amunicji, obieg
 oddechowy bez butli, latarki i automatyczną wymianę zapasów przez AI.
 W **1.3.22** wyłączono automatyczne chwytanie postaci przez AI. Bot nadal
 naprawia i broni, ale nie podnosi już nieprzytomnych sojuszników chwytakiem.
@@ -14,7 +14,7 @@ spadek czasu klatki uzyskano przy widocznych naprawach kombinezonów.
 
 [Dokumentacja projektu](docs/README.md) · [Historia zmian](CHANGELOG.md)
 
-Paczka do lokalnej instalacji: [1.3.23](output/MULTI-TOOL-V2-1.3.23.zip).
+[Paczka 1.3.24 do lokalnej instalacji](output/MULTI-TOOL-V2-1.3.24.zip).
 
 Wersja Aegis wymaga [Lua for Barotrauma / LuaCs](https://github.com/evilfactory/LuaCsForBarotrauma)
 na kliencie i serwerze. Punktem zgodności jest Barotrauma **1.13.5.0**;
@@ -71,7 +71,8 @@ spawnitem pulselaserammobox inventory 1
 
 Załóż kombinezon w slocie ubrania zewnętrznego. Do pierwszego slotu włóż
 baterię albo pręt reaktora (`spawnitem fuelrod inventory 1`), do drugiego
-skrzynkę amunicji lasera pulsacyjnego. Butla nie jest potrzebna — obieg
+skrzynkę amunicji lasera pulsacyjnego lub działa Gaussa. Ramię dostosowuje
+pocisk do skrzynki i oddaje z niej trzy razy tyle strzałów co wieżyczka. Obieg
 oddechowy korzysta z zasilania kombinezonu. Po aktualizacji utwórz nowy egzemplarz,
 aby otrzymać aktualne komponenty i skalę złożonego przedmiotu na ziemi.
 W panelu po prawej wybierz naprawę/spawanie, obronę lub chwytak.

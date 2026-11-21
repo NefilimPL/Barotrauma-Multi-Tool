@@ -48,7 +48,7 @@ class DescendantBeamRenderingTests(LuaCase):
                 attachment=function() return {x=0,y=0} end,
                 toolPose=function() return pose end,
                 patch=function(name,class,method,fn) if name=='draw' then draw=fn end end}
-            E={Sprite=makeSprite,Vector2=vec,Color=color,Rectangle=function(x,y,w,h)
+            E={Sprite=makeSprite,Vector2=vec,Color=color,printerror=function() end,Rectangle=function(x,y,w,h)
                 return {X=x,Y=y,Width=w,Height=h} end,
                 GUI={GUI={Canvas={Rect={Width=800,Height=600}},DrawLine=function(...)
                     lines[#lines+1]={...}
@@ -93,6 +93,28 @@ class DescendantBeamRenderingTests(LuaCase):
         self.lua.execute("""
             state.mode='off';state.target=nil;state.active=false;render()
             assert(#lines==0,'old shot snapshot draws ghost beam after switching off')
+        """)
+
+    def test_failed_draw_does_not_hide_other_suits_and_recovers_after_camera_fault(self):
+        self.lua.execute("""
+            local second={};local secondItem={}
+            state.owner=owner
+            G.states[secondItem]={mode='off',owner=second}
+            G.equipped=function(c) return c==owner and item or secondItem end
+            local mount=G.mount;local fail=true
+            G.mount=function(c,drawPose)
+                if c==owner and fail then error('temporary draw transform failure') end
+                return mount(c,drawPose)
+            end
+            draw(owner,{spriteBatch={},cam=cam})
+            assert(G.drawError,'failed frame was not diagnosed')
+            draw(second,{spriteBatch={},cam=cam})
+            assert(#draws==5,'second wearer lost both arm and fan')
+            fail=false;G.now=G.now+1
+            render()
+            local fan=false
+            for _,d in ipairs(draws) do if d.path=='mod/Assets/DescendantSuit/impeller.png' then fan=true end end
+            assert(fan and #draws>=5,'first wearer did not resume drawing the arm and fan')
         """)
 
     def test_client_dispose_releases_all_loaded_sprites(self):

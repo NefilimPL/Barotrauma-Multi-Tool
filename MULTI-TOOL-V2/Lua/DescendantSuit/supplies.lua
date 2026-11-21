@@ -1,5 +1,5 @@
 local U=require('CombatTool.util')
-local C=require('DescendantSuit.config')
+local Ammo=require('DescendantSuit.ammo')
 local M={}
 function M.allowed(E,source,owner,suit)
     if not source or source.Removed or source==suit then return false end
@@ -33,7 +33,7 @@ function M.install(G,E)
         if G.energy(item)>0 then objective.IsCompleted=true end
     end)
     E.Util.RegisterItemGroup('bmt.descendant.supplies',function(item)
-        return item.HasTag('mobilebattery') or item.HasTag('reactorfuel') or item.HasTag('pulselaserammo')
+        return item.HasTag('mobilebattery') or item.HasTag('reactorfuel') or Ammo.profile(item)~=nil
     end)
     local function cancel(s)
         if s.resupply then s.resupply.IsCompleted=true end
@@ -43,9 +43,9 @@ function M.install(G,E)
     local function candidate(owner,item,slot,s)
         local best,score
         U.each(E.Util.GetItemGroup('bmt.descendant.supplies'),function(source)
-            local role=slot==0 and (source.HasTag('mobilebattery') or source.HasTag('reactorfuel')) or
-                slot==1 and source.HasTag('pulselaserammo')
-            if not role or source.Condition<(slot==1 and C.ammoCost or 1) or
+            local usable=slot==0 and source.Condition>=1 and (source.HasTag('mobilebattery') or source.HasTag('reactorfuel')) or
+                slot==1 and Ammo.status(source,Ammo.profile(source))>=1
+            if not usable or
                 not M.allowed(E,source,owner,item) or not source.HasAccess(owner) or
                 U.reservedHeadsetCell(E,source) or (s.failedSupplies and (s.failedSupplies[source.ID] or 0)>G.now) then return end
             if source.Submarine~=owner.Submarine and source.ParentInventory~=owner.Inventory then return end
@@ -68,8 +68,7 @@ function M.install(G,E)
         end
         if G.now<(s.nextResupply or 0) then return end
         s.nextResupply=G.now+1
-        local ammo=G.ammo(item)
-        local slot=G.energy(item)<=0 and 0 or (not ammo or ammo.Condition<C.ammoCost) and 1 or nil
+        local slot=G.energy(item)<=0 and 0 or Ammo.status(G.ammo(item))<1 and 1 or nil
         if slot==nil then return end
         local source=candidate(owner,item,slot,s)
         if not source then return end

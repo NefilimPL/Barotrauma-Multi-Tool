@@ -39,6 +39,20 @@ class VacuumFilterTests(LuaCase):
             assert(pack.Tags=='mobilecontainer,custom.tag')
         """)
 
+    def test_protection_and_allowance_are_independent_and_persist(self):
+        self.lua.execute("""
+            assert(G.setExcluded(ctx,'iron',true))
+            assert(G.setProtected(ctx,'iron',true))
+            assert(G.setAllowed(ctx,'iron',true))
+            G.clearFilters()
+            local rules=G.filterRules(pack)
+            assert(rules.excluded.iron and rules.protected.iron and rules.allowed.iron)
+            assert(not G.acceptsLoot(pack,{Prefab=iron}))
+            assert(G.setProtected(ctx,'iron',false) and not G.filterRules(pack).protected.iron)
+            assert(G.filter(pack).iron and G.filterRules(pack).allowed.iron)
+            assert(pack.Tags:find('custom.tag',1,true))
+        """)
+
     def test_catalog_combines_search_category_and_blocked_defaults(self):
         self.lua.execute("""
             local rows=G.filterCatalog({category='diving',search='sui'})

@@ -3,6 +3,18 @@
 Przeniesione opisy wcześniejszych wydań z README. Pomiary i deklaracje
 w tych wpisach dotyczą wskazanych wersji, nie bieżącego kodu roboczego.
 
+## 1.3.24
+
+- Po chwilowym błędzie rysowania ramię i wirnik kombinezonu ponawiają próbę.
+  Błąd jednej postaci jest odizolowany od pozostałych kombinezonów.
+- Ramię strzela amunicją właściwą dla jednej z sześciu skrzynek pulsacyjnych
+  lub Gaussa. Każda daje trzy razy tyle strzałów co odpowiadająca wieżyczka.
+- Plecak mieści do 200 grup po 200 sztuk. Przy wkładaniu i rozbiórce
+  pojemność jest sprawdzana na podstawie liczników typów i zajętości stron.
+  Tworzenie stron i produktów uwzględnia wolne identyfikatory encji w rundzie.
+- W **Filtrach** zielone oznaczenie chroni typ przed rozbiórką i koszem.
+  **Odblokuj** zezwala na wkładanie i zbieranie m.in. odczepionej rudy.
+
 ## 1.3.23
 
 - Ramię Descendants rzadziej ponawia wyszukiwanie aktywnego celu i ponownie

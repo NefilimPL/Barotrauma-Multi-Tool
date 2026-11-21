@@ -19,7 +19,7 @@ class VacuumContentTests(LuaCase):
         self.assertEqual(vacuum.find('Holdable').get('slots'),'Any,RightHand+LeftHand')
         self.assertEqual(vacuum.find('ItemContainer/Containable').get('items'),'mobilebattery')
         self.assertEqual(pack.find('ItemContainer/Containable').get('items'),'aegisvacuumpage')
-        self.assertEqual(page.find('ItemContainer').get('capacity'),'100')
+        self.assertEqual(page.find('ItemContainer').get('capacity'),'200')
         self.assertEqual(page.find('ItemContainer').get('maxstacksize'),'1')
         self.assertIsNone(page.find('Fabricate'))
 

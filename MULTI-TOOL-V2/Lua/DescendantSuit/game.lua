@@ -1,6 +1,7 @@
 local Core=require('DescendantSuit.core')
 local C=Core.config
 local U=require('CombatTool.util')
+local Ammo=require('DescendantSuit.ammo')
 local M={}
 function M.new(E)
     local G={env=E,authoritative=E.SERVER or E.Game.IsSingleplayer,states={},now=0,alive=true,patches={}}
@@ -42,7 +43,8 @@ function M.new(E)
     function G.ammo(item)
         local inv=G.container(item,1)
         local box=inv and inv.GetItemAt(1)
-        if box and not box.Removed and box.MaxCondition>0 and box.HasTag('pulselaserammo') then return box end
+        local profile=Ammo.profile(box)
+        if profile then return box,profile end
     end
     function G.energy(item)
         local s=G.source(item)

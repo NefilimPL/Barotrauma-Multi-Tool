@@ -23,6 +23,7 @@ function M.install(G,E,root)
     local colors={repair={75,190,255},weld={75,190,255},combat={255,45,45},grab={255,153,35}}
     local channels={}
     local heldPlatforms={}
+    local drawFailures=setmetatable({},{__mode='k'})
     local function restoreHeld(entity,old)
         if not entity.Removed then entity.AnimController.IgnorePlatforms=old end
         if G.heldCharacters then G.heldCharacters[entity]=nil end
@@ -179,15 +180,31 @@ function M.install(G,E,root)
         end
     end
     G.patch('draw','Barotrauma.Character','Draw',function(owner,p)
-        if G.drawError then return end
+        local failure=drawFailures[owner]
+        if failure and G.now<failure.retryAt then return end
         local ok,err=pcall(draw,p['spriteBatch'],p['cam'],owner)
-        if not ok then G.drawError=tostring(err);E.printerror('[Descendant suit] Render: '..tostring(err)) end
+        if ok then
+            if failure then
+                drawFailures[owner]=nil
+                local _,other=next(drawFailures)
+                G.drawError=other and other.message or nil
+            end
+            return
+        end
+        -- A temporary draw transform failure must not disable other wearers.
+        -- Retry this wearer after a short delay and log repeated errors once.
+        local message=tostring(err)
+        G.drawError=message
+        if not failure or failure.message~=message then E.printerror('[Descendant suit] Render: '..message) end
+        drawFailures[owner]={message=message,retryAt=G.now+.25}
     end,true)
     function G.pauseClient()
         for _,entry in pairs(channels) do stop(entry.beam);stop(entry.motor) end
         channels={}
     end
     function G.clearClient()
+        for owner in pairs(drawFailures) do drawFailures[owner]=nil end
+        G.drawError=nil
         for entity,old in pairs(heldPlatforms) do restoreHeld(entity,old) end
         for _,s in pairs(G.states) do G.removeLights(s) end
         for _,entry in pairs(channels) do stop(entry.beam);stop(entry.motor);G.removeLights(entry.state) end

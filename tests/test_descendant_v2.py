@@ -1,3 +1,6 @@
+import xml.etree.ElementTree as ET
+from pathlib import Path
+
 from lua_support import LuaCase
 
 
@@ -8,7 +11,7 @@ class DescendantV2Tests(LuaCase):
             E={SERVER=true,Game={IsSingleplayer=false},InvSlotType={OuterClothes=9}}
             E.LuaUserData={IsTargetType=function(v,t) return v.character==true end}
             cell={Condition=80,MaxCondition=100,HasTag=function(t) return t=='mobilebattery' end}
-            box={Condition=100,MaxCondition=100,HasTag=function(t) return t=='pulselaserammo' end}
+            box={Condition=100,MaxCondition=100,Prefab={Identifier={Value='pulselaserammobox'}},HasTag=function(t) return t=='pulselaserammo' end}
             slots={[0]=cell,[1]=box}
             suit={Condition=100,Prefab={Identifier={Value='descendantservosuit'}},Components={
                 {Name='ItemContainer',Inventory={GetItemAt=function(i) return slots[i] end}}}}
@@ -52,6 +55,32 @@ class DescendantV2Tests(LuaCase):
             assert(C.payPulse(s,power,ammo,5.41))
             assert(C.config.combatRange>=1500 and C.config.shotDamage>=20)
         """)
+
+    def test_all_six_boxes_deliver_three_times_the_native_capacity_with_float_condition(self):
+        from ctypes import c_float
+
+        self.lua.globals().native_float = lambda value: c_float(value).value
+        self.lua.execute("""
+            local Ammo=require('DescendantSuit.ammo')
+            for id,expected in pairs({pulselaserammobox=132,pulselaserammoboxtrilaser=84,
+                coilgunammobox=600,physicoriumammobox=600,coilgunammoboxexplosive=300,coilgunammoboxpiercing=447}) do
+                local box={Condition=100,MaxCondition=100,Prefab={Identifier={Value=id}}}
+                local profile=assert(Ammo.profile(box),id)
+                for shots=expected,1,-1 do
+                    local actual,cost,condition=Ammo.status(box,profile)
+                    assert(actual==shots,id..' '..actual..'/'..shots)
+                    box.Condition=native_float(condition-cost)
+                end
+                assert(Ammo.status(box,profile)==0 and box.Condition==0)
+            end
+        """)
+
+    def test_piercing_round_can_continue_after_its_first_impact(self):
+        items = ET.parse(Path(__file__).resolve().parents[1] / 'MULTI-TOOL-V2/descendant_suit.xml')
+        projectile = items.find("./Item[@identifier='descendantpiercingbolt']/Projectile")
+        self.assertEqual(projectile.get('maxtargetstohit'), '2')
+        self.assertNotEqual(projectile.get('removeonhit'), 'true')
+        self.assertIsNotNone(projectile.find("StatusEffect[@type='OnNotContained']/Remove"))
 
     def test_power_toggle_restores_last_selected_single_mode(self):
         self.lua.execute("""

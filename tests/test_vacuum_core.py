@@ -6,32 +6,42 @@ class VacuumCoreTests(LuaCase):
         super().setUp()
         self.lua.execute("V=require('SalvageVacuum.core')")
 
-    def test_groups_split_at_100_and_keep_actual_instances(self):
+    def test_groups_split_at_200_and_keep_actual_instances(self):
         self.lua.execute("""
             local items={}
-            for i=1,101 do items[i]={id=i,kind='suit',condition=i,contents={i}} end
+            for i=1,201 do items[i]={id=i,kind='suit',condition=i,contents={i}} end
             local groups=V.groups(items)
-            assert(#groups==2 and #groups[1].items==100 and #groups[2].items==1)
-            assert(groups[1].items[1]==items[1] and groups[2].items[1]==items[101])
+            assert(#groups==2 and #groups[1].items==200 and #groups[2].items==1)
+            assert(groups[1].items[1]==items[1] and groups[2].items[1]==items[201])
             assert(items[42].condition==42 and items[42].contents[1]==42)
         """)
 
     def test_capacity_counts_groups_instead_of_only_number_of_items(self):
         self.lua.execute("""
             local items={}
-            for i=1,100 do items[i]={kind='type'..i} end
+            for i=1,200 do items[i]={kind='type'..i} end
             assert(not V.canAccept(items,{kind='newtype'}))
             assert(V.canAccept(items,{kind='type1'}))
-            for i=2,100 do items[#items+1]={kind='type1'} end
+            for i=2,200 do items[#items+1]={kind='type1'} end
             assert(not V.canAccept(items,{kind='type1'}))
         """)
 
     def test_batch_capacity_reserves_all_products_together(self):
         self.lua.execute("""
             local items={}
-            for i=1,99 do items[i]={kind='type'..i} end
+            for i=1,199 do items[i]={kind='type'..i} end
             assert(V.canFit(items,{{kind='iron'},{kind='iron'}}))
             assert(not V.canFit(items,{{kind='iron'},{kind='copper'}}))
+        """)
+
+    def test_full_pack_holds_40000_entities(self):
+        self.lua.execute("""
+            local items={}
+            for i=1,40000 do items[i]={kind='iron',id=i} end
+            local groups=V.groups(items)
+            assert(#groups==200 and #groups[200].items==200)
+            assert(groups[200].items[200]==items[40000])
+            assert(not V.canAccept(items,{kind='iron'}))
         """)
 
     def test_snapshot_is_postorder_and_cycle_safe(self):
