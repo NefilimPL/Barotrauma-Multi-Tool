@@ -12,9 +12,9 @@
   <aegisvacuum.stack>Weź stos</aegisvacuum.stack>
   <aegisvacuum.stackhelp>Pobierz jeden stos do jednego slotu ekwipunku, zgodnie z limitem gry. Uzupełnia istniejący stos. Nadmiar zostaje w plecaku; różna jakość i stan nie zajmą kolejnych slotów.</aegisvacuum.stackhelp>
   <aegisvacuum.details>Egzemplarze</aegisvacuum.details>
-  <aegisvacuum.filters>Filtry</aegisvacuum.filters>
+  <aegisvacuum.filters>Ochrona i zbieranie</aegisvacuum.filters>
   <aegisvacuum.contents>Zawartość</aegisvacuum.contents>
-  <aegisvacuum.filterhelp>Wybierz regułę pod siatką i kliknij przedmiot, aby ją przełączyć.</aegisvacuum.filterhelp>
+  <aegisvacuum.filterhelp>Ustaw TAK przy typach, których nie chcesz rozbierać.</aegisvacuum.filterhelp>
   <aegisvacuum.rule.filter>Ignoruj (-)</aegisvacuum.rule.filter>
   <aegisvacuum.rule.protect>Chroń (O)</aegisvacuum.rule.protect>
   <aegisvacuum.rule.allow>Odblokuj (!)</aegisvacuum.rule.allow>
@@ -111,4 +111,37 @@
   <entitydescription.aegisservomoduleclowns>Wycraftuj osobno i włóż do slotu 3 kombinezonu Aegis, po zasilaniu i amunicji. Włącza naprawę, spawanie, obronę i chwytak ramienia. Wyjęcie zwalnia trzymany cel i zatrzymuje pracę ramienia. Moduł nie zastępuje skrzynki amunicji ani źródła zasilania.</entitydescription.aegisservomoduleclowns>
   <entityname.aegisimpellermoduleclowns>Moduł wirnika Aegis — Dzieci Honkomatki</entityname.aegisimpellermoduleclowns>
   <entitydescription.aegisimpellermoduleclowns>Wycraftuj osobno i włóż do slotu 4 kombinezonu Aegis. Włącza wspomaganie pływania wirnikiem. Wyjęcie wyłącza napęd. Obieg oddechowy, sonar i oświetlenie działają niezależnie.</entitydescription.aegisimpellermoduleclowns>
+  <aegishud.collapse>Zwiń cały panel</aegishud.collapse>
+  <aegishud.expand>Rozwiń sterowanie sprzętem</aegishud.expand>
+  <aegishud.tool>Multitool</aegishud.tool>
+  <aegishud.arm>Ramię</aegishud.arm>
+  <aegishud.weld>Spawanie</aegishud.weld>
+  <aegishud.cut>Cięcie</aegishud.cut>
+  <aegishud.extinguish>Gaśnica</aegishud.extinguish>
+  <aegishud.combat>Broń</aegishud.combat>
+  <aegishud.damage>Obrażenia NPC</aegishud.damage>
+  <aegishud.on>WŁ.</aegishud.on>
+  <aegishud.off>WYŁ.</aegishud.off>
+  <aegishud.power>Energia</aegishud.power>
+  <aegishud.shield>Tarcza</aegishud.shield>
+  <aegishud.missing>brak wkładu</aegishud.missing>
+  <aegishud.waiting>oczekiwanie</aegishud.waiting>
+  <aegisvacuum.protectiontitle>Co zachować?</aegisvacuum.protectiontitle>
+  <aegisvacuum.typename>Typ przedmiotu</aegisvacuum.typename>
+  <aegisvacuum.protectcolumn>Nie rozbieraj</aegisvacuum.protectcolumn>
+  <aegisvacuum.collectcolumn>Zbieraj</aegisvacuum.collectcolumn>
+  <aegisvacuum.unblockcolumn>Wyjątek</aegisvacuum.unblockcolumn>
+  <aegisvacuum.yes>TAK</aegisvacuum.yes>
+  <aegisvacuum.no>NIE</aegisvacuum.no>
+  <aegisvacuum.blockedshort>Blokada</aegisvacuum.blockedshort>
+  <aegisvacuum.unblock>Zezwól</aegisvacuum.unblock>
+  <aegisvacuum.revoke>Cofnij</aegisvacuum.revoke>
+  <aegisvacuum.protecttype>Chroń typ</aegisvacuum.protecttype>
+  <aegisvacuum.protection_on>Typ chroniony [TAK]</aegisvacuum.protection_on>
+  <aegisvacuum.protecttypehelp>Ochrona obejmuje wszystkie egzemplarze tego typu, także zebrane później. Rozbiórka i kosz je pomijają. Dotyczy też przedmiotów w pojemnikach.</aegisvacuum.protecttypehelp>
+  <aegisvacuum.collectionhelp>TAK: zbieraj ten typ. NIE: pomijaj go przy zbieraniu i wkładaniu. Nie zmienia ochrony przed rozbiórką.</aegisvacuum.collectionhelp>
+  <aegisvacuum.unblockhelp>Wyjątek znosi domyślną blokadę zbierania tego typu. Nie wyłącza ochrony rozbiórki.</aegisvacuum.unblockhelp>
+  <aegisvacuum.ruleshelp>Nie rozbieraj: TAK zachowuje wszystkie obecne i przyszłe sztuki tego typu.
+Zbieraj osobno decyduje o przyjmowaniu przedmiotów do plecaka.
+Wyjątek jest potrzebny tylko dla typów z domyślną blokadą. Zasady zapisują się w plecaku.</aegisvacuum.ruleshelp>
 </infotexts>

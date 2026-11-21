@@ -1,8 +1,8 @@
-# System Aegis 1.5.2 — wersja bez komunikatorów
+# System Aegis 1.6.0
 
-Osobny, kompletny folder moda: `System-Aegis-No-Headsets/`.
-[Gotowy ZIP](../output/System-Aegis-No-Headsets-1.5.2.zip).
-Pełna wersja `System-Aegis/` pozostaje bez zmian.
+Archiwum zawiera kompletny folder moda `System-Aegis/`.
+[Gotowy ZIP](../output/System-Aegis-1.6.0.zip).
+
 
 W tym wariancie są odkurzacz z plecakiem, kombinezon Aegis, bojowy multitool,
 kompozytowy multitool i klucz-śrubokręt. Nie zawiera komunikatorów Aegis,
@@ -12,12 +12,14 @@ ich regeneracji, osłon, skryptów ani zasobów. Wymaga LuaCs na kliencie i serw
 
 ## Instalacja
 
-1. Skopiuj `System-Aegis-No-Headsets` do `Barotrauma/LocalMods/`.
-2. Włącz pakiet **System Aegis (No Headsets)**. Włączaj jedną wersję Aegis naraz,
+1. Skopiuj folder `System-Aegis` z archiwum do `Barotrauma/LocalMods/`.
+2. Włącz pakiet **System Aegis**. Włączaj jedną wersję Aegis naraz,
    ponieważ wersje używają tych samych identyfikatorów wyposażenia.
 3. Uruchom grę ponownie. Utwórz nowe egzemplarze broni i kombinezonu,
    aby mieć nowe sloty. Moduły wytwarza się i wkłada osobno; nie są dołączane
    przy zakupie ani wytworzeniu wyposażenia.
+
+[Nowy panel i ochrona przed rozbiórką](INTERFACE.md).
 
 ## Używanie bez modułów
 
@@ -127,7 +129,7 @@ przemalowywania plików źródłowych. [Komplet promptów](modular-assets/PROMPT
 ```powershell
 python tools/run_tests.py
 python tools/validate_content.py --mod System-Aegis-No-Headsets --game 'D:/SteamLibrary/steamapps/common/Barotrauma'
-python tools/package_mod.py --mod System-Aegis-No-Headsets
+python tools/package_mod.py --mod System-Aegis-No-Headsets --package-name System-Aegis
 ```
 
 Testy obejmują limit blokad, kolejkę regeneracji, brak zasilania, pauzę,

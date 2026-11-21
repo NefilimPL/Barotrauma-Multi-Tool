@@ -12,9 +12,9 @@
   <aegisvacuum.stack>Take stack</aegisvacuum.stack>
   <aegisvacuum.stackhelp>Take one stack into one inventory slot, using the game stack limit. Tops up an existing stack. Excess stays in the backpack; different quality or condition will not fill more slots.</aegisvacuum.stackhelp>
   <aegisvacuum.details>Instances</aegisvacuum.details>
-  <aegisvacuum.filters>Filters</aegisvacuum.filters>
+  <aegisvacuum.filters>Protection and collection</aegisvacuum.filters>
   <aegisvacuum.contents>Contents</aegisvacuum.contents>
-  <aegisvacuum.filterhelp>Choose a rule below the grid and click an item to toggle it.</aegisvacuum.filterhelp>
+  <aegisvacuum.filterhelp>Choose YES for the types you want to keep.</aegisvacuum.filterhelp>
   <aegisvacuum.rule.filter>Ignore (-)</aegisvacuum.rule.filter>
   <aegisvacuum.rule.protect>Protect (O)</aegisvacuum.rule.protect>
   <aegisvacuum.rule.allow>Allow (!)</aegisvacuum.rule.allow>
@@ -111,4 +111,37 @@
   <entitydescription.aegisservomoduleclowns>Craft separately and install in slot 3 of the Aegis servo suit, after power and ammunition. Enables every arm function: repair, welding, combat and tractor beam. Removing it releases the held target and stops arm work. It does not replace the ammunition box or power source.</entitydescription.aegisservomoduleclowns>
   <entityname.aegisimpellermoduleclowns>Aegis impeller module — Children of the Honkmother</entityname.aegisimpellermoduleclowns>
   <entitydescription.aegisimpellermoduleclowns>Craft separately and install in slot 4 of the Aegis servo suit. Enables the underwater propulsion impeller. Removing it disables powered swimming assistance. Life support, sonar and lights remain independent.</entitydescription.aegisimpellermoduleclowns>
+  <aegishud.collapse>Collapse entire panel</aegishud.collapse>
+  <aegishud.expand>Expand equipment controls</aegishud.expand>
+  <aegishud.tool>Multitool</aegishud.tool>
+  <aegishud.arm>Arm</aegishud.arm>
+  <aegishud.weld>Welding</aegishud.weld>
+  <aegishud.cut>Cutting</aegishud.cut>
+  <aegishud.extinguish>Extinguisher</aegishud.extinguish>
+  <aegishud.combat>Weapon</aegishud.combat>
+  <aegishud.damage>NPC damage</aegishud.damage>
+  <aegishud.on>ON</aegishud.on>
+  <aegishud.off>OFF</aegishud.off>
+  <aegishud.power>Power</aegishud.power>
+  <aegishud.shield>Shield</aegishud.shield>
+  <aegishud.missing>no cartridge</aegishud.missing>
+  <aegishud.waiting>waiting</aegishud.waiting>
+  <aegisvacuum.protectiontitle>What should be kept?</aegisvacuum.protectiontitle>
+  <aegisvacuum.typename>Item type</aegisvacuum.typename>
+  <aegisvacuum.protectcolumn>Do not dismantle</aegisvacuum.protectcolumn>
+  <aegisvacuum.collectcolumn>Collect</aegisvacuum.collectcolumn>
+  <aegisvacuum.unblockcolumn>Override</aegisvacuum.unblockcolumn>
+  <aegisvacuum.yes>YES</aegisvacuum.yes>
+  <aegisvacuum.no>NO</aegisvacuum.no>
+  <aegisvacuum.blockedshort>Blocked</aegisvacuum.blockedshort>
+  <aegisvacuum.unblock>Allow</aegisvacuum.unblock>
+  <aegisvacuum.revoke>Revoke</aegisvacuum.revoke>
+  <aegisvacuum.protecttype>Protect type</aegisvacuum.protecttype>
+  <aegisvacuum.protection_on>Type protected [YES]</aegisvacuum.protection_on>
+  <aegisvacuum.protecttypehelp>Protects every copy of this item type, including future pickups. Dismantling and trash skip them, including items inside containers.</aegisvacuum.protecttypehelp>
+  <aegisvacuum.collectionhelp>YES: collect this type. NO: skip it during collection and insertion. Does not change dismantling protection.</aegisvacuum.collectionhelp>
+  <aegisvacuum.unblockhelp>Overrides this type's default collection block. Does not disable dismantling protection.</aegisvacuum.unblockhelp>
+  <aegisvacuum.ruleshelp>Do not dismantle: YES keeps all current and future copies of that type.
+Collect independently controls what the backpack accepts.
+Override is only needed for types blocked by default. Rules are saved in the backpack.</aegisvacuum.ruleshelp>
 </infotexts>

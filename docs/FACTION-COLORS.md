@@ -1,10 +1,10 @@
-# Kolory frakcji — System Aegis 1.5.2
+# Kolory frakcji — System Aegis 1.6.0
 
-Wersja bez komunikatorów zawiera sześć kosmetycznych zestawów kombinezonu,
+System Aegis zawiera sześć kosmetycznych zestawów kombinezonu,
 ramienia serwo i wirnika. Wybierz wariant po nazwie frakcji w fabrykatorze
 lub sklepie. Warianty mają takie same receptury, koszty, ochronę i funkcje.
 
-[Podgląd wszystkich palet](faction-colors/preview.html) · [ZIP 1.5.2](../output/System-Aegis-No-Headsets-1.5.2.zip)
+[Podgląd wszystkich palet](faction-colors/preview.html) · [ZIP 1.6.0](../output/System-Aegis-1.6.0.zip)
 
 | Frakcja | Kolor | Emblemat i detale |
 |---|---|---|
@@ -98,7 +98,7 @@ aby zachować widoczne nogi i buty również przy innych proporcjach PNG.
 [Dokładne prompty i sumy SHA256 dla 1.5.1](faction-colors/PROMPTS-1.5.1.md).
 [Historia generowania palet 1.5.0](faction-colors/PROMPTS.md).
 
-781 automatycznych testów przeszły. Testy sprawdzają rozpoznawanie wszystkich wariantów, zgodność
+Automatyczne testy sprawdzają rozpoznawanie wszystkich wariantów, zgodność
 modułów, dobór kolorów na postaci, zwalnianie pamięci tekstur, zgodność receptur
 i parametry przedmiotów. Walidacja obejmuje XML, Lua, grafiki oraz receptury
 z zainstalowanej gry. Test rozgrywki w silniku dla tego wydania pozostaje do wykonania.

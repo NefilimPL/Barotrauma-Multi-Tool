@@ -85,6 +85,7 @@ function M.install(G,E)
                 end
             end
         end
+        local pageSize=view.filters and C.filterRows or pageSize
         local page=math.min(view.page,math.max(0,math.ceil(#rows/pageSize)-1))
         local selected={}
         for i=page*pageSize+1,math.min(#rows,page*pageSize+pageSize) do

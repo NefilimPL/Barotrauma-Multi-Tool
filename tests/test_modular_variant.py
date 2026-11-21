@@ -218,7 +218,7 @@ class ModularVariantContentTests(unittest.TestCase):
 
     def test_variant_contains_no_custom_headset_content_or_loader(self):
         manifest=self.manifest()
-        self.assertIn('No Headsets',manifest.get('name'))
+        self.assertEqual(manifest.get('name'),'System Aegis')
         self.assertFalse(manifest.get('steamworkshopid'))
         self.assertFalse(any('headset' in n.get('file','').lower() for n in manifest))
         self.assertFalse((MOD / 'Lua/AegisHeadset').exists())
