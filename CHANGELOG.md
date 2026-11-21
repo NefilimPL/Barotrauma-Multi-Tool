@@ -3,6 +3,41 @@
 Przeniesione opisy wcześniejszych wydań z README. Pomiary i deklaracje
 w tych wpisach dotyczą wskazanych wersji, nie bieżącego kodu roboczego.
 
+## 1.5.2 — sprzedaż kombinezonów
+
+- Cena bazowa każdego z sześciu kombinezonów: 10 000 marek; po jednej sztuce
+  w ofercie właściwego sprzedawcy, bez losowych ofert dnia.
+- Piraci u zbrojmistrza, Descendens w sklepie naukowym; Koalicja i Separatyści
+  w wojskowych placówkach własnej frakcji; Łuska i Klauni u własnych handlarzy.
+- Wyłączona sprzedaż tych strojów w pozostałych sklepach. Standardowe modyfikatory
+  cen kampanii nadal obowiązują. Receptury nie zmienione.
+- Potwierdzono sloty i wymóg modułu serwa, wirnika oraz wkładu tarczy; instrukcja
+  wyjaśnia, które podstawowe funkcje pozostają dostępne bez tych modułów.
+
+## 1.5.1 — emblematy i wykończenie frakcji
+
+- Małe znaki na pancerzu, ramieniu serwo i obudowie wirnika dla wszystkich sześciu frakcji.
+- Osobne wykończenia: pirackie spawy, ceramika Descendens, wojskowe panele Koalicji,
+  przemysłowe detale Separatystów, ceremonialne grawerunki Łuski i akcenty Klaunów.
+- 42 nowe tekstury wyposażenia oraz sześć przezroczystych emblematów PNG.
+  Wspólne części mechaniczne, układ atlasów i identyfikatory pozostają zgodne.
+- Kadry stojaków obejmują cały kombinezon wraz z butami.
+- Kadry atlasów dopasowane do rzeczywistego położenia części w każdej palecie;
+  hełmy, dłonie i łączniki są wyświetlane w całości.
+- Przegląd wariantów i zapis promptów w `docs/faction-colors/`.
+
+## 1.5.0 — kolory frakcji
+
+- Sześć kosmetycznych zestawów: Piraci (czerwony), Descendens (biały),
+  Koalicja (niebieski), Separatyści (pomarańczowy), Kościół Łuski (fioletowy),
+  Dzieci Honkomatki (zielony z żółtymi akcentami).
+- Piętnaście dodatkowych wariantów kombinezonu, serwa i wirnika z tymi samymi
+  cenami, recepturami, parametrami i funkcjami; czerwone identyfikatory zachowane.
+- Trzydzieści pięć nowych PNG dla pancerza, obrazów złożonego kombinezonu,
+  stojaków i modułów; geometria atlasu oraz przezroczystość zachowane.
+- Ramię i wirnik na postaci wyświetlają kolor rzeczywiście włożonego modułu.
+  Pamięć tekstur jest buforowana i zwalniana przy przeładowaniu moda.
+
 ## 1.4.1 — dopasowanie tekstur modułów
 
 - Ikona serwa odpowiada grafitowemu ramieniu kombinezonu z czerwonymi przewodami,

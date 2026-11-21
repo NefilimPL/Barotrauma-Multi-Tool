@@ -1,12 +1,14 @@
-# System Aegis 1.4.1 — wersja bez komunikatorów
+# System Aegis 1.5.2 — wersja bez komunikatorów
 
 Osobny, kompletny folder moda: `System-Aegis-No-Headsets/`.
-[Gotowy ZIP](../output/System-Aegis-No-Headsets-1.4.1.zip).
+[Gotowy ZIP](../output/System-Aegis-No-Headsets-1.5.2.zip).
 Pełna wersja `System-Aegis/` pozostaje bez zmian.
 
 W tym wariancie są odkurzacz z plecakiem, kombinezon Aegis, bojowy multitool,
 kompozytowy multitool i klucz-śrubokręt. Nie zawiera komunikatorów Aegis,
 ich regeneracji, osłon, skryptów ani zasobów. Wymaga LuaCs na kliencie i serwerze.
+
+[Kolory, emblematy i detale frakcji](FACTION-COLORS.md) · [Podgląd palet](faction-colors/preview.html)
 
 ## Instalacja
 
@@ -16,6 +18,19 @@ ich regeneracji, osłon, skryptów ani zasobów. Wymaga LuaCs na kliencie i serw
 3. Uruchom grę ponownie. Utwórz nowe egzemplarze broni i kombinezonu,
    aby mieć nowe sloty. Moduły wytwarza się i wkłada osobno; nie są dołączane
    przy zakupie ani wytworzeniu wyposażenia.
+
+## Używanie bez modułów
+
+Można założyć sam kombinezon. Bez serwa nie działa ramię, a bez wirnika napęd.
+Podstawowa ochrona, oddychanie, światła i sonar pozostają dostępne zgodnie
+z wymaganiami zasilania. Bojowy multitool bez wkładu tarczy nadal działa jako
+broń i narzędzie, lecz nie blokuje pocisków. Pozostałe multitoole nie potrzebują
+wkładu tarczy. Moduły są osobnymi przedmiotami wkładanymi do slotów, nie bonusami
+odblokowywanymi samym posiadaniem ich w ekwipunku.
+
+Kombinezony kosztują bazowo **10 000 marek** i są sprzedawane wyłącznie przez
+[przypisanych handlarzy](FACTION-COLORS.md#sprzedaż-kombinezonów).
+Zakup ani craft kombinezonu/broni nie dołącza modułów.
 
 ## Tarcza bojowego multitoola
 

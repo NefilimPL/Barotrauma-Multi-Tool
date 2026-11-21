@@ -244,8 +244,9 @@ class ModularVariantContentTests(unittest.TestCase):
         gun=ET.parse(MOD / 'aegis_combat.xml').find('Item/ItemContainer')
         suit=ET.parse(MOD / 'aegis_suit.xml').find('Item/ItemContainer')
         self.assertEqual(gun.find('SubContainer/Containable').get('items'),'aegisshieldmodule')
-        self.assertEqual([n.find('Containable').get('items') for n in suit.findall('SubContainer')][1:],
-                         ['aegisservomodule','aegisimpellermodule'])
+        for node, base in zip(suit.findall('SubContainer')[1:], ('aegisservomodule','aegisimpellermodule')):
+            self.assertEqual(set(node.find('Containable').get('items').split(',')),
+                             {base+suffix for suffix in ('','descendens','coalition','separatists','husk','clowns')})
         self.assertEqual({n.get('slotindex') for n in suit.findall('SlotIcon')},{'0','1','2','3'})
 
     def test_original_full_package_keeps_headsets_and_previous_slots(self):

@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
 <infotexts language="English" nowhitespace="false" translatedname="English">
-  <entityname.aegisservosuit>Aegis servo suit</entityname.aegisservosuit>
+  <entityname.aegisservosuit>Aegis servo suit — Pirates</entityname.aegisservosuit>
   <entitydescription.aegisservosuit>Powered exosuit rated to 10,000 m. Four slots in order: battery/reactor rod, ammunition, separately crafted servo arm module, separately crafted impeller module. No free modules are included. Arm functions require the servo; powered swimming requires the impeller. Removing the servo releases held targets and stops repair and firing. Life support, sonar and lights work without these modules. Requires client and server LuaCs.</entitydescription.aegisservosuit>
   <aegis.title>Servo arm</aegis.title>
   <aegis.off>Arm off</aegis.off>

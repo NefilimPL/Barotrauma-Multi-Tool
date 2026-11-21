@@ -1,9 +1,8 @@
 <?xml version='1.0' encoding='utf-8'?>
 <Items>
   <Item identifier="aegisservosuit" category="Diving,Equipment" tags="diving,deepdiving,human,aegisservosuit,divinggear_wearableindoors" scale="0.06" fireproof="true" allowdroppingonswapwith="diving" impactsoundtag="impact_metal_heavy" addedrepairspeedmultiplier="4.5" cannotrepairfail="true">
-    <Price baseprice="4500" sold="true" minavailable="1" maxavailable="1">
-      <Price storeidentifier="merchantresearch" />
-      <Price storeidentifier="merchantmilitary" />
+    <Price baseprice="10000" sold="false" soldelsewhere="false" minavailable="1" maxavailable="1" canbespecial="false">
+      <Price storeidentifier="merchantarmory" sold="true" multiplier="1.0" />
     </Price>
     <Fabricate suitablefabricators="fabricator" requiredtime="60">
       <RequiredSkill identifier="mechanical" level="65" />
@@ -19,10 +18,10 @@
     </Deconstruct>
     <InventoryIcon texture="%ModDir%/Assets/AegisSuit/packed-suit.png" sourcerect="96,173,1428,586" origin="0.5,0.5" compress="false" />
     <Sprite texture="%ModDir%/Assets/AegisSuit/packed-suit.png" sourcerect="96,173,1428,586" origin="0.5,0.5" depth="0.55" compress="false" />
-    <ContainedSprite name="Aegis upright suit" allowedcontainertags="divingsuitcontainervertical" texture="%ModDir%/Assets/AegisSuit/rack-suit.png" sourcerect="150,100,540,1240" origin="0.5,0.5" depth="0.55" compress="false" />
+    <ContainedSprite name="Aegis upright suit" allowedcontainertags="divingsuitcontainervertical" texture="%ModDir%/Assets/AegisSuit/rack-suit.png" origin="0.5,0.5" depth="0.55" compress="false" />
     <ContainedSprite name="Aegis window suit" allowedcontainertags="divingsuitcontainerwindow" texture="%ModDir%/Assets/AegisSuit/rack-window-v2.png" sourcerect="50,63,657,1742" origin="-0.12,-0.13" depth="0.55" compress="false" />
     <ContainedSprite name="Aegis horizontal suit" allowedcontainertags="divingsuitcontainerhorizontal" texture="%ModDir%/Assets/AegisSuit/packed-suit.png" sourcerect="96,173,1428,586" origin="0.5,0.5" depth="0.55" compress="false" />
-    <ContainedSprite name="Aegis suit holder" allowedcontainertags="divingsuitcontainer" texture="%ModDir%/Assets/AegisSuit/rack-suit.png" sourcerect="150,100,540,1240" origin="0.5,0.5" depth="0.55" compress="false" />
+    <ContainedSprite name="Aegis suit holder" allowedcontainertags="divingsuitcontainer" texture="%ModDir%/Assets/AegisSuit/rack-suit.png" origin="0.5,0.5" depth="0.55" compress="false" />
     <Body width="1200" height="430" density="20" />
     <Wearable slots="OuterClothes" msg="ItemMsgEquipSelect" displaycontainedstatus="true" canbeselected="false" canbepicked="true" pickkey="Select">
       <sprite name="Aegis seal Torso" texture="Content/Items/Diving/Abyss_DivingSuit.png" limb="Torso" hidelimb="true" hideotherwearables="true" inherittexturescale="true" inheritorigin="true" inheritsourcerect="true" depth="0.6" color="65,70,80,255" />
@@ -71,11 +70,11 @@
         <Containable items="pulselaserammobox,pulselaserammoboxtrilaser,coilgunammobox,physicoriumammobox,coilgunammoboxexplosive,coilgunammoboxpiercing" />
       </SubContainer>
       <SubContainer capacity="1" maxstacksize="1">
-        <Containable items="aegisservomodule" />
+        <Containable items="aegisservomodule,aegisservomoduledescendens,aegisservomodulecoalition,aegisservomoduleseparatists,aegisservomodulehusk,aegisservomoduleclowns" />
       </SubContainer>
       <SlotIcon slotindex="2" texture="%ModDir%/Assets/AegisModules/servo-module.png" sourcerect="0,0,1536,1024" origin="0.5,0.5" />
       <SubContainer capacity="1" maxstacksize="1">
-        <Containable items="aegisimpellermodule" />
+        <Containable items="aegisimpellermodule,aegisimpellermoduledescendens,aegisimpellermodulecoalition,aegisimpellermoduleseparatists,aegisimpellermodulehusk,aegisimpellermoduleclowns" />
       </SubContainer>
       <SlotIcon slotindex="3" texture="%ModDir%/Assets/AegisModules/impeller-module.png" sourcerect="0,0,1254,1254" origin="0.5,0.5" />
     </ItemContainer>

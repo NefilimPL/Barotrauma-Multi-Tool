@@ -2,6 +2,7 @@ local Core=require('AegisSuit.core')
 local C=Core.config
 local U=require('AegisCombat.util')
 local Ammo=require('AegisSuit.ammo')
+local Factions=require('AegisSuit.factions')
 local M={}
 function M.new(E)
     local G={env=E,authoritative=E.SERVER or E.Game.IsSingleplayer,states={},now=0,alive=true,patches={}}
@@ -16,7 +17,10 @@ function M.new(E)
         humanAI=humanAI or E.LuaUserData.CreateStatic('Barotrauma.HumanAIController')
         return humanAI.IsFriendly(a,b,false,false)
     end
-    function G.is(item) return item and not item.Removed and U.itemId(item)==C.identifier end
+    function G.is(item) return item and not item.Removed and Factions.is(item,'suit') end
+    function G.eachSuit(fn)
+        for _,identifier in ipairs(Factions.suitIds) do U.each(E.Util.GetItemsById(identifier),fn) end
+    end
     function G.owner(item)
         local owner=item and item.ParentInventory and item.ParentInventory.Owner
         return owner and E.LuaUserData.IsTargetType(owner,'Barotrauma.Character') and owner or nil
@@ -328,7 +332,7 @@ function M.new(E)
         if G.authoritative and E.Game.RoundStarted then
             if G.now>=(G.nextOwners or 0) then
                 G.nextOwners=G.now+.25
-                U.each(E.Util.GetItemsById(C.identifier),function(item)
+                G.eachSuit(function(item)
                     if G.updateDocked then G.updateDocked(item,.25) end
                     local owner=G.owner(item)
                     if G.equipped(owner)==item then G.state(item) end

@@ -4,6 +4,7 @@
 
 - [Instalacja i LuaCs](INSTALL.md)
 - [Wersja bez komunikatorów — moduły tarczy, serwa i wirnika](NO-HEADSETS.md)
+- [Kolory frakcji, sprzedawcy i ceny wyposażenia](FACTION-COLORS.md)
 - [Publikacja osobnego moda](PUBLISH.md)
 - [Komunikatory Aegis](HEADSETS.md)
 - [Odkurzacz i magazyn plecaka](VACUUM.md)

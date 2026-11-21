@@ -1,13 +1,23 @@
 local C=require('AegisSuit.config')
 local Core=require('AegisSuit.core')
 local U=require('AegisCombat.util')
+local Factions=require('AegisSuit.factions')
 local M={}
 function M.install(G,E,root)
     local UI=E.GUI
     local gui=UI.GUI
-    local atlas=E.Sprite(root..'/Assets/AegisSuit/suit-v2.png',E.Vector2(.5,.5))
+    local skins={}
+    local function skin(key,asset)
+        local path=Factions.path(key,asset)
+        if not skins[path] then
+            skins[path]=E.Sprite(root..'/'..path,E.Vector2(asset=='housing' and .54 or .5,.5))
+        end
+        return skins[path]
+    end
+    local atlasKey='pirates'
+    local atlas=skin(atlasKey,'atlas')
     local impeller=E.Sprite(root..'/Assets/AegisSuit/impeller.png',E.Vector2(.5,.5))
-    local housing=E.Sprite(root..'/Assets/AegisSuit/impeller-housing.png',E.Vector2(.54,.5))
+    local housing=skin('pirates','housing')
     local pulseHead=E.Sprite('Content/Items/Weapons/Turrets.png',E.Vector2(.5,.5))
     local beamSprite=E.Sprite('Content/Particles/ParticleAtlas.png',E.Vector2(0,.5))
     -- Native neutral, feathered trail. The pulse itself is rendered only by
@@ -15,8 +25,8 @@ function M.install(G,E,root)
     beamSprite.SourceRect=E.Rectangle(130,383,225,40)
     beamSprite.Origin=E.Vector2(0,20)
     local A=require('AegisSuit.atlas')
-    local rects={upper=A.upperLink,lower=A.lowerLink,red=A.emitter,blue=A.emitter,orange=A.emitter,
-        rotor0=A.rotor,rotor1=A.rotor,rotor2=A.rotor,rotor3=A.rotor}
+    local rects={upper='upperLink',lower='lowerLink',red='emitter',blue='emitter',orange='emitter',
+        rotor0='rotor',rotor1='rotor',rotor2='rotor',rotor3='rotor'}
     require('AegisSuit.lights').install(G,E)
     require('AegisSuit.ui').install(G,E)
     local emitSparks=require('AegisSuit.sparks').new(E)
@@ -42,7 +52,9 @@ function M.install(G,E,root)
     -- Character.Draw already has the world transform and is lit afterwards.
     local function screen(cam,p) return E.Vector2(p.x,-p.y) end
     local function sprite(batch,cam,key,point,rotation,scale,origin)
-        local r=rects[key]
+        local base=A[rects[key]]
+        local r=Factions.frame(atlasKey,rects[key])
+        if origin then origin=E.Vector2(origin.X+(r[3]-base[3])/2,origin.Y+(r[4]-base[4])/2) end
         atlas.SourceRect=E.Rectangle(r[1],r[2],r[3],r[4])
         atlas.Origin=origin or E.Vector2(r[3]/2,r[4]/2)
         atlas.Draw(batch,screen(cam,point),E.Color.White,atlas.Origin,rotation or 0,E.Vector2(scale,scale))
@@ -90,7 +102,7 @@ function M.install(G,E,root)
         U.each(owner.AnimController.Limbs,function(limb)
             if limb.type==E.LimbType.Head then U.each(limb.WearingItems,function(w)
                 if w.WearableComponent and w.WearableComponent.Item==item then
-                    local r=open and A.helmetOpen or A.helmetClosed
+                    local r=Factions.frame(Factions.key(item),open and 'helmetOpen' or 'helmetClosed')
                     w.Sprite.SourceRect=E.Rectangle(r[1],r[2],r[3],r[4]);w.Sprite.Origin=E.Vector2(r[3]/2,r[4]/2)
                 end
             end) end
@@ -164,6 +176,9 @@ function M.install(G,E,root)
                     if target and target.entity and not target.entity.Removed and target.kind~='weld' then target.point=U.point(target.entity.WorldPosition) end
                     local pose
                     if s.hasArm then
+                        local part=G.module and G.module(item,'servo')
+                        atlasKey=Factions.key(part or item)
+                        atlas=skin(atlasKey,'atlas')
                         local flash=s.lastPulse and G.now-(s.shotTime or -100)<C.pulseDuration
                         pose=G.toolPose(owner,s,true,flash and s.lastPulse or nil)
                         link(batch,cam,'upper',base,pose.elbow,250,E.Vector2(44,50))
@@ -172,6 +187,8 @@ function M.install(G,E,root)
                         else sprite(batch,cam,target and target.kind=='grab' and 'orange' or 'blue',pose.tip,-pose.angle,.16,E.Vector2(37,54)) end
                     end
                     if s.hasImpeller then
+                        local part=G.module and G.module(item,'impeller')
+                        housing=skin(Factions.key(part or item),'housing')
                         local motor=G.attachment(owner,-20,-18,true)
                         housing.Draw(batch,screen(cam,motor),E.Color.White,housing.Origin,-bodyRotation,E.Vector2(.022,.022))
                         impeller.Draw(batch,screen(cam,motor),E.Color.White,impeller.Origin,
@@ -219,7 +236,9 @@ function M.install(G,E,root)
         channels={};G.clearSuitUI()
     end
     function G.disposeClient()
-        G.disposeSuitUI();atlas.Remove();impeller.Remove();housing.Remove();pulseHead.Remove();beamSprite.Remove()
+        G.disposeSuitUI();impeller.Remove();pulseHead.Remove();beamSprite.Remove()
+        for _,sprite in pairs(skins) do sprite.Remove() end
+        skins={}
     end
 end
 return M

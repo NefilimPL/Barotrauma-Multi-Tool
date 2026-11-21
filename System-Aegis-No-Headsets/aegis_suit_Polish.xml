@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
 <infotexts language="Polish" nowhitespace="false" translatedname="Polski">
-  <entityname.aegisservosuit>Kombinezon serwomanipulacyjny Aegis</entityname.aegisservosuit>
+  <entityname.aegisservosuit>Kombinezon serwomanipulacyjny Aegis — Piraci</entityname.aegisservosuit>
   <entitydescription.aegisservosuit>Egzoszkielet do 10 000 m. Cztery sloty kolejno: bateria/pręt, amunicja, osobno craftowany moduł serwa i osobno craftowany wirnik. Moduły nie są dołączane za darmo. Ramię wymaga serwa, wspomaganie pływania wymaga wirnika. Wyjęcie serwa zwalnia trzymany cel i zatrzymuje naprawę oraz strzelanie. Obieg oddechowy, sonar i światła działają bez tych modułów. Wymaga LuaCs na kliencie i serwerze.</entitydescription.aegisservosuit>
   <aegis.title>Ramię serwomanipulacyjne</aegis.title>
   <aegis.off>Ramię wyłączone</aegis.off>
