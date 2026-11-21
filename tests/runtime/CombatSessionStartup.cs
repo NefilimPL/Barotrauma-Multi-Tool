@@ -39,7 +39,7 @@ public class StartupHook
                 var harmony = Assembly.LoadFrom(Path.Combine(Root, "0Harmony.dll"));
                 var type = harmony.GetType("HarmonyLib.Harmony");
                 var hm = harmony.GetType("HarmonyLib.HarmonyMethod");
-                var instance = Activator.CreateInstance(type, new object[] { "bmt.test.vacuum.network" });
+                var instance = Activator.CreateInstance(type, new object[] { "aegis.test.vacuum.network" });
                 var postfix = Activator.CreateInstance(hm, new object[] { typeof(StartupHook).GetMethod("Tick") });
                 var updatePrefix = Activator.CreateInstance(hm, new object[] { typeof(StartupHook).GetMethod("UpdateStart") });
                 type.GetMethods().First(m => m.Name == "Patch" && m.GetParameters().Length == 5)
@@ -122,7 +122,7 @@ public class StartupHook
             }
             long now = Stopwatch.GetTimestamp();
             if (Sampling(now)) updates.Add(Ms(now - __state));
-            string phaseFile = Path.Combine(Root, "LocalMods", "MULTI-TOOL-V2", "combat-session-phase.txt");
+            string phaseFile = Path.Combine(Root, "LocalMods", "System-Aegis", "combat-session-phase.txt");
             if (File.Exists(phaseFile) && File.GetLastWriteTimeUtc(phaseFile) != phaseWrite)
             {
                 phaseWrite = File.GetLastWriteTimeUtc(phaseFile);

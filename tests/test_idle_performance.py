@@ -18,7 +18,7 @@ class IdlePerformanceTests(LuaCase):
                     patch=function() end,id=function(i) return i.kind end,
                     is=function(i,id) return i and not i.Removed and i.kind==id end,
                     context=function() return {valid=false} end}
-                require('SalvageVacuum.runtime').install(G,E)
+                require('AegisVacuum.runtime').install(G,E)
             end
             function worldItems(count)
                 for i=1,count do world[i]={ID=i,kind='iron'} end
@@ -124,9 +124,9 @@ class IdlePerformanceTests(LuaCase):
             G={now=0,frame=0,states={},authoritative=false,patch=function() end,
                 isWeapon=function(i) return i==tool end,
                 state=function() activations=activations+1;return {} end}
-            require('CombatTool.runtime').install(G,E)
+            require('AegisCombat.runtime').install(G,E)
             for i=1,60 do G.update(1/60) end
-            indexed.combatmultitool={tool};world[#world+1]=tool
+            indexed.aegiscombattool={tool};world[#world+1]=tool
             for i=1,60 do G.update(1/60) end
             assert(activations>0,'new indexed tool was not activated')
             assert(worldReads==0,'idle combat tool scanned the world '..worldReads..' times')
@@ -137,7 +137,7 @@ class IdlePerformanceTests(LuaCase):
             local nozzle={ID=1};local contexts=0
             G={now=10,states={[nozzle]={}},remoteActiveUntil={},jobs={},pending={},
                 context=function() contexts=contexts+1;return {valid=false} end}
-            require('SalvageVacuum.audio').install(G,{})
+            require('AegisVacuum.audio').install(G,{})
             for i=1,60 do G.updateAudio() end
             assert(contexts==0,'idle audio resolved inventories '..contexts..' times')
         """)

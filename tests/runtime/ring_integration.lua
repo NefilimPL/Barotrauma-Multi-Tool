@@ -1,11 +1,11 @@
 -- Test-only: actual energy-ring flight, native NPC damage and match friendly fire.
-local G=BMTCombat
-local U=require('CombatTool.util')
+local G=AegisCombat
+local U=require('AegisCombat.util')
 local results,created={},{}
 local function check(name,fn)
     local ok,err=pcall(fn)
     results[#results+1]=(ok and 'PASS ' or 'FAIL ')..name..(ok and '' or ': '..tostring(err))
-    print('[BMT RING] '..results[#results])
+    print('[Aegis RING] '..results[#results])
 end
 local function track(value) created[#created+1]=value;return value end
 local origin=Submarine.MainSub.WorldPosition+Vector2(0,5000)
@@ -15,13 +15,13 @@ for n=1,20 do
     origin=origin+Vector2(0,500)
 end
 local function human(position,team)
-    local c=track(Character.Create('human',position,'bmt-ring-'..team,nil,0,false,false,true,nil,true,false))
+    local c=track(Character.Create('human',position,'aegis-ring-'..team,nil,0,false,false,true,nil,true,false))
     c.TeamID=team;c.Enabled=true;c.GodMode=false
     return c
 end
 local owner=human(origin-Vector2(250,0),CharacterTeamType.Team1)
 local target=human(origin+Vector2(180,0),CharacterTeamType.Team2)
-local gun=track(Item(ItemPrefab.Prefabs['combatmultitool'],origin,nil))
+local gun=track(Item(ItemPrefab.Prefabs['aegiscombattool'],origin,nil))
 U.component(gun,'LightComponent').IsOn=true
 local state=G.state(gun);state.owner=owner
 local originalFriendlyFire=Game.ServerSettings.AllowFriendlyFire
@@ -76,4 +76,4 @@ for i=#created,1,-1 do
     local entity=created[i]
     if not entity.Removed and not Entity.Spawner.IsInRemoveQueue(entity) then entity.Remove() end
 end
-File.Write('LocalMods/MULTI-TOOL-V2/ring-results.txt',table.concat(results,'\n'))
+File.Write('LocalMods/System-Aegis/ring-results.txt',table.concat(results,'\n'))

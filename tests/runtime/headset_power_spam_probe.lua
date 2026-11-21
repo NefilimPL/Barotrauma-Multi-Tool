@@ -1,7 +1,7 @@
 -- Diagnostic only: run on the disposable dedicated server after round start.
 -- Measures the production headset against native coil attacks and other spam.
-local G=assert(BMTHeadsets)
-local U=require('CombatTool.util')
+local G=assert(AegisHeadsets)
+local U=require('AegisCombat.util')
 local position=Submarine.MainSub.WorldPosition
 for hull in Hull.HullList do
     if hull.Submarine==Submarine.MainSub then position=hull.WorldPosition;break end
@@ -51,7 +51,7 @@ probe('other repeated effects',function()
     end
 end)
 local function finish()
-    File.Write('LocalMods/MULTI-TOOL-V2/headset-power-spam-results.txt',table.concat(rows,'\n'))
+    File.Write('LocalMods/System-Aegis/headset-power-spam-results.txt',table.concat(rows,'\n'))
     -- NT initializes blood type on a timer after character creation.
     Timer.Wait(function()
         for i=#objects,1,-1 do if not objects[i].Removed then objects[i].Remove() end end
@@ -72,10 +72,10 @@ if limited then
     end)
     local c,item=wearer('sustained-spam')
     local started=G.now;local frames=0
-    Hook.Add('think','bmt.test.headset.power-spam',function()
+    Hook.Add('think','aegis.test.headset.power-spam',function()
         local elapsed=G.now-started
         if elapsed>=5 then
-            Hook.Remove('think','bmt.test.headset.power-spam')
+            Hook.Remove('think','aegis.test.headset.power-spam')
             probe('sustained spam',function()
                 sample(string.format('mixed spam %.4fs %d frames',elapsed,frames),item)
                 assert(G.energy(item)>=100-5-5*elapsed-.001,'sustained drain exceeded limit')

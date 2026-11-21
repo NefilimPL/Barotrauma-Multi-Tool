@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<infotexts language="English" nowhitespace="false" translatedname="English">
+  <entityname.aegisservosuit>Aegis servo suit</entityname.aegisservosuit>
+  <entitydescription.aegisservosuit>A 10,000 m powered exosuit with a compact third arm and work lights. Select repair/welding, pulse defence or tractor beam. The two visible slots hold a battery/reactor rod and a pulse laser ammunition box. Closed-loop breathing needs power, not an oxygen tank. AI replaces empty supplies. Repair uses native skills and completion talents. LuaCs required.</entitydescription.aegisservosuit>
+  <aegis.title>Servo arm</aegis.title>
+  <aegis.off>Arm off</aegis.off>
+  <aegis.on>Arm on</aegis.on>
+  <aegis.ammo>Shots</aegis.ammo>
+  <aegis.closedloop>Closed-loop breathing</aegis.closedloop>
+  <aegis.repair>Repair / weld</aegis.repair>
+  <aegis.combat>Defense</aegis.combat>
+  <aegis.grab>Tractor beam</aegis.grab>
+  <aegis.grab_short>[InputType.Aim] + [InputType.Use]: grab / release</aegis.grab_short>
+  <aegis.grab_help>Point at the target. Hold [InputType.Aim] and press [InputType.Use], then release the keys. The target stays suspended. Press again while aiming to release. Creatures become temporarily limp. One loose object or creature, excluding massive targets; range 300. Changing mode, an obstacle, power loss or removing the suit releases the grip.</aegis.grab_help>
+  <aegis.arm_tab>Arm</aegis.arm_tab>
+  <aegis.hide_panel>Hide panel; the function stays enabled</aegis.hide_panel>
+  <aegis.sonar>Sonar</aegis.sonar>
+  <aegis.sonar_on>Sonar on</aegis.sonar_on>
+  <aegis.sonar_off>Sonar off</aegis.sonar_off>
+  <aegis.sonar_active>Active</aegis.sonar_active>
+  <aegis.sonar_passive>Passive</aegis.sonar_passive>
+  <aegis.no_power>No power</aegis.no_power>
+  <aegis.power>Power</aegis.power>
+  <aegis.air>Room air</aegis.air>
+  <aegis.tank>Oxygen tank</aegis.tank>
+  <aegis.minerals>Mineral scanner</aegis.minerals>
+</infotexts>

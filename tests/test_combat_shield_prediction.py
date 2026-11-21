@@ -7,7 +7,7 @@ class ClientShieldPredictionTests(LuaCase):
         self.lua.execute('''
             local function v(x,y) return {X=x,Y=y} end
             defender={TeamID=1};attacker={TeamID=2,IsOnPlayerTeam=false}
-            gun={ID=42,Prefab={Identifier={Value='combatmultitool'}},WorldPosition=v(0,0),
+            gun={ID=42,Prefab={Identifier={Value='aegiscombattool'}},WorldPosition=v(0,0),
                 body={TransformedRotation=0,DrawPosition=v(0,0),DrawRotation=0,Dir=1,
                     UpdateDrawPosition=function() end}}
             env={Game={IsSingleplayer=false,ServerSettings={AllowFriendlyFire=true}},
@@ -15,15 +15,15 @@ class ClientShieldPredictionTests(LuaCase):
                 LuaUserData={RegisterType=function() end,CreateEnumTable=function() return {} end,
                     CreateStatic=function() return {} end},
                 Entity={FindEntityByID=function(id) if id==42 then return gun end end}}
-            G=require('CombatTool.game').new(env)
-            require('CombatTool.physics').install(G,env)
+            G=require('AegisCombat.game').new(env)
+            require('AegisCombat.physics').install(G,env)
             hooks={};G.patch=function(id,_,_,fn) hooks[id]=fn end
             G.cast=function() end;G.owner=function() return defender end
             G.friendly=function() return false end
-            require('CombatTool.visuals').install(G,env,'mod')
+            require('AegisCombat.visuals').install(G,env,'mod')
             G.authoritative=false
             G.remote={received=0,rings={},shields={{id=42,x=0,y=0,angle=0,energy=100}}}
-            require('CombatTool.shield_client').install(G,env)
+            require('AegisCombat.shield_client').install(G,env)
             health=100;damageCalls=0
             projectile={User=attacker,FriendlyFire=true,MaxTargetsToHit=3,
                 Item={WorldPosition=v(120,0),body={Enabled=true}}}

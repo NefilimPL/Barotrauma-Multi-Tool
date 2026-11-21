@@ -1,13 +1,13 @@
 -- Native dedicated-server hook/parameter conversion probe. No real shop/wallet.
 assert(SERVER and Game.RoundStarted)
-local G=BMTVacuum
-local U=require('CombatTool.util')
+local G=AegisVacuum
+local U=require('AegisCombat.util')
 local rows={}
 local function check(name,fn)
     local ok,err=pcall(fn)
     rows[#rows+1]=(ok and 'PASS ' or 'FAIL ')..name..(ok and '' or ': '..tostring(err))
     print('[MERCHANT SERVER] '..rows[#rows])
-    File.Write('LocalMods/MULTI-TOOL-V2/merchant-server-results.txt',table.concat(rows,'\n'))
+    File.Write('LocalMods/System-Aegis/merchant-server-results.txt',table.concat(rows,'\n'))
 end
 LuaUserData.RegisterType('Barotrauma.CargoManager')
 local Manager=LuaUserData.CreateStatic('Barotrauma.CargoManager')
@@ -48,5 +48,5 @@ check('native sale hook rejects reserved input before removal',function()
     assert(#got==1 and got[1]==copper.ID and not iron.Removed)
 end)
 -- Remove only this probe's hooks. Leave production hooks intact.
-Hook.RemovePatch('bmt.vacuum.merchant-probe-stop','Barotrauma.CargoManager','SellItems',Hook.HookMethodType.Before)
-Hook.RemovePatch('bmt.vacuum.merchant-probe-observe','Barotrauma.CargoManager','SellItems',Hook.HookMethodType.After)
+Hook.RemovePatch('aegis.vacuum.merchant-probe-stop','Barotrauma.CargoManager','SellItems',Hook.HookMethodType.Before)
+Hook.RemovePatch('aegis.vacuum.merchant-probe-observe','Barotrauma.CargoManager','SellItems',Hook.HookMethodType.After)

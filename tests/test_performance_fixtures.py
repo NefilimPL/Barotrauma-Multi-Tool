@@ -13,7 +13,7 @@ class PerformanceWorkProofTests(LuaCase):
             wall={SectionDamage=function() return damage end};setDamage=function(v) damage=v end
             a={item={},work=0,wall=wall,section=0,testMode='weld'}
             b={item={},work=0,wall=wall,section=0,testMode='weld'}
-            R={actors={a,b},started=0,phase={mode='weld',item='combatmultitool'}}
+            R={actors={a,b},started=0,phase={mode='weld',item='aegiscombattool'}}
             C={rings={},fire=function() end,toolComponent=function(item) return item.tool end}
             D={hold=function() return true end}
             V={insert=function() return true end,snapshot=function() return {} end}
@@ -36,9 +36,9 @@ class PerformanceWorkProofTests(LuaCase):
     def test_unchanged_wall_and_unrelated_power_loss_are_not_work(self):
         self.lua.execute("""
             local tool={Item=a.item};a.item.tool=tool
-            hooks['bmt.performance.wall.before'](tool)
+            hooks['aegis.performance.wall.before'](tool)
             a.item.Condition=20
-            hooks['bmt.performance.wall.after'](tool)
+            hooks['aegis.performance.wall.after'](tool)
             assert(a.work==0 and b.work==0)
         """)
 
@@ -47,17 +47,17 @@ class PerformanceWorkProofTests(LuaCase):
             local first={Item=a.item};a.item.tool=first
             local second={Item=b.item};b.item.tool=second
             local function damage(value)
-                hooks['bmt.performance.wall.damage.before'](wall,{sectionIndex=1})
+                hooks['aegis.performance.wall.damage.before'](wall,{sectionIndex=1})
                 setDamage(value)
-                hooks['bmt.performance.wall.damage.after'](wall)
+                hooks['aegis.performance.wall.damage.after'](wall)
             end
-            hooks['bmt.performance.wall.before'](first);damage(80);hooks['bmt.performance.wall.after'](first)
+            hooks['aegis.performance.wall.before'](first);damage(80);hooks['aegis.performance.wall.after'](first)
             assert(a.work==20 and b.work==0)
             setDamage(100) -- fixture reset outside a tool use must not earn credit
             b.testMode='cut'
-            hooks['bmt.performance.wall.before'](second);damage(120);hooks['bmt.performance.wall.after'](second)
+            hooks['aegis.performance.wall.before'](second);damage(120);hooks['aegis.performance.wall.after'](second)
             assert(a.work==20 and b.work==20)
-            hooks['bmt.performance.wall.before'](second);damage(110);hooks['bmt.performance.wall.after'](second)
+            hooks['aegis.performance.wall.before'](second);damage(110);hooks['aegis.performance.wall.after'](second)
             assert(b.work==20,'cutting received welding credit')
         """)
 
@@ -69,9 +69,9 @@ class PerformanceWorkProofTests(LuaCase):
     def test_native_hitscan_counts_the_real_launcher_and_not_an_unrelated_projectile(self):
         self.lua.execute("""
             a.testKind='smg'
-            hooks['bmt.performance.native.shot.DoHitscan']({Launcher={}})
+            hooks['aegis.performance.native.shot.DoHitscan']({Launcher={}})
             assert(a.work==0)
-            hooks['bmt.performance.native.shot.DoHitscan']({Launcher=a.item})
+            hooks['aegis.performance.native.shot.DoHitscan']({Launcher=a.item})
             assert(a.work==1,'native hitscan was not counted as actual work')
         """)
 
@@ -145,7 +145,7 @@ class PerformancePanelProofTests(LuaCase):
             Hook={HookMethodType={Before=0,After=1},Patch=function() end,Add=function(_,_,fn) think=fn end}
             pack={ID=1,ParentInventory={Owner=Character.Controlled}};Entity={FindEntityByID=function(id) if id==1 then return pack end end}
             opens=0;frame=nil
-            BMTVacuum={contents=function() return {{}} end,context=function() return {valid=true,pack=pack} end,
+            AegisVacuum={contents=function() return {{}} end,context=function() return {valid=true,pack=pack} end,
                 openPanel=function() opens=opens+1;frame={Visible=true};return frame end,
                 closePanel=function() if frame then frame.Visible=false end end,
                 onSnapshot=function(s) if frame and frame.Visible and s.vacuum==1 and s.filters==false and s.category=='all' and s.search=='' and s.group==0 then frame.accepted=s end end}
@@ -159,34 +159,34 @@ class PerformancePanelProofTests(LuaCase):
             function reply() return {vacuum=1,pack=1,count=1,groups=1,rows={{id=3,count=1}},filters=false,category='all',search='',group=0,page=0} end
         """)
         self.lua.execute("FixtureProof=dofile(...)", (ROOT / 'tests/runtime/performance/proof.lua').as_posix())
-        self.lua.execute("local original=dofile;dofile=function(path) if path=='LocalMods/MULTI-TOOL-V2/Lua/Tests/performance/proof.lua' then return FixtureProof end;return original(path) end")
+        self.lua.execute("local original=dofile;dofile=function(path) if path=='LocalMods/System-Aegis/Lua/Tests/performance/proof.lua' then return FixtureProof end;return original(path) end")
         self.lua.execute("dofile(...)", (ROOT / 'tests/runtime/performance/client.lua').as_posix())
-        self.lua.execute("receivers['bmt.performance.v1.prepare'](packet({'panel_case'},{1,1,1,1,0},{true},{}));think()")
+        self.lua.execute("receivers['aegis.performance.v1.prepare'](packet({'panel_case'},{1,1,1,1,0},{true},{}));think()")
 
     def test_rejected_or_empty_snapshot_cannot_pass_preparation(self):
         self.lua.execute("""
-            local r=BMTPerformanceClient
-            local wrong=reply();wrong.vacuum=99;BMTVacuum.onSnapshot(wrong)
+            local r=AegisPerformanceClient
+            local wrong=reply();wrong.vacuum=99;AegisVacuum.onSnapshot(wrong)
             assert(not r.preparing.snapshot,'wrong vacuum accepted')
-            wrong=reply();wrong.search='old search';BMTVacuum.onSnapshot(wrong)
+            wrong=reply();wrong.search='old search';AegisVacuum.onSnapshot(wrong)
             assert(not r.preparing.snapshot,'stale view accepted')
-            wrong=reply();wrong.count=0;wrong.rows={};BMTVacuum.onSnapshot(wrong)
+            wrong=reply();wrong.count=0;wrong.rows={};AegisVacuum.onSnapshot(wrong)
             assert(not r.preparing.snapshot,'empty storage reply accepted')
         """)
 
     def test_delayed_valid_snapshot_keeps_the_same_panel_at_measurement_start(self):
         self.lua.execute("""
-            local r=BMTPerformanceClient;local preparedFrame=frame
+            local r=AegisPerformanceClient;local preparedFrame=frame
             assert(r.preparing and opens==1)
             think();assert(r.preparing and opens==1)
-            BMTVacuum.onSnapshot(reply());think();assert(not r.preparing)
-            receivers['bmt.performance.v1.phase'](packet({'panel_case','panel'},{1,1},{true,false},{0,0,.75,500,0}))
+            AegisVacuum.onSnapshot(reply());think();assert(not r.preparing)
+            receivers['aegis.performance.v1.phase'](packet({'panel_case','panel'},{1,1},{true,false},{0,0,.75,500,0}))
             assert(opens==1 and r.panelFrame==preparedFrame and r.requested,'prepared panel was discarded or reopened')
         """)
 
     def test_closed_panel_cannot_earn_snapshot_credit(self):
         self.lua.execute("""
-            local r=BMTPerformanceClient
-            BMTVacuum.closePanel();BMTVacuum.onSnapshot(reply())
+            local r=AegisPerformanceClient
+            AegisVacuum.closePanel();AegisVacuum.onSnapshot(reply())
             assert(not r.preparing.snapshot,'closed panel accepted a snapshot')
         """)

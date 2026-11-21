@@ -1,6 +1,6 @@
 -- Continue the same real two-client session with normal-health damage cases.
 assert(SERVER and CombatSession)
-local R,G,U=CombatSession,BMTCombat,require('CombatTool.util')
+local R,G,U=CombatSession,AegisCombat,require('AegisCombat.util')
 R.running=false;R.ready={}
 local L={index=0,counts={},kills={},pending={},rows={}}
 CombatSessionFollowup=L
@@ -20,7 +20,7 @@ local function healthy(c)
     c.Oxygen=100;c.PressureProtection=1000000;c.Stun=0
 end
 local function send(client,target,aim,shoot)
-    local m=Networking.Start('bmt.combat.session.phase');m.WriteString(L.phase)
+    local m=Networking.Start('aegis.combat.session.phase');m.WriteString(L.phase)
     m.WriteUInt16(target and target.ID or 0);m.WriteBoolean(aim);m.WriteBoolean(shoot)
     m.WriteSingle(L.base.X);m.WriteSingle(L.base.Y+40);Networking.Send(m,client.Connection)
 end
@@ -37,7 +37,7 @@ local function report()
     local row={'phase='..L.phase,'seconds='..string.format('%.2f',now()-L.started),'victims='..victims}
     for k,v in pairs(R.counts) do row[#row+1]=k..'='..v end
     L.rows[#L.rows+1]=table.concat(row,' ')
-    File.Write('LocalMods/MULTI-TOOL-V2/combat-session-followup.txt',table.concat(L.rows,'\n'))
+    File.Write('LocalMods/System-Aegis/combat-session-followup.txt',table.concat(L.rows,'\n'))
     print('[COMBAT FOLLOWUP] '..L.rows[#L.rows])
 end
 local function begin()
@@ -73,7 +73,7 @@ local function begin()
     send(R.clients[L.actor=='CombatA' and 'CombatB' or 'CombatA'],R.clients[L.actor].Character,L.mass or false,L.mass or false)
     print('[COMBAT FOLLOWUP] PHASE '..L.phase)
 end
-Hook.Patch('bmt.session.aim-npc','Barotrauma.Character','UpdateNetInput',function(c)
+Hook.Patch('aegis.session.aim-npc','Barotrauma.Character','UpdateNetInput',function(c)
     if not L.shield then return end
     for _,npc in ipairs(R.npcs) do if npc==c then
         local target=R.clients[L.actor].Character.AnimController.MainLimb.WorldPosition
@@ -82,7 +82,7 @@ Hook.Patch('bmt.session.aim-npc','Barotrauma.Character','UpdateNetInput',functio
         c.Enabled=true;c.AnimController.Frozen=false;healthy(c);return
     end end
 end,Hook.HookMethodType.After)
-Hook.Add('think','bmt.session.followup',function()
+Hook.Add('think','aegis.session.followup',function()
     if not L.phase or L.phase=='done' then return end
     local t=now()
     if t-L.started>=18 then begin();return end

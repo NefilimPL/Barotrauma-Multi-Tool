@@ -1,6 +1,6 @@
 -- Disposable singleplayer client only; never ship in the mod.
 if not CLIENT then return end
-File.Write('LocalMods/MULTI-TOOL-V2/vacuum-client-results.txt','WAIT for round')
+File.Write('LocalMods/System-Aegis/vacuum-client-results.txt','WAIT for round')
 local function begin()
     if not Game.RoundStarted or not Submarine.MainSub then Timer.Wait(begin,1000);return end
     local rows={}
@@ -8,9 +8,9 @@ local function begin()
         local ok,err=pcall(fn)
         rows[#rows+1]=(ok and 'PASS ' or 'FAIL ')..name..(ok and '' or ': '..tostring(err))
         print('[VACUUM CLIENT] '..rows[#rows])
-        File.Write('LocalMods/MULTI-TOOL-V2/vacuum-client-results.txt',table.concat(rows,'\n'))
+        File.Write('LocalMods/System-Aegis/vacuum-client-results.txt',table.concat(rows,'\n'))
     end
-    local G=BMTVacuum
+    local G=AegisVacuum
     local room;for h in Hull.HullList do if h.Submarine==Submarine.MainSub then room=h;break end end
     local c=Character.Create('human',room.WorldPosition,'vacuum-client',nil,0,false,true,true,nil,true,false)
     c.AIController.Enabled=false;c.GodMode=true
@@ -45,7 +45,7 @@ local function begin()
             local Blend=LuaUserData.CreateStatic('Microsoft.Xna.Framework.Graphics.BlendState')
             local Sort=LuaUserData.CreateEnumTable('Microsoft.Xna.Framework.Graphics.SpriteSortMode')
             local batch=SB(gm.Instance.GraphicsDevice)
-            local ranged=require('CombatTool.util').component(vacuum,'RangedWeapon')
+            local ranged=require('AegisCombat.util').component(vacuum,'RangedWeapon')
             local now=G.now
             c.SetInput(InputType.Aim,false,true)
             ranged.Use(1/60,c)
@@ -59,8 +59,8 @@ local function begin()
             G.now=now;batch.Dispose()
             assert(not G.visualError,G.visualError)
         end)
-        File.Write('LocalMods/MULTI-TOOL-V2/headset-capture.request',
-            'F:/_Github/Barotrauma-Multi-Tool/.runtime/vacuum-client-preview.png')
+        File.Write('LocalMods/System-Aegis/headset-capture.request',
+            (AegisCaptureRoot or 'LocalMods/System-Aegis/')..'vacuum-client-preview.png')
     end,1500)
 end
 Timer.Wait(begin,8000)

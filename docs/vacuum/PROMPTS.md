@@ -6,7 +6,7 @@ Generated with the built-in image_gen tool. Original alpha preserved; no bitmap 
 - vacuum.png: 1774 × 887, hand-held vacuum with battery cassette and inventory icon.
 - suction.png: 1451 × 1084, 4 × 4 cyclic suction frames. Frame edges use floor(column × width / 4); the artwork keeps its native alpha.
 
-Workspace assets: MULTI-TOOL-V2/Assets/Vacuum/.
+Workspace assets: System-Aegis/Assets/AegisVacuum/.
 
 ## Exact prompts
 

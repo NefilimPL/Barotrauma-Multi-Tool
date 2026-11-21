@@ -1,6 +1,10 @@
-# Barotrauma-Multi-Tool
+# System Aegis
 
-Mod zawiera **kombinezon serwomanipulacyjny Descendants** z jednym
+**System Aegis** to samodzielny, pełny mod wyposażenia do Barotraumy.
+Zawiera narzędzia techniczne i bojowe, komunikatory, odkurzacz z plecakiem
+oraz kombinezon. Wymaga LuaCs na kliencie i serwerze.
+
+Mod zawiera **kombinezon serwomanipulacyjny Aegis** z jednym
 ramieniem do automatycznej naprawy i spawania, obrony lub chwytania celu.
 Wersja V2 ma widoczne sloty baterii/pręta i skrzynki amunicji, obieg
 oddechowy bez butli, latarki i automatyczną wymianę zapasów przez AI.
@@ -14,12 +18,13 @@ spadek czasu klatki uzyskano przy widocznych naprawach kombinezonów.
 
 [Dokumentacja projektu](docs/README.md) · [Historia zmian](CHANGELOG.md)
 
-[Paczka 1.3.26 do lokalnej instalacji](output/MULTI-TOOL-V2-1.3.26.zip).
+[Paczka System Aegis 1.3.27](output/System-Aegis-1.3.27.zip).
+[Publikacja jako osobny mod](docs/PUBLISH.md).
 
-Wersja Aegis wymaga [Lua for Barotrauma / LuaCs](https://github.com/evilfactory/LuaCsForBarotrauma)
+System Aegis wymaga [Lua for Barotrauma / LuaCs](https://github.com/evilfactory/LuaCsForBarotrauma)
 na kliencie i serwerze. Punktem zgodności jest Barotrauma **1.13.5.0**;
 testowy serwer używa wydania LuaCs z 27.10.2026, commit `c6e8829`.
-Starszy multitool nadal ma własną, dotychczasową definicję XML.
+Kompozytowy multitool i klucz-śrubokręt są pełnoprawnymi elementami System Aegis.
 
 ## Zakup w sklepach
 
@@ -27,8 +32,8 @@ W zwykłych sklepach kampanii dostępne są wszystkie przedmioty moda:
 
 | Przedmiot | Cena bazowa |
 |---|---:|
-| Klucz-śrubokręt 2 w 1 | 57 mk |
-| Kompozytowy multitool | 1300 mk |
+| Klucz-śrubokręt 2 w 1 Aegis | 57 mk |
+| Kompozytowy multitool Aegis | 1300 mk |
 | Bojowy multitool Aegis | 2000 mk |
 | Komunikator Aegis | 500 mk |
 | Komunikator Aegis Mk II | 1000 mk |
@@ -43,10 +48,14 @@ sklepu może wymagać odświeżenia przy przejściu do nowej lokacji.
 
 1. Zainstaluj zgodne LuaCs według instrukcji jego projektu, także na serwerze.
    Same pozostałe po starej instalacji pliki `Lua/` nie wystarczą.
-2. Skopiuj folder `MULTI-TOOL-V2` do `Barotrauma/LocalMods/`.
-3. Włącz pakiet `MULTI-TOOL-V2` i uruchom grę ponownie. Nie włączaj jednocześnie
+2. Skopiuj folder `System-Aegis` do `Barotrauma/LocalMods/`.
+3. Włącz pakiet **System Aegis** i uruchom grę ponownie. Nie włączaj jednocześnie
    dwóch kopii tego samego pakietu ze Workshop i LocalMods.
-4. W fabrykatorze szukaj **Bojowy multitool Aegis**, identyfikator `combatmultitool`.
+4. W fabrykatorze szukaj **Bojowy multitool Aegis**, identyfikator `aegiscombattool`.
+
+System Aegis jest osobnym pakietem z nowymi identyfikatorami. Nie zastępuje
+automatycznie wyposażenia ze starszych zapisów. Utwórz nowe egzemplarze;
+przed migracją zachowaj kopię zapisu i opróżnij stare pojemniki.
 
 ## Komendy tworzenia przedmiotów (F3)
 
@@ -61,10 +70,10 @@ kontrolowanej postaci. Na serwerze potrzebujesz uprawnień do tych komend.
 Komendy kopiuj przyciskiem kopiowania bloku kodu. Dostępne są też w
 [zwykłym pliku tekstowym](docs/spawn-commands.txt).
 
-Kombinezon serwomanipulacyjny Descendants V2 z baterią i amunicją do testowania:
+Kombinezon serwomanipulacyjny Aegis V2 z baterią i amunicją do testowania:
 
 ```text
-spawnitem descendantservosuit inventory 1
+spawnitem aegisservosuit inventory 1
 spawnitem batterycell inventory 1
 spawnitem pulselaserammobox inventory 1
 ```
@@ -92,7 +101,7 @@ tryby aktywny/pasywny sterują natywnym sonarem. `«` zwija go do małego radaru
 a `+` rozwija ustawienia. Wyłączony i zwinięty sonar jest niewidoczny.
 **Minerały** włącza skaner w trybie aktywnym. Sonar wyłącz
 jego przyciskiem zasilania, jeśli ma przestać pobierać energię i nadawać impulsy.
-[Pełna instrukcja kombinezonu](docs/DESCENDANT-SUIT.md).
+[Pełna instrukcja kombinezonu](docs/AEGIS-SUIT.md).
 
 Odkurzacz Aegis:
 
@@ -125,19 +134,19 @@ spawnitem aegisheadsetmk2 inventory 1
 Bojowy multitool Aegis:
 
 ```text
-spawnitem combatmultitool inventory 1
+spawnitem aegiscombattool inventory 1
 ```
 
-Kompozytowy multitool:
+Kompozytowy multitool Aegis:
 
 ```text
-spawnitem Multi-toolSET inventory 1
+spawnitem aegiscompositetool inventory 1
 ```
 
-Klucz-śrubokręt 2 w 1:
+Klucz-śrubokręt 2 w 1 Aegis:
 
 ```text
-spawnitem wrenchscrewdrivertwoinoneSET inventory 1
+spawnitem aegiswrenchscrewdriver inventory 1
 ```
 
 Zasilanie i butle do testowania narzędzi:
@@ -265,19 +274,19 @@ Dekonstrukcja Aegis odzyskuje część materiałów; zawarte źródła są oddaw
 
 ## Grafiki i balans
 
-Własne grafiki PNG z przezroczystością są w `MULTI-TOOL-V2/Assets/Combat/`.
+Własne grafiki PNG z przezroczystością są w `System-Aegis/Assets/AegisCombat/`.
 Arkusze pracy tarczy, trafienia, rozpadu i porażenia mają po 16 klatek.
 Prompty i wymiary: [PROMPTS.md](docs/combat-assets/PROMPTS.md).
 Podglądy: [grafika i animacje](docs/combat-assets/preview.html),
 [dźwięki](docs/combat-assets/audio/preview.html).
 Instrukcja instalacji: [INSTALL.md](docs/INSTALL.md).
 
-Folder `MULTI-TOOL-V2/` zawiera wyłącznie pliki używane przez grę.
+Folder `System-Aegis/` zawiera wyłącznie pliki używane przez grę.
 Dokumentacja i podglądy znajdują się w `docs/`, generatory w `tools/`,
 a gotowe paczki i alternatywne próbki dźwięków w `output/`.
 
 Wszystkie koszty, obrażenia, czasy i limity są w
-`MULTI-TOOL-V2/Lua/CombatTool/config.lua`. Po zmianie uruchom ponownie grę
+`System-Aegis/Lua/AegisCombat/config.lua`. Po zmianie uruchom ponownie grę
 lub użyj konsolowego `reloadlua` na serwerze i klientach.
 
 ## Sprawdzenia

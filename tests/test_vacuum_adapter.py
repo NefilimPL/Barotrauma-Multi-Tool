@@ -33,7 +33,7 @@ class VacuumAdapterTests(LuaCase):
             vacuum.OwnInventory=inv(vacuum,{battery});pack.OwnInventory=inv(pack,{})
             env={SERVER=true,Game={IsSingleplayer=false},InvSlotType={RightHand='right',LeftHand='left'},
                 InputType={Aim='aim',Use='use'},LuaUserData={IsTargetType=function(x,t) return x==owner end}}
-            G=require('SalvageVacuum.game').new(env)
+            G=require('AegisVacuum.game').new(env)
         """)
 
     def test_battery_is_read_from_vacuum_not_pack(self):

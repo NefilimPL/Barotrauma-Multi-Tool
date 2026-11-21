@@ -8,10 +8,10 @@ from validate_content import validate
 
 if __name__=='__main__':
     validate(None)
-    mod=ROOT/'MULTI-TOOL-V2'
+    mod=ROOT/'System-Aegis'
     version=ET.parse(mod/'filelist.xml').getroot().get('modversion')
     output=ROOT/'output';output.mkdir(exist_ok=True)
-    archive=output/f'MULTI-TOOL-V2-{version}.zip'
+    archive=output/f'System-Aegis-{version}.zip'
     with zipfile.ZipFile(archive,'w',zipfile.ZIP_DEFLATED,compresslevel=9) as z:
         for file in sorted(mod.rglob('*')):
             if file.is_file():z.write(file,file.relative_to(ROOT).as_posix())

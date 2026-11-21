@@ -46,18 +46,18 @@ class IdleToolFrameTests(LuaCase):
             local owner={IsKeyDown=function() return true end}
             owner.Inventory={GetItemInLimbSlot=function() if held then return gun end end}
             local lamp={Name='LightComponent',IsOn=false,IsActive=false}
-            gun={ID=1,Condition=100,Prefab={Identifier={Value='combatmultitool'}},Components={
+            gun={ID=1,Condition=100,Prefab={Identifier={Value='aegiscombattool'}},Components={
                 {Name='Pump',IsOn=false},{Name='Controller',State=false},{Name='LightComponent',IsOn=false},lamp}}
             local E={InvSlotType={RightHand=1,LeftHand=2},InputType={Aim=1},
                 Util={GetItemsById=function() return {gun} end},Hook={Add=function() end},
                 LuaUserData={CreateEnumTable=function() return {Both=1} end,
                     RegisterType=function() return {} end,MakeFieldAccessible=function() end,
                     IsTargetType=function(o,t) return o==owner and t=='Barotrauma.Character' end}}
-            local G=require('CombatTool.game').new(E);G.authoritative=false;G.patch=function() end
+            local G=require('AegisCombat.game').new(E);G.authoritative=false;G.patch=function() end
             G.powered=function() return true end
             local context=G.context;local calls=0
             G.context=function(...) calls=calls+1;return context(...) end
-            require('CombatTool.runtime').install(G,E)
+            require('AegisCombat.runtime').install(G,E)
             for i=1,60 do G.update(1/60) end
             assert(calls==0,'floor tool resolved full context '..calls..' times')
             gun.ParentInventory={Owner=owner};held=true;G.update(1/60)
@@ -119,10 +119,10 @@ class TileFrameTests(VacuumClientTests):
             G.onSnapshot(s);assert(#widgets==count,'unchanged snapshot allocated widgets')
             s.rows[1]={id=20,kind='iron',name='New Iron',count=2,condition=40,quality=1,group=1}
             G.onSnapshot(s);assert(#widgets==count)
-            tile.OnClicked();button('vacuum.stack').OnClicked()
+            tile.OnClicked();button('aegisvacuum.stack').OnClicked()
             assert(requests[#requests].target==20,'reused tile operated on its previous item')
             s.rows={};G.onSnapshot(s)
-            assert(not tile.Enabled and not button('vacuum.stack').Enabled)
+            assert(not tile.Enabled and not button('aegisvacuum.stack').Enabled)
             s.rows={{id=30,kind='iron',name='Iron',count=3,condition=100,quality=0,group=1}}
             G.onSnapshot(s);assert(#widgets==count and tile.Enabled)
         """)

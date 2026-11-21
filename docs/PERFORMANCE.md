@@ -28,7 +28,7 @@ Stabilny koszt pełnego magazynu 40 000 przedmiotów wymaga porównywalnej
 próby obciążeniowej. Granicę grup i sztuk sprawdzono automatycznie.
 Natywny test potwierdził oba limity inwentarza po 200. Próba kampanii
 zachowała 10 000 przedmiotów i wszystkie trzy reguły po zapisie i ponownym
-odczycie. [Próby w grze](../output/performance/20261121T123308Z-descendant-vacuum-native-complete/native-checks.txt) · [Próba kampanii](../output/performance/20261121T123711Z-backpack-v6-rules-campaign/lifecycle.txt).
+odczycie. [Próby w grze](../output/performance/20261121T123308Z-aegis-vacuum-native-complete/native-checks.txt) · [Próba kampanii](../output/performance/20261121T123711Z-backpack-v6-rules-campaign/lifecycle.txt).
 
 ## Pomiary przed i po zmianach
 
@@ -49,10 +49,10 @@ i rozmiar wiadomości przed kompresją.
 | Odkurzacz, 8 zbierających | 5,44 → 5,48 | 151 → 159 | 148 → 144 |
 | Plecak, 2 otwarte panele po 1000 rzeczy | 2,72 → 2,91 | 733 → 815 | 702 → 672 |
 | Plecak, 10 000 rzeczy po replikacji | 3,69 → 3,90 | 676 → 746 | 658 → 617 |
-| Descendants, 8 bezczynnych | 4,36 → 4,70 | 414 → 436 | 399 → 359 |
-| Descendants, 8 widocznych napraw | 7,75 → 7,93 | 153 → 343 | 151 → 301 |
-| Descendants, 8 napraw poza ekranem [2] | 8,01 → 6,88 | 1570 → 1362 | 1130 → 1122 |
-| Descendants, 8 strzelających [2] | 9,45 → 8,25 | 370 → 364 | 329 → 311 |
+| Aegis, 8 bezczynnych | 4,36 → 4,70 | 414 → 436 | 399 → 359 |
+| Aegis, 8 widocznych napraw | 7,75 → 7,93 | 153 → 343 | 151 → 301 |
+| Aegis, 8 napraw poza ekranem [2] | 8,01 → 6,88 | 1570 → 1362 | 1130 → 1122 |
+| Aegis, 8 strzelających [2] | 9,45 → 8,25 | 370 → 364 | 329 → 311 |
 
 Wynik [1] pochodzi z wersji przed dodatkową optymalizacją rysowania
 pierścieni. Zachowano wygląd 100 odcinków w teście porównawczym, tworząc
@@ -200,7 +200,7 @@ wykonały leczenie. Zakres tej próby obejmuje te tryby i podane wersje.
   trafienia. Kilka tarcz w jednym kroku współdzieli odczyty pozycji kończyn;
   trafienie, pęknięcie tarczy i brak zasilania unieważniają te odczyty.
 - Ponowny test ujawnił błąd pasywnej nauki zwykłego multitoola:
-  indeks LuaCs zachowuje wielkość liter, a XML używa `Multi-toolSET`.
+  indeks LuaCs zachowuje wielkość liter, a XML używa `aegiscompositetool`.
   Skrypt rozwiązuje teraz rzeczywistą nazwę przez natywny rejestr prefabów.
   Nagroda pozostaje równa +2 do pięciu umiejętności co 300 s.
 
@@ -262,7 +262,7 @@ nawigacją AI. Nie jest to próba ośmiu klientów sieciowych.
 Sprzęt: i5-13600KF, RTX 4080, klient 1280×800, bez VSync i limitu klatek;
 Barotrauma 1.13.5.0 / LuaCs `c6e8829`.
 
-Aktualne sondy utrwalają nasiono `BMT-performance-20261118`, Dugonga,
+Aktualne sondy utrwalają nasiono `Aegis-performance-20261118`, Dugonga,
 liczbę obiektów i manifesty SHA256. Dla krótkich scen [M] pomiar służy
 wykrywaniu kosztów, a nie ocenie powtarzalności. Poprawiony przebieg [R]
 miał 1310 przedmiotów i 16 postaci przed dodaniem wyposażenia faz.
@@ -301,14 +301,14 @@ współrzędnych, kolorów i grubości wszystkich odcinków.
 
 Paczka zawiera 130 plików. Sprawdzono CRC i zgodność każdego pliku z kodem.
 Numer wersji w manifeście jest jedyną różnicą względem kodu z półgodzinnego
-pomiaru. [Paczka 1.3.23](../output/MULTI-TOOL-V2-1.3.23.zip) · [Sumy kontrolne](../output/MULTI-TOOL-V2-1.3.23.manifest.json).
+pomiaru. [Paczka 1.3.23](../output/System-Aegis-1.3.23.zip) · [Sumy kontrolne](../output/System-Aegis-1.3.23.manifest.json).
 
 Uruchomiono pliki rozpakowane z ZIP-a na serwerze i dwóch klientach. W
 próbie dwóch kombinezonów utworzono 56 pocisków pomocniczych. Po zakończeniu
 fazy wszystkie zostały usunięte. [Dowód usunięcia pocisków](../output/performance/20261120T163403Z-release-1-3-23-smoke/pulse-lifetime.txt).
 
 Zrzut rozgrzewki potwierdza widoczne niebieskie efekty podczas naprawy.
-[Zrzut z klienta A](../output/performance/20261120T003224Z-current-all-functions/descendantservosuit_repair_8_r1-A.png).
+[Zrzut z klienta A](../output/performance/20261120T003224Z-current-all-functions/aegisservosuit_repair_8_r1-A.png).
 
 Uruchamiacz zapisuje konfigurację każdej roli oraz kolejność, wersje i skróty
 plików `filelist.xml` włączonych pakietów. W starszej bazie te informacje
@@ -323,6 +323,6 @@ pamięci pozostają poza zakresem dowodów.
 ## Odtwarzanie
 
 [Instrukcja narzędzi i formatów](../tools/performance/README.md).
-Sondy są w `tests/runtime/performance/`, produkcja w `MULTI-TOOL-V2/`.
+Sondy są w `tests/runtime/performance/`, produkcja w `System-Aegis/`.
 Nie uruchamiać pomiarów jednocześnie z normalną sesją gry.
 Uruchamiacz odmawia startu przy wykrytych procesach gry; żadnego nie zamyka.

@@ -1,14 +1,14 @@
 -- Run only in a disposable singleplayer client with production 1.3.4 loaded.
 assert(CLIENT and Game.IsSingleplayer and Game.RoundStarted)
-local G=BMTVacuum
-local U=require('CombatTool.util')
+local G=AegisVacuum
+local U=require('AegisCombat.util')
 local R={rows={}}
 Vacuum134=R
 function R.check(name,fn)
     local ok,err=pcall(fn)
     R.rows[#R.rows+1]=(ok and 'PASS ' or 'FAIL ')..name..(ok and '' or ': '..tostring(err))
     print('[VACUUM 134] '..R.rows[#R.rows])
-    File.Write('LocalMods/MULTI-TOOL-V2/vacuum-134-results.txt',table.concat(R.rows,'\n'))
+    File.Write('LocalMods/System-Aegis/vacuum-134-results.txt',table.concat(R.rows,'\n'))
 end
 local room;for hull in Hull.HullList do if hull.Submarine==Submarine.MainSub then room=hull;break end end
 assert(room)

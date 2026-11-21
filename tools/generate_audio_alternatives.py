@@ -87,7 +87,7 @@ def generate():
                 f'<label>Pojedynczy wystrzał<audio controls preload="none" src="{data(single)}"></audio></label>'
                 f'<label>Seria pięciu wystrzałów<audio controls preload="none" src="{data(burst)}"></audio></label>'
                 f'<a download="{single.name}" href="{data(single)}">Pobierz próbkę OGG</a></section>')
-    current=data(ROOT/'MULTI-TOOL-V2/Assets/Combat/Audio/shot-1.ogg')
+    current=data(ROOT/'System-Aegis/Assets/AegisCombat/Audio/shot-1.ogg')
     page='''<!doctype html><html lang="pl"><meta charset="utf-8"><meta name="viewport" content="width=device-width">
 <title>Aegis — alternatywne wystrzały</title><style>
 body{background:#081722;color:#e4f9ff;font:16px system-ui;max-width:840px;margin:32px auto;padding:20px}

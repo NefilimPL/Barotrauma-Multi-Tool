@@ -6,11 +6,11 @@ class ShieldFriendlyFireTests(LuaCase):
         super().setUp()
         self.lua.execute('''
             env={SERVER=true,Game={IsSingleplayer=false,ServerSettings={AllowFriendlyFire=true}},Entity={}}
-            G=require('CombatTool.game').new(env)
-            require('CombatTool.physics').install(G,env)
+            G=require('AegisCombat.game').new(env)
+            require('AegisCombat.physics').install(G,env)
             hooks={};G.patch=function(id,_,_,fn) hooks[id]=fn end
             G.cast=function() end;G.event=function() end
-            require('CombatTool.shield').install(G,env)
+            require('AegisCombat.shield').install(G,env)
             defender={TeamID=1,IsFriendly=function() return true end}
             attacker={TeamID=1,IsOnPlayerTeam=true,IsFriendly=defender.IsFriendly}
             battery={Condition=100,MaxCondition=100,HasTag=function(t) return t=='mobilebattery' end}
@@ -170,9 +170,9 @@ class ShieldFriendlyFireTests(LuaCase):
         self.lua.execute('''
             env.Game.ServerSettings.AllowFriendlyFire=false
             attacker.TeamID=3;attacker.IsOnPlayerTeam=false
-            local Core=require('CombatTool.core')
+            local Core=require('AegisCombat.core')
             G.flags=function() return {damage=true} end
-            require('CombatTool.projectiles').install(G,env)
+            require('AegisCombat.projectiles').install(G,env)
             local ring=Core.ring({x=100,y=0},{x=-1,y=0},0)
             ring.owner=attacker;ring.weapon={};G.rings={ring}
             G.updateRings(.05)
@@ -182,9 +182,9 @@ class ShieldFriendlyFireTests(LuaCase):
 
     def test_crew_ring_uses_same_server_friendly_fire_policy(self):
         self.lua.execute('''
-            local Core=require('CombatTool.core')
+            local Core=require('AegisCombat.core')
             G.flags=function() return {damage=true} end
-            require('CombatTool.projectiles').install(G,env)
+            require('AegisCombat.projectiles').install(G,env)
             local ring=Core.ring({x=100,y=0},{x=-1,y=0},0)
             ring.owner=attacker;ring.weapon={};G.rings={ring}
             G.updateRings(.05)
@@ -200,7 +200,7 @@ class ShieldRenderSynchronizationTests(LuaCase):
             local function v(x,y) return {X=x,Y=y} end
             body={DrawPosition=v(30,40),DrawRotation=math.pi/2,Dir=1,
                 TransformedRotation=0,UpdateDrawPosition=function() refreshed=true end}
-            gun={ID=42,Prefab={Identifier={Value='combatmultitool'}},body=body,
+            gun={ID=42,Prefab={Identifier={Value='aegiscombattool'}},body=body,
                 WorldPosition=v(1000,2000),Components={}}
             env={Sprite=function() return {Draw=function(_,pos,_,_,rotation)
                     drawCount=drawCount+1;drawX=pos.X;drawY=pos.Y;drawAngle=rotation
@@ -210,10 +210,10 @@ class ShieldRenderSynchronizationTests(LuaCase):
                 LuaUserData={RegisterType=function() end,CreateEnumTable=function() return {} end,
                     CreateStatic=function() return {} end},
                 Entity={FindEntityByID=function(id) if id==42 then return gun end end}}
-            G=require('CombatTool.game').new(env)
-            require('CombatTool.physics').install(G,env)
+            G=require('AegisCombat.game').new(env)
+            require('AegisCombat.physics').install(G,env)
             hooks={};G.patch=function(id,_,_,fn) hooks[id]=fn end;G.cast=function() end
-            require('CombatTool.visuals').install(G,env,'mod')
+            require('AegisCombat.visuals').install(G,env,'mod')
             G.authoritative=false
             G.remote={received=0,rings={},shields={{id=42,x=-100,y=-200,angle=0,energy=70}}}
             camera={Zoom=1,WorldToScreen=function(p) return p end}

@@ -70,7 +70,7 @@ public class StartupHook
                 var harmony = Assembly.LoadFrom(Path.Combine(Root, "0Harmony.dll"));
                 var type = harmony.GetType("HarmonyLib.Harmony");
                 var methodType = harmony.GetType("HarmonyLib.HarmonyMethod");
-                var instance = Activator.CreateInstance(type, new object[] { "bmt.test.performance.native" });
+                var instance = Activator.CreateInstance(type, new object[] { "aegis.test.performance.native" });
                 var patch = type.GetMethods().First(m => m.Name == "Patch" && m.GetParameters().Length == 5);
                 Action<MethodInfo, string, string> install = (original, before, after) =>
                 {
@@ -92,9 +92,9 @@ public class StartupHook
                     install(game.GetMethod("Update", All), "Begin", "ClientUpdate");
                     install(game.GetMethod("Draw", All), "Begin", "ClientDraw");
                 }
-                File.WriteAllText(Path.Combine(Root, "bmt-perf-installed.txt"), server ? "server" : "client");
+                File.WriteAllText(Path.Combine(Root, "aegis-perf-installed.txt"), server ? "server" : "client");
             }
-            catch (Exception e) { File.AppendAllText(Path.Combine(Root, "bmt-perf-error.txt"), e + "\n"); }
+            catch (Exception e) { File.AppendAllText(Path.Combine(Root, "aegis-perf-error.txt"), e + "\n"); }
         });
         worker.IsBackground = true;
         worker.Start();
@@ -102,8 +102,8 @@ public class StartupHook
     public static void Begin(out long __state) { __state = Stopwatch.GetTimestamp(); }
     public static void MarkerWrite(string __0, string __1)
     {
-        if (!__0.EndsWith("bmt-perf-phase.txt", StringComparison.OrdinalIgnoreCase)) return;
-        string expected = Path.Combine(Root, "LocalMods", "MULTI-TOOL-V2", "bmt-perf-phase.txt");
+        if (!__0.EndsWith("aegis-perf-phase.txt", StringComparison.OrdinalIgnoreCase)) return;
+        string expected = Path.Combine(Root, "LocalMods", "System-Aegis", "aegis-perf-phase.txt");
         if (!string.Equals(Path.GetFullPath(__0), expected, StringComparison.OrdinalIgnoreCase)) return;
         markerEvents++;
         string next = __1.Trim();
@@ -161,7 +161,7 @@ public class StartupHook
                 }
                 finally { ((IDisposable)texture).Dispose(); }
             }
-            catch (Exception e) { File.AppendAllText(Path.Combine(Root, "bmt-perf-error.txt"), e + "\n"); }
+            catch (Exception e) { File.AppendAllText(Path.Combine(Root, "aegis-perf-error.txt"), e + "\n"); }
         }
     }
     static string Stats(string name, List<double> samples)
@@ -184,8 +184,8 @@ public class StartupHook
                 phase, Math.Max(0, Millis(now - started) / 1000 - 5), Stats("tick_ms", ticks.Values),
                 Stats("frame_ms", frames.Values), Stats("draw_ms", draws.Values), Stats("update_ms", updates.Values),
                 frames.Values.Count(v => v > 33.333), frames.Values.Count(v => v > 50), markerEvents);
-            File.AppendAllText(Path.Combine(Root, "bmt-perf-metrics.jsonl"), result);
-            File.WriteAllText(Path.Combine(Root, "LocalMods", "MULTI-TOOL-V2", "bmt-perf-stopped.txt"), phase);
+            File.AppendAllText(Path.Combine(Root, "aegis-perf-metrics.jsonl"), result);
+            File.WriteAllText(Path.Combine(Root, "LocalMods", "System-Aegis", "aegis-perf-stopped.txt"), phase);
         }
         phase = next; started = now; lastFrame = 0;
         frames.Clear(); draws.Clear(); updates.Clear(); ticks.Clear();
@@ -202,7 +202,7 @@ public class StartupHook
                 if (!(bool)game.GetProperty("HasLoaded", All).GetValue(instance, null)) return;
                 game.GetProperty("InactiveSleepTime", All).SetValue(instance, TimeSpan.Zero, null);
             }
-            string phaseFile = Path.Combine(Root, "LocalMods", "MULTI-TOOL-V2", "bmt-perf-phase.txt");
+            string phaseFile = Path.Combine(Root, "LocalMods", "System-Aegis", "aegis-perf-phase.txt");
             if (File.Exists(phaseFile))
             {
                 string marker = File.ReadAllText(phaseFile).Trim();
@@ -214,22 +214,22 @@ public class StartupHook
                 if (next != phase) Change(next, boundary);
                 else if (Active) Flush(now);
             }
-            string ready = Path.Combine(Root, "bmt-perf-ready.txt");
+            string ready = Path.Combine(Root, "aegis-perf-ready.txt");
             if (!File.Exists(ready)) File.WriteAllText(ready, "ready");
-            string request = Path.Combine(Root, "bmt-perf-command.txt");
+            string request = Path.Combine(Root, "aegis-perf-command.txt");
             var console = Find("Barotrauma.DebugConsole");
             if (File.Exists(request))
             {
                 string command = File.ReadAllText(request);
                 File.Delete(request);
                 console.GetMethod("ExecuteCommand", All).Invoke(null, new object[] { command });
-                File.WriteAllText(Path.Combine(Root, "bmt-perf-command-done.txt"), command);
+                File.WriteAllText(Path.Combine(Root, "aegis-perf-command-done.txt"), command);
             }
             if (!server)
             {
                 var open = console.GetProperty("IsOpen", All);
                 if (open != null) open.SetValue(null, false, null);
-                string capture = Path.Combine(Root, "bmt-perf-capture.txt");
+                string capture = Path.Combine(Root, "aegis-perf-capture.txt");
                 if (File.Exists(capture))
                 {
                     pendingCapture = File.ReadAllText(capture).Trim();
@@ -240,10 +240,10 @@ public class StartupHook
             {
                 nextConsole = now + Stopwatch.Frequency * 2;
                 var messages = (System.Collections.IEnumerable)console.GetField("Messages", All).GetValue(null);
-                File.WriteAllLines(Path.Combine(Root, "bmt-perf-console.txt"), messages.Cast<object>()
+                File.WriteAllLines(Path.Combine(Root, "aegis-perf-console.txt"), messages.Cast<object>()
                     .Select(m => Convert.ToString(m.GetType().GetField("Text", All).GetValue(m))).ToArray());
             }
         }
-        catch (Exception e) { File.AppendAllText(Path.Combine(Root, "bmt-perf-error.txt"), e + "\n"); }
+        catch (Exception e) { File.AppendAllText(Path.Combine(Root, "aegis-perf-error.txt"), e + "\n"); }
     }
 }

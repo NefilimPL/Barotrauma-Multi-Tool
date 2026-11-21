@@ -8,7 +8,7 @@ i rozszerzalne integracje, bez wymagania Neurotraumy do działania urządzeń.
 
 ## Cel i ustalenia użytkownika
 
-Dodać do istniejącego MULTI-TOOL-V2 dwa urządzenia zajmujące slot słuchawek.
+Dodać do istniejącego System-Aegis dwa urządzenia zajmujące slot słuchawek.
 Oba mają działać komunikacyjnie dokładnie jak zwykły komunikator, mieścić
 wymienną baterię, chronić przed ciśnieniem kosztem energii i stopniowo usuwać
 wszystkie negatywne następstwa zdrowotne. Użytkownik potwierdził pełną
@@ -153,7 +153,7 @@ Klient rysuje i odtwarza zsynchronizowane zdarzenia, bez podwójnego naliczania.
 Wykorzystać obecne wzorce inicjalizacji LuaCs, bez zakłócania sieci Aegisa.
 Sprzątanie po zdjęciu, śmierci, usunięciu przedmiotu, zmianie rundy i reloadlua.
 Brak zmian w plikach instalacji Steam lub innych modach. Własne XML/Lua,
-PNG i OGG w MULTI-TOOL-V2; dokumentacja/generatory/testy poza nim.
+PNG i OGG w System-Aegis; dokumentacja/generatory/testy poza nim.
 Receptury i ceny dobiera wykonawca, z wyższym kosztem Mk II, i dokumentuje.
 
 ## Weryfikacja i warunki ukończenia

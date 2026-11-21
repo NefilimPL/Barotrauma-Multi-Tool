@@ -5,7 +5,7 @@ blue healing light, audible low power and stronger paid shield hits with an
 original resonant science-fiction impact sound.
 
 Evidence before implementation: installed mod is 1.2.3. Its headset-specific
-AI refuses replacement at >=30%, but CombatTool.ai's separate candidate scan
+AI refuses replacement at >=30%, but AegisCombat.ai's separate candidate scan
 allows cells inside headsets. Native TakeItem/containment also need reservation.
 Current audio intentionally suppresses non-hit low-tier warnings, explaining
 missing alarms during healing/pressure. Existing GPU tests verify calls rather

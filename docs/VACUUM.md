@@ -175,8 +175,8 @@ Plecak: fabrykator/fabrykator wojskowy, 25 s, mechanika 40;
 2 stopy tytanowo-aluminiowe, 3 plastiki, 2 gumy, 1 FPGA. Cena bazowa 1400 mk.
 Ogniwo trzeba zdobyć osobno.
 
-Parametry: `MULTI-TOOL-V2/Lua/SalvageVacuum/config.lua`.
-Grafiki i animacja: `MULTI-TOOL-V2/Assets/Vacuum/`.
+Parametry: `System-Aegis/Lua/AegisVacuum/config.lua`.
+Grafiki i animacja: `System-Aegis/Assets/AegisVacuum/`.
 [Podgląd grafik i animacji](vacuum/preview.html) · [Raport testów](VACUUM-VERIFICATION.md).
 
 ## Tworzenie do testów

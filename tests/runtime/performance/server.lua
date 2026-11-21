@@ -1,25 +1,25 @@
 -- TEST ONLY. A disposable real server round, never a campaign save.
 assert(SERVER and Game.RoundStarted)
-assert(not BMTPerformance,'Use a fresh process for a new performance run')
-local U=BMTCombat and require('CombatTool.util') or {}
-local D=BMTDescendantSuit
-local V=BMTVacuum
-local C=BMTCombat
-local H=BMTHeadsets
-local P='bmt.performance.v1'
-local signalRoot='LocalMods/MULTI-TOOL-V2/'
+assert(not AegisPerformance,'Use a fresh process for a new performance run')
+local U=AegisCombat and require('AegisCombat.util') or {}
+local D=AegisSuit
+local V=AegisVacuum
+local C=AegisCombat
+local H=AegisHeadsets
+local P='aegis.performance.v1'
+local signalRoot='LocalMods/System-Aegis/'
 local function write(path,text) File.Write(signalRoot..path,text) end
 LuaUserData.RegisterType('System.Diagnostics.Stopwatch')
 local Clock=LuaUserData.CreateStatic('System.Diagnostics.Stopwatch')
 local clock=Clock.StartNew()
 local function now() return clock.ElapsedMilliseconds/1000 end
-local function signal(id) write('bmt-perf-phase.txt',id..'|'..string.format('%.0f',Clock.GetTimestamp())) end
+local function signal(id) write('aegis-perf-phase.txt',id..'|'..string.format('%.0f',Clock.GetTimestamp())) end
 local R={actors={},clients={},ready={},created={},phase=nil,index=0,activity={},enabled=true}
-local Proof=dofile('LocalMods/MULTI-TOOL-V2/Lua/Tests/performance/proof.lua')
+local Proof=dofile('LocalMods/System-Aegis/Lua/Tests/performance/proof.lua')
 local managed=Proof.tracker(function(entity) Entity.Spawner.AddEntityToRemoveQueue(entity) end)
 R.created=managed.items
-R.serverOnly=File.Exists(signalRoot..'bmt-perf-server-only.txt')
-BMTPerformance=R
+R.serverOnly=File.Exists(signalRoot..'aegis-perf-server-only.txt')
+AegisPerformance=R
 local function encode(v)
     if type(v)=='string' then return '"'..v:gsub('\\','\\\\'):gsub('"','\\"'):gsub('\n','\\n')..'"' end
     if type(v)=='number' or type(v)=='boolean' then return tostring(v) end
@@ -136,12 +136,12 @@ local function catalogue(repeats,filter)
     add('screwdriver','repair',8)
     add('smg','fire',8)
     add('weldingtool','weld',8)
-    local modes={wrenchscrewdrivertwoinoneset={'idle','repair'},['multi-toolset']={'idle','repair','light','weld','cut','extinguish','passive'},
-        combatmultitool={'idle','repair','light','shield','fire','weld','cut','extinguish','passive'},aegisheadset={'idle','heal','pressure'},
+    local modes={aegiswrenchscrewdriver={'idle','repair'},['aegiscompositetool']={'idle','repair','light','weld','cut','extinguish','passive'},
+        aegiscombattool={'idle','repair','light','shield','fire','weld','cut','extinguish','passive'},aegisheadset={'idle','heal','pressure'},
         aegisheadsetmk2={'idle','heal','pressure','hit'},aegisvacuum={'idle','vacuum'},
         aegisvacuumpack={'idle','panel','storage1000','storage10000','salvage'},
-        descendantservosuit={'idle','repair','combat','grab','sonar'}}
-    if D then for _,kind in ipairs({'wrenchscrewdrivertwoinoneset','multi-toolset','combatmultitool','aegisheadset','aegisheadsetmk2','aegisvacuum','aegisvacuumpack','descendantservosuit'}) do
+        aegisservosuit={'idle','repair','combat','grab','sonar'}}
+    if D then for _,kind in ipairs({'aegiswrenchscrewdriver','aegiscompositetool','aegiscombattool','aegisheadset','aegisheadsetmk2','aegisvacuum','aegisvacuumpack','aegisservosuit'}) do
         local first=#phases+1
         for _,mode in ipairs(modes[kind]) do
             for _,count in ipairs({1,2,8}) do
@@ -152,14 +152,14 @@ local function catalogue(repeats,filter)
             table.insert(phases,first,{id='none_before_'..kind..'_r1',item='none',mode='none',count=0,active=false})
         end
     end
-    add('descendantservosuit','repair',8,true)
+    add('aegisservosuit','repair',8,true)
     add('mixed','stress',8)
     end
     return phases
 end
 local mixed={
-    {'descendantservosuit','repair'},{'descendantservosuit','combat'},
-    {'combatmultitool','shield'},{'combatmultitool','fire'},
+    {'aegisservosuit','repair'},{'aegisservosuit','combat'},
+    {'aegiscombattool','shield'},{'aegiscombattool','fire'},
     {'aegisheadset','heal'},{'aegisheadsetmk2','hit'},
     {'aegisvacuum','vacuum'},{'aegisvacuumpack','storage1000'}}
 local function actorPhase(a,p)
@@ -191,27 +191,27 @@ local function equipment(a,p)
         a.item=value
         if p.item=='aegisheadset' or p.item=='aegisheadsetmk2' then
             assert(a.c.Inventory.TryPutItem(value,a.c,{InvSlotType.Headset}))
-        elseif p.item=='descendantservosuit' then
+        elseif p.item=='aegisservosuit' then
             assert(a.c.Inventory.TryPutItem(value,a.c,{InvSlotType.OuterClothes}))
         elseif p.item=='aegisvacuumpack' then
             assert(a.c.Inventory.TryPutItem(value,a.c,{InvSlotType.Bag}));a.pack=value
-        elseif p.item=='combatmultitool' or p.item=='aegisvacuum' or p.item=='smg' then
+        elseif p.item=='aegiscombattool' or p.item=='aegisvacuum' or p.item=='smg' then
             assert(a.c.Inventory.TryPutItem(value,a.c,{InvSlotType.RightHand+InvSlotType.LeftHand}))
         else
             assert(a.c.Inventory.TryPutItem(value,a.c,{InvSlotType.RightHand}))
         end
         local inventory=value.OwnInventory
-        if p.item=='descendantservosuit' then inventory=D.container(value,1) end
+        if p.item=='aegisservosuit' then inventory=D.container(value,1) end
         if inventory and p.item~='aegisvacuumpack' then
             a.pending=a.pending+1
-            local kind=p.item=='multi-toolset' and 'fuelrod' or p.item=='weldingtool' and 'weldingfueltank' or
+            local kind=p.item=='aegiscompositetool' and 'fuelrod' or p.item=='weldingtool' and 'weldingfueltank' or
                 p.item=='smg' and 'smgmagazine' or 'batterycell'
             item(kind,inventory,function(cell)
                 if p.item=='smg' then a.ammo=cell else a.cell=cell end
                 a.pending=a.pending-1
             end)
         end
-        if p.item=='descendantservosuit' then
+        if p.item=='aegisservosuit' then
             a.pending=a.pending+1
             item('pulselaserammobox',a.c.Inventory,function(box)
                 assert(D.container(value,1).TryPutItem(box,1,false,false,a.c));a.ammo=box;a.pending=a.pending-1
@@ -233,18 +233,18 @@ local function finish()
         if p.active and value<=0 then valid=false;reason=reason..'wearer '..i..' did no work; ' end
     end
     if not Proof.sustained(R,now(),true) then valid=false;reason=reason..'inactive sustained-work window; ' end
-    append('bmt-perf-activity.jsonl',{phase=p.id,valid=valid,reason=reason,work=work,seconds=now()-R.started,
+    append('aegis-perf-activity.jsonl',{phase=p.id,valid=valid,reason=reason,work=work,seconds=now()-R.started,
         scans=R.scans or 0,casts=R.casts or 0,poses=R.poses or 0,controller_ms=R.controllerMs or {},module_calls=R.moduleCalls or {},
         native_send_calls=R.netCalls or 0,native_payload_bytes=R.netBytes or 0,network_error=R.networkError or '',
         work_windows=R.workWindows or {}})
-    print('[BMT PERFORMANCE] END '..p.id..' valid='..tostring(valid)..' '..reason)
+    print('[Aegis PERFORMANCE] END '..p.id..' valid='..tostring(valid)..' '..reason)
 end
 local function advance()
     R.index=R.index+1;R.phase=R.phases[R.index];R.started=nil
     clean()
     if not R.phase then
         signal('done');for _,client in pairs(R.clients) do message(client) end
-        print('[BMT PERFORMANCE] DONE');return
+        print('[Aegis PERFORMANCE] DONE');return
     end
     R.preparing=now();R.prepared=false;R.replicaReady={};R.prepareSentAt=nil
     if R.phase.item~='none' then for i=1,R.phase.count do equipment(R.actors[i],actorPhase(R.actors[i],R.phase)) end end
@@ -256,14 +256,14 @@ local function begin()
     R.stopping={id=R.phase.id,at=now()};R.stoppedClients={};R.started=nil
     for _,client in pairs(R.clients) do message(client,true) end
 end
-dofile('LocalMods/MULTI-TOOL-V2/Lua/Tests/performance/scenarios.lua').install(R,
+dofile('LocalMods/System-Aegis/Lua/Tests/performance/scenarios.lua').install(R,
     {D=D,V=V,C=C,H=H,U=U,now=now,item=item,worldItem=worldItem,remove=managed.remove})
 function R.run(seconds,repeats,filter)
     assert(not R.phases,'Already running')
     assert(R.ready.PerfA and R.ready.PerfB,'Clients not ready')
     R.duration=seconds;R.phases=catalogue(repeats,filter or '')
     assert(#R.phases>0,'No matching scenarios')
-    write('bmt-perf-manifest.json',encode(R.phases));begin()
+    write('aegis-perf-manifest.json',encode(R.phases));begin()
 end
 for name,G in pairs({suit=D,combat=C,vacuum=V,headsets=H}) do
     local update=G.update
@@ -275,7 +275,7 @@ for name,G in pairs({suit=D,combat=C,vacuum=V,headsets=H}) do
         end
     end
 end
-Hook.Patch('bmt.performance.network','Barotrauma.Networking.LidgrenServerPeer','Send',function(_,p)
+Hook.Patch('aegis.performance.network','Barotrauma.Networking.LidgrenServerPeer','Send',function(_,p)
     if not R.started or now()-R.started<5 then return end
     local ok,length=pcall(function() return p['msg'].LengthBytes end)
     if ok and type(length)=='number' then R.netCalls=R.netCalls+1;R.netBytes=R.netBytes+length
@@ -297,12 +297,12 @@ Hook.Add('think',P,function()
     Game.Server.EndRoundTimer=1
     if R.failed then return end
     if R.stopping then
-        local path=signalRoot..'bmt-perf-stopped.txt'
+        local path=signalRoot..'aegis-perf-stopped.txt'
         local localStop=File.Exists(path) and File.Read(path)==R.stopping.id
         local remoteStop=R.serverOnly or (R.stoppedClients.PerfA and R.stoppedClients.PerfB)
         if localStop and remoteStop then R.stopping=nil;advance()
         elseif now()-R.stopping.at>20 then
-            R.failed=true;write('bmt-perf-fatal.txt','Missing native/client stop acknowledgement for '..R.stopping.id)
+            R.failed=true;write('aegis-perf-fatal.txt','Missing native/client stop acknowledgement for '..R.stopping.id)
         end
         return
     end
@@ -335,11 +335,11 @@ Hook.Add('think',P,function()
         end
         for i=1,p.count do local a=R.actors[i]
             local q=actorPhase(a,p)
-            if q.item=='descendantservosuit' then
+            if q.item=='aegisservosuit' then
                 D.setMode(a.item,(q.mode=='repair' or q.mode=='combat' or q.mode=='grab') and q.mode or 'off',a.c)
                 if q.mode=='repair' then a.device.Condition=10 end
                 if q.mode=='combat' then a.enemy.TeamID=CharacterTeamType.Team2 end
-            elseif q.item=='combatmultitool' then
+            elseif q.item=='aegiscombattool' then
                 U.component(a.item,'LightComponent').IsOn=q.mode=='fire' or q.mode=='shield'
             end
         end
@@ -347,7 +347,7 @@ Hook.Add('think',P,function()
         R.workWindows=nil;R.windowBefore=nil;R.windowStart=nil;R.sustainedValid=nil
         R.netCalls=0;R.netBytes=0;R.networkError=nil
         signal(p.id);for _,client in pairs(R.clients) do message(client) end
-        print('[BMT PERFORMANCE] BEGIN '..p.id);return
+        print('[Aegis PERFORMANCE] BEGIN '..p.id);return
     end
     if now()-R.started>=R.duration then begin();return end
     for i=1,p.count do
@@ -374,7 +374,7 @@ Hook.Add('think',P,function()
         if a.oxygen then a.oxygen.Condition=a.oxygen.MaxCondition end
         if i<=p.count then
             R.maintainItem(a,q)
-            if q.item=='descendantservosuit' then
+            if q.item=='aegisservosuit' then
                 local s=D.state(a.item)
                 if q.mode=='repair' and a.device.Condition>65 then a.device.Condition=10 end
                 if q.mode=='combat' then
@@ -390,9 +390,9 @@ local function ready()
     for i=1,8 do local a=R.actors[i];if not a or not a.device or not a.enemy then Timer.Wait(ready,250);return end end
     local itemCount=0;for _ in Item.ItemList do itemCount=itemCount+1 end
     local characterCount=0;for _ in Character.CharacterList do characterCount=characterCount+1 end
-    write('bmt-perf-scene.json',encode({seed=Level.Loaded.Seed,sub=Submarine.MainSub.Info.Name,
+    write('aegis-perf-scene.json',encode({seed=Level.Loaded.Seed,sub=Submarine.MainSub.Info.Name,
         items=itemCount,characters=characterCount,fixture_wearers=8,skill_level=50,skill_reset='each_phase',
         health_reset='all_afflictions_and_client_prediction'}))
-    write('bmt-perf-scene-ready.txt','ready');print('[BMT PERFORMANCE] scene ready')
+    write('aegis-perf-scene-ready.txt','ready');print('[Aegis PERFORMANCE] scene ready')
 end
 ready()

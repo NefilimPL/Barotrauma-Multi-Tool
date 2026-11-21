@@ -1,11 +1,11 @@
 -- Native fixture/damage checks on the isolated server, during a sandbox round.
-local G=BMTCombat
-local U=require('CombatTool.util')
+local G=AegisCombat
+local U=require('AegisCombat.util')
 local results,created={},{}
 local function check(name,fn)
     local ok,err=pcall(fn)
     results[#results+1]=(ok and 'PASS ' or 'FAIL ')..name..(ok and '' or ': '..tostring(err))
-    print('[BMT SHIELD] '..results[#results])
+    print('[Aegis SHIELD] '..results[#results])
 end
 local function track(o) created[#created+1]=o;return o end
 local room
@@ -21,7 +21,7 @@ for i=1,10 do
     origin=origin+Vector2(0,500)
 end
 local function human(offset,team)
-    local c=track(Character.Create('human',origin+Vector2(offset,0),'bmt-shield-'..offset,nil,0,false,false,true,nil,true,false))
+    local c=track(Character.Create('human',origin+Vector2(offset,0),'aegis-shield-'..offset,nil,0,false,false,true,nil,true,false))
     c.TeamID=team
     c.Enabled=true
     c.GodMode=false
@@ -29,7 +29,7 @@ local function human(offset,team)
 end
 local attacker=human(-200,CharacterTeamType.Team2)
 local protected=human(300,CharacterTeamType.Team1)
-local gun=track(Item(ItemPrefab.Prefabs['combatmultitool'],protected.WorldPosition,nil))
+local gun=track(Item(ItemPrefab.Prefabs['aegiscombattool'],protected.WorldPosition,nil))
 local battery=track(Item(ItemPrefab.Prefabs['batterycell'],protected.WorldPosition,nil))
 assert(gun.OwnInventory.TryPutItem(battery,0,false,false,protected))
 local state=G.state(gun);state.owner=protected
@@ -157,4 +157,4 @@ Timer.Wait(function()
     end
     G.states[gun]=nil
 end,1500)
-File.Write('LocalMods/MULTI-TOOL-V2/shield-results.txt',table.concat(results,'\n'))
+File.Write('LocalMods/System-Aegis/shield-results.txt',table.concat(results,'\n'))

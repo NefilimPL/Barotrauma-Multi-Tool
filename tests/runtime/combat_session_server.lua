@@ -1,7 +1,7 @@
 -- Dedicated server + two real clients. Native input, weapons, damage, snapshots.
 assert(SERVER and Game.RoundStarted)
-local G=BMTCombat
-local U=require('CombatTool.util')
+local G=AegisCombat
+local U=require('AegisCombat.util')
 LuaUserData.RegisterType('System.Diagnostics.Stopwatch')
 local Clock=LuaUserData.CreateStatic('System.Diagnostics.Stopwatch')
 assert(not CombatSession,'Run this probe once in a fresh round')
@@ -11,7 +11,7 @@ R.clock=Clock.StartNew()
 local function now() return R.clock.ElapsedMilliseconds/1000 end
 for client in Client.ClientList do if client.Name=='CombatA' or client.Name=='CombatB' then R.clients[client.Name]=client end end
 assert(R.clients.CombatA and R.clients.CombatB,'both actual clients must be connected')
-Networking.Receive('bmt.combat.session.ready',function(_,client) R.ready[client.Name]=true;print('[COMBAT SESSION] ready '..client.Name) end)
+Networking.Receive('aegis.combat.session.ready',function(_,client) R.ready[client.Name]=true;print('[COMBAT SESSION] ready '..client.Name) end)
 local function own(item) R.created[#R.created+1]=item;return item end
 local function spawn(kind,inventory,fn)
     Entity.Spawner.AddItemToSpawnQueue(ItemPrefab.Prefabs[kind],inventory,nil,nil,function(item) own(item);if fn then fn(item) end end,false)
@@ -31,7 +31,7 @@ local function healthy(c)
 end
 local function equip(c,key)
     for item in c.Inventory.AllItems do if not item.Removed then item.Drop(c,true) end end
-    spawn('combatmultitool',c.Inventory,function(gun)
+    spawn('aegiscombattool',c.Inventory,function(gun)
         assert(c.Inventory.TryPutItem(gun,c,{InvSlotType.RightHand+InvSlotType.LeftHand}))
         U.component(gun,'LightComponent').IsOn=true;R.guns[key]=gun
         spawn('batterycell',gun.OwnInventory,function(cell) R.cells[key]=cell end)
@@ -88,7 +88,7 @@ local phases={
     {'shield_mass_B',15,'CombatB',false,true,true},
 }
 local function message(client,target,aim,shoot)
-    local m=Networking.Start('bmt.combat.session.phase')
+    local m=Networking.Start('aegis.combat.session.phase')
     m.WriteString(R.phase);m.WriteUInt16(target and target.ID or 0);m.WriteBoolean(aim);m.WriteBoolean(shoot)
     m.WriteSingle(base.X);m.WriteSingle(base.Y+50);Networking.Send(m,client.Connection)
 end
@@ -98,7 +98,7 @@ local function report()
     local values={'phase='..R.phase,'seconds='..string.format('%.2f',now()-R.started),'victims='..victims}
     for key,value in pairs(R.counts) do values[#values+1]=key..'='..value end
     R.rows[#R.rows+1]=table.concat(values,' ')
-    File.Write('LocalMods/MULTI-TOOL-V2/combat-session-server.txt',table.concat(R.rows,'\n'))
+    File.Write('LocalMods/System-Aegis/combat-session-server.txt',table.concat(R.rows,'\n'))
     print('[COMBAT SESSION] '..R.rows[#R.rows])
 end
 local function beginPhase()
@@ -134,11 +134,11 @@ function R.start()
     for _,c in ipairs(R.npcs) do c.GodMode=false end
     R.running=true;beginPhase()
 end
-Hook.Patch('bmt.session.health','Barotrauma.Character','UpdateNetInput',function(c)
+Hook.Patch('aegis.session.health','Barotrauma.Character','UpdateNetInput',function(c)
     if c==R.clients.CombatA.Character or c==R.clients.CombatB.Character then healthy(c);return end
     for _,npc in ipairs(R.npcs) do if c==npc then healthy(c);return end end
 end,Hook.HookMethodType.After)
-Hook.Add('think','bmt.session.server',function()
+Hook.Add('think','aegis.session.server',function()
     if not R.running then
         if R.ready.CombatA and R.ready.CombatB and #R.npcs==15 and R.cells.CombatA and R.cells.CombatB and R.guns[15] and now()>8 then R.start() end
         return

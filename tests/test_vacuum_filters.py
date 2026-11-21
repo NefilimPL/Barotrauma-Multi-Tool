@@ -26,7 +26,7 @@ class VacuumFilterTests(LuaCase):
             E={ItemPrefab={Prefabs={iron,suit,gun,door}}}
             G={jobs={},pending={},children=function(i) return i.children or {} end,
                 id=function(i) return tostring(i.Prefab.Identifier) end}
-            require('SalvageVacuum.filters').install(G,E)
+            require('AegisVacuum.filters').install(G,E)
             ctx={valid=true,pack=pack}
         """)
 
@@ -80,7 +80,7 @@ class VacuumFilterTests(LuaCase):
             assert(G.categoryMatches(prefab('x','X',1),'misc'))
         """)
 
-    def test_filtered_descendant_blocks_whole_crate_and_cycle_is_rejected(self):
+    def test_filtered_aegis_blocks_whole_crate_and_cycle_is_rejected(self):
         self.lua.execute("""
             assert(G.setExcluded(ctx,'iron',true))
             local item={Prefab=suit,children={{Prefab=iron}}}

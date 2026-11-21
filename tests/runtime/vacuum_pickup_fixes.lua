@@ -1,13 +1,13 @@
 -- Regression probe in a disposable native singleplayer client only.
 assert(CLIENT and Game.IsSingleplayer and Game.RoundStarted)
-local U=require('CombatTool.util')
-local G=BMTVacuum
+local U=require('AegisCombat.util')
+local G=AegisVacuum
 local results,created={},{}
 local function check(name,fn)
     local ok,err=pcall(fn)
     results[#results+1]=(ok and 'PASS ' or 'FAIL ')..name..(ok and '' or ': '..tostring(err))
     print('[PICKUP FIXES] '..results[#results])
-    File.Write('LocalMods/MULTI-TOOL-V2/pickup-fixes-results.txt',table.concat(results,'\n'))
+    File.Write('LocalMods/System-Aegis/pickup-fixes-results.txt',table.concat(results,'\n'))
 end
 local c=Character.Controlled
 local pos=c.WorldPosition
@@ -41,7 +41,7 @@ check('duffel bag retains excluded iron while copper is collected',function()
     assert(G.pickupTarget(iron,ctx)==bag,'unfiltered bag was not kept intact')
 end)
 check('production suction collects floor loot and allowed bag contents',function()
-    local bot=Character.Create('human',Submarine.MainSub.WorldPosition+Vector2(0,2500),'bmt-pickup-loop',nil,0,false,true,true,nil,true,false)
+    local bot=Character.Create('human',Submarine.MainSub.WorldPosition+Vector2(0,2500),'aegis-pickup-loop',nil,0,false,true,true,nil,true,false)
     created[#created+1]=bot;bot.GodMode=true;bot.AIController.Enabled=false
     local nozzle,battery,bagPack=create('aegisvacuum'),create('batterycell'),create('aegisvacuumpack')
     local storage=create('aegisvacuumpage')

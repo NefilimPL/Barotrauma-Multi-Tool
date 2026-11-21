@@ -16,7 +16,7 @@ def generate():
                                     ('low', 'hit', 30, 0), ('critical', 'hit', 10, .06),
                                     ('empty', 'hit', 0, .06)]:
         lua = LuaRuntime(unpack_returned_tuples=True)
-        lua.execute("package.path=... .. '/?.lua;' .. package.path", (ROOT / 'MULTI-TOOL-V2/Lua').as_posix())
+        lua.execute("package.path=... .. '/?.lua;' .. package.path", (ROOT / 'System-Aegis/Lua').as_posix())
         lua.execute('''
             lines={}
             E={CLIENT=true,Game={IsSingleplayer=true},Networking={Receive=function() end},

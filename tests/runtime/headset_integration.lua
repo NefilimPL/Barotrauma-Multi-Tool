@@ -1,7 +1,7 @@
 -- Disposable server only. Run after gamemode sandbox/start; never package.
-local G=BMTHeadsets
+local G=AegisHeadsets
 assert(G and #G.patches>=4,'headset bootstrap missing')
-local U=require('CombatTool.util')
+local U=require('AegisCombat.util')
 local results={}
 local function check(name,fn)
     -- Each case is independent; direct helper calls do not advance think time.
@@ -92,5 +92,5 @@ check('removing headset leaves no permanent pressure immunity',function()
     assert(not character.IsProtectedFromPressure)
 end)
 print('[HEADSET TEST] COMPLETE '..#results..' checks')
-File.Write('LocalMods/MULTI-TOOL-V2/headset-results.txt',table.concat(results,'\n'))
+File.Write('LocalMods/System-Aegis/headset-results.txt',table.concat(results,'\n'))
 Timer.Wait(function() if not character.Removed then character.Remove() end end,3000)

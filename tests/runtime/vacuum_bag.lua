@@ -1,7 +1,7 @@
 -- Disposable singleplayer client only; test native Bag, GUI and FastLoot safety.
 assert(CLIENT and Game.IsSingleplayer and Game.RoundStarted)
-local G=BMTVacuum
-local U=require('CombatTool.util')
+local G=AegisVacuum
+local U=require('AegisCombat.util')
 LuaUserData.RegisterType('Barotrauma.GameMain')
 local Main=LuaUserData.CreateStatic('Barotrauma.GameMain')
 LuaUserData.RegisterType('Barotrauma.GUIButton+OnClickedHandler')
@@ -11,7 +11,7 @@ local function check(name,fn)
     local ok,err=pcall(fn)
     R.rows[#R.rows+1]=(ok and 'PASS ' or 'FAIL ')..name..(ok and '' or ': '..tostring(err))
     print('[VACUUM BAG] '..R.rows[#R.rows])
-    File.Write('LocalMods/MULTI-TOOL-V2/vacuum-bag-results.txt',table.concat(R.rows,'\n'))
+    File.Write('LocalMods/System-Aegis/vacuum-bag-results.txt',table.concat(R.rows,'\n'))
 end
 local room;for hull in Hull.HullList do if hull.Submarine==Submarine.MainSub then room=hull;break end end
 assert(room)

@@ -5,8 +5,8 @@ class ReviewRegressionTests(LuaCase):
     def setUp(self):
         super().setUp()
         self.lua.execute('''
-            G=require('CombatTool.game').new({});G.patch=function() end
-            gun={ID=1,Condition=100,Prefab={Identifier={Value='combatmultitool'}},Components={{Name='ItemContainer'}}}
+            G=require('AegisCombat.game').new({});G.patch=function() end
+            gun={ID=1,Condition=100,Prefab={Identifier={Value='aegiscombattool'}},Components={{Name='ItemContainer'}}}
             gun.OwnInventory={GetItemAt=function() return nil end}
             function vec(x,y) return setmetatable({X=x,Y=y,LengthSquared=function() return x*x+y*y end},
                 {__sub=function(a,b) return vec(a.X-b.X,a.Y-b.Y) end,__add=function(a,b) return vec(a.X+b.X,a.Y+b.Y) end}) end
@@ -19,7 +19,7 @@ class ReviewRegressionTests(LuaCase):
             env={InvSlotType={Any=1},Item={ItemList={source}},LuaUserData={IsTargetType=function(o,name) return o.kind==name end},
                 AIObjectiveContainItem=function() return {IsCompleted=false,Abandon=false,AddSubObjective=function(o) fetching=o end} end,
                 AIObjectiveGetItem=function() fetchCalls=(fetchCalls or 0)+1;return {kind='fetch'} end}
-            A=require('CombatTool.ai');A.install(G,env)
+            A=require('AegisCombat.ai');A.install(G,env)
         ''')
         self.item_groups('env')
 
@@ -27,7 +27,7 @@ class ReviewRegressionTests(LuaCase):
         self.lua.execute('assert(A.resupply(bot,gun,0,currentParent))')
         self.assertEqual(self.lua.globals().fetchCalls,1)
 
-    def test_multitool_never_uses_reserved_headset_battery(self):
+    def test_aegis_never_uses_reserved_headset_battery(self):
         self.lua.execute('''
             local headset={kind='Barotrauma.Item',HasTag=function(t) return t=='aegisheadset' end}
             source.ParentInventory={Owner=headset}
@@ -92,7 +92,7 @@ class ReviewRegressionTests(LuaCase):
                 Submarine={Loaded={{Position=vec(100,0),WorldPosition=vec(10100,0)}}},
                 Vector2=setmetatable(Vector,{__call=function(_,x,y) return vec(x,y) end}),
                 ConvertUnits={ToSimUnits=function(v) return v end},Game={World={RayCast=function(_,a,b) lastRayStart=a end}}}
-            require('CombatTool.physics').install(G,env)
+            require('AegisCombat.physics').install(G,env)
             G.cast({x=150,y=0},{x=200,y=0},0,nil,true)
         ''')
         self.assertEqual(self.lua.globals().lastRayStart.X,50)
@@ -101,7 +101,7 @@ class ReviewRegressionTests(LuaCase):
         self.lua.execute('''
             env={CLIENT=true,Game={IsSingleplayer=false},Timer={GetTime=function() return 100 end},
                 Networking={Receive=function(name,fn) if name:find('snapshot') then receiver=fn end end}}
-            require('CombatTool.network').install(G,env)
+            require('AegisCombat.network').install(G,env)
             function packet(epoch,sequence)
                 local values={epoch,sequence};local n=0
                 return {ReadUInt32=function() n=n+1;return values[n] end,ReadUInt16=function() return 0 end}
@@ -116,7 +116,7 @@ class ReviewRegressionTests(LuaCase):
             G.friendly=function() return false end
             G.cast=function() return nil end
             G.event=function() end
-            require('CombatTool.shield').install(G,{Entity={}})
+            require('AegisCombat.shield').install(G,{Entity={}})
             blocks=0
             G.findShield=function(a,b) if b.x>=100 then return {t=(100-a.x)/(b.x-a.x),x=100,y=0,state={}} end end
             G.blockShield=function() blocks=blocks+1;return true end

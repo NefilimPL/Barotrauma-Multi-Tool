@@ -10,7 +10,7 @@ class VacuumManualTests(LuaCase):
             G.context=function() return ctx end
             local requested
             G.request=function(action,p,target,view) requested=view.targets end
-            require('SalvageVacuum.manual').install(G,E)
+            require('AegisVacuum.manual').install(G,E)
             local p=setmetatable({i=0,user=owner,item=item},{__index=function(t,k) error('unknown native argument '..k) end})
             local inv={GetItemAt=function(i) assert(i==0);return pack end}
             assert(hooks['manual-drag-container'](inv,p))
@@ -22,7 +22,7 @@ class VacuumManualTests(LuaCase):
         self.lua.execute('''
             local function isType(v,t) return v and v.type==t end
             owner={type='Barotrauma.Character',CanInteractWith=function() return true end}
-            pack={ID=1,kind='aegisvacuumpack',Tags='bmt.vacuum.exclude.iron'}
+            pack={ID=1,kind='aegisvacuumpack',Tags='aegis.vacuum.exclude.iron'}
             item={ID=2,kind='iron',ParentInventory={Owner=owner}}
             local items={[2]=item};moved={}
             E={Entity={FindEntityByID=function(id) return items[id] end},LuaUserData={IsTargetType=isType}}
@@ -30,7 +30,7 @@ class VacuumManualTests(LuaCase):
                 is=function(i,k) return i and i.kind==k end,
                 safeStorageInput=function() return true end,
                 insert=function(p,i,c) moved[#moved+1]=i;return true end}
-            require('SalvageVacuum.manual').install(G,E)
+            require('AegisVacuum.manual').install(G,E)
             ctx={valid=true,pack=pack,owner=owner}
         ''')
 

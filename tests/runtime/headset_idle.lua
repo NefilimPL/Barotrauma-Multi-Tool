@@ -1,4 +1,4 @@
-local G=BMTHeadsets
+local G=AegisHeadsets
 local room
 for h in Hull.HullList do
     if h.Submarine==Submarine.MainSub and (not room or h.Rect.Width>room.Rect.Width) then room=h end
@@ -7,7 +7,7 @@ assert(room)
 room.WaterVolume=0;room.Oxygen=100000000
 local c=Character.Create('human',room.WorldPosition,'headset-idle-probe',nil,0,false,true,true,nil,true,false)
 c.AIController.Enabled=false
-Hook.Patch('bmt.test.idle-enabled','Barotrauma.Character','Update',function(char) if char==c then char.Enabled=true end end,Hook.HookMethodType.Before)
+Hook.Patch('aegis.test.idle-enabled','Barotrauma.Character','Update',function(char) if char==c then char.Enabled=true end end,Hook.HookMethodType.Before)
 Timer.Wait(function()
     local item=Item(ItemPrefab.Prefabs['aegisheadsetmk2'],c.WorldPosition,nil)
     local cell=Item(ItemPrefab.Prefabs['batterycell'],c.WorldPosition,nil)
@@ -35,12 +35,12 @@ Timer.Wait(function()
         local hull=c.AnimController.CurrentHull
         records[#records+1]=(idle and 'PASS ' or 'FAIL ')..'healthy idle energy='..G.energy(item)..' vitality='..c.Vitality..' hull='..tostring(hull)..' pressure='..tostring(hull and hull.LethalPressure)..' needsAir='..tostring(c.NeedsAir)..' removed='..tostring(c.Removed)
         print('[HEADSET IDLE] '..records[#records])
-        File.Write('LocalMods/MULTI-TOOL-V2/headset-idle-results.txt',table.concat(records,'\n'))
+        File.Write('LocalMods/System-Aegis/headset-idle-results.txt',table.concat(records,'\n'))
         G.heal=original
         c.CharacterHealth.ApplyAffliction(c.AnimController.MainLimb,AfflictionPrefab.Prefabs['burn'].Instantiate(10))
         G.heal(c,item,.2)
         G.printStatus()
-        Hook.RemovePatch('bmt.test.idle-enabled','Barotrauma.Character','Update',Hook.HookMethodType.Before)
+        Hook.RemovePatch('aegis.test.idle-enabled','Barotrauma.Character','Update',Hook.HookMethodType.Before)
         c.Remove()
     end,30000)
 end,2000)

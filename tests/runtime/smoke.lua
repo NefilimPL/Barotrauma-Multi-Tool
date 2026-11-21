@@ -1,22 +1,22 @@
 -- Execute only on the disposable dedicated server after `gamemode sandbox; start`.
--- lua dofile('LocalMods/MULTI-TOOL-V2/Lua/Tests/smoke.lua')
-local G=BMTCombat
+-- lua dofile('LocalMods/System-Aegis/Lua/Tests/smoke.lua')
+local G=AegisCombat
 assert(G and #G.patches>=15,'Combat bootstrap did not install hooks')
-local U=require('CombatTool.util')
-local C=require('CombatTool.config')
-local A=require('CombatTool.ai')
+local U=require('AegisCombat.util')
+local C=require('AegisCombat.config')
+local A=require('AegisCombat.ai')
 local results={}
 local function check(name,fn)
     local ok,err=pcall(fn)
     results[#results+1]=(ok and 'PASS ' or 'FAIL ')..name..(ok and '' or ': '..tostring(err))
-    print('[BMT TEST] '..results[#results])
+    print('[Aegis TEST] '..results[#results])
 end
 local position=Submarine.MainSub.WorldPosition
 for hull in Hull.HullList do if hull.Submarine==Submarine.MainSub then position=hull.WorldPosition;break end end
-local bot=Character.Create('human',position,'bmt-runtime',nil,0,false,true,true,nil,true,false)
+local bot=Character.Create('human',position,'aegis-runtime',nil,0,false,true,true,nil,true,false)
 bot.GodMode=true
 bot.AIController.Enabled=false
-local item=Item(ItemPrefab.Prefabs['combatmultitool'],position,nil)
+local item=Item(ItemPrefab.Prefabs['aegiscombattool'],position,nil)
 assert(bot.Inventory.TryPutItem(item,bot,{InvSlotType.RightHand+InvSlotType.LeftHand}))
 local a=Item(ItemPrefab.Prefabs['batterycell'],position,nil)
 local b=Item(ItemPrefab.Prefabs['batterycell'],position,nil)
@@ -115,6 +115,6 @@ check('shared depletion makes ranged component empty',function()
     source.Condition=0
     assert(ranged.IsEmpty(bot))
 end)
-BMTTestBot=bot;BMTTestGun=item
-File.Write('LocalMods/MULTI-TOOL-V2/runtime-results.txt',table.concat(results,'\n'))
-print('[BMT TEST] Wrote '..#results..' checks to bmt-runtime-results.txt')
+AegisTestBot=bot;AegisTestGun=item
+File.Write('LocalMods/System-Aegis/runtime-results.txt',table.concat(results,'\n'))
+print('[Aegis TEST] Wrote '..#results..' checks to aegis-runtime-results.txt')

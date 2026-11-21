@@ -12,7 +12,7 @@
 
 ## Global Constraints
 
-- Preserve the existing multitool. Scope hooks to `combatmultitool`.
+- Preserve the existing multitool. Scope hooks to `aegiscombattool`.
 - Two hands equipped, one normal inventory slot stowed; two energy slots.
 - Quality 0/1/2/3 permits 1/2/3/4 ricochets; no hull damage from rings.
 - NPC damage permission is authoritative; bots never enable it automatically.
@@ -30,7 +30,7 @@
 
 ### Task 1: Rules, geometry and resource accounting
 
-**Files:** `MULTI-TOOL-V2/Lua/CombatTool/{config,core}.lua`, `tests/test_combat_core.py`.
+**Files:** `System-Aegis/Lua/AegisCombat/{config,core}.lua`, `tests/test_combat_core.py`.
 **Interfaces:** `Core.mode(context) -> string`; `Core.reflect(v,n) -> vector`; `Core.segmentArc(a,b,shield) -> t,point`; `Core.spend(source,cost) -> boolean`; `Core.bounces(quality) -> integer`.
 
 - [x] Write failing tests for mutually exclusive player/bot modes, hard damage disable, 1–4 bounce limits, reflection, nearest arc hits and one-slot spending.
@@ -40,7 +40,7 @@
 
 ### Task 2: Native item and exclusive AI integration
 
-**Files:** `MULTI-TOOL-V2/combat_tool.xml`, manifest/text files, `Lua/CombatTool/{game,ai}.lua`, `Lua/Autorun/combatmultitool.lua`, `tests/test_combat_adapter.py`.
+**Files:** `System-Aegis/aegis_combat.xml`, manifest/text files, `Lua/AegisCombat/{game,ai}.lua`, `Lua/Autorun/aegiscombattool.lua`, `tests/test_combat_adapter.py`.
 **Interfaces:** `Game.state(item)`, `Game.context(item,character)`, `Game.use(component,character,dt)`; AI adapter uses the executing objective and its actual selected tool, not queued orders. Core interfaces from Task 1.
 
 - [x] Add adapter tests proving use gates, owner transition cancellation and independent resupply slots; watch them fail.
@@ -50,7 +50,7 @@
 
 ### Task 3: Authoritative rings, shields and networking
 
-**Files:** `Lua/CombatTool/{projectiles,shield,network}.lua`, extend adapter tests.
+**Files:** `Lua/AegisCombat/{projectiles,shield,network}.lua`, extend adapter tests.
 **Interfaces:** `Projectiles.fire(state,context)`, `Projectiles.update(dt)`; `Shield.update(state,context,dt)`, `Shield.intercept(projectile,start,end)`; `Network.emit(kind,data)` and bounded snapshot sync. Modules consume Core geometry and Game state.
 
 - [x] Write failing tests for ricochet budget/remaining travel, shield front/back interception, last-energy behavior, source separation and replay throttling.
@@ -60,7 +60,7 @@
 
 ### Task 4: Raster assets and animated rendering
 
-**Files:** `Assets/Combat/*`, `Lua/CombatTool/visuals.lua`, item sprite references, asset prompt record.
+**Files:** `Assets/AegisCombat/*`, `Lua/AegisCombat/visuals.lua`, item sprite references, asset prompt record.
 **Interfaces:** `Visuals.receive(snapshot/event)`, `Visuals.draw(spriteBatch,cam)`; assets are project-local alpha PNGs with explicit frame rectangles.
 
 - [x] Use built-in imagegen for weapon and separate shield active/hit/break/contact animation sheets.

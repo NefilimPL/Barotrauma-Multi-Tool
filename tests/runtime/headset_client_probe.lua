@@ -3,7 +3,7 @@ if not CLIENT then return end
 Timer.Wait(function()
     local batch
     local ok,err=pcall(function()
-        local G=BMTHeadsets
+        local G=AegisHeadsets
         assert(G and G.drawEffects,'headset client did not initialize')
         LuaUserData.RegisterType('Barotrauma.GameMain')
         LuaUserData.RegisterType('Microsoft.Xna.Framework.Graphics.GraphicsDevice')
@@ -24,7 +24,7 @@ Timer.Wait(function()
             local device=Item(ItemPrefab.Prefabs[id],Vector2.Zero,nil)
             local descriptor=LuaUserData.RegisterType('Barotrauma.Items.Components.Wearable')
             LuaUserData.MakeFieldAccessible(descriptor,'wearableSprites')
-            local wearable=require('CombatTool.util').component(device,'Wearable')
+            local wearable=require('AegisCombat.util').component(device,'Wearable')
             for sprite in wearable.wearableSprites do
                 sprite.Init()
                 assert(sprite.Scale*sprite.Sprite.SourceRect.Height<=50,'worn headset is larger than the head')
@@ -56,7 +56,7 @@ Timer.Wait(function()
         assert(not G.visualError,G.visualError)
     end)
     if batch then pcall(function() batch.End();batch.Dispose() end) end
-    File.Write('LocalMods/MULTI-TOOL-V2/headset-client-results.txt',
+    File.Write('LocalMods/System-Aegis/headset-client-results.txt',
         ok and 'PASS native GPU LED flashes, equipped sprite-derived geometry, 4 power tiers, both wearable sprites, 7 audio channels' or 'FAIL '..tostring(err))
     print('[HEADSET CLIENT] '..(ok and 'PASS' or tostring(err)))
 end,8000)

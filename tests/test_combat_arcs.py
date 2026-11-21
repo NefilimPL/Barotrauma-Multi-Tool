@@ -18,7 +18,7 @@ class ImpactArcTests(LuaCase):
                 cast=function(a,b,_,_,wallsOnly)
                     if wallsOnly and b.y==10 then return {kind='wall'} end
                 end,findShield=function() end}
-            require('CombatTool.projectiles').install(G,{Character={CharacterList={owner,direct,far,hidden,dead,removed,near}}})
+            require('AegisCombat.projectiles').install(G,{Character={CharacterList={owner,direct,far,hidden,dead,removed,near}}})
             ring={owner=owner,weapon=gun,damageMultiplier=1}
             hit={x=0,y=0,nx=-1,ny=0,kind='character',target=direct}
             math.random=function() return 0 end
@@ -50,7 +50,7 @@ class ImpactArcTests(LuaCase):
             local third={WorldPosition={X=170,Y=0}}
             local fourth={WorldPosition={X=230,Y=0}}
             local E={Character={CharacterList={owner,direct,near,far,third,fourth}}}
-            require('CombatTool.projectiles').install(G,E)
+            require('AegisCombat.projectiles').install(G,E)
             G.tryArc(ring,hit);G.tryArc(ring,hit)
             assert(#shocks==3,'arc must visit three targets once, without repeating a chain')
             assert(shocks[1].target==near and shocks[2].target==far and shocks[3].target==third)
@@ -71,7 +71,7 @@ class ImpactArcTests(LuaCase):
 
     def test_wall_collision_invokes_secondary_arc(self):
         self.lua.execute('''
-            local Core=require('CombatTool.core')
+            local Core=require('AegisCombat.core')
             G.cast=function(_,_,_,_,walls)
                 if not walls then return {t=.5,x=0,y=0,nx=-1,ny=0,kind='wall'} end
             end
@@ -91,14 +91,14 @@ class ImpactArcTests(LuaCase):
             local env={SERVER=true,Game={IsSingleplayer=false,Server={}},Timer={GetTime=function() return 0 end},
                 Networking={Start=function() return message end,Send=function() end}}
             local server={direction=function() return {},0 end}
-            require('CombatTool.network').install(server,env)
+            require('AegisCombat.network').install(server,env)
             server.event('arc',{item={ID=17}},{x=5,y=10},{x=30,y=40})
             local client={onEffect=function(kind,point,_,id,endpoint)
                 assert(kind=='arc' and id==17 and point.x==5 and point.y==10)
                 assert(endpoint.x==30 and endpoint.y==40,'network lost the arc destination')
                 received=true
             end}
-            require('CombatTool.network').install(client,{CLIENT=true,Game={IsSingleplayer=false},
+            require('AegisCombat.network').install(client,{CLIENT=true,Game={IsSingleplayer=false},
                 Timer=env.Timer,Networking={Receive=function(name,fn) if name:find('effect') then receive=fn end end}})
             receive(message);assert(received,'client ignored the secondary arc')
         ''')
@@ -107,7 +107,7 @@ class ImpactArcTests(LuaCase):
         self.lua.execute('''
             local function prefab(kind) return {Instantiate=function(n) return {kind=kind,strength=n} end} end
             local P={}
-            require('CombatTool.physics').install(P,{Vector2=setmetatable({Zero={}},
+            require('AegisCombat.physics').install(P,{Vector2=setmetatable({Zero={}},
                 {__call=function(_,x,y) return {X=x,Y=y} end}),
                 AfflictionPrefab={Prefabs={burn=prefab('burn'),stun=prefab('stun')}}})
             assert(P.shock,'electrical affliction delivery is missing')

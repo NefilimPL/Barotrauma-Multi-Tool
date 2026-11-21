@@ -14,7 +14,7 @@ class CombatDiagnosticTests(LuaCase):
                 print=function(line) output=(output or '')..line..'\\n' end,
                 Game={AddCommand=function(name,_,fn) commandName=name;runStatus=fn end,
                     RemoveCommand=function(name) removed=name end}}
-            require('CombatTool.diagnostics').install(G,E)
+            require('AegisCombat.diagnostics').install(G,E)
             runStatus()
             G.disposeDiagnostics()
         ''')

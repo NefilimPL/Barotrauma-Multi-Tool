@@ -1,17 +1,17 @@
 -- Actual client/server transport test, after vacuum_grid_server.lua fixture is ready.
-assert(CLIENT and not BMTVacuum.authoritative)
-local G=BMTVacuum
+assert(CLIENT and not AegisVacuum.authoritative)
+local G=AegisVacuum
 local P={rows={}};Vacuum134Network=P
 function P.check(name,fn)
     local ok,err=pcall(fn)
     P.rows[#P.rows+1]=(ok and 'PASS ' or 'FAIL ')..name..(ok and '' or ': '..tostring(err))
     print('[VACUUM 134 MP] '..P.rows[#P.rows])
-    File.Write('LocalMods/MULTI-TOOL-V2/vacuum-134-network-results.txt',table.concat(P.rows,'\n'))
+    File.Write('LocalMods/System-Aegis/vacuum-134-network-results.txt',table.concat(P.rows,'\n'))
     return ok
 end
 local original=G.onSnapshot
 G.onSnapshot=function(s) P.last=s;if original then original(s) end end
-local pack;for item in Item.ItemList do if item.HasTag('bmtgrid_mp_pack') then pack=item;break end end
+local pack;for item in Item.ItemList do if item.HasTag('aegisgrid_mp_pack') then pack=item;break end end
 assert(pack and G.context(pack,Character.Controlled).valid)
 P.pack=pack;G.openPanel(pack)
 Timer.Wait(function()

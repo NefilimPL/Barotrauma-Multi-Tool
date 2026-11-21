@@ -38,16 +38,16 @@ function M.install(R,A)
         return result
     end end
     local fixing={}
-    Hook.Patch('bmt.performance.repair.before','Barotrauma.Items.Components.Repairable','Update',function(r)
-        if not sampled() or not R.phase or R.phase.mode~='repair' or R.phase.item=='descendantservosuit' then return end
+    Hook.Patch('aegis.performance.repair.before','Barotrauma.Items.Components.Repairable','Update',function(r)
+        if not sampled() or not R.phase or R.phase.mode~='repair' or R.phase.item=='aegisservosuit' then return end
         for _,a in ipairs(R.actors) do if a.device==r.Item then fixing[r]={actor=a,before=r.Item.Condition};break end end
     end,Hook.HookMethodType.Before)
-    Hook.Patch('bmt.performance.repair.after','Barotrauma.Items.Components.Repairable','Update',function(r)
+    Hook.Patch('aegis.performance.repair.after','Barotrauma.Items.Components.Repairable','Update',function(r)
         local entry=fixing[r];if not entry then return end;fixing[r]=nil
         entry.actor.work=entry.actor.work+math.max(0,r.Item.Condition-entry.before)
     end,Hook.HookMethodType.After)
     local wallUses, wallChanges = {}, {}
-    Hook.Patch('bmt.performance.wall.before','Barotrauma.Items.Components.RepairTool','Use',function(tool)
+    Hook.Patch('aegis.performance.wall.before','Barotrauma.Items.Components.RepairTool','Use',function(tool)
         if not sampled() then return end
         for _,a in ipairs(R.actors) do
             if a.item==tool.Item and a.wall and (a.testMode=='weld' or a.testMode=='cut') and
@@ -56,20 +56,20 @@ function M.install(R,A)
             end
         end
     end,Hook.HookMethodType.Before)
-    Hook.Patch('bmt.performance.wall.after','Barotrauma.Items.Components.RepairTool','Use',function(tool)
+    Hook.Patch('aegis.performance.wall.after','Barotrauma.Items.Components.RepairTool','Use',function(tool)
         local entry=wallUses[#wallUses]
         if entry and entry.tool==tool then wallUses[#wallUses]=nil end
     end,Hook.HookMethodType.After)
     -- Follow the native ray's actual section during the synchronous tool use.
     -- Fixture damage outside Use and walls on other submarines do not count.
     local damageOverload={'System.Int32','System.Single','Barotrauma.Character','System.Boolean','System.Boolean'}
-    Hook.Patch('bmt.performance.wall.damage.before','Barotrauma.Structure','AddDamage',damageOverload,function(wall,p)
+    Hook.Patch('aegis.performance.wall.damage.before','Barotrauma.Structure','AddDamage',damageOverload,function(wall,p)
         local use=wallUses[#wallUses]
         if not use then return end
         local section=p['sectionIndex']
         wallChanges[#wallChanges+1]={wall=wall,section=section,before=wall.SectionDamage(section),actor=use.actor}
     end,Hook.HookMethodType.Before)
-    Hook.Patch('bmt.performance.wall.damage.after','Barotrauma.Structure','AddDamage',damageOverload,function(wall)
+    Hook.Patch('aegis.performance.wall.damage.after','Barotrauma.Structure','AddDamage',damageOverload,function(wall)
         local hit=wallChanges[#wallChanges]
         if not hit or hit.wall~=wall then return end
         wallChanges[#wallChanges]=nil
@@ -84,7 +84,7 @@ function M.install(R,A)
         end
     end
     for _,method in ipairs({'DoLaunch','DoHitscan'}) do
-        Hook.Patch('bmt.performance.native.shot.'..method,'Barotrauma.Items.Components.Projectile',method,nativeShot,Hook.HookMethodType.After)
+        Hook.Patch('aegis.performance.native.shot.'..method,'Barotrauma.Items.Components.Projectile',method,nativeShot,Hook.HookMethodType.After)
     end
     function R.fill(a,count,kind)
         local pages=math.ceil(count/100)
@@ -125,10 +125,10 @@ function M.install(R,A)
                     a.pending=a.pending-1
                 end)
             end
-        elseif p.item=='multi-toolset' then
+        elseif p.item=='aegiscompositetool' then
             U.component(a.item,'Pump').IsOn=p.mode=='cut'
             U.component(a.item,'Controller').State=p.mode=='extinguish'
-        elseif p.item=='combatmultitool' then
+        elseif p.item=='aegiscombattool' then
             U.component(a.item,'Pump').IsOn=p.mode=='cut'
             U.component(a.item,'Controller').State=p.mode=='extinguish'
         end
@@ -197,14 +197,14 @@ function M.install(R,A)
                 a.work=math.max(a.work,gained)
             end
         elseif mode=='light' then
-            local light=U.component(a.item,'LightComponent',a.testKind=='combatmultitool' and 2 or 1)
+            local light=U.component(a.item,'LightComponent',a.testKind=='aegiscombattool' and 2 or 1)
             if sampled() and light and light.IsOn and a.cell and a.cell.Condition>0 then a.work=a.work+.1 end
         end
-        if mode=='repair' and p.item=='wrenchscrewdrivertwoinoneset' then
+        if mode=='repair' and p.item=='aegiswrenchscrewdriver' then
             -- The normal double-click switches this dual tool to its screwdriver state.
             a.item.AddTag('electricalrepairtool');a.item.AddTag('screwdriver')
         end
-        if mode=='repair' and p.item~='descendantservosuit' then
+        if mode=='repair' and p.item~='aegisservosuit' then
             local r=a.device.GetComponentString('Repairable')
             a.c.SelectedItem=a.device
             if not r.CurrentFixer then r.StartRepairing(a.c,LuaUserData.CreateEnumTable('Barotrauma.Items.Components.Repairable+FixActions').Repair) end

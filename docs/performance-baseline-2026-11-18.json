@@ -4,7 +4,7 @@
   "production_version": "1.3.22",
   "cases": [
     {
-      "scenario": "wrenchscrewdrivertwoinoneset_repair_8",
+      "scenario": "aegiswrenchscrewdriver_repair_8",
       "run_id": "20261118T213813Z-matrix-smoke-before2",
       "manifest_sha256": "aecd0552a1e42b8a1f4c9204c7c34dbfdb1e4afc839abe665c4814bcb0a8f737",
       "phase_seconds": 8,
@@ -49,7 +49,7 @@
       },
       "activity": [
         {
-          "phase": "wrenchscrewdrivertwoinoneset_repair_8_r1",
+          "phase": "aegiswrenchscrewdriver_repair_8_r1",
           "work": [
             17.735851287841797,
             17.29326629638672,
@@ -64,7 +64,7 @@
       ]
     },
     {
-      "scenario": "multi-toolset_weld_8",
+      "scenario": "aegiscompositetool_weld_8",
       "run_id": "20261118T213813Z-matrix-smoke-before2",
       "manifest_sha256": "aecd0552a1e42b8a1f4c9204c7c34dbfdb1e4afc839abe665c4814bcb0a8f737",
       "phase_seconds": 8,
@@ -109,7 +109,7 @@
       },
       "activity": [
         {
-          "phase": "multi-toolset_weld_8_r1",
+          "phase": "aegiscompositetool_weld_8_r1",
           "work": [
             0.08232879638671875,
             0.0914764404296875,
@@ -124,7 +124,7 @@
       ]
     },
     {
-      "scenario": "combatmultitool_shield_8",
+      "scenario": "aegiscombattool_shield_8",
       "run_id": "20261118T213813Z-matrix-smoke-before2",
       "manifest_sha256": "aecd0552a1e42b8a1f4c9204c7c34dbfdb1e4afc839abe665c4814bcb0a8f737",
       "phase_seconds": 8,
@@ -169,7 +169,7 @@
       },
       "activity": [
         {
-          "phase": "combatmultitool_shield_8_r1",
+          "phase": "aegiscombattool_shield_8_r1",
           "work": [
             2.700000000000001,
             2.700000000000001,
@@ -417,7 +417,7 @@
       ]
     },
     {
-      "scenario": "descendantservosuit_repair_8",
+      "scenario": "aegisservosuit_repair_8",
       "run_id": "20261118T205645Z-baseline-suit",
       "manifest_sha256": "f8940649afb0bf8f2c7ab25a46c1a477e5247b9b2421589378be2cedf13bc2a2",
       "phase_seconds": 30,
@@ -462,7 +462,7 @@
       },
       "activity": [
         {
-          "phase": "descendantservosuit_repair_8_r1",
+          "phase": "aegisservosuit_repair_8_r1",
           "work": [
             795.5113868713379,
             783.5381374359131,
@@ -475,7 +475,7 @@
           ]
         },
         {
-          "phase": "descendantservosuit_repair_8_r2",
+          "phase": "aegisservosuit_repair_8_r2",
           "work": [
             794.9813957214355,
             783.0161266326904,
@@ -488,7 +488,7 @@
           ]
         },
         {
-          "phase": "descendantservosuit_repair_8_r3",
+          "phase": "aegisservosuit_repair_8_r3",
           "work": [
             795.5114135742188,
             783.5381374359131,

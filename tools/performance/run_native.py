@@ -15,10 +15,10 @@ import xml.etree.ElementTree as ET
 
 ROOT = Path(__file__).resolve().parents[2]
 PROBES = ROOT / 'tests/runtime/performance'
-ROLES = {'server': ROOT / '.runtime/descendant-native',
+ROLES = {'server': ROOT / '.runtime/aegis-native',
          'A': ROOT / '.runtime/vacuum-clients/A', 'B': ROOT / '.runtime/vacuum-clients/B'}
 PORT = 27975
-SIGNALS = Path('LocalMods/MULTI-TOOL-V2')
+SIGNALS = Path('LocalMods/System-Aegis')
 
 
 def write(path, text):
@@ -43,7 +43,7 @@ def wait_for(predicate, processes, timeout=120):
     end = time.monotonic() + timeout
     while time.monotonic() < end:
         for role in processes:
-            error = ROLES[role] / 'bmt-perf-error.txt'
+            error = ROLES[role] / 'aegis-perf-error.txt'
             if error.exists():
                 raise RuntimeError(f'{role} native probe error: {error.read_text(encoding="utf-8")}')
         if predicate():
@@ -57,20 +57,20 @@ def wait_for(predicate, processes, timeout=120):
 
 def command(role, text, processes):
     folder = ROLES[role]
-    done = folder / 'bmt-perf-command-done.txt'
+    done = folder / 'aegis-perf-command-done.txt'
     if done.exists():
         done.unlink()
-    write(folder / 'bmt-perf-command.txt', text)
+    write(folder / 'aegis-perf-command.txt', text)
     wait_for(lambda: done.exists(), processes, timeout=90)
 
 
 def wait_complete(processes, max_seconds=18000, phase_timeout=600, capture_folder=None):
-    phase_file = ROLES['server'] / SIGNALS / 'bmt-perf-phase.txt'
+    phase_file = ROLES['server'] / SIGNALS / 'aegis-perf-phase.txt'
     started, changed = time.monotonic(), time.monotonic()
     phase, capture_due = None, None
     while time.monotonic() - started < max_seconds:
         for role in processes:
-            for error in (ROLES[role] / 'bmt-perf-error.txt', ROLES[role] / SIGNALS / 'bmt-perf-fatal.txt'):
+            for error in (ROLES[role] / 'aegis-perf-error.txt', ROLES[role] / SIGNALS / 'aegis-perf-fatal.txt'):
                 if error.exists():
                     raise RuntimeError(f'{role} performance probe error: {error.read_text(encoding="utf-8")}')
         dead = [(role, p.poll()) for role, p in processes.items() if p.poll() is not None]
@@ -81,9 +81,9 @@ def wait_complete(processes, max_seconds=18000, phase_timeout=600, capture_folde
             phase, changed = current, time.monotonic()
             print('Phase: ' + (phase or 'preparing/replicating'), flush=True)
             capture_due = (time.monotonic() + 2 if capture_folder and
-                           phase.startswith('descendantservosuit_repair_8') and '_hidden_' not in phase else None)
+                           phase.startswith('aegisservosuit_repair_8') and '_hidden_' not in phase else None)
         if capture_due is not None and time.monotonic() >= capture_due:
-            write(ROLES['A'] / 'bmt-perf-capture.txt', str((capture_folder / (phase + '-A.png')).resolve()))
+            write(ROLES['A'] / 'aegis-perf-capture.txt', str((capture_folder / (phase + '-A.png')).resolve()))
             capture_due = None
         if phase == 'done':
             return
@@ -97,7 +97,7 @@ def package_settings(folder, extra_packages, no_mod):
     settings = ET.Element('contentpackages')
     ET.SubElement(settings, 'corepackage', path='Content/ContentPackages/Vanilla.xml')
     regular = ET.SubElement(settings, 'regularpackages')
-    paths = list(extra_packages) + ([] if no_mod else ['LocalMods/MULTI-TOOL-V2/filelist.xml'])
+    paths = list(extra_packages) + ([] if no_mod else ['LocalMods/System-Aegis/filelist.xml'])
     inventory = []
     for relative in paths:
         path = folder / relative
@@ -112,7 +112,7 @@ def package_settings(folder, extra_packages, no_mod):
 
 
 def prepare(output, no_mod=False, source=None, probes=PROBES, extra_packages=()):
-    source = Path(source or ROOT / 'MULTI-TOOL-V2').resolve()
+    source = Path(source or ROOT / 'System-Aegis').resolve()
     files = [p for p in source.rglob('*') if p.is_file()]
     hashes = {p.relative_to(source).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest() for p in files}
     for role, folder in ROLES.items():
@@ -121,26 +121,26 @@ def prepare(output, no_mod=False, source=None, probes=PROBES, extra_packages=())
         executable = folder / ('DedicatedServer.exe' if role == 'server' else 'Barotrauma.exe')
         if not executable.is_file():
             raise FileNotFoundError(executable)
-        for name in ('bmt-perf-installed.txt', 'bmt-perf-ready.txt', 'bmt-perf-phase.txt',
-                     'bmt-perf-command.txt', 'bmt-perf-command-done.txt', 'bmt-perf-error.txt',
-                     'bmt-perf-metrics.jsonl', 'bmt-perf-activity.jsonl', 'bmt-perf-scene-ready.txt'):
+        for name in ('aegis-perf-installed.txt', 'aegis-perf-ready.txt', 'aegis-perf-phase.txt',
+                     'aegis-perf-command.txt', 'aegis-perf-command-done.txt', 'aegis-perf-error.txt',
+                     'aegis-perf-metrics.jsonl', 'aegis-perf-activity.jsonl', 'aegis-perf-scene-ready.txt'):
             p = folder / name
             if p.exists():
                 shutil.copy2(p, output / f'previous-{role}-{name}')
                 p.unlink()
-        mod = folder / 'LocalMods/MULTI-TOOL-V2'
+        mod = folder / 'LocalMods/System-Aegis'
         autorun = mod / 'Lua/Autorun'
         unexpected = [p for p in autorun.glob('*.lua') if p.relative_to(mod).as_posix() not in hashes]
         if unexpected:
             raise ValueError(f'Unexpected runtime Autorun scripts: {unexpected}')
-        previous_manifest = folder / 'bmt-perf-production.json'
+        previous_manifest = folder / 'aegis-perf-production.json'
         if previous_manifest.exists():
             for relative in json.loads(previous_manifest.read_text(encoding='utf-8')):
                 obsolete = (mod / relative).resolve()
                 if relative not in hashes and obsolete.is_relative_to(mod.resolve()) and obsolete.is_file():
                     obsolete.unlink()
-        for name in ('bmt-perf-phase.txt', 'bmt-perf-activity.jsonl', 'bmt-perf-manifest.json', 'bmt-perf-scene-ready.txt',
-                     'bmt-perf-scene.json', 'bmt-perf-client-evidence.jsonl', 'bmt-perf-stopped.txt', 'bmt-perf-fatal.txt'):
+        for name in ('aegis-perf-phase.txt', 'aegis-perf-activity.jsonl', 'aegis-perf-manifest.json', 'aegis-perf-scene-ready.txt',
+                     'aegis-perf-scene.json', 'aegis-perf-client-evidence.jsonl', 'aegis-perf-stopped.txt', 'aegis-perf-fatal.txt'):
             p = mod / name
             if p.exists():
                 shutil.copy2(p, output / f'previous-{role}-{name}')
@@ -171,7 +171,7 @@ def prepare(output, no_mod=False, source=None, probes=PROBES, extra_packages=())
         if role == 'server':
             settings = ET.parse(folder / 'serversettings.xml')
             for key, value in {'port': str(PORT), 'queryport': str(PORT + 1), 'IsPublic': 'False',
-                               'ServerName': 'BMT performance private', 'enableupnp': 'false',
+                               'ServerName': 'Aegis performance private', 'enableupnp': 'false',
                                'RequireAuthentication': 'False', 'AutoRestart': 'False',
                                'RandomizeSeed': 'False', 'Biome': 'coldcaverns',
                                'MaxPlayers': '16', 'GameModeIdentifier': 'sandbox'}.items():
@@ -183,15 +183,15 @@ def prepare(output, no_mod=False, source=None, probes=PROBES, extra_packages=())
 def finalize_run(output, manifest, processes, streams, monitor):
     try:
         for role in processes:
-            for name, target in (('bmt-perf-metrics.jsonl', f'{role}.jsonl'),
-                                 ('bmt-perf-error.txt', f'{role}-probe-errors.txt'),
-                                 ('bmt-perf-console.txt', f'{role}-console.txt'),
-                                 ('bmt-perf-client-evidence.jsonl', f'{role}-evidence.jsonl'),
-                                 ('bmt-perf-scene.json', 'scene.json'),
-                                 ('bmt-perf-activity.jsonl', 'activity.jsonl'),
-                                 ('bmt-perf-manifest.json', 'phases.json')):
-                local = name in ('bmt-perf-activity.jsonl', 'bmt-perf-manifest.json',
-                                 'bmt-perf-client-evidence.jsonl', 'bmt-perf-scene.json')
+            for name, target in (('aegis-perf-metrics.jsonl', f'{role}.jsonl'),
+                                 ('aegis-perf-error.txt', f'{role}-probe-errors.txt'),
+                                 ('aegis-perf-console.txt', f'{role}-console.txt'),
+                                 ('aegis-perf-client-evidence.jsonl', f'{role}-evidence.jsonl'),
+                                 ('aegis-perf-scene.json', 'scene.json'),
+                                 ('aegis-perf-activity.jsonl', 'activity.jsonl'),
+                                 ('aegis-perf-manifest.json', 'phases.json')):
+                local = name in ('aegis-perf-activity.jsonl', 'aegis-perf-manifest.json',
+                                 'aegis-perf-client-evidence.jsonl', 'aegis-perf-scene.json')
                 source = ROLES[role] / (SIGNALS / name if local else Path(name))
                 if source.exists():
                     shutil.copy2(source, output / target)
@@ -251,7 +251,7 @@ def main(after_run=None, before_run=None):
     parser.add_argument('--no-mod', action='store_true')
     parser.add_argument('--server-only', action='store_true', help='Explicit separate cohort, no client or FPS claims')
     parser.add_argument('--capture-warmup', action='store_true', help='Capture suit repair during excluded warmup; use current probes')
-    parser.add_argument('--source', type=Path, default=ROOT / 'MULTI-TOOL-V2')
+    parser.add_argument('--source', type=Path, default=ROOT / 'System-Aegis')
     parser.add_argument('--probe-source', type=Path, default=PROBES)
     parser.add_argument('--expected-scene', type=Path, help='Refuse a paired run before sampling if its native scene differs')
     parser.add_argument('--extra-package', action='append', default=[], help='Existing filelist path relative to EACH disposable installation; loaded before the tested mod')
@@ -270,13 +270,13 @@ def main(after_run=None, before_run=None):
     output.mkdir(parents=True, exist_ok=False)
     probes = args.probe_source.resolve()
     source_hash = hashlib.sha256((probes / 'NativeProbe.cs').read_bytes()).hexdigest()
-    probe = ROOT / '.runtime' / f'BMTNativeProbe-{source_hash[:16]}.dll'
+    probe = ROOT / '.runtime' / f'AegisNativeProbe-{source_hash[:16]}.dll'
     if not probe.exists():
         build_env = os.environ.copy()
-        build_env['BMT_PROBE_SOURCE'] = str(probes / 'NativeProbe.cs')
-        build_env['BMT_PROBE_OUTPUT'] = str(probe)
+        build_env['Aegis_PROBE_SOURCE'] = str(probes / 'NativeProbe.cs')
+        build_env['Aegis_PROBE_OUTPUT'] = str(probe)
         subprocess.run(['powershell.exe', '-NoProfile', '-NonInteractive', '-Command',
-                        "$ErrorActionPreference='Stop'; Add-Type -TypeDefinition ([IO.File]::ReadAllText($env:BMT_PROBE_SOURCE)) -OutputAssembly $env:BMT_PROBE_OUTPUT -OutputType Library"],
+                        "$ErrorActionPreference='Stop'; Add-Type -TypeDefinition ([IO.File]::ReadAllText($env:Aegis_PROBE_SOURCE)) -OutputAssembly $env:Aegis_PROBE_OUTPUT -OutputType Library"],
                        check=True, cwd=ROOT, env=build_env)
     hashes = prepare(output, args.no_mod, args.source, probes, args.extra_package)
     manifest = {'label': args.label, 'run_id': output.name, 'phase_seconds': args.phase_seconds,
@@ -288,11 +288,11 @@ def main(after_run=None, before_run=None):
                 'probes': {p.relative_to(probes).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest() for p in probes.rglob('*') if p.is_file()},
                 'native_probe_sha256': hashlib.sha256(probe.read_bytes()).hexdigest(),
                 'require_native_marker': 'MarkerWrite' in (probes / 'NativeProbe.cs').read_text(encoding='utf-8'),
-                'require_client_evidence': 'bmt-perf-client-evidence.jsonl' in (probes / 'client.lua').read_text(encoding='utf-8'),
+                'require_client_evidence': 'aegis-perf-client-evidence.jsonl' in (probes / 'client.lua').read_text(encoding='utf-8'),
                 'require_replica_health': 'can_interact_samples' in (probes / 'client.lua').read_text(encoding='utf-8'),
                 'roles': {k: str(v) for k, v in ROLES.items()}, 'phases': []}
     write(output / 'manifest.json', json.dumps(manifest, indent=2))
-    mode = ROLES['server'] / SIGNALS / 'bmt-perf-server-only.txt'
+    mode = ROLES['server'] / SIGNALS / 'aegis-perf-server-only.txt'
     if args.server_only:
         write(mode, 'explicit server-only cohort')
     elif mode.exists():
@@ -313,7 +313,7 @@ def main(after_run=None, before_run=None):
             streams.extend([stdout, stderr])
             arguments = [str(executable)] + ([] if role == 'server' else ['-username', 'Perf' + role, '-skipintro'])
             if role != 'server' and (not args.smoke or after_run is not None):
-                arguments = [str(executable), '-connect', 'BMT performance private', f'127.0.0.1:{PORT}',
+                arguments = [str(executable), '-connect', 'Aegis performance private', f'127.0.0.1:{PORT}',
                              '-username', 'Perf' + role, '-skipintro']
             processes[role] = subprocess.Popen(arguments, cwd=folder, env=env, stdin=subprocess.PIPE,
                                                stdout=stdout, stderr=stderr, startupinfo=startup,
@@ -322,14 +322,14 @@ def main(after_run=None, before_run=None):
         write(output / 'pids.json', json.dumps({k: p.pid for k, p in processes.items()}))
         monitor = subprocess.Popen([sys.executable, str(Path(__file__).with_name('monitor.py')), str(output)],
                                    cwd=ROOT, creationflags=subprocess.CREATE_NO_WINDOW)
-        wait_for(lambda: all((folder / 'bmt-perf-ready.txt').exists() for folder in ROLES.values()), processes, 180)
+        wait_for(lambda: all((folder / 'aegis-perf-ready.txt').exists() for folder in ROLES.values()), processes, 180)
         print('Native probes ready', flush=True)
         if args.smoke:
             for folder in ROLES.values():
-                write(folder / SIGNALS / 'bmt-perf-phase.txt', 'smoke_idle')
+                write(folder / SIGNALS / 'aegis-perf-phase.txt', 'smoke_idle')
             time.sleep(args.phase_seconds)
             for folder in ROLES.values():
-                write(folder / SIGNALS / 'bmt-perf-phase.txt', 'done')
+                write(folder / SIGNALS / 'aegis-perf-phase.txt', 'done')
             time.sleep(.5)
         else:
             time.sleep(12)
@@ -340,24 +340,24 @@ def main(after_run=None, before_run=None):
             command('server', 'gamemode sandbox', processes)
             command('server', 'sub Dugong', processes)
             command('server', 'botcount 0', processes)
-            command('server', 'seed BMT-performance-20261118', processes)
+            command('server', 'seed Aegis-performance-20261118', processes)
             command('server', 'start', processes)
             time.sleep(15)
-            command('server', "lua dofile('LocalMods/MULTI-TOOL-V2/Lua/Tests/performance/server.lua')", processes)
-            wait_for(lambda: (ROLES['server'] / SIGNALS / 'bmt-perf-scene-ready.txt').exists(), processes, 90)
+            command('server', "lua dofile('LocalMods/System-Aegis/Lua/Tests/performance/server.lua')", processes)
+            wait_for(lambda: (ROLES['server'] / SIGNALS / 'aegis-perf-scene-ready.txt').exists(), processes, 90)
             if not args.server_only:
                 for role in ('A', 'B'):
-                    command(role, "cl_lua dofile('LocalMods/MULTI-TOOL-V2/Lua/Tests/performance/client.lua')", processes)
+                    command(role, "cl_lua dofile('LocalMods/System-Aegis/Lua/Tests/performance/client.lua')", processes)
             time.sleep(2)
             if before_run is not None:
                 before_run(output, manifest, processes)
                 write(output / 'manifest.json', json.dumps(manifest, indent=2))
             if args.expected_scene:
-                actual = json.loads((ROLES['server'] / SIGNALS / 'bmt-perf-scene.json').read_text(encoding='utf-8-sig'))
+                actual = json.loads((ROLES['server'] / SIGNALS / 'aegis-perf-scene.json').read_text(encoding='utf-8-sig'))
                 expected = json.loads(args.expected_scene.read_text(encoding='utf-8-sig'))
                 if actual != expected:
                     raise RuntimeError(f'Native scene mismatch before sampling: expected {expected}, got {actual}')
-            command('server', 'lua BMTPerformance.run(' + str(args.phase_seconds) + ',' + str(args.repeats) + ",'" + args.filter + "')", processes)
+            command('server', 'lua AegisPerformance.run(' + str(args.phase_seconds) + ',' + str(args.repeats) + ",'" + args.filter + "')", processes)
             wait_complete(processes, phase_timeout=max(600, args.phase_seconds + 120),
                           capture_folder=output if args.capture_warmup else None)
             time.sleep(1)

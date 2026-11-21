@@ -1,5 +1,5 @@
 assert(CLIENT and Game.IsSingleplayer and Vacuum134 and Vacuum134.nozzle)
-local R,G=Vacuum134,BMTVacuum
+local R,G=Vacuum134,AegisVacuum
 G.closePanel()
 local original=G.context
 G.context=function(item,character)
@@ -7,7 +7,7 @@ G.context=function(item,character)
     if item==R.nozzle then ctx.aim=true end
     return ctx
 end
-Hook.Add('think','bmt.test.flow',function()
+Hook.Add('think','aegis.test.flow',function()
     G.states[R.nozzle]=G.states[R.nozzle] or {}
     G.states[R.nozzle].usedAt=G.now
 end)
@@ -16,7 +16,7 @@ Timer.Wait(function()
         assert(not G.visualError,tostring(G.visualError))
         assert(G.suctionActive(R.nozzle,G.states[R.nozzle]))
     end)
-    Hook.Remove('think','bmt.test.flow');G.context=original;G.clearAudio()
+    Hook.Remove('think','aegis.test.flow');G.context=original;G.clearAudio()
     local palette={'copper','zinc','lead','carbon','aluminium','titanium','plastic','rubber','organicfiber',
         'morphine','opium','antibiotics','chlorine','sodium','potassium','sulphur','phosphorus','lithium',
         'uranium','thorium','calcium','silicon','ethanol','screwdriver','batterycell','redwire','bluewire'}

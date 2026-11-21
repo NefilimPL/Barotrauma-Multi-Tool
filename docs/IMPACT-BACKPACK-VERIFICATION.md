@@ -96,5 +96,5 @@ Walidacja: 13 XML / 41 modułów Lua 5.2, grafiki, dźwięki i receptury: OK.
 Niezależny przegląd: jedna ważna uwaga o serwerowej sprzedaży; poprawiona
 z regresją RED → GREEN oraz natywną próbą serwera. Bez odroczonych uwag.
 
-Paczka: `output/MULTI-TOOL-V2-1.3.11.zip`. Protokół plecaka v5 wymaga
+Paczka: `output/System-Aegis-1.3.11.zip`. Protokół plecaka v5 wymaga
 aktualizacji i restartu hosta oraz wszystkich klientów.

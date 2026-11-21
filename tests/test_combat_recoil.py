@@ -10,7 +10,7 @@ class CombatRecoilTests(LuaCase):
             local vector=setmetatable({Zero={X=0,Y=0}}, {
                 __call=function(_,x,y) return setmetatable({X=x,Y=y},mt) end})
             gun={ID=7,Quality=0,WorldPosition=vector(0,0),
-                Prefab={Identifier={Value='combatmultitool'}},
+                Prefab={Identifier={Value='aegiscombattool'}},
                 body={Enabled=true,Mass=2,TransformedRotation=0,
                     ApplyLinearImpulse=function(impulse,cap)
                         kicks=(kicks or 0)+1;lastImpulse=impulse;lastCap=cap
@@ -21,8 +21,8 @@ class CombatRecoilTests(LuaCase):
                 Networking={Receive=function(name,fn)
                     if name:find('effect') then receive=fn end
                 end}}
-            G=require('CombatTool.game').new(env)
-            require('CombatTool.physics').install(G,env)
+            G=require('AegisCombat.game').new(env)
+            require('AegisCombat.physics').install(G,env)
         ''')
 
     def test_recoil_follows_aim_and_ignores_invalid_bodies(self):
@@ -44,7 +44,7 @@ class CombatRecoilTests(LuaCase):
 
     def test_multiplayer_shot_receipt_kicks_only_its_weapon(self):
         self.lua.execute('''
-            require('CombatTool.network').install(G,env)
+            require('AegisCombat.network').install(G,env)
             G.onEffect=function() effects=(effects or 0)+1 end
             function packet(kind,id)
                 return {ReadByte=function() return kind end,ReadUInt16=function() return id end,
@@ -62,8 +62,8 @@ class CombatRecoilTests(LuaCase):
     def test_authoritative_fire_kicks_once_even_with_local_effects(self):
         self.lua.execute('''
             env.Game.IsSingleplayer=true
-            require('CombatTool.network').install(G,env)
-            require('CombatTool.projectiles').install(G,env)
+            require('AegisCombat.network').install(G,env)
+            require('AegisCombat.projectiles').install(G,env)
             G.muzzle=function() return {x=0,y=0} end
             G.cast=function() end
             G.onEffect=function() effects=(effects or 0)+1 end
@@ -84,7 +84,7 @@ class CombatRecoilTests(LuaCase):
                 RegisterType=function() return {} end,MakeFieldAccessible=function() end}
             env.Hook={Add=function() end}
             env.Single=function(value) return {Value=value,isSingle=true} end
-            require('CombatTool.runtime').install(G,env)
+            require('AegisCombat.runtime').install(G,env)
             assert(hooks['recoil-pose'],'held weapon pose has no recoil hook')
             G.now=1;G.recoil(gun)
             local function arguments(item,aim)

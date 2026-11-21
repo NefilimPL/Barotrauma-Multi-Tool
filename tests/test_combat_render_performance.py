@@ -20,7 +20,7 @@ class RingProjectionTests(LuaCase):
                 trail={{x=-10,y=3,age=-1},{x=-5,y=7,age=.1},
                        {x=4,y=9,age=.17},{x=20,y=30,age=.22}}}
             local G={now=0,authoritative=false,remote={received=0,rings={ring},shields={}},patch=function() end}
-            require('CombatTool.visuals').install(G,E,'mod')
+            require('AegisCombat.visuals').install(G,E,'mod')
             vectors=0
             G.draw({}, {Zoom=1.75,
                 Transform={M11=.8,M12=.3,M21=-.4,M22=.7,M41=100,M42=-50},

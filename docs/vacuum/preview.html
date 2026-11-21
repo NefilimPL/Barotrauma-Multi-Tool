@@ -5,15 +5,15 @@
 </style>
 <h1>Aegis <span class="accent">/</span> plecak i odkurzacz</h1>
 <p>Dwa osobno wytwarzane przedmioty. Bateria znajduje się w odkurzaczu. Oryginalne grafiki PNG z przezroczystością.</p>
-<div class="assets"><article class="card"><h2>Plecak zbierający</h2><img src="../../MULTI-TOOL-V2/Assets/Vacuum/backpack.png" alt="Plecak z zasobnikiem i gniazdem przewodu"><p>Magazyn łupu, bez baterii.</p></article>
-<article class="card"><h2>Odkurzacz dwuręczny</h2><img src="../../MULTI-TOOL-V2/Assets/Vacuum/vacuum.png" alt="Dwuręczny odkurzacz z modułem baterii"><p>Wymienne ogniwo zasila zasysanie i rozbiórkę.</p></article></div>
+<div class="assets"><article class="card"><h2>Plecak zbierający</h2><img src="../../System-Aegis/Assets/AegisVacuum/backpack.png" alt="Plecak z zasobnikiem i gniazdem przewodu"><p>Magazyn łupu, bez baterii.</p></article>
+<article class="card"><h2>Odkurzacz dwuręczny</h2><img src="../../System-Aegis/Assets/AegisVacuum/vacuum.png" alt="Dwuręczny odkurzacz z modułem baterii"><p>Wymienne ogniwo zasila zasysanie i rozbiórkę.</p></article></div>
 <article class="card" style="margin-top:20px"><h2>Animacja zasysania</h2><canvas id="preview" width="1000" height="260"></canvas>
 <label>Tempo <input id="speed" type="range" min="4" max="32" value="16"> <span id="fps">16</span> kl./s</label><button id="pause">Pauza</button>
 <p>Podgląd oryginalnego arkusza 16 klatek. W grze strumień obraca się wraz ze ssawką, a drobiny wskazują drogę pobieranego przedmiotu.</p></article>
 <p><a href="../VACUUM.md">Instrukcja urządzenia</a> · <a href="PROMPTS.md">Prompty i wymiary grafik</a></p>
 <script>
 const sheet=new Image(),vacuum=new Image(),canvas=document.getElementById('preview'),ctx=canvas.getContext('2d');
-sheet.src='../../MULTI-TOOL-V2/Assets/Vacuum/suction.png';vacuum.src='../../MULTI-TOOL-V2/Assets/Vacuum/vacuum.png';
+sheet.src='../../System-Aegis/Assets/AegisVacuum/suction.png';vacuum.src='../../System-Aegis/Assets/AegisVacuum/vacuum.png';
 let paused=false,time=0,last=performance.now();document.getElementById('pause').onclick=()=>{paused=!paused;document.getElementById('pause').textContent=paused?'Wznów':'Pauza'};
 const speed=document.getElementById('speed');speed.oninput=()=>document.getElementById('fps').textContent=speed.value;
 function draw(now){if(!paused)time+=(now-last)/1000;last=now;ctx.clearRect(0,0,1000,260);

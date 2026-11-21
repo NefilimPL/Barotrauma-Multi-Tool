@@ -1,6 +1,6 @@
 -- Test only: verify the exact native typed-dictionary bridge before enabling hooks.
 assert(CLIENT,'run this typed-dictionary probe on the isolated client')
-local U=require('CombatTool.util')
+local U=require('AegisCombat.util')
 local descriptor=LuaUserData.RegisterType('Barotrauma.Items.Components.Fabricator')
 LuaUserData.MakeFieldAccessible(descriptor,'availableIngredients')
 LuaUserData.MakeFieldAccessible(descriptor,'user')

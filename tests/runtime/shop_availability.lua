@@ -1,7 +1,7 @@
 -- Read native loaded prices, availability and stock; no campaign purchases.
 LuaUserData.RegisterType('Barotrauma.PriceInfo')
-local prices={['wrenchscrewdrivertwoinoneset']=57,['multi-toolset']=1300,
-    combatmultitool=2000,aegisheadset=500,aegisheadsetmk2=1000}
+local prices={['aegiswrenchscrewdriver']=57,['aegiscompositetool']=1300,
+    aegiscombattool=2000,aegisheadset=500,aegisheadsetmk2=1000}
 local required={'merchantoutpost','merchantcity','merchantresearch','merchantmilitary',
     'merchantmine','merchantengineering','merchantmedical','merchantarmory'}
 local rows={}
@@ -22,4 +22,4 @@ for id,price in pairs(prices) do
     rows[#rows+1]=(ok and 'PASS ' or 'FAIL ')..id..' base='..price..' stores=8'..(ok and '' or ': '..tostring(err))
     print('[SHOP TEST] '..rows[#rows])
 end
-File.Write('LocalMods/MULTI-TOOL-V2/shop-results.txt',table.concat(rows,'\n'))
+File.Write('LocalMods/System-Aegis/shop-results.txt',table.concat(rows,'\n'))

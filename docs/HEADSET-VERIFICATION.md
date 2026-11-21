@@ -343,7 +343,7 @@ Wzór natywnego `Limb.DrawWearable` potwierdził przyczynę ogromnych słuchawek
 WearableSprite.Scale nie jest mnożona przez Item.Scale. Regresja najpierw
 wykazała wysokość 877,8 px. Oba noszone sprite'y mają teraz skalę 0,035,
 czyli 43,89 px przed skalowaniem ragdolla. Grafika przedmiotu w świecie
-zachowała dotychczasowy rozmiar. Dwa odwołania do wrench.png mają
+zachowała dotychczasowy rozmiar. Dwa odwołania do aegis-wrench.png mają
 compress=false, aby nie kompresować arkusza 93×19 niepodzielnego przez 4.
 
 Renderer ma wypełnioną półprzezroczystą powierzchnię, szerszą poświatę,

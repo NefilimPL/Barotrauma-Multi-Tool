@@ -1,8 +1,8 @@
 -- TEST ONLY: real remote client input and camera; never package this file.
 assert(CLIENT and Game.RoundStarted and not Game.IsSingleplayer)
-local P='bmt.performance.v1'
-local Proof=dofile('LocalMods/MULTI-TOOL-V2/Lua/Tests/performance/proof.lua')
-local R={mode='idle',phase='',home=nil};BMTPerformanceClient=R
+local P='aegis.performance.v1'
+local Proof=dofile('LocalMods/System-Aegis/Lua/Tests/performance/proof.lua')
+local R={mode='idle',phase='',home=nil};AegisPerformanceClient=R
 local function resetReplicas(mode)
     local medical=mode=='heal' or mode=='hit' or mode=='pressure'
     local function reset(c)
@@ -31,15 +31,15 @@ end)
 local function evidence()
     if R.phase=='' or R.phase=='done' then return end
     local c=Character.Controlled
-    local path='LocalMods/MULTI-TOOL-V2/bmt-perf-client-evidence.jsonl'
+    local path='LocalMods/System-Aegis/aegis-perf-client-evidence.jsonl'
     local old=File.Exists(path) and File.Read(path) or ''
     File.Write(path,old..string.format('{"phase":"%s","controlled":%s,"samples":%d,"equipped_samples":%d,"panel_snapshots":%d,"sonar_visible":%d,"draw_error":%s,"can_interact_samples":%d}\n',
         R.phase,tostring(c and c.ID or 0),R.samples or 0,R.equipped or 0,R.snapshots or 0,R.sonarVisible or 0,
-        tostring(BMTDescendantSuit~=nil and BMTDescendantSuit.drawError~=nil),R.canInteract or 0))
+        tostring(AegisSuit~=nil and AegisSuit.drawError~=nil),R.canInteract or 0))
 end
-if BMTVacuum then
-local oldClose=BMTVacuum.closePanel
-BMTVacuum.closePanel=function(...)
+if AegisVacuum then
+local oldClose=AegisVacuum.closePanel
+AegisVacuum.closePanel=function(...)
     if R.panelFrame then
         local c=Character.Controlled
         print('[PERF PANEL CLOSE] phase='..R.phase..' mode='..R.mode..' allow='..tostring(c and c.AllowInput)..
@@ -50,8 +50,8 @@ BMTVacuum.closePanel=function(...)
     R.panelFrame=nil;R.panelDevice=nil;R.panelPack=nil;R.panelExpected=nil;R.panelPreparedFor=nil
     if R.preparing then R.preparing.opened=nil;R.preparing.snapshot=nil end
 end
-local oldSnapshot=BMTVacuum.onSnapshot
-BMTVacuum.onSnapshot=function(s)
+local oldSnapshot=AegisVacuum.onSnapshot
+AegisVacuum.onSnapshot=function(s)
     oldSnapshot(s)
     -- Match the actual initial UI view, then check the retained visible frame.
     -- A reply rejected by production, an empty payload or a closed UI is no proof.
@@ -66,7 +66,7 @@ Networking.Receive(P..'.phase',function(m)
     local previous=R.phase
     local nextPhase=m.ReadString()
     -- Native File.WriteAllText instrumentation captures the exact local QPC.
-    File.Write('LocalMods/MULTI-TOOL-V2/bmt-perf-phase.txt',nextPhase)
+    File.Write('LocalMods/System-Aegis/aegis-perf-phase.txt',nextPhase)
     evidence()
     R.phase=nextPhase;R.mode=m.ReadString();R.item=m.ReadUInt16();R.pack=m.ReadUInt16()
     resetReplicas(R.mode)
@@ -91,7 +91,7 @@ local function inputs(c)
     c.SetInput(InputType.Use,false,false)
     if R.active and R.mode=='grab' then
         local item=Entity.FindEntityByID(R.item)
-        local state=item and BMTDescendantSuit.states[item]
+        local state=item and AegisSuit.states[item]
         local acquire=not (state and state.target)
         local cycle=(Timer.GetTime()-R.started)%2
         local held=acquire and cycle>.3 and cycle<.6
@@ -116,7 +116,7 @@ Hook.Patch(P..'.camera','Barotrauma.GameScreen','Draw',function()
 end,Hook.HookMethodType.Before)
 Hook.Add('think',P,function()
     if R.stoppedPhase then
-        local path='LocalMods/MULTI-TOOL-V2/bmt-perf-stopped.txt'
+        local path='LocalMods/System-Aegis/aegis-perf-stopped.txt'
         if File.Exists(path) and File.Read(path)==R.stoppedPhase then
             local m=Networking.Start(P..'.stopped');m.WriteString(R.stoppedPhase);Networking.Send(m);R.stoppedPhase=nil
         end
@@ -131,7 +131,7 @@ Hook.Add('think',P,function()
             if row.cell>0 and not Entity.FindEntityByID(row.cell) then ready=false;break end
             if row.pack>0 then
                 local pack=Entity.FindEntityByID(row.pack)
-                if not pack or not pack.ParentInventory or #BMTVacuum.contents(pack)~=row.count then ready=false;break end
+                if not pack or not pack.ParentInventory or #AegisVacuum.contents(pack)~=row.count then ready=false;break end
                 if R.preparing.panel and pack.ParentInventory.Owner==Character.Controlled then
                     R.preparing.ownPack=pack.ID;R.preparing.expected=row.count
                 end
@@ -139,8 +139,8 @@ Hook.Add('think',P,function()
         end
         if ready and R.preparing.panel and R.preparing.ownPack and not R.preparing.opened then
             local pack=Entity.FindEntityByID(R.preparing.ownPack)
-            if BMTVacuum.context(pack,Character.Controlled).valid then
-                R.panelFrame=BMTVacuum.openPanel(pack);R.preparing.opened=true
+            if AegisVacuum.context(pack,Character.Controlled).valid then
+                R.panelFrame=AegisVacuum.openPanel(pack);R.preparing.opened=true
                 R.panelDevice=pack.ID;R.panelPack=pack.ID;R.panelExpected=R.preparing.expected
             end
         end
@@ -159,13 +159,13 @@ Hook.Add('think',P,function()
         if not R.active or (item and item.ParentInventory and item.ParentInventory.Owner==Character.Controlled) then R.equipped=R.equipped+1 end
         if R.mode=='sonar' then
             local sonar=item and item.GetComponentString('Sonar')
-            local G=BMTDescendantSuit
+            local G=AegisSuit
             if sonar and sonar.HasPower and sonar.Voltage>.5 and G.sonarPanel and G.sonarPanel.Visible and G.sonarView and G.sonarView.Rect.Width>100 then
                 R.sonarVisible=R.sonarVisible+1
             end
         end
         if R.mode=='panel' and R.active and not R.panelDebug then
-            local pack=Entity.FindEntityByID(R.pack);local ctx=pack and BMTVacuum.context(pack,Character.Controlled)
+            local pack=Entity.FindEntityByID(R.pack);local ctx=pack and AegisVacuum.context(pack,Character.Controlled)
             print('[PERF PANEL] valid='..tostring(ctx and ctx.valid)..' requested='..tostring(R.requested)..
                 ' frame='..tostring(R.panelFrame and R.panelFrame.Visible)..' paused='..tostring(GUI.GUI.PauseMenuOpen)..
                 ' canInteract='..tostring(Character.Controlled.CanInteract)..' oxygen='..tostring(Character.Controlled.Oxygen)..
@@ -178,17 +178,17 @@ Hook.Add('think',P,function()
     local item=Entity.FindEntityByID(R.item)
     if R.mode=='panel' then
         local pack=Entity.FindEntityByID(R.pack)
-        if pack and BMTVacuum and BMTVacuum.context(pack,Character.Controlled).valid then R.panelFrame=BMTVacuum.openPanel(pack);R.requested=true end
+        if pack and AegisVacuum and AegisVacuum.context(pack,Character.Controlled).valid then R.panelFrame=AegisVacuum.openPanel(pack);R.requested=true end
     elseif R.mode=='sonar' then
-        if item and BMTDescendantSuit then
-            local s=BMTDescendantSuit.states[item]
+        if item and AegisSuit then
+            local s=AegisSuit.states[item]
             if s and s.sonar then R.requested=true
-            elseif s then BMTDescendantSuit.requestMode(item,'sonar') end
+            elseif s then AegisSuit.requestMode(item,'sonar') end
         end
     else
-        if BMTVacuum and BMTVacuum.closePanel then BMTVacuum.closePanel() end
+        if AegisVacuum and AegisVacuum.closePanel then AegisVacuum.closePanel() end
         R.requested=true
     end
 end)
 local m=Networking.Start(P..'.ready');Networking.Send(m)
-print('[BMT PERFORMANCE] remote client ready')
+print('[Aegis PERFORMANCE] remote client ready')

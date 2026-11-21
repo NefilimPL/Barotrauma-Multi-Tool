@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Sounds>
+  <aegis_repair file="%ModDir%/Assets/AegisSuit/Audio/repair.ogg" range="350" volume="0.25" />
+  <aegis_weld file="%ModDir%/Assets/AegisSuit/Audio/weld.ogg" range="350" volume="0.25" />
+  <aegis_combat file="%ModDir%/Assets/AegisSuit/Audio/combat.ogg" range="600" volume="0.25" />
+  <aegis_grab file="%ModDir%/Assets/AegisSuit/Audio/grab.ogg" range="350" volume="0.25" />
+  <aegis_impeller file="%ModDir%/Assets/AegisSuit/Audio/impeller.ogg" range="350" volume="0.25" />
+  <aegis_servo file="%ModDir%/Assets/AegisSuit/Audio/servo.ogg" range="350" volume="0.25" />
+  <aegis_helmet file="%ModDir%/Assets/AegisSuit/Audio/helmet.ogg" range="350" volume="0.35" />
+  <aegis_switch file="%ModDir%/Assets/AegisSuit/Audio/switch.ogg" range="350" volume="0.25" />
+  <aegis_pulse file="Content/Items/Weapons/WEAPONS_laserGunShot1.ogg" range="1800" volume="0.7" />
+  <aegis_gauss file="Content/Items/Weapons/Coilgun1.ogg" range="1800" volume="0.55" />
+</Sounds>

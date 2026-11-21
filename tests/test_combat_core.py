@@ -72,7 +72,7 @@ class CombatCoreTests(LuaCase):
 
     def test_ring_consumes_remaining_travel_after_bounce(self):
         self.lua.execute('''
-            local Core = require('CombatTool.core')
+            local Core = require('AegisCombat.core')
             ring = Core.ring({x=0,y=0},{x=1,y=0},0)
             ring.speed = 100
             Core.advanceRing(ring, .2, function(a,b,r)
@@ -86,7 +86,7 @@ class CombatCoreTests(LuaCase):
 
     def test_ring_next_wall_after_budget_kills_it(self):
         self.lua.execute('''
-            local Core = require('CombatTool.core')
+            local Core = require('AegisCombat.core')
             ring = Core.ring({x=0,y=0},{x=1,y=0},0)
             ring.bouncesLeft = 0
             Core.advanceRing(ring, .2, function(a,b,r) return {t=.5,x=10,y=0,nx=-1,ny=0,kind='wall'} end)
@@ -95,7 +95,7 @@ class CombatCoreTests(LuaCase):
 
     def test_ring_lifetime_and_distance_are_bounded(self):
         self.lua.execute('''
-            local Core = require('CombatTool.core')
+            local Core = require('AegisCombat.core')
             ring = Core.ring({x=0,y=0},{x=1,y=0},3)
             Core.advanceRing(ring, 100, function() end)
         ''')

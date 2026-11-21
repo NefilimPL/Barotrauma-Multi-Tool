@@ -1,10 +1,16 @@
-# MULTI-TOOL-V2 1.1.12 — Aegis
+# System Aegis 1.3.27
 
-Skopiuj folder `MULTI-TOOL-V2` do `Barotrauma/LocalMods/` i włącz pakiet w grze.
+Skopiuj folder `System-Aegis` do `Barotrauma/LocalMods/` i włącz pakiet **System Aegis** w grze.
 Wymagane jest zgodne **Lua for Barotrauma / LuaCs na kliencie i serwerze**.
 Punktem zgodności jest Barotrauma 1.13.5.0 i LuaCs `c6e8829`.
 
-Aegis powstaje w fabrykatorze z kompozytowego multitoola, 2 stopów
+System Aegis to pełny, osobny mod zawierający narzędzia, komunikatory,
+odkurzacz z plecakiem oraz kombinezon. Nie wymaga poprzedniego moda.
+Nowe identyfikatory nie przenoszą automatycznie starego wyposażenia;
+zachowaj kopię zapisu i opróżnij pojemniki przed migracją.
+[Komendy tworzenia przedmiotów](spawn-commands.txt).
+
+Bojowy multitool Aegis powstaje w fabrykatorze z kompozytowego multitoola, 2 stopów
 tytanowo-aluminiowych, 2 miedzi, 1 FPGA i 1 fulgurium.
 Broń zajmuje dwie ręce, a po schowaniu jeden zwykły slot.
 
@@ -34,7 +40,7 @@ Od wersji 1.1.10 wystrzał używa wybranego rezonatora plazmowego (próbka 3),
 a łuk — natywnej animacji Electricity i cząstek ElectricShock z cewki wyładowczej.
 Wersja 1.1.7 mocuje początek stożka latarki do obracającego się korpusu broni,
 także podczas pionowego celowania i zmiany kierunku patrzenia.
-Balans: [config.lua](../MULTI-TOOL-V2/Lua/CombatTool/config.lua).
+Balans: [config.lua](../System-Aegis/Lua/AegisCombat/config.lua).
 Broń ma przestrzenne dźwięki broni i trafień, impuls odpychający NPC oraz
 pulsujący pierścień ze śladem energii. Wersja 1.1.5 skraca ładowanie do 0,10 s
 i przerwę po strzale do 0,28 s: około 20% więcej strzałów przy trzymaniu spustu.

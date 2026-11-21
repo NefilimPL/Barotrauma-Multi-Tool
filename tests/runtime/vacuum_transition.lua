@@ -1,6 +1,6 @@
 -- Test only: actual campaign LoadNewLevel during an active native-spawner batch.
 local R=assert(VacuumExtended)
-local G=BMTVacuum
+local G=AegisVacuum
 function R.prepareTransition()
     R.tagged=nil
     local pack=R.find('disconnectpack')
@@ -51,10 +51,10 @@ function R.startPartialTransition()
                         R.disconnectPack=pack;R.transitionPackTag='transitionpack';R.transitionTotal=30
                         G.selected[R.vacuum.ID]=pack.ID;R.battery.Condition=R.battery.MaxCondition
                         assert(G.startSalvage(G.context(R.vacuum,player)))
-                        Hook.Add('think','bmt.test.transition.partway',function()
+                        Hook.Add('think','aegis.test.transition.partway',function()
                             local job=G.jobs[pack]
                             if job and job.done>=3 then
-                                Hook.Remove('think','bmt.test.transition.partway')
+                                Hook.Remove('think','aegis.test.transition.partway')
                                 R.check('partly completed native batch before level transition',function()
                                     assert(job.done>=3 and job.done<10)
                                 end)

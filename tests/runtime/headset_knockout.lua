@@ -1,5 +1,5 @@
 -- Disposable NT CS server. Assert real physiology, not just loaded XML/DLL.
-local G=BMTHeadsets
+local G=AegisHeadsets
 LuaUserData.RegisterType('Neurotrauma.NTHuman')
 local NT=LuaUserData.CreateStatic('Neurotrauma.NTHuman')
 local room
@@ -27,7 +27,7 @@ local idle=make('healthy idle')
 -- Installed NT's integer delay postpones its final two character entries120s.
 local raptor=Character.Create('mudraptor',Vector2(room.WorldPosition.X+100000,room.WorldPosition.Y),'knockout-attacker',nil,0,false,true,true,nil,true,false)
 local sentinel=Character.Create('crawler',Vector2(room.WorldPosition.X+100000,room.WorldPosition.Y),'knockout-sentinel',nil,0,false,true,true,nil,true,false)
-Hook.Patch('bmt.test.knockout-enable','Barotrauma.Character','Update',function(c)
+Hook.Patch('aegis.test.knockout-enable','Barotrauma.Character','Update',function(c)
     for _,p in ipairs(patients) do
         if c==p.c then
             c.Enabled=true
@@ -38,7 +38,7 @@ Hook.Patch('bmt.test.knockout-enable','Barotrauma.Character','Update',function(c
         end
     end
 end,Hook.HookMethodType.Before)
-Hook.Patch('bmt.test.nt-post-count','Neurotrauma.NTHuman','PostHook',function(nt)
+Hook.Patch('aegis.test.nt-post-count','Neurotrauma.NTHuman','PostHook',function(nt)
     for _,p in ipairs(patients) do if nt.Human==p.c then p.ticks=p.ticks+1 end end
 end,Hook.HookMethodType.After)
 local function check(name,fn)
@@ -97,9 +97,9 @@ Timer.Wait(function()
                 for _,d in ipairs(G.state(p.item).debits or {}) do rows[#rows+1]='IDLE DEBIT '..d.reason..' '..d.amount end
             end
         end
-        File.Write('LocalMods/MULTI-TOOL-V2/headset-knockout-results.txt',table.concat(rows,'\n'))
-        Hook.RemovePatch('bmt.test.knockout-enable','Barotrauma.Character','Update',Hook.HookMethodType.Before)
-        Hook.RemovePatch('bmt.test.nt-post-count','Neurotrauma.NTHuman','PostHook',Hook.HookMethodType.After)
+        File.Write('LocalMods/System-Aegis/headset-knockout-results.txt',table.concat(rows,'\n'))
+        Hook.RemovePatch('aegis.test.knockout-enable','Barotrauma.Character','Update',Hook.HookMethodType.Before)
+        Hook.RemovePatch('aegis.test.nt-post-count','Neurotrauma.NTHuman','PostHook',Hook.HookMethodType.After)
         for _,p in ipairs(patients) do p.c.Remove() end
         raptor.Remove();sentinel.Remove()
     end,20000)

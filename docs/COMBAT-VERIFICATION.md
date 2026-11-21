@@ -82,7 +82,7 @@ z dołączonymi klientami ani wszystkie animacje i pociski innych modów.
 Natywne strzały obejmują hitscan; fizyczne pociski, wcześniejsze przeszkody
 i friendly fire obejmują istniejące testy automatyczne.
 
-Paczka: `output/MULTI-TOOL-V2-1.3.9.zip`. Po wymianie plików na hoście
+Paczka: `output/System-Aegis-1.3.9.zip`. Po wymianie plików na hoście
 i klientach trzeba ponownie uruchomić grę i serwer, aby przeładować Lua.
 
 ## Poprawka 1.2.10 — rewolwer NPC wrogiej placówki (2026-11-03)
@@ -159,7 +159,7 @@ Nie zmieniano instalacji Steam ani uruchomionej gry użytkownika.
 
 ## Wersja 1.1.12 — porządek w folderze moda
 
-Pięć plików dokumentacji i podglądów przeniesiono poza MULTI-TOOL-V2:
+Pięć plików dokumentacji i podglądów przeniesiono poza System-Aegis:
 instrukcję do docs/INSTALL.md, prompty i podgląd grafik do docs/combat-assets/,
 a opis i podgląd audio do docs/combat-assets/audio/. Wszystkie względne ścieżki
 podglądów i odnośniki README/instrukcji zostały dostosowane.
@@ -580,7 +580,7 @@ poniższe wyniki nie zastępują sprawdzenia grafiki i synchronizacji na klienta
 ## Środowisko i odtworzenie
 
 - Barotrauma Dedicated Server 1.13.5.0, LuaCs `c6e8829`.
-- Osobna kopia w `.runtime/server`, bazowa zawartość gry i MULTI-TOOL-V2.
+- Osobna kopia w `.runtime/server`, bazowa zawartość gry i System-Aegis.
   Oficjalny patch LuaCs zastosowano wyłącznie do tej kopii. Instalacja Steam
   nie była modyfikowana.
 - Python, Lupa 2.8 (interpreter Lua 5.2), Pillow; zależności lokalne.
@@ -597,9 +597,9 @@ Skrypty natywne wymagają rundy Sandbox na serwerze testowym. Skopiuj
 `Lua/Tests/` testowej kopii moda, następnie uruchom z konsoli:
 
 ```text
-lua dofile('LocalMods/MULTI-TOOL-V2/Lua/Tests/smoke.lua')
-lua dofile('LocalMods/MULTI-TOOL-V2/Lua/Tests/shield_integration.lua')
-lua dofile('LocalMods/MULTI-TOOL-V2/Lua/Tests/ai_integration.lua')
+lua dofile('LocalMods/System-Aegis/Lua/Tests/smoke.lua')
+lua dofile('LocalMods/System-Aegis/Lua/Tests/shield_integration.lua')
+lua dofile('LocalMods/System-Aegis/Lua/Tests/ai_integration.lua')
 ```
 
 Ostatni skrypt trwa około 14 sekund. Testy tworzą postacie i przedmioty,

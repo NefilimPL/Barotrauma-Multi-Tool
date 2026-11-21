@@ -1,0 +1,206 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Items>
+  <Item identifier="aegisservosuit" category="Diving,Equipment" tags="diving,deepdiving,human,aegisservosuit,divinggear_wearableindoors" scale="0.06" fireproof="true" allowdroppingonswapwith="diving" impactsoundtag="impact_metal_heavy" addedrepairspeedmultiplier="4.5" cannotrepairfail="true">
+    <Price baseprice="4500" sold="true" minavailable="1" maxavailable="1">
+      <Price storeidentifier="merchantresearch" />
+      <Price storeidentifier="merchantmilitary" />
+    </Price>
+    <Fabricate suitablefabricators="fabricator" requiredtime="60">
+      <RequiredSkill identifier="mechanical" level="65" />
+      <RequiredSkill identifier="electrical" level="55" />
+      <RequiredItem identifier="abyssdivingsuit" />
+      <RequiredItem identifier="titaniumaluminiumalloy" amount="4" />
+      <RequiredItem identifier="fpgacircuit" amount="2" />
+      <RequiredItem identifier="copper" amount="2" />
+    </Fabricate>
+    <Deconstruct time="20">
+      <Item identifier="titaniumaluminiumalloy" amount="2" />
+      <Item identifier="copper" />
+    </Deconstruct>
+    <InventoryIcon texture="%ModDir%/Assets/AegisSuit/packed-suit.png" sourcerect="96,173,1428,586" origin="0.5,0.5" compress="false" />
+    <Sprite texture="%ModDir%/Assets/AegisSuit/packed-suit.png" sourcerect="96,173,1428,586" origin="0.5,0.5" depth="0.55" compress="false" />
+    <ContainedSprite name="Aegis upright suit" allowedcontainertags="divingsuitcontainervertical" texture="%ModDir%/Assets/AegisSuit/rack-suit.png" sourcerect="150,100,540,1240" origin="0.5,0.5" depth="0.55" compress="false" />
+    <ContainedSprite name="Aegis window suit" allowedcontainertags="divingsuitcontainerwindow" texture="%ModDir%/Assets/AegisSuit/rack-window-v2.png" sourcerect="50,63,657,1742" origin="-0.12,-0.13" depth="0.55" compress="false" />
+    <ContainedSprite name="Aegis horizontal suit" allowedcontainertags="divingsuitcontainerhorizontal" texture="%ModDir%/Assets/AegisSuit/packed-suit.png" sourcerect="96,173,1428,586" origin="0.5,0.5" depth="0.55" compress="false" />
+    <ContainedSprite name="Aegis suit holder" allowedcontainertags="divingsuitcontainer" texture="%ModDir%/Assets/AegisSuit/rack-suit.png" sourcerect="150,100,540,1240" origin="0.5,0.5" depth="0.55" compress="false" />
+    <Body width="1200" height="430" density="20" />
+    <Wearable slots="OuterClothes" msg="ItemMsgEquipSelect" displaycontainedstatus="true" canbeselected="false" canbepicked="true" pickkey="Select">
+      <sprite name="Aegis seal Torso" texture="Content/Items/Diving/Abyss_DivingSuit.png" limb="Torso" hidelimb="true" hideotherwearables="true" inherittexturescale="true" inheritorigin="true" inheritsourcerect="true" depth="0.6" color="65,70,80,255" />
+      <sprite name="Aegis seal Waist" texture="Content/Items/Diving/Abyss_DivingSuit.png" limb="Waist" hidelimb="true" hideotherwearables="true" inherittexturescale="true" inheritorigin="true" inheritsourcerect="true" depth="0.6" color="65,70,80,255" />
+      <sprite name="Aegis seal RightArm" texture="Content/Items/Diving/Abyss_DivingSuit.png" limb="RightArm" hidelimb="true" hideotherwearables="true" inherittexturescale="true" inheritorigin="true" inheritsourcerect="true" depth="0.6" color="65,70,80,255" />
+      <sprite name="Aegis seal LeftArm" texture="Content/Items/Diving/Abyss_DivingSuit.png" limb="LeftArm" hidelimb="true" hideotherwearables="true" inherittexturescale="true" inheritorigin="true" inheritsourcerect="true" depth="0.6" color="65,70,80,255" />
+      <sprite name="Aegis seal RightForearm" texture="Content/Items/Diving/Abyss_DivingSuit.png" limb="RightForearm" hidelimb="true" hideotherwearables="true" inherittexturescale="true" inheritorigin="true" inheritsourcerect="true" depth="0.6" color="65,70,80,255" />
+      <sprite name="Aegis seal LeftForearm" texture="Content/Items/Diving/Abyss_DivingSuit.png" limb="LeftForearm" hidelimb="true" hideotherwearables="true" inherittexturescale="true" inheritorigin="true" inheritsourcerect="true" depth="0.6" color="65,70,80,255" />
+      <sprite name="Aegis seal RightHand" texture="Content/Items/Diving/Abyss_DivingSuit.png" limb="RightHand" hidelimb="true" hideotherwearables="true" inherittexturescale="true" inheritorigin="true" inheritsourcerect="true" depth="0.6" color="65,70,80,255" />
+      <sprite name="Aegis seal LeftHand" texture="Content/Items/Diving/Abyss_DivingSuit.png" limb="LeftHand" hidelimb="true" hideotherwearables="true" inherittexturescale="true" inheritorigin="true" inheritsourcerect="true" depth="0.6" color="65,70,80,255" />
+      <sprite name="Aegis seal RightThigh" texture="Content/Items/Diving/Abyss_DivingSuit.png" limb="RightThigh" hidelimb="true" hideotherwearables="true" inherittexturescale="true" inheritorigin="true" inheritsourcerect="true" depth="0.6" color="65,70,80,255" />
+      <sprite name="Aegis seal LeftThigh" texture="Content/Items/Diving/Abyss_DivingSuit.png" limb="LeftThigh" hidelimb="true" hideotherwearables="true" inherittexturescale="true" inheritorigin="true" inheritsourcerect="true" depth="0.6" color="65,70,80,255" />
+      <sprite name="Aegis seal RightLeg" texture="Content/Items/Diving/Abyss_DivingSuit.png" limb="RightLeg" hidelimb="true" hideotherwearables="true" inherittexturescale="true" inheritorigin="true" inheritsourcerect="true" depth="0.6" color="65,70,80,255" />
+      <sprite name="Aegis seal LeftLeg" texture="Content/Items/Diving/Abyss_DivingSuit.png" limb="LeftLeg" hidelimb="true" hideotherwearables="true" inherittexturescale="true" inheritorigin="true" inheritsourcerect="true" depth="0.6" color="65,70,80,255" />
+      <sprite name="Aegis seal RightFoot" texture="Content/Items/Diving/Abyss_DivingSuit.png" limb="RightFoot" hidelimb="true" hideotherwearables="true" inherittexturescale="true" inheritorigin="true" inheritsourcerect="true" depth="0.6" color="65,70,80,255" />
+      <sprite name="Aegis seal LeftFoot" texture="Content/Items/Diving/Abyss_DivingSuit.png" limb="LeftFoot" hidelimb="true" hideotherwearables="true" inherittexturescale="true" inheritorigin="true" inheritsourcerect="true" depth="0.6" color="65,70,80,255" />
+      <sprite name="Aegis Head" texture="%ModDir%/Assets/AegisSuit/suit-v2.png" sourcerect="850,10,220,241" limb="Head" scale="0.4" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="false" depth="0.5" canbehiddenbyotherwearables="false" alphaclipotherwearables="true" />
+      <StatusEffect type="OnWearing" target="Character" PressureProtection="10000" setvalue="true" disabledeltatime="true">
+        </StatusEffect>
+      <damagemodifier armorsector="0,360" afflictionidentifiers="blunttrauma,gunshotwound,bitewounds,lacerations,bleeding,explosiondamage" damagemultiplier="0.6" damagesound="LimbArmor" />
+      <damagemodifier armorsector="0,360" afflictiontypes="burn" damagemultiplier="0.7" />
+    </Wearable>
+    <Wearable slots="OuterClothes" msg="ItemMsgEquipSelect" displaycontainedstatus="true" canbeselected="false" canbepicked="true" pickkey="Select">
+      <sprite name="Aegis Torso" texture="%ModDir%/Assets/AegisSuit/suit-v2.png" sourcerect="113,5,179,251" limb="Torso" scale="0.6" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="false" depth="0.5" canbehiddenbyotherwearables="false" />
+      <sprite name="Aegis Waist" texture="%ModDir%/Assets/AegisSuit/suit-v2.png" sourcerect="467,80,219,151" limb="Waist" scale="0.32" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="false" depth="0.5" canbehiddenbyotherwearables="false" />
+      <sprite name="Aegis RightArm" texture="%ModDir%/Assets/AegisSuit/suit-v2.png" sourcerect="120,263,144,240" limb="RightArm" scale="0.34" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="false" depth="0.5" canbehiddenbyotherwearables="false" />
+      <sprite name="Aegis LeftArm" texture="%ModDir%/Assets/AegisSuit/suit-v2.png" sourcerect="120,263,144,240" limb="LeftArm" scale="0.34" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="false" depth="0.5" canbehiddenbyotherwearables="false" />
+      <sprite name="Aegis RightForearm" texture="%ModDir%/Assets/AegisSuit/suit-v2.png" sourcerect="518,267,111,238" limb="RightForearm" scale="0.36" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="false" depth="0.5" canbehiddenbyotherwearables="false" />
+      <sprite name="Aegis LeftForearm" texture="%ModDir%/Assets/AegisSuit/suit-v2.png" sourcerect="518,267,111,238" limb="LeftForearm" scale="0.36" rotation="180" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="false" depth="0.5" canbehiddenbyotherwearables="false" />
+      <sprite name="Aegis RightHand" texture="%ModDir%/Assets/AegisSuit/suit-v2.png" sourcerect="907,308,124,171" limb="RightHand" scale="0.28" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="false" depth="0.5" canbehiddenbyotherwearables="false" />
+      <sprite name="Aegis LeftHand" texture="%ModDir%/Assets/AegisSuit/suit-v2.png" sourcerect="907,308,124,171" limb="LeftHand" scale="0.28" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="false" depth="0.5" canbehiddenbyotherwearables="false" />
+      <sprite name="Aegis RightThigh" texture="%ModDir%/Assets/AegisSuit/suit-v2.png" sourcerect="1273,257,143,255" limb="RightThigh" scale="0.42" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="false" depth="0.5" canbehiddenbyotherwearables="false" />
+      <sprite name="Aegis LeftThigh" texture="%ModDir%/Assets/AegisSuit/suit-v2.png" sourcerect="1273,257,143,255" limb="LeftThigh" scale="0.42" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="false" depth="0.5" canbehiddenbyotherwearables="false" />
+      <sprite name="Aegis RightLeg" texture="%ModDir%/Assets/AegisSuit/suit-v2.png" sourcerect="136,515,117,253" limb="RightLeg" scale="0.44" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="false" depth="0.5" canbehiddenbyotherwearables="false" />
+      <sprite name="Aegis LeftLeg" texture="%ModDir%/Assets/AegisSuit/suit-v2.png" sourcerect="136,515,117,253" limb="LeftLeg" scale="0.44" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="false" depth="0.5" canbehiddenbyotherwearables="false" />
+      <sprite name="Aegis RightFoot" texture="%ModDir%/Assets/AegisSuit/suit-v2.png" sourcerect="456,568,239,158" limb="RightFoot" scale="0.28" rotation="90" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="false" depth="0.5" canbehiddenbyotherwearables="false" />
+      <sprite name="Aegis LeftFoot" texture="%ModDir%/Assets/AegisSuit/suit-v2.png" sourcerect="456,568,239,158" limb="LeftFoot" scale="0.28" rotation="90" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="false" depth="0.5" canbehiddenbyotherwearables="false" />
+    </Wearable>
+    <Holdable slots="RightHand+LeftHand" controlpose="true" holdpos="0,-50" handle1="-10,-20" handle2="10,-20" holdangle="45" msg="ItemMsgPickUpUse" canbeselected="false" canbepicked="true" pickkey="Use" />
+    <AiTarget sightrange="1500" />
+    <ItemContainer capacity="1" slotsperrow="2" maxstacksize="1" hideitems="true" keepopenwhenequipped="true" containedstateindicatorstyle="battery">
+      <SlotIcon slotindex="0" texture="Content/UI/StatusMonitorUI.png" sourcerect="128,448,128,64" origin="0.5,0.5" />
+      <SlotIcon slotindex="1" texture="Content/UI/CommandUIAtlas.png" sourcerect="384,768,128,128" origin="0.5,0.5" />
+      <Containable items="mobilebattery,reactorfuel" />
+      <SubContainer capacity="1" maxstacksize="1" containedstateindicatorstyle="bullet">
+        <Containable items="pulselaserammobox,pulselaserammoboxtrilaser,coilgunammobox,physicoriumammobox,coilgunammoboxexplosive,coilgunammoboxpiercing" />
+      </SubContainer>
+    </ItemContainer>
+    <Sonar range="6000" powerconsumption="1" minvoltage="0.5" drawhudwhenequipped="false" detectsubmarinewalls="true" displaybordersize="-0.1" characterusable="false" hasmineralscanner="true" allowuioverlap="true">
+      <sound file="Content/Items/Command/SonarPing.ogg" type="OnUse" range="1000.0" frequencymultiplier="1.5" />
+      <GuiFrame relativesize="0.37,0.50" anchor="CenterLeft" relativeoffset="0.01,0" />
+      <PingCircle texture="Content/Items/Command/pingCircle.png" origin="0.5,0.5" />
+      <DirectionalPingCircle texture="Content/Items/Command/directionalPingCircle.png" origin="0.0,0.5" />
+      <ScreenOverlay texture="Content/Items/Command/sonarOverlay.png" origin="0.5,0.5" />
+      <ScreenBackground texture="Content/Items/Command/sonarBackground.png" origin="0.5,0.5" />
+      <DirectionalPingBackground texture="Content/Items/Command/directionalPingBackground.png" origin="0.5,0.5" />
+      <DirectionalPingButton index="0" texture="Content/Items/Command/directionalPingButton.png" sourcerect="0,0,91,266" origin="-4.5275,0.5" />
+      <DirectionalPingButton index="1" texture="Content/Items/Command/directionalPingButton.png" sourcerect="133,0,91,266" origin="-4.5275,0.5" />
+      <DirectionalPingButton index="2" texture="Content/Items/Command/directionalPingButton.png" sourcerect="266,0,91,266" origin="-4.5275,0.5" />
+      <Blip texture="Content/Items/Command/sonarBlip.png" origin="0.5,0.5" />
+      <LineSprite texture="Content/Items/Command/NavUI.png" sourcerect="181,141,109,4" origin="0,0.5" />
+      <icon identifier="outpost" texture="Content/UI/MainIconsAtlas.png" sourcerect="352,398,16,8" origin="0.5,0.5" />
+      <icon identifier="submarine" texture="Content/UI/MainIconsAtlas.png" sourcerect="353,407,14,6" origin="0.5,0.5" />
+      <icon identifier="shuttle" texture="Content/UI/MainIconsAtlas.png" sourcerect="336,407,8,6" origin="0.5,0.5" />
+      <icon identifier="artifact" texture="Content/UI/MainIconsAtlas.png" sourcerect="336,414,8,8" origin="0.5,0.5" />
+      <icon identifier="location" texture="Content/UI/MainIconsAtlas.png" sourcerect="349,435,11,11" origin="0.5,0.5" />
+      <icon identifier="mineral" texture="Content/UI/MainIconsAtlas.png" sourcerect="336,434,7,12" origin="0.5,0.5" />
+      <icon identifier="" texture="Content/UI/MainIconsAtlas.png" sourcerect="346,416,4,4" origin="0.5,0.5" />
+    </Sonar>
+  </Item>
+  <Item identifier="aegispulsebolt" category="Weapon" scale="0.18" hideinmenus="true">
+    <Sprite texture="Content/Items/Weapons/weapons_new.png" sourcerect="143,414,113,9" depth="0.55" />
+    <Body width="50" height="4" density="20" />
+    <Projectile characterusable="false" hitscan="true" removeonhit="true" friendlyfire="false" maxTargetsToHit="1" penetration="0" damagedoors="false">
+      <ParticleEmitter particle="aegispulsetracer" particleamount="1" scalemin="1" scalemax="1" velocitymin="0" velocitymax="0" />
+      <ParticleEmitter particle="FlareBubbles" emitacrossrayinterval="80" scalemin="0.3" scalemax="0.5" />
+      <Attack structuredamage="0" itemdamage="0" severlimbsprobability="0" penetration="0.15">
+        <Affliction identifier="burn" strength="16" />
+        <Affliction identifier="explosiondamage" strength="4" />
+        <Affliction identifier="stun" strength="0.15" />
+      </Attack>
+      <StatusEffect type="OnImpact" target="UseTarget">
+        <ParticleEmitter particle="muzzleflashpulselaser" particleamount="2" anglemin="0" anglemax="360" scalemin="0.12" scalemax="0.19" />
+        <ParticleEmitter particle="weldspark" particleamount="5" anglemin="0" anglemax="360" velocitymin="100" velocitymax="230" scalemin="0.4" scalemax="0.6" drawontop="true" colormultiplier="255,130,130,235" />
+      </StatusEffect>
+    </Projectile>
+  </Item>
+  <Item identifier="aegistribolt" category="Weapon" scale="0.18" hideinmenus="true">
+    <Sprite texture="Content/Items/Weapons/weapons_new.png" sourcerect="143,414,113,9" depth="0.55" />
+    <Body width="50" height="4" density="20" />
+    <Projectile characterusable="false" hitscan="true" removeonhit="true" friendlyfire="false" spread="6" staticspread="true" hitscancount="3" damagedoors="false">
+      <ParticleEmitter particle="aegispulsetracer" particleamount="1" velocitymin="0" velocitymax="0" />
+      <Attack structuredamage="0" itemdamage="0" penetration="0.20">
+        <Affliction identifier="burn" strength="7" />
+        <Affliction identifier="explosiondamage" strength="3" />
+        <Affliction identifier="stun" strength="0.10" />
+      </Attack>
+      <StatusEffect type="OnImpact" target="UseTarget">
+        <ParticleEmitter particle="muzzleflashpulselaser" particleamount="1" anglemin="0" anglemax="360" scalemin="0.10" scalemax="0.15" />
+        <ParticleEmitter particle="weldspark" particleamount="3" anglemin="0" anglemax="360" velocitymin="100" velocitymax="210" scalemin="0.35" scalemax="0.55" drawontop="true" colormultiplier="255,130,130,235" />
+      </StatusEffect>
+    </Projectile>
+  </Item>
+  <Item identifier="aegisgaussbolt" category="Weapon" scale="0.30" hideinmenus="true">
+    <Sprite texture="Content/Items/Weapons/weapons_new.png" sourcerect="143,414,113,9" depth="0.55" />
+    <Body width="30" height="2.4" density="20" />
+    <Projectile characterusable="false" launchimpulse="42" removeonhit="true" friendlyfire="false" damagedoors="false">
+      <Attack structuredamage="0" itemdamage="0" penetration="0.14">
+        <Affliction identifier="lacerations" strength="12" />
+        <Affliction identifier="bleeding" strength="0.8" />
+        <Affliction identifier="stun" strength="0.025" />
+      </Attack>
+      <StatusEffect type="OnActive" target="This" lifetime="0.65">
+        <ParticleEmitter particle="ammotrail" copyentityangle="true" particlespersecond="30" velocitymin="-80" velocitymax="-30" scalemin="0.25" scalemax="0.4" />
+      </StatusEffect>
+      <StatusEffect type="OnImpact" target="This">
+        <ParticleEmitter particle="impactfirearm" particleamount="1" scalemin="0.6" scalemax="0.85" />
+        <ParticleEmitter particle="shrapnel" particleamount="5" anglemin="0" anglemax="360" velocitymin="110" velocitymax="310" scalemin="0.30" scalemax="0.50" />
+      </StatusEffect>
+      <StatusEffect type="OnNotContained" target="This" stackable="false" delay="0.65"><Remove /></StatusEffect>
+    </Projectile>
+  </Item>
+  <Item identifier="aegisphysicoriumbolt" category="Weapon" scale="0.30" hideinmenus="true">
+    <Sprite texture="Content/Items/Weapons/weapons_new.png" sourcerect="143,425,113,9" depth="0.55" />
+    <Body width="30" height="2.4" density="20" />
+    <Projectile characterusable="false" launchimpulse="42" removeonhit="true" friendlyfire="false" damagedoors="false">
+      <Attack structuredamage="0" itemdamage="0" penetration="0.24">
+        <Affliction identifier="lacerations" strength="20" />
+        <Affliction identifier="bleeding" strength="1.2" />
+        <Affliction identifier="stun" strength="0.05" />
+      </Attack>
+      <StatusEffect type="OnActive" target="This" lifetime="0.65">
+        <ParticleEmitter particle="ammotrail" copyentityangle="true" particlespersecond="30" velocitymin="-80" velocitymax="-30" scalemin="0.25" scalemax="0.4" colormultiplier="225,145,255" />
+      </StatusEffect>
+      <StatusEffect type="OnImpact" target="This">
+        <ParticleEmitter particle="impactfirearm" particleamount="1" scalemin="0.85" scalemax="1.15" colormultiplier="225,145,255" />
+        <ParticleEmitter particle="shrapnel" particleamount="5" anglemin="0" anglemax="360" velocitymin="110" velocitymax="310" scalemin="0.30" scalemax="0.50" />
+      </StatusEffect>
+      <StatusEffect type="OnNotContained" target="This" stackable="false" delay="0.65"><Remove /></StatusEffect>
+    </Projectile>
+  </Item>
+  <Item identifier="aegisexplosivebolt" category="Weapon" scale="0.30" hideinmenus="true">
+    <Sprite texture="Content/Items/Weapons/weapons_new.png" sourcerect="144,436,112,9" depth="0.55" />
+    <Body width="30" height="2.4" density="20" />
+    <Projectile characterusable="false" launchimpulse="42" removeonhit="true" friendlyfire="false" damagedoors="false">
+      <Attack structuredamage="0" itemdamage="0" penetration="0.10">
+        <Affliction identifier="explosiondamage" strength="19" />
+        <Affliction identifier="bleeding" strength="1" />
+        <Affliction identifier="stun" strength="0.20" />
+      </Attack>
+      <StatusEffect type="OnActive" target="This" lifetime="0.65">
+        <ParticleEmitter particle="ammotrail" copyentityangle="true" particlespersecond="30" velocitymin="-80" velocitymax="-30" scalemin="0.25" scalemax="0.4" colormultiplier="255,180,105" />
+      </StatusEffect>
+      <StatusEffect type="OnImpact" target="This">
+        <ParticleEmitter particle="explosionfireadditive" particleamount="2" scalemin="0.13" scalemax="0.23" />
+        <ParticleEmitter particle="shrapnel" particleamount="6" anglemin="0" anglemax="360" velocitymin="110" velocitymax="360" scalemin="0.30" scalemax="0.55" />
+      </StatusEffect>
+      <StatusEffect type="OnNotContained" target="This" stackable="false" delay="0.65"><Remove /></StatusEffect>
+    </Projectile>
+  </Item>
+  <Item identifier="aegispiercingbolt" category="Weapon" scale="0.30" hideinmenus="true">
+    <Sprite texture="Content/Items/Weapons/weapons_new.png" sourcerect="144,447,112,12" depth="0.55" />
+    <Body width="30" height="2.4" density="20" />
+    <Projectile characterusable="false" launchimpulse="42" friendlyfire="false" maxtargetstohit="2" damagedoors="false">
+      <Attack structuredamage="0" itemdamage="0" penetration="0.50">
+        <Affliction identifier="lacerations" strength="9" />
+        <Affliction identifier="bleeding" strength="1.5" />
+        <Affliction identifier="stun" strength="0.0125" />
+      </Attack>
+      <StatusEffect type="OnActive" target="This" lifetime="0.65">
+        <ParticleEmitter particle="ammotrail" copyentityangle="true" particlespersecond="30" velocitymin="-80" velocitymax="-30" scalemin="0.25" scalemax="0.4" />
+      </StatusEffect>
+      <StatusEffect type="OnImpact" target="This" condition="-50" disabledeltatime="true">
+        <ParticleEmitter particle="impactfirearm" particleamount="1" scalemin="0.55" scalemax="0.75" />
+        <ParticleEmitter particle="shrapnel" particleamount="4" anglemin="0" anglemax="360" velocitymin="110" velocitymax="300" scalemin="0.30" scalemax="0.45" />
+      </StatusEffect>
+      <StatusEffect type="OnBroken" target="This"><Remove /></StatusEffect>
+      <StatusEffect type="OnNotContained" target="This" stackable="false" delay="0.65"><Remove /></StatusEffect>
+    </Projectile>
+  </Item>
+</Items>

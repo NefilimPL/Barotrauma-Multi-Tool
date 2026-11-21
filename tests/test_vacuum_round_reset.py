@@ -14,7 +14,7 @@ class VacuumRoundResetTests(LuaCase):
                 id=function(i) return i.kind end,
                 is=function(i,id) return i and i.kind==id end,
                 context=function() return {valid=false} end}
-            require('SalvageVacuum.runtime').install(G,env)
+            require('AegisVacuum.runtime').install(G,env)
         """)
 
     def test_round_reset_during_scan_interval_does_not_reuse_missing_state(self):

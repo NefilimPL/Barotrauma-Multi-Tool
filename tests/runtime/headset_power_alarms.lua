@@ -1,6 +1,6 @@
 -- Disposable client only: real driver, real audio tags, no actual power cost.
 assert(CLIENT)
-local G=BMTHeadsets
+local G=AegisHeadsets
 local character=Character.Controlled
 local item=G.equipped(character)
 assert(item,'equip the test headset first')
@@ -20,5 +20,5 @@ local ok,err=pcall(function()
     assert(#warnings==3,'missing power alarm')
 end)
 G.emit=emit;G.setEnergy(item,before)
-File.Write('LocalMods/MULTI-TOOL-V2/headset-power-alarms-results.txt',
+File.Write('LocalMods/System-Aegis/headset-power-alarms-results.txt',
     ok and 'PASS native low/critical/empty alarm driver at 20/10/0 percent, no power cost' or 'FAIL '..tostring(err))

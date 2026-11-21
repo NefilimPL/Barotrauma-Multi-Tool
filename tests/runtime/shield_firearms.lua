@@ -1,15 +1,15 @@
 -- Native projectile regression in an isolated singleplayer sandbox.
 assert(CLIENT and Game.IsSingleplayer and Game.RoundStarted)
-local U=require('CombatTool.util')
-local G=BMTCombat
+local U=require('AegisCombat.util')
+local G=AegisCombat
 local created,lines={},{}
 local function track(o) created[#created+1]=o;return o end
 local function log(s) lines[#lines+1]=s;print('[FIREARMS] '..s) end
 local origin=Submarine.MainSub.WorldPosition+Vector2(0,2500)
-local shooter=track(Character.Create('human',origin-Vector2(600,0),'bmt-shooter',nil,0,false,false,true,nil,true,false))
-local defender=track(Character.Create('human',origin,'bmt-defender',nil,0,false,false,true,nil,true,false))
+local shooter=track(Character.Create('human',origin-Vector2(600,0),'aegis-shooter',nil,0,false,false,true,nil,true,false))
+local defender=track(Character.Create('human',origin,'aegis-defender',nil,0,false,false,true,nil,true,false))
 shooter.TeamID=CharacterTeamType.Team2;defender.TeamID=CharacterTeamType.Team1
-local gun=track(Item(ItemPrefab.Prefabs['combatmultitool'],origin,nil))
+local gun=track(Item(ItemPrefab.Prefabs['aegiscombattool'],origin,nil))
 local cell=track(Item(ItemPrefab.Prefabs['batterycell'],origin,nil))
 assert(gun.OwnInventory.TryPutItem(cell,0,false,false,defender))
 local s=G.state(gun)
@@ -30,7 +30,7 @@ local cases={{'revolverround'},{'smground'},{'riflebullet'},{'shotgunshell'},
     {'revolverround','turned'},{'revolverround','moved'}}
 local function finish()
     G.updateShield=updateShield;G.event=oldEvent;G.states[gun]=nil
-    File.Write('LocalMods/MULTI-TOOL-V2/firearms-results.txt',table.concat(lines,'\n'))
+    File.Write('LocalMods/System-Aegis/firearms-results.txt',table.concat(lines,'\n'))
     Timer.Wait(function() for i=#created,1,-1 do if not created[i].Removed then created[i].Remove() end end end,1500)
 end
 local function run(index)

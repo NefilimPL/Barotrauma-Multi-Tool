@@ -1,5 +1,5 @@
 -- Disposable NT CS server: allow real simulation/NT ticks after leg loss.
-local G=BMTHeadsets
+local G=AegisHeadsets
 local room
 for h in Hull.HullList do if h.Submarine==Submarine.MainSub and (not room or h.Rect.Width>room.Rect.Width) then room=h end end
 assert(room)
@@ -12,7 +12,7 @@ assert(c.Inventory.TryPutItem(item,c,{InvSlotType.Headset}))
 assert(item.OwnInventory.TryPutItem(cell,0,false,false,c))
 local rows={}
 local hitCost,limbCost=0,0
-Hook.Patch('bmt.test.amputation-source','Barotrauma.StatusEffect','GetMultipliedAffliction',function(effect,p)
+Hook.Patch('aegis.test.amputation-source','Barotrauma.StatusEffect','GetMultipliedAffliction',function(effect,p)
     if p['targetCharacter']==c and p.ReturnValue then
         rows[#rows+1]='EFFECT '..tostring(p.ReturnValue.Prefab.Identifier)..' '..p.ReturnValue.Strength..' ownBody='..tostring(p['entity']==c)
     end
@@ -26,7 +26,7 @@ G.recordDebit=function(device,amount,reason)
         rows[#rows+1]=string.format('%.3f %s %.6f energy=%.4f',G.now,reason,amount,G.energy(item))
     end
 end
-Hook.Patch('bmt.test.live-amputation','Barotrauma.Character','Update',function(character) if character==c then character.Enabled=true end end,Hook.HookMethodType.Before)
+Hook.Patch('aegis.test.live-amputation','Barotrauma.Character','Update',function(character) if character==c then character.Enabled=true end end,Hook.HookMethodType.Before)
 Timer.Wait(function()
     c.CharacterHealth.SetAllDamage(0,0,0);cell.Condition=100
     local limb=c.AnimController.GetLimb(LimbType.LeftLeg)
@@ -39,10 +39,10 @@ Timer.Wait(function()
         rows[#rows+1]=(passed and 'PASS ' or 'FAIL ')..'delayed NT amputation: hitCost='..hitCost..' limbCost='..limbCost
         rows[#rows+1]='FINAL energy='..G.energy(item)..' dead='..tostring(c.IsDead)..' vitality='..c.Vitality
         for a in c.CharacterHealth.GetAllAfflictions() do if a.Strength>0 then rows[#rows+1]='state '..tostring(a.Prefab.Identifier)..' '..a.Strength end end
-        File.Write('LocalMods/MULTI-TOOL-V2/headset-amputation-trace.txt',table.concat(rows,'\n'))
+        File.Write('LocalMods/System-Aegis/headset-amputation-trace.txt',table.concat(rows,'\n'))
         G.recordDebit=debit
-        Hook.RemovePatch('bmt.test.live-amputation','Barotrauma.Character','Update',Hook.HookMethodType.Before)
-        Hook.RemovePatch('bmt.test.amputation-source','Barotrauma.StatusEffect','GetMultipliedAffliction',Hook.HookMethodType.After)
+        Hook.RemovePatch('aegis.test.live-amputation','Barotrauma.Character','Update',Hook.HookMethodType.Before)
+        Hook.RemovePatch('aegis.test.amputation-source','Barotrauma.StatusEffect','GetMultipliedAffliction',Hook.HookMethodType.After)
         c.Remove()
     end,16000)
 end,2500)

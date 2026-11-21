@@ -1,9 +1,9 @@
 -- Sustained native-ammunition stress. Fixed native emitters; real player aiming shields.
 assert(SERVER and CombatSession)
-local R,G,U=CombatSession,BMTCombat,require('CombatTool.util')
+local R,G,U=CombatSession,AegisCombat,require('AegisCombat.util')
 R.running=false;R.ready={};R.mass=false
-Hook.Remove('think','bmt.session.followup')
-Hook.RemovePatch('bmt.session.aim-npc','Barotrauma.Character','UpdateNetInput',Hook.HookMethodType.After)
+Hook.Remove('think','aegis.session.followup')
+Hook.RemovePatch('aegis.session.aim-npc','Barotrauma.Character','UpdateNetInput',Hook.HookMethodType.After)
 local S={index=0,rows={},lastSupply=0,lastShot=0}
 CombatShieldStress=S
 local function now() return R.clock.ElapsedMilliseconds/1000 end
@@ -11,7 +11,7 @@ local phases={{'mass_idle_A','CombatA',false},{'mass_block_A','CombatA',true},
     {'mass_idle_B','CombatB',false},{'mass_block_B','CombatB',true}}
 local function healthy(c) c.Oxygen=100;c.PressureProtection=1000000;c.Stun=0 end
 local function send(client,target,aim,shoot)
-    local m=Networking.Start('bmt.combat.session.phase');m.WriteString(S.phase)
+    local m=Networking.Start('aegis.combat.session.phase');m.WriteString(S.phase)
     m.WriteUInt16(target and target.ID or 0);m.WriteBoolean(aim);m.WriteBoolean(shoot)
     m.WriteSingle(R.origin.X);m.WriteSingle(R.origin.Y+50);Networking.Send(m,client.Connection)
 end
@@ -20,7 +20,7 @@ local function report()
     local row={'phase='..S.phase,'seconds='..string.format('%.2f',now()-S.started)}
     for k,v in pairs(R.counts) do row[#row+1]=k..'='..v end
     S.rows[#S.rows+1]=table.concat(row,' ')
-    File.Write('LocalMods/MULTI-TOOL-V2/combat-session-shield-stress.txt',table.concat(S.rows,'\n'))
+    File.Write('LocalMods/System-Aegis/combat-session-shield-stress.txt',table.concat(S.rows,'\n'))
     print('[SHIELD STRESS] '..S.rows[#S.rows])
 end
 local function begin()
@@ -57,7 +57,7 @@ local function begin()
     send(R.clients[S.actor=='CombatA' and 'CombatB' or 'CombatA'],R.clients[S.actor].Character,S.active,S.active)
     print('[SHIELD STRESS] PHASE '..S.phase)
 end
-Hook.Add('think','bmt.session.shield-stress',function()
+Hook.Add('think','aegis.session.shield-stress',function()
     if not S.phase or S.phase=='done' then return end
     local t=now();if t-S.started>=18 then begin();return end
     for _,client in pairs(R.clients) do healthy(client.Character) end

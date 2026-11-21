@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<infotexts language="Simplified Chinese" nowhitespace="true" translatedname="中文(简体)">
+  <entityname.aegiscompositetool>复合多功能工具 Aegis</entityname.aegiscompositetool>
+  <entitydescription.aegiscompositetool>一种高级复合工具，可切换焊接和切割模式，自带手电照明，新增灭火器模式，并共用同一个氧气瓶槽位。</entitydescription.aegiscompositetool>
+  <label.aegischangetool>启用切割模式</label.aegischangetool>
+  <label.aegisenableextinguisher>启用灭火器模式</label.aegisenableextinguisher>
+  <label.aegisenabledamage>启用对NPC造成伤害</label.aegisenabledamage>
+  <entityname.aegiswrenchscrewdriver>二合一螺丝刀扳手 Aegis</entityname.aegiswrenchscrewdriver>
+  <entitydescription.aegiswrenchscrewdriver>潜艇工程师的好帮手，双击右键切换扳手/螺丝刀。</entitydescription.aegiswrenchscrewdriver>
+</infotexts>

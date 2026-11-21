@@ -9,20 +9,20 @@ local input=function(c)
  c.SetInput(InputType.Shoot,false,false)
  for _,k in ipairs({InputType.Left,InputType.Right,InputType.Up,InputType.Down}) do c.SetInput(k,false,false) end
 end
-Networking.Receive('bmt.shield.host.target',function(m) ShieldHostTarget=m.ReadUInt16();print('[HOST SHIELD] target='..ShieldHostTarget) end)
-Hook.Patch('bmt.host.input','Barotrauma.Character','ControlLocalPlayer',input,Hook.HookMethodType.After)
-Hook.Patch('bmt.host.control','Barotrauma.Character','Control',input,Hook.HookMethodType.Before)
-Hook.Patch('bmt.host.netinput','Barotrauma.Character','UpdateNetInput',input,Hook.HookMethodType.Before)
+Networking.Receive('aegis.shield.host.target',function(m) ShieldHostTarget=m.ReadUInt16();print('[HOST SHIELD] target='..ShieldHostTarget) end)
+Hook.Patch('aegis.host.input','Barotrauma.Character','ControlLocalPlayer',input,Hook.HookMethodType.After)
+Hook.Patch('aegis.host.control','Barotrauma.Character','Control',input,Hook.HookMethodType.Before)
+Hook.Patch('aegis.host.netinput','Barotrauma.Character','UpdateNetInput',input,Hook.HookMethodType.Before)
 print('[HOST SHIELD] client ready')
 
-local U=require('CombatTool.util');local Core=require('CombatTool.core');local G=BMTCombat
+local U=require('AegisCombat.util');local Core=require('AegisCombat.core');local G=AegisCombat
 local rows={};local passed,failed,localDamage=0,0,0
 local minHealth,maxOverlay,clientScans=math.huge,0,0
-Hook.Patch('bmt.host.client-damage','Barotrauma.Attack','DoDamageToLimb',function(_,p)
+Hook.Patch('aegis.host.client-damage','Barotrauma.Attack','DoDamageToLimb',function(_,p)
  local limb=p['targetLimb']
  if limb and limb.character==Character.Controlled then localDamage=localDamage+1 end
 end,Hook.HookMethodType.Before)
-Hook.Patch('bmt.host.client-health','Barotrauma.Items.Components.Projectile','DoHitscan',function(proj)
+Hook.Patch('aegis.host.client-health','Barotrauma.Items.Components.Projectile','DoHitscan',function(proj)
  if not proj.User or proj.User.ID~=ShieldHostTarget then return end
  clientScans=clientScans+1
  local c=Character.Controlled
@@ -30,16 +30,16 @@ Hook.Patch('bmt.host.client-health','Barotrauma.Items.Components.Projectile','Do
  local row='HEALTH value='..c.Vitality..' localDamage='..localDamage..' overlay='..c.CharacterHealth.DamageOverlayTimer
  rows[#rows+1]=row;print('[TRACER CHECK] '..row)
 end,Hook.HookMethodType.After)
-Networking.Receive('bmt.shield.host.done',function(m)
+Networking.Receive('aegis.shield.host.done',function(m)
  local expected=m.ReadUInt16()
  local summary='TOTAL serverShots='..expected..' clientScans='..clientScans..' passed='..passed..' failed='..failed..' localDamage='..localDamage..' minHealth='..minHealth..' maxOverlay='..maxOverlay
  rows[#rows+1]=summary;print('[TRACER CHECK] '..summary)
- File.Write('LocalMods/MULTI-TOOL-V2/host-tracer-after.txt',table.concat(rows,'\n'))
+ File.Write('LocalMods/System-Aegis/host-tracer-after.txt',table.concat(rows,'\n'))
  -- Count native client replays separately from authoritative server shots.
  assert(expected>0 and clientScans>0 and clientScans<=expected and passed==clientScans and failed==0,'every replayed shot must stop on the shield')
  assert(localDamage==0 and minHealth>=99.99 and maxOverlay<.001,'blocked bullets must not cause local wounds or pain')
 end)
-Hook.Patch('bmt.host.tracer','Barotrauma.Items.Components.Projectile','LaunchProjSpecific',function(proj,p)
+Hook.Patch('aegis.host.tracer','Barotrauma.Items.Components.Projectile','LaunchProjSpecific',function(proj,p)
  if not proj.User or proj.User.ID~=ShieldHostTarget then return end
  local a,b=U.point(p['startLocation']),U.point(p['endLocation'])
  local near=false
@@ -56,6 +56,6 @@ Hook.Patch('bmt.host.tracer','Barotrauma.Items.Components.Projectile','LaunchPro
  end
  if near then passed=passed+1 end
  local row='ammo='..proj.Item.Prefab.Identifier.Value..' end='..b.x..','..b.y..' onArc='..tostring(near)..' passed='..passed..' failed='..failed
- rows[#rows+1]=row;print('[TRACER CHECK] '..row);File.Write('LocalMods/MULTI-TOOL-V2/host-tracer-after.txt',table.concat(rows,'\n'))
+ rows[#rows+1]=row;print('[TRACER CHECK] '..row);File.Write('LocalMods/System-Aegis/host-tracer-after.txt',table.concat(rows,'\n'))
 end,Hook.HookMethodType.After)
 print('[TRACER CHECK] ready')

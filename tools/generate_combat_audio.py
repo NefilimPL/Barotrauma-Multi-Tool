@@ -44,7 +44,7 @@ def synth(kind,duration,variant):
 def generate():
     encoder=shutil.which('ffmpeg')
     if not encoder: raise SystemExit('ffmpeg with libvorbis is required')
-    target=ROOT/'MULTI-TOOL-V2/Assets/Combat/Audio';target.mkdir(exist_ok=True)
+    target=ROOT/'System-Aegis/Assets/AegisCombat/Audio';target.mkdir(exist_ok=True)
     with tempfile.TemporaryDirectory() as tmp:
         for kind,duration,variants in [('shot',.46,2),('arc',.2,2),('bodyhit',.16,2),('wallhit',.18,2),('bounce',.09,2),('charge',.07,1)]:
             for variant in range(variants):

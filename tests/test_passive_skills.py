@@ -8,7 +8,7 @@ class PassiveSkillTests(LuaCase):
             levels={helm=10,weapons=20,mechanical=30,electrical=40,medical=50}
             changes=0
             source={Condition=100,HasTag=function(tag) return tag=='mobilebattery' end}
-            gun={Condition=100,Prefab={Identifier={Value='combatmultitool'}},
+            gun={Condition=100,Prefab={Identifier={Value='aegiscombattool'}},
                 OwnInventory={GetItemAt=function() return source end}}
             actor={HeldItems={gun},Info={Job={GetSkillLevel=function(id) return levels[id] end},
                 SetSkillLevel=function(id,level) levels[id]=level;changes=changes+1 end},
@@ -26,7 +26,7 @@ class PassiveSkillTests(LuaCase):
             end}
             env.Hook={Add=function(event,id,fn) hooks[event]=fn end,Remove=function() end}
             env.LuaUserData.IsTargetType=function(o,t) return t=='Barotrauma.Character' and o.Info~=nil end
-            require('CombatTool.passive_skills').install(G,env)
+            require('AegisCombat.passive_skills').install(G,env)
         ''')
 
     def test_first_reward_waits_five_minutes_and_awards_all_five_skills(self):
@@ -43,7 +43,7 @@ class PassiveSkillTests(LuaCase):
         self.lua.execute('''
             G.updatePassiveSkills(150)
             actor.HeldItems={};G.updatePassiveSkills(300);assert(changes==0)
-            local small={Condition=100,Prefab={Identifier={Value='multi-toolset'}},OwnInventory=gun.OwnInventory}
+            local small={Condition=100,Prefab={Identifier={Value='aegiscompositetool'}},OwnInventory=gun.OwnInventory}
             source.HasTag=function(tag) return tag=='reactorfuel' end
             actor.HeldItems={small,gun};G.updatePassiveSkills(149);assert(changes==0)
             G.updatePassiveSkills(1);assert(changes==5,'two multitools doubled or reset the character timer')
@@ -59,7 +59,7 @@ class PassiveSkillTests(LuaCase):
 
     def test_smaller_tool_retains_fuel_rod_requirement(self):
         self.lua.execute('''
-            gun.Prefab.Identifier.Value='multi-toolset'
+            gun.Prefab.Identifier.Value='aegiscompositetool'
             G.updatePassiveSkills(300);assert(changes==0,'small tool earned time with ordinary battery')
             source.HasTag=function(tag) return tag=='reactorfuel' end
             G.updatePassiveSkills(300);assert(changes==5)
@@ -67,11 +67,11 @@ class PassiveSkillTests(LuaCase):
 
     def test_discovery_uses_native_prefab_spelling_for_luacs_case_sensitive_index(self):
         self.lua.execute('''
-            gun.Prefab.Identifier.Value='Multi-toolSET'
+            gun.Prefab.Identifier.Value='aegiscompositetool'
             source.HasTag=function(tag) return tag=='reactorfuel' end
-            env.ItemPrefab={Prefabs={['multi-toolset']=gun.Prefab}}
+            env.ItemPrefab={Prefabs={['aegiscompositetool']=gun.Prefab}}
             G.clearPassiveSkills()
-            require('CombatTool.passive_skills').install(G,env)
+            require('AegisCombat.passive_skills').install(G,env)
             G.updatePassiveSkills(300)
             assert(changes==5,'case-sensitive LuaCs index omitted the mixed-case multitool prefab')
         ''')

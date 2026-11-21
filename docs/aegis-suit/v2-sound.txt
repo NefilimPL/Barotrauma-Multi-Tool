@@ -1,0 +1,1 @@
+pulse channel=SoundChannel ([checkout]/.runtime/aegis-client/Content/Items/Weapons/WEAPONS_laserGunShot1.ogg) playing=true

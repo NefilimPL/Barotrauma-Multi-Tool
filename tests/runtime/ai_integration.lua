@@ -1,6 +1,6 @@
 -- Asynchronous native bot exercise. Run after sandbox start, allow ~16 s.
-local G=BMTCombat
-local U=require('CombatTool.util')
+local G=AegisCombat
+local U=require('AegisCombat.util')
 local counts={shot=0,weld=0,cut=0,extinguish=0}
 -- Previous runs leave invulnerable test crew behind; isolate this trial.
 local obsolete={}
@@ -9,8 +9,8 @@ for _,c in ipairs(obsolete) do c.Remove() end
 local results={}
 local function report(name,ok,detail)
     results[#results+1]=(ok and 'PASS ' or 'FAIL ')..name..(detail and ': '..tostring(detail) or '')
-    print('[BMT AI] '..results[#results])
-    File.Write('LocalMods/MULTI-TOOL-V2/ai-results.txt',table.concat(results,'\n'))
+    print('[Aegis AI] '..results[#results])
+    File.Write('LocalMods/System-Aegis/ai-results.txt',table.concat(results,'\n'))
 end
 local room
 for h in Hull.HullList do
@@ -20,10 +20,10 @@ for h in Hull.HullList do
     end
 end
 assert(room,'test needs a room on the submarine')
-local bot=Character.Create('human',room.WorldPosition,'bmt-ai',nil,0,false,true,true,nil,true,false)
+local bot=Character.Create('human',room.WorldPosition,'aegis-ai',nil,0,false,true,true,nil,true,false)
 bot.TeamID=CharacterTeamType.Team1;bot.GodMode=true
 bot.Enabled=true
-local gun=Item(ItemPrefab.Prefabs['combatmultitool'],bot.WorldPosition,nil)
+local gun=Item(ItemPrefab.Prefabs['aegiscombattool'],bot.WorldPosition,nil)
 assert(bot.Inventory.TryPutItem(gun,bot,{InvSlotType.RightHand+InvSlotType.LeftHand}))
 for slot=0,0 do
     local source=Item(ItemPrefab.Prefabs['batterycell'],bot.WorldPosition,nil)
@@ -47,7 +47,7 @@ G.use=function(component,character,dt)
     return allowed
 end
 local manager=bot.AIController.ObjectiveManager
-BMTAIBot=bot;BMTAIGun=gun
+AegisAIBot=bot;AegisAIGun=gun
 local gap=Gap(Rectangle(math.floor(room.Position.X+100),math.floor(room.Position.Y),8,32),true,Submarine.MainSub)
 gap.Open=1
 U.component(gun,'Pump').IsOn=true
@@ -61,14 +61,14 @@ Timer.Wait(function()
         'weld='..counts.weld..', cut='..counts.cut..', extinguisher='..counts.extinguish..', shots='..counts.shot..', task='..tostring(manager.CurrentObjective)..', mode='..G.context(gun).mode)
     report('welding does not also shoot/cut/extinguish',counts.shot==0 and counts.cut==0 and counts.extinguish==0)
     gap.Open=0
-    local target=Character.Create('human',room.WorldPosition+Vector2(160,0),'bmt-target',nil,0,false,false,true,nil,true,false)
+    local target=Character.Create('human',room.WorldPosition+Vector2(160,0),'aegis-target',nil,0,false,false,true,nil,true,false)
     target.TeamID=CharacterTeamType.Team2;target.GodMode=true
     target.Enabled=true
     bot.TeleportTo(room.WorldPosition-Vector2(60,0))
     U.component(gun,'Controller').State=false
     local combatOrder=AIObjectiveCombat(bot,target,CombatMode.Offensive,manager)
     combatOrder.ForceHighestPriority=true
-    BMTAICombat=combatOrder;BMTAITarget=target
+    AegisAICombat=combatOrder;AegisAITarget=target
     manager.SetForcedOrder(combatOrder)
     local weldBefore=counts.weld
     Timer.Wait(function()

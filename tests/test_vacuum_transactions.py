@@ -5,7 +5,7 @@ class VacuumTransactionTests(LuaCase):
     def setUp(self):
         super().setUp()
         self.lua.execute("""
-            local C=require('SalvageVacuum.config')
+            local C=require('AegisVacuum.config')
             pack={};vacuum={};battery={Condition=50,MaxCondition=100};owner={}
             ctx={valid=true,pack=pack,vacuum=vacuum,owner=owner}
             source={kind='source',Condition=100,MaxCondition=100,AllowDeconstruct=true,parent=pack,
@@ -35,7 +35,7 @@ class VacuumTransactionTests(LuaCase):
                     queue[#queue+1]=function() local p={parent=pack,Condition=condition};callback(p);return p end
                 end,
                 AddItemToRemoveQueue=function(item) removed[item]=true end}}}
-            require('SalvageVacuum.salvage').install(G,E)
+            require('AegisVacuum.salvage').install(G,E)
             job={ctx=ctx,items={source},index=1,done=0,skipped=0};G.jobs[pack]=job
         """)
 
@@ -133,7 +133,7 @@ class VacuumTransactionTests(LuaCase):
 
     def test_last_success_is_complete_even_when_it_spends_remaining_energy(self):
         self.lua.execute("""
-            battery.Condition=require('SalvageVacuum.config').salvageCost
+            battery.Condition=require('AegisVacuum.config').salvageCost
             G.processSalvage(job);queue[1]();queue[2]();G.processSalvage(job)
             local p=G.salvageProgress(pack)
             assert(p.phase=='complete' and p.done==1 and p.processed==p.total)

@@ -4,8 +4,8 @@ from lua_support import LuaCase
 class VacuumPickupTests(LuaCase):
     def test_floor_only_skips_contained_items_but_collects_loaded_floor_items_intact(self):
         self.lua.execute('''
-            ctx.pack={Tags='bmt.vacuum.looseonly'};G.jobs={};G.pending={}
-            require('SalvageVacuum.filters').install(G,E)
+            ctx.pack={Tags='aegis.vacuum.looseonly'};G.jobs={};G.pending={}
+            require('AegisVacuum.filters').install(G,E)
             assert(G.pickupTarget(item,ctx)==item)
             local cabinet={id='cabinet',type='Barotrauma.Item',Components={},HasAccess=item.HasAccess}
             item.ParentInventory={Owner=cabinet}
@@ -16,14 +16,14 @@ class VacuumPickupTests(LuaCase):
             item.children={};assert(G.pickupTarget(item,ctx)==item)
         ''')
 
-    def test_floor_loaded_item_still_respects_descendant_exclusions_and_locks(self):
+    def test_floor_loaded_item_still_respects_aegis_exclusions_and_locks(self):
         self.lua.execute('''
-            ctx.pack={Tags='bmt.vacuum.looseonly,bmt.vacuum.exclude.iron'};G.jobs={};G.pending={}
-            require('SalvageVacuum.filters').install(G,E)
+            ctx.pack={Tags='aegis.vacuum.looseonly,aegis.vacuum.exclude.iron'};G.jobs={};G.pending={}
+            require('AegisVacuum.filters').install(G,E)
             local child={id='iron',Components={pick},AllowedSlots={'Any'},HasAccess=item.HasAccess}
             item.children={child}
             assert(not G.pickupTarget(item,ctx),'excluded cargo was collected inside a floor container')
-            ctx.pack.Tags='bmt.vacuum.looseonly';G.clearFilters()
+            ctx.pack.Tags='aegis.vacuum.looseonly';G.clearFilters()
             assert(G.pickupTarget(item,ctx)==item)
             child.ParentInventory={Locked=true}
             assert(not G.pickupTarget(item,ctx),'locked cargo was collected inside a floor container')
@@ -37,7 +37,7 @@ class VacuumPickupTests(LuaCase):
             G={patch=function() end}
             function G.id(item) return item.id end
             function G.is(item,id) return item.id==id end
-            require('SalvageVacuum.runtime').install(G,E)
+            require('AegisVacuum.runtime').install(G,E)
             pick={Name='MeleeWeapon',type='Barotrauma.Items.Components.Pickable',
                 CanBePicked=true,IsAttached=false,PickingTime=0}
             item={id='wrench',Components={pick},AllowedSlots={'Any'},HasAccess=function() return true end}
@@ -52,11 +52,11 @@ class VacuumPickupTests(LuaCase):
         self.lua.execute("""
             item.id='chalcopyrite';pick.PickingTime=3.402823466e38
             ctx.pack={Tags=''};G.jobs={};G.pending={}
-            require('SalvageVacuum.filters').install(G,E)
+            require('AegisVacuum.filters').install(G,E)
             assert(not G.safeStorageInput(item,ctx) and not G.pickupTarget(item,ctx))
-            ctx.pack.Tags='bmt.vacuum.allow.chalcopyrite'
+            ctx.pack.Tags='aegis.vacuum.allow.chalcopyrite'
             assert(G.safeStorageInput(item,ctx) and G.pickupTarget(item,ctx)==item)
-            ctx.pack.Tags=ctx.pack.Tags..',bmt.vacuum.exclude.chalcopyrite'
+            ctx.pack.Tags=ctx.pack.Tags..',aegis.vacuum.exclude.chalcopyrite'
             assert(G.safeStorageInput(item,ctx) and not G.pickupTarget(item,ctx))
             pick.IsAttached=true;assert(not G.safeStorageInput(item,ctx))
             pick.IsAttached=false;item.ParentInventory={Locked=true};assert(not G.safeStorageInput(item,ctx))
@@ -121,8 +121,8 @@ class VacuumPickupTests(LuaCase):
             local bag={id='duffelbag',type='Barotrauma.Item',Components={pick},AllowedSlots={'Any'},
                 HasAccess=item.HasAccess,children={allow,excluded}}
             local inv={Owner=bag,Locked=false};allow.ParentInventory=inv;excluded.ParentInventory=inv
-            ctx.pack={Tags='bmt.vacuum.exclude.iron'};G.jobs={};G.pending={}
-            require('SalvageVacuum.filters').install(G,E)
+            ctx.pack={Tags='aegis.vacuum.exclude.iron'};G.jobs={};G.pending={}
+            require('AegisVacuum.filters').install(G,E)
             assert(G.pickupTarget(bag,ctx)==nil,'filtered bag must remain on the floor')
             assert(G.pickupTarget(excluded,ctx)==nil,'excluded contents must stay in the bag')
             assert(G.pickupTarget(allow,ctx)==allow,'allowed contents were blocked by a sibling filter')

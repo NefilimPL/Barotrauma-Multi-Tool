@@ -1,6 +1,6 @@
 -- Disposable server only. Accelerate the production timer, not native skill APIs.
-local G=BMTCombat
-local U=require('CombatTool.util')
+local G=AegisCombat
+local U=require('AegisCombat.util')
 assert(G.updatePassiveSkills,'passive skill system did not initialize')
 local results,created={},{}
 local function track(e) created[#created+1]=e;return e end
@@ -8,17 +8,17 @@ local function check(name,fn)
     G.clearPassiveSkills()
     local ok,err=pcall(fn)
     results[#results+1]=(ok and 'PASS ' or 'FAIL ')..name..(ok and '' or ': '..tostring(err))
-    print('[BMT SKILLS] '..results[#results])
+    print('[Aegis SKILLS] '..results[#results])
 end
 local pos=Submarine.MainSub.WorldPosition
 for hull in Hull.HullList do if hull.Submarine==Submarine.MainSub then pos=hull.WorldPosition;break end end
-local actor=track(Character.Create('human',pos,'bmt-skills',nil,0,false,true,true,nil,true,false))
+local actor=track(Character.Create('human',pos,'aegis-skills',nil,0,false,true,true,nil,true,false))
 actor.GodMode=true;actor.AIController.Enabled=false
 assert(actor.Info and actor.Info.Job,'native human has no skill data')
-local gun=track(Item(ItemPrefab.Prefabs['combatmultitool'],pos,nil))
+local gun=track(Item(ItemPrefab.Prefabs['aegiscombattool'],pos,nil))
 local cell=track(Item(ItemPrefab.Prefabs['batterycell'],pos,nil))
 assert(gun.OwnInventory.TryPutItem(cell,0,false,false,actor))
-local small=track(Item(ItemPrefab.Prefabs['Multi-toolSET'],pos,nil))
+local small=track(Item(ItemPrefab.Prefabs['aegiscompositetool'],pos,nil))
 local rod=track(Item(ItemPrefab.Prefabs['fuelrod'],pos,nil))
 assert(small.OwnInventory.TryPutItem(rod,0,false,false,actor))
 local names={'helm','weapons','mechanical','electrical','medical'}
@@ -55,7 +55,7 @@ check('stowing pauses the common timer; switching to smaller tool preserves time
     G.updatePassiveSkills(.1);delta(before,2)
 end)
 check('fuel-rod repair gain buff does not multiply the fixed passive reward',function()
-    actor.CharacterHealth.ApplyAffliction(nil,AfflictionPrefab.Prefabs['multitool_fuelrod_repairboost'].Instantiate(1))
+    actor.CharacterHealth.ApplyAffliction(nil,AfflictionPrefab.Prefabs['aegis_fuelrod_repairboost'].Instantiate(1))
     local before=levels()
     G.updatePassiveSkills(300);delta(before,2)
 end)
@@ -77,5 +77,5 @@ Timer.Wait(function()
     end)
     G.clearPassiveSkills()
     for i=#created,1,-1 do if not created[i].Removed then created[i].Remove() end end
-    File.Write('LocalMods/MULTI-TOOL-V2/skill-results.txt',table.concat(results,'\n'))
+    File.Write('LocalMods/System-Aegis/skill-results.txt',table.concat(results,'\n'))
 end,1500)

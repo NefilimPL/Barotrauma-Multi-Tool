@@ -1,6 +1,6 @@
 -- Test-only: ordinary defensive objective, screwdriver equipped, Aegis stowed.
-local G=BMTCombat
-local U=require('CombatTool.util')
+local G=AegisCombat
+local U=require('AegisCombat.util')
 local room
 for h in Hull.HullList do
     if h.Submarine==Submarine.MainSub then
@@ -13,7 +13,7 @@ local bot=Character.Create('human',room.WorldPosition,'aegis-defense',nil,0,fals
 bot.TeamID=CharacterTeamType.Team1;bot.Enabled=true;bot.GodMode=true
 local enemy=Character.Create('human',room.WorldPosition+Vector2(90,0),'aegis-threat',nil,0,false,false,true,nil,true,false)
 enemy.TeamID=CharacterTeamType.Team2;enemy.Enabled=true;enemy.GodMode=true
-local gun=Item(ItemPrefab.Prefabs['combatmultitool'],bot.WorldPosition,nil)
+local gun=Item(ItemPrefab.Prefabs['aegiscombattool'],bot.WorldPosition,nil)
 assert(bot.Inventory.TryPutItem(gun,bot,{InvSlotType.Any}))
 local cell=Item(ItemPrefab.Prefabs['batterycell'],bot.WorldPosition,nil)
 assert(gun.OwnInventory.TryPutItem(cell,0,false,false,bot))
@@ -35,12 +35,12 @@ Timer.Wait(function()
     local lines={}
     local function check(name,pass,detail)
         local line=(pass and 'PASS ' or 'FAIL ')..name..': '..tostring(detail or '')
-        lines[#lines+1]=line;print('[BMT DEFENSE] '..line)
+        lines[#lines+1]=line;print('[Aegis DEFENSE] '..line)
     end
     check('natural defensive AI chooses Aegis over equipped screwdriver',weapon==gun,U.itemId(weapon))
     check('bot fires autonomously with player checkbox initially off',shots>0,shots)
     check('automatic combat does not rewrite player checkbox',not U.component(gun,'LightComponent').IsOn)
     G.fire=original
-    File.Write('LocalMods/MULTI-TOOL-V2/defense-results.txt',table.concat(lines,'\n'))
+    File.Write('LocalMods/System-Aegis/defense-results.txt',table.concat(lines,'\n'))
     enemy.Remove();bot.Remove()
 end,6000)

@@ -10,8 +10,8 @@ ROOT = Path(__file__).resolve().parents[1]
 class NativeTimingBoundaryTests(unittest.TestCase):
     def check_buffer(self, commands):
         env = os.environ.copy()
-        env['BMT_TIMING_SOURCE'] = str(ROOT / 'tests/runtime/performance/NativeProbe.cs')
-        script = "$ErrorActionPreference='Stop'; Add-Type -TypeDefinition ([IO.File]::ReadAllText($env:BMT_TIMING_SOURCE)); " + commands
+        env['Aegis_TIMING_SOURCE'] = str(ROOT / 'tests/runtime/performance/NativeProbe.cs')
+        script = "$ErrorActionPreference='Stop'; Add-Type -TypeDefinition ([IO.File]::ReadAllText($env:Aegis_TIMING_SOURCE)); " + commands
         result = subprocess.run(['powershell.exe', '-NoProfile', '-NonInteractive', '-Command', script],
                                 capture_output=True, text=True, env=env, timeout=45)
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
@@ -29,7 +29,7 @@ class NativeTimingBoundaryTests(unittest.TestCase):
         self.check_buffer("$flags=[Reflection.BindingFlags]'Static,NonPublic'; "
                           "[StartupHook]::MarkerWrite('unrelated.txt','wrong'); "
                           "$before=[Diagnostics.Stopwatch]::GetTimestamp(); "
-                          "[StartupHook]::MarkerWrite([IO.Path]::Combine([Environment]::CurrentDirectory,'LocalMods','MULTI-TOOL-V2','bmt-perf-phase.txt'),'test_phase'); "
+                          "[StartupHook]::MarkerWrite([IO.Path]::Combine([Environment]::CurrentDirectory,'LocalMods','System-Aegis','aegis-perf-phase.txt'),'test_phase'); "
                           "$after=[Diagnostics.Stopwatch]::GetTimestamp(); "
                           "$phase=[StartupHook].GetField('phase',$flags).GetValue($null); "
                           "$stamp=[StartupHook].GetField('started',$flags).GetValue($null); "

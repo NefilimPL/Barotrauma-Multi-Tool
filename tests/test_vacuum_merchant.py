@@ -19,7 +19,7 @@ class VacuumMerchantTests(LuaCase):
                 local list={};list.Add=function(value) list[#list+1]=value end;return list
             end end
             local sales={{ID=9,Origin=1},{ID=77,Origin=1},{ID=8,Origin=1}}
-            require('SalvageVacuum.merchant').install(G,E)
+            require('AegisVacuum.merchant').install(G,E)
             local function filtered()
                 local p={itemsToSell=sales,client=client};hooks['merchant-server-sales']({},p);return p.itemsToSell
             end
@@ -58,7 +58,7 @@ class VacuumMerchantTests(LuaCase):
                 end
                 return true
             end
-            require('SalvageVacuum.merchant').install(G,E)
+            require('AegisVacuum.merchant').install(G,E)
         ''')
 
     def test_hidden_aegis_pages_are_sellable_but_native_exclusions_remain(self):

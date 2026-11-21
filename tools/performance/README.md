@@ -6,7 +6,7 @@ network clients. Every active scenario must prove work for each wearer.
 
 The existing disposable installations are:
 
-- `.runtime/descendant-native` — server;
+- `.runtime/aegis-native` — server;
 - `.runtime/vacuum-clients/A` and `B` — clients.
 
 The runner uses localhost ports 27975/27976 and a process lock. It writes only
@@ -26,11 +26,11 @@ From the repository root:
 python tools/performance/run_native.py --label smoke --smoke --phase-seconds 10 --repeats 1
 
 # A full production run uses 30-second phases, 5-second warmup, 3 repeats.
-python tools/performance/run_native.py --label before --source .runtime/performance-baseline/MULTI-TOOL-V2
+python tools/performance/run_native.py --label before --source .runtime/performance-baseline/System-Aegis
 python tools/performance/run_native.py --label after
 
 # Prefix filters can be comma-separated. This selects just these suit cases.
-python tools/performance/run_native.py --label suit --filter descendantservosuit_idle,descendantservosuit_repair,descendantservosuit_combat
+python tools/performance/run_native.py --label suit --filter aegisservosuit_idle,aegisservosuit_repair,aegisservosuit_combat
 
 # Same native scene, Vanilla + LuaCs with this mod disabled.
 python tools/performance/run_native.py --label no-mod --no-mod
@@ -39,7 +39,7 @@ python tools/performance/analyze.py output/performance/<run-id>
 python tools/performance/compare.py output/performance/<before> output/performance/<after>
 
 # Separate server-only diagnostics; these have no clients or FPS results.
-python tools/performance/run_native.py --label server-check --server-only --filter descendantservosuit_repair_8
+python tools/performance/run_native.py --label server-check --server-only --filter aegisservosuit_repair_8
 
 # At least 30 minutes sampled mixed load (5 seconds warmup + 1800 measured).
 python tools/performance/run_native.py --label soak --filter mixed_stress --phase-seconds 1805 --repeats 1
@@ -115,7 +115,7 @@ and CoroutineManager.Update. CrossThread.ProcessTasks and outer-loop command
 polling are outside that body. Frame intervals include the recorder's overhead;
 the final cohort still needs native startup/activity and overhead verification.
 
-Historical tools `tools/analyze_descendant_performance.py` and
+Historical tools `tools/analyze_aegis_performance.py` and
 `tools/analyze_combat_session.py` reproduce their documented older cohorts;
 they are not the entry point for these new runs. All runtime Lua/C# files live
 under `tests/runtime/performance/`, outside the production package.
@@ -134,3 +134,10 @@ checks the mod's repairable index and waits for the same entities on both
 clients. Use the same probe freeze for both sources and pass the first
 run's scene manifest to `--expected-scene` for the second run. Report this
 as a separate workload from the ordinary item scenes.
+
+
+Historyczne próby `tests/runtime/` zapisują zrzuty ekranu w katalogu
+`LocalMods/System-Aegis/` prywatnej kopii gry. Aby wybrać inne istniejące
+miejsce, przed uruchomieniem próby ustaw globalną zmienną Lua
+`AegisCaptureRoot` na ścieżkę zakończoną `/`. Ścieżki nie zależą od nazwy
+ani położenia katalogu repozytorium.

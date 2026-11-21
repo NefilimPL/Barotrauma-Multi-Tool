@@ -58,9 +58,9 @@ each scenario has an explicit measurable activity predicate.
 
 ## Task 3: Arm targeting and movement
 
-**Files:** modify `MULTI-TOOL-V2/Lua/DescendantSuit/game.lua`, `motion.lua`, `aim.lua`
+**Files:** modify `System-Aegis/Lua/AegisSuit/game.lua`, `motion.lua`, `aim.lua`
 and introduce a focused helper only if measurements justify one;
-tests `tests/test_descendant_performance.py`, existing motion/aim/suit tests.
+tests `tests/test_aegis_performance.py`, existing motion/aim/suit tests.
 
 **Interfaces:** existing `G.gather(owner,state)`, `G.advanceTool(owner,state,dt)`,
 `G.planShot(owner,state,target)`, `G.toolPose(owner,state,draw,point)` remain compatible.
@@ -73,8 +73,8 @@ tests `tests/test_descendant_performance.py`, existing motion/aim/suit tests.
 
 ## Task 4: Client and other server costs
 
-**Files:** measured modules under `DescendantSuit`, `CombatTool`, `AegisHeadset`,
-`SalvageVacuum`; regressions in corresponding tests.
+**Files:** measured modules under `AegisSuit`, `AegisCombat`, `AegisHeadset`,
+`AegisVacuum`; regressions in corresponding tests.
 
 **Interfaces:** existing module APIs and network schemas remain unless a measured
 benefit requires a documented, synchronized protocol revision.

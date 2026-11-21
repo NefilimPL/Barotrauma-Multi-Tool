@@ -1,6 +1,6 @@
 # Komunikatory Aegis
 
-Wersja 1.2.8 zawiera dwa przedmioty dodane w 1.2.0 do MULTI-TOOL-V2. Wymagany jest LuaCs
+Wersja 1.2.8 zawiera dwa przedmioty dodane w 1.2.0 do System-Aegis. Wymagany jest LuaCs
 na kliencie i serwerze. **Żaden mod medyczny nie jest wymagany.**
 
 | Przedmiot | Identyfikator | Funkcje |
@@ -105,7 +105,7 @@ Znacznik amputacji NT i zerwane stawy tej samej kończyny tworzą jeden proces
 regeneracji. Odtworzenie kończyny nie usuwa bezpłatnie pozostałych urazów;
 ich leczenie kontynuuje pobór energii.
 
-Parametry: `MULTI-TOOL-V2/Lua/AegisHeadset/config.lua`.
+Parametry: `System-Aegis/Lua/AegisHeadset/config.lua`.
 
 ## Nokaut i nieprzytomność
 
@@ -136,14 +136,14 @@ systemem zdrowia, mieć odwróconą skalę albo oznaczać uraz jako korzystny.
 Takie przypadki wymagają integracji przez publiczne API:
 
 ```lua
--- Wykonać po uruchomieniu BMTHeadsets; ponowić po reloadlua.
-BMTHeadsets.registerTreatment('my_disease', {target=0, priority=80})
-BMTHeadsets.registerTreatment('my_blood_level', {target=100, priority=90})
-BMTHeadsets.registerTreatment('my_implant', {preserve=true})
-BMTHeadsets.registerTreatment('my_missing_organ', {target=0, anatomy='organ'})
+-- Wykonać po uruchomieniu AegisHeadsets; ponowić po reloadlua.
+AegisHeadsets.registerTreatment('my_disease', {target=0, priority=80})
+AegisHeadsets.registerTreatment('my_blood_level', {target=100, priority=90})
+AegisHeadsets.registerTreatment('my_implant', {preserve=true})
+AegisHeadsets.registerTreatment('my_missing_organ', {target=0, anatomy='organ'})
 
 -- Dla stanu przechowywanego poza afflictions:
-BMTHeadsets.registerProvider('my-mod', function(character)
+AegisHeadsets.registerProvider('my-mod', function(character)
     local state = MyMod.GetHealth(character)
     return {{id='my_damage', strength=state.damage, policy={target=0},
         apply=function(value) state.damage=value end}}
@@ -182,7 +182,7 @@ Mk II: elektryka 65, 45 s, podstawowy komunikator, FPGA, 2 fulgurium
 i 2 stopy. Ogniwo wkłada się osobno. Ceny bazowe w sklepach: 500 / 1000 mk.
 Oba modele można kupić w zwykłych sklepach kampanii, z zapasem 1–2 sztuk.
 
-Własne grafiki i OGG są w `Assets/Headsets`. Zamiast obwódki postaci renderer
+Własne grafiki i OGG są w `Assets/AegisHeadsets`. Zamiast obwódki postaci renderer
 rysuje krótkie, małe światło w miejscach istniejących soczewek: jedną diodę
 w podstawowym modelu, trzy w Mk II. Światło podąża za głową, jej obrotem
 i odbiciem grafiki. Zewnętrzne emitery pozostają widoczne przy nakryciu głowy.

@@ -31,7 +31,7 @@ class VacuumNetworkTests(VacuumAdapterTests):
             G.setProtected=function(ctx,kind,value) rules.protected[kind]=value;return true end
             G.setAllowed=function(ctx,kind,value) rules.allowed[kind]=value;return true end
             G.onSnapshot=function(value) snapshot=value end
-            require('SalvageVacuum.network').install(G,env);G.authoritative=false
+            require('AegisVacuum.network').install(G,env);G.authoritative=false
             G.request('batch',vacuum,0,{targets={11,11,12},group=1})
             assert(withdrawn and #withdrawn.ids==2 and withdrawn.ids[2]==12 and not withdrawn.groups)
             G.now=G.now+1;G.request('insert',vacuum,0,{targets={21,22}})
@@ -64,7 +64,7 @@ class VacuumNetworkTests(VacuumAdapterTests):
             G.contents=function() return {} end;G.records=function() return {} end
             local callbacks={}
             env.Networking={Receive=function(name,fn) callbacks[name]=fn end}
-            require('SalvageVacuum.network').install(G,env)
+            require('AegisVacuum.network').install(G,env)
             calls=0;G.withdraw=function(ctx,id) calls=calls+1;return true end
             G.startSalvage=function(ctx) calls=calls+1;return true end
         """)
@@ -101,8 +101,8 @@ class VacuumNetworkTests(VacuumAdapterTests):
             env.Networking.Send=function(message) receive[message.name](reader(message.values)) end
             G.salvageProgress=function() return {phase='power',total=598,processed=9,done=7,skipped=2} end
             local result;G.onSnapshot=function(s) result=s end
-            require('SalvageVacuum.network').install(G,env)
-            local protocol=require('SalvageVacuum.config').protocol
+            require('AegisVacuum.network').install(G,env)
+            local protocol=require('AegisVacuum.config').protocol
             receive[protocol..'.request'](reader({1,vacuum.ID,0,0,0,'',false,'all','',0}),{Character=owner})
             assert(result and result.salvage and result.salvage.phase=='power')
             assert(result.salvage.total==598 and result.salvage.processed==9 and result.salvage.done==7 and result.salvage.skipped==2)
@@ -170,7 +170,7 @@ class VacuumNetworkTests(VacuumAdapterTests):
 
     def test_category_search_and_filter_catalog_are_separate_from_contents(self):
         self.lua.execute("""
-            env.ItemPrefab={Prefabs={}};require('SalvageVacuum.filters').install(G,env)
+            env.ItemPrefab={Prefabs={}};require('AegisVacuum.filters').install(G,env)
             local item={ID=20,Name='Iron',Prefab={Category='Material'},kind='iron',Condition=100,MaxCondition=100,Quality=0}
             G.contents=function() return {item} end
             G.records=function() return {{item=item,id=20,kind='iron'}} end

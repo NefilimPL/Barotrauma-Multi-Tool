@@ -3,16 +3,16 @@ import xml.etree.ElementTree as ET
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-MOD = ROOT / 'MULTI-TOOL-V2'
+MOD = ROOT / 'System-Aegis'
 
 
 class HeadsetContentTests(unittest.TestCase):
     def test_external_headset_emitters_are_not_hidden_by_headgear(self):
-        for item in ET.parse(MOD / 'regenerative_headsets.xml').getroot().findall('Item'):
+        for item in ET.parse(MOD / 'aegis_headsets.xml').getroot().findall('Item'):
             self.assertEqual(item.find('Wearable/sprite').get('canbehiddenbyotherwearables'), 'false')
 
     def test_worn_sprite_is_head_sized_without_multiplying_item_scale(self):
-        for item in ET.parse(MOD / 'regenerative_headsets.xml').getroot().findall('Item'):
+        for item in ET.parse(MOD / 'aegis_headsets.xml').getroot().findall('Item'):
             sprite = item.find('Wearable/sprite')
             height = int(sprite.get('sourcerect').split(',')[3])
             native_height = height * float(sprite.get('scale', '1'))
@@ -20,7 +20,7 @@ class HeadsetContentTests(unittest.TestCase):
             self.assertLessEqual(native_height, 50, 'native wearable scale does not include Item.Scale')
 
     def test_both_items_have_native_unpowered_radio_and_headset_slot(self):
-        items = ET.parse(MOD / 'regenerative_headsets.xml').getroot().findall('Item')
+        items = ET.parse(MOD / 'aegis_headsets.xml').getroot().findall('Item')
         self.assertEqual({i.get('identifier') for i in items}, {'aegisheadset', 'aegisheadsetmk2'})
         for item in items:
             wifi = item.find('WifiComponent')
@@ -34,8 +34,8 @@ class HeadsetContentTests(unittest.TestCase):
     def test_manifest_has_devices_and_sounds_without_medical_dependencies(self):
         manifest = ET.parse(MOD / 'filelist.xml').getroot()
         refs = [i.get('file', '') for i in manifest]
-        self.assertIn('%ModDir%/regenerative_headsets.xml', refs)
-        self.assertIn('%ModDir%/headset_sounds.xml', refs)
+        self.assertIn('%ModDir%/aegis_headsets.xml', refs)
+        self.assertIn('%ModDir%/aegis_headset_sounds.xml', refs)
         self.assertFalse(any('neurotrauma' in r.lower() for r in refs))
         self.assertFalse(manifest.findall('RequiredContentPackage'))
 
@@ -47,7 +47,7 @@ class HeadsetContentTests(unittest.TestCase):
                 self.assertTrue(root.findtext('entitydescription.' + identifier))
 
     def test_three_power_tiers_and_poweroff_have_real_ogg_files(self):
-        sounds = ET.parse(MOD / 'headset_sounds.xml').getroot()
+        sounds = ET.parse(MOD / 'aegis_headset_sounds.xml').getroot()
         self.assertEqual({s.get('identifier') for s in sounds},
                          {'aegis_headset_high', 'aegis_headset_low', 'aegis_headset_critical', 'aegis_headset_empty',
                           'aegis_headset_warning_low', 'aegis_headset_warning_critical', 'aegis_headset_warning_empty'})

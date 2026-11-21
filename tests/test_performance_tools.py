@@ -31,7 +31,7 @@ class PerformanceAnalysisTests(unittest.TestCase):
 
     def fixture(self, folder, active=True, evidence=True, ups=40):
         manifest = {'phase_seconds': 30, 'warmup_seconds': 5,
-                    'phases': [{'id': 'repair_1_r1', 'item': 'descendantservosuit',
+                    'phases': [{'id': 'repair_1_r1', 'item': 'aegisservosuit',
                                 'mode': 'repair', 'count': 1, 'active': active}]}
         (folder / 'manifest.json').write_text(json.dumps(manifest), encoding='utf-8')
         for role in ('server', 'A', 'B'):
@@ -203,14 +203,14 @@ class PerformanceAnalysisTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             folder = Path(tmp)
             for relative, name in [('LocalMods/NT/filelist.xml', 'Neurotrauma'),
-                                   ('LocalMods/MULTI-TOOL-V2/filelist.xml', 'MULTI-TOOL')]:
+                                   ('LocalMods/System-Aegis/filelist.xml', 'System Aegis')]:
                 target = folder / relative
                 target.parent.mkdir(parents=True, exist_ok=True)
                 target.write_text(f'<contentpackage name="{name}" modversion="2"/>')
             settings, inventory = module.package_settings(folder, ['LocalMods/NT/filelist.xml'], False)
             self.assertEqual([p.attrib['path'] for p in settings.find('regularpackages')],
-                             ['LocalMods/NT/filelist.xml', 'LocalMods/MULTI-TOOL-V2/filelist.xml'])
-            self.assertEqual([p['name'] for p in inventory], ['Neurotrauma', 'MULTI-TOOL'])
+                             ['LocalMods/NT/filelist.xml', 'LocalMods/System-Aegis/filelist.xml'])
+            self.assertEqual([p['name'] for p in inventory], ['Neurotrauma', 'System Aegis'])
             self.assertTrue(all(p['modversion'] == '2' and len(p['filelist_sha256']) == 64 for p in inventory))
 
     def test_active_user_game_stops_runner_before_changing_any_installation(self):
@@ -228,7 +228,7 @@ class PerformanceAnalysisTests(unittest.TestCase):
         module = self.runner_module()
         with tempfile.TemporaryDirectory() as tmp:
             folder = Path(tmp)
-            (folder / 'bmt-perf-metrics.jsonl').write_text('{}')
+            (folder / 'aegis-perf-metrics.jsonl').write_text('{}')
             processes = {role: Mock() for role in ('server', 'A', 'B')}
             for process in processes.values():
                 process.poll.return_value = None

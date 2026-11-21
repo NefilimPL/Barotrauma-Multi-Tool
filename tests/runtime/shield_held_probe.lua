@@ -2,8 +2,8 @@
 -- native firearm prefabs (including all shotgun pellets), and damage calls.
 -- The immediate turn deliberately precedes the following arm physics update.
 assert(SERVER and Game.RoundStarted)
-local G=BMTCombat
-local U=require('CombatTool.util')
+local G=AegisCombat
+local U=require('AegisCombat.util')
 local created,lines={},{}
 local function log(s) lines[#lines+1]=s;print('[HELD SHIELD] '..s) end
 local function track(o) created[#created+1]=o;return o end
@@ -11,8 +11,8 @@ local room
 for hull in Hull.HullList do if hull.Submarine==Submarine.MainSub and hull.Rect.Width>650 then room=hull;break end end
 room=room or Hull.HullList[0]
 local center=room.WorldPosition
-local defender=track(Character.Create('human',center,'bmt-held-defender',nil,0,false,false,true,nil,true,false))
-local attacker=track(Character.Create('human',center-Vector2(500,0),'bmt-held-attacker',nil,0,false,false,true,nil,true,false))
+local defender=track(Character.Create('human',center,'aegis-held-defender',nil,0,false,false,true,nil,true,false))
+local attacker=track(Character.Create('human',center-Vector2(500,0),'aegis-held-attacker',nil,0,false,false,true,nil,true,false))
 defender.TeamID=CharacterTeamType.Team1;attacker.TeamID=CharacterTeamType.Team2
 defender.Enabled=true;defender.GodMode=false;attacker.Enabled=true;attacker.GodMode=false
 local descriptor=LuaUserData.RegisterType('Barotrauma.Character')
@@ -20,7 +20,7 @@ LuaUserData.MakeFieldAccessible(descriptor,'dequeuedInput')
 local flags=LuaUserData.CreateEnumTable('Barotrauma.Character+InputNetFlags')
 defender.IsRemotePlayer=true;defender.dequeuedInput=flags.Aim
 defender.CursorPosition=defender.Position-Vector2(500,0)
-local gun=track(Item(ItemPrefab.Prefabs['combatmultitool'],center,nil))
+local gun=track(Item(ItemPrefab.Prefabs['aegiscombattool'],center,nil))
 local battery=track(Item(ItemPrefab.Prefabs['batterycell'],center,nil))
 assert(gun.OwnInventory.TryPutItem(battery,0,false,false,defender))
 assert(defender.Inventory.TryPutItem(gun,defender,{InvSlotType.RightHand+InvSlotType.LeftHand}))
@@ -29,7 +29,7 @@ local s=G.state(gun)
 local event=G.event
 local hits=0
 local damageCalls,failures=0,0
-Hook.Patch('bmt.probe.damage','Barotrauma.Attack','DoDamageToLimb',function(attack,p)
+Hook.Patch('aegis.probe.damage','Barotrauma.Attack','DoDamageToLimb',function(attack,p)
     local limb=p['targetLimb'] or p['limb']
     if limb and limb.character==defender then damageCalls=damageCalls+1 end
 end,Hook.HookMethodType.Before)
@@ -39,8 +39,8 @@ G.event=function(kind,state,pos,...)
 end
 local function finish()
     G.event=event
-    Hook.RemovePatch('bmt.probe.damage','Barotrauma.Attack','DoDamageToLimb',Hook.HookMethodType.Before)
-    File.Write('LocalMods/MULTI-TOOL-V2/held-shield-results.txt',table.concat(lines,'\n'))
+    Hook.RemovePatch('aegis.probe.damage','Barotrauma.Attack','DoDamageToLimb',Hook.HookMethodType.Before)
+    File.Write('LocalMods/System-Aegis/held-shield-results.txt',table.concat(lines,'\n'))
     Timer.Wait(function()
         G.states[gun]=nil
         for i=#created,1,-1 do if not created[i].Removed then created[i].Remove() end end
