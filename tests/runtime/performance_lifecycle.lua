@@ -1,10 +1,10 @@
 -- TEST ONLY: disposable native rounds and campaign copies, not a benchmark.
 assert(SERVER)
-local root='LocalMods/MULTI-TOOL-V2/'
-local log=assert(BMTLifecycleLog)
-local L={owned={},pending=0};BMTLifecycle=L
+local root='LocalMods/System-Aegis/'
+local log=assert(AegisLifecycleLog)
+local L={owned={},pending=0};AegisLifecycle=L
 local function write(line)
-    print('[BMT LIFECYCLE] '..line)
+    print('[Aegis LIFECYCLE] '..line)
     File.Write(root..log,(File.Exists(root..log) and File.Read(root..log) or '')..line..'\n')
 end
 function L.check(name,fn)
@@ -29,11 +29,11 @@ local function equip(id,owner,slot,fn)
         if slot then
             assert(owner.Inventory.TryPutItem(item,owner,{slot}),'cannot equip '..id..' in '..tostring(slot))
         end
-        if id=='descendantservosuit' then
-            spawn('batterycell',BMTDescendantSuit.container(item,1))
-            BMTDescendantSuit.setMode(item,'repair',owner)
-        elseif item.OwnInventory and id~='aegisvacuumpack' and id~='wrenchscrewdrivertwoinoneset' then
-            spawn(id=='multi-toolset' and 'fuelrod' or 'batterycell',item.OwnInventory)
+        if id=='aegisservosuit' then
+            spawn('batterycell',AegisSuit.container(item,1))
+            AegisSuit.setMode(item,'repair',owner)
+        elseif item.OwnInventory and id~='aegisvacuumpack' and id~='aegiswrenchscrewdriver' then
+            spawn(id=='aegiscompositetool' and 'fuelrod' or 'batterycell',item.OwnInventory)
         end
         if fn then fn(item) end
     end)
@@ -54,29 +54,29 @@ function L.equipAfterClear()
         L.pack=pack
         spawn('aegisvacuumpage',pack.OwnInventory,function(page)
             for i=1,30 do local n=i;spawn('iron',page.OwnInventory,function(item)
-                item.Condition=20+n;item.AddTag('bmt_lifecycle_'..n)
+                item.Condition=20+n;item.AddTag('aegis_lifecycle_'..n)
             end) end
         end)
     end)
     equip('aegisvacuumpack',L.b,InvSlotType.Bag)
-    equip('descendantservosuit',L.a,InvSlotType.OuterClothes)
+    equip('aegisservosuit',L.a,InvSlotType.OuterClothes)
     equip('aegisheadsetmk2',L.a,InvSlotType.Headset)
     equip('aegisheadset',L.b,InvSlotType.Headset)
-    equip('multi-toolset',L.a,nil)
-    equip('wrenchscrewdrivertwoinoneset',L.a,nil)
-    equip('combatmultitool',L.a,InvSlotType.RightHand+InvSlotType.LeftHand)
+    equip('aegiscompositetool',L.a,nil)
+    equip('aegiswrenchscrewdriver',L.a,nil)
+    equip('aegiscombattool',L.a,InvSlotType.RightHand+InvSlotType.LeftHand)
     equip('aegisvacuum',L.b,InvSlotType.RightHand+InvSlotType.LeftHand)
     local function ready()
         if L.pending>0 then Timer.Wait(ready,100);return end
         L.check('all four production controllers track real equipped items',function()
-            for _,g in ipairs({BMTDescendantSuit,BMTCombat,BMTHeadsets,BMTVacuum}) do assert(next(g.states)) end
+            for _,g in ipairs({AegisSuit,AegisCombat,AegisHeadsets,AegisVacuum}) do assert(next(g.states)) end
             assert(L.a.Inventory.GetItemInLimbSlot(InvSlotType.Bag)==L.pack)
-            assert(L.a.Inventory.GetItemInLimbSlot(InvSlotType.RightHand).Prefab.Identifier.Value:lower()=='combatmultitool')
+            assert(L.a.Inventory.GetItemInLimbSlot(InvSlotType.RightHand).Prefab.Identifier.Value:lower()=='aegiscombattool')
             assert(L.b.Inventory.GetItemInLimbSlot(InvSlotType.RightHand).Prefab.Identifier.Value:lower()=='aegisvacuum')
         end)
         L.helpers={}
         L.check('native multitool mode helpers and backpack page exist',function()
-            local expected={toolwe=false,toolpl=false,tooldamageflag=false,toolexton=false,toolextoff=false,aegisvacuumpage=false}
+            local expected={aegistoolwelder=false,aegistoolcutter=false,aegistooldamageflag=false,aegistoolfireon=false,aegistoolfireoff=false,aegisvacuumpage=false}
             for item in Item.ItemList do
                 local id=item.Prefab.Identifier.Value:lower()
                 local parent=item.ParentInventory and item.ParentInventory.Owner
@@ -110,9 +110,9 @@ function L.reconnected()
 end
 function L.verifyPack(name)
     L.check(name,function()
-        local found={};local items=BMTVacuum.contents(L.pack);assert(#items==30)
+        local found={};local items=AegisVacuum.contents(L.pack);assert(#items==30)
         for _,item in ipairs(items) do
-            local n=tonumber(item.Tags:match('bmt_lifecycle_(%d+)'))
+            local n=tonumber(item.Tags:match('aegis_lifecycle_(%d+)'))
             assert(n and not found[n]);found[n]=true;assert(math.abs(item.Condition-(20+n))<.02)
         end
     end)
@@ -130,7 +130,7 @@ function L.clearOwned()
     L.owned={}
     Timer.Wait(function()
         L.check('removed item states pruned before round end',function()
-            for _,g in ipairs({BMTDescendantSuit,BMTCombat,BMTHeadsets,BMTVacuum}) do
+            for _,g in ipairs({AegisSuit,AegisCombat,AegisHeadsets,AegisVacuum}) do
                 for item in pairs(g.states) do assert(not item.Removed) end
             end
         end)
@@ -145,8 +145,8 @@ end
 function L.verifyStopped()
     L.check('round ended and production states cleared',function()
         assert(not Game.RoundStarted)
-        for _,g in ipairs({BMTDescendantSuit,BMTCombat,BMTHeadsets,BMTVacuum}) do assert(not next(g.states)) end
-        assert(#BMTCombat.rings==0 and not next(BMTVacuum.jobs) and not next(BMTVacuum.pending))
+        for _,g in ipairs({AegisSuit,AegisCombat,AegisHeadsets,AegisVacuum}) do assert(not next(g.states)) end
+        assert(#AegisCombat.rings==0 and not next(AegisVacuum.jobs) and not next(AegisVacuum.pending))
     end)
     L.signal('stopped')
 end
@@ -174,12 +174,12 @@ end
 function L.verifyLegacy(name, saved)
     if L.check(name,function()
         local pack
-        for item in Item.ItemList do if item.HasTag('bmtvac_20261104_stresspack') then pack=item;break end end
+        for item in Item.ItemList do if item.HasTag('aegisvac_20261104_stresspack') then pack=item;break end end
         assert(pack,'native saved stress pack missing')
-        local items=BMTVacuum.contents(pack);assert(#items==10000,'native stress count '..#items)
+        local items=AegisVacuum.contents(pack);assert(#items==10000,'native stress count '..#items)
         local seen={}
         for _,item in ipairs(items) do
-            local n=tonumber(item.Tags:match('bmtvac_20261104_stressitem(%d+)'))
+            local n=tonumber(item.Tags:match('aegisvac_20261104_stressitem(%d+)'))
             assert(n and not seen[n]);seen[n]=true
             local expected=saved and n==10000 and 23 or 10+n%80
             assert(math.abs(item.Condition-expected)<.02,'saved condition changed')
@@ -201,14 +201,14 @@ function L.verifyLegacy(name, saved)
                     'could not equip verified legacy pack in empty bag slot')
             end
             assert(wearer.Inventory.GetItemInLimbSlot(InvSlotType.Bag)==pack,'verified pack not in save owner bag slot')
-            if BMTVacuum.filterRules then
-                local ctx=BMTVacuum.context(pack,wearer)
-                assert(BMTVacuum.setExcluded(ctx,'iron',true),'could not save exclusion')
-                assert(BMTVacuum.setProtected(ctx,'iron',true),'could not save protection')
-                assert(BMTVacuum.setAllowed(ctx,'chalcopyrite',true),'could not save ore allowance')
+            if AegisVacuum.filterRules then
+                local ctx=AegisVacuum.context(pack,wearer)
+                assert(AegisVacuum.setExcluded(ctx,'iron',true),'could not save exclusion')
+                assert(AegisVacuum.setProtected(ctx,'iron',true),'could not save protection')
+                assert(AegisVacuum.setAllowed(ctx,'chalcopyrite',true),'could not save ore allowance')
             end
-        elseif BMTVacuum.filterRules then
-            local rules=BMTVacuum.filterRules(pack)
+        elseif AegisVacuum.filterRules then
+            local rules=AegisVacuum.filterRules(pack)
             assert(rules.excluded.iron and rules.protected.iron and rules.allowed.chalcopyrite,'native save lost filter rules')
             write('METRIC saved_filter_rules=3')
         end

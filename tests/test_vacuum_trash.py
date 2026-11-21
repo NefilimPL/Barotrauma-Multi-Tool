@@ -7,7 +7,7 @@ class VacuumTrashTests(VacuumStorageCacheTests):
         self.lua.execute("""
             removed={};G.now=10
             E.Entity={Spawner={AddItemToRemoveQueue=function(item) removed[#removed+1]=item end}}
-            require('SalvageVacuum.trash').install(G,E)
+            require('AegisVacuum.trash').install(G,E)
             owner={};ctx={valid=true,pack=pack,owner=owner}
         """)
 

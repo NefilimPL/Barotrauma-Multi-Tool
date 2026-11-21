@@ -67,5 +67,5 @@ rozładowanej baterii. Pierwsza lista łupu nadal wymaga przejścia przez świat
 w ograniczonych porcjach. Test limitu 1,5 s dotyczy kontrolowanej symulacji
 5000 odległych kandydatów, nie gwarancji czasu dla dowolnego poziomu.
 
-Paczka: `output/MULTI-TOOL-V2-1.3.8.zip`. Zainstaluj ją na hoście
+Paczka: `output/System-Aegis-1.3.8.zip`. Zainstaluj ją na hoście
 i wszystkich klientach, następnie uruchom ponownie grę i serwer.

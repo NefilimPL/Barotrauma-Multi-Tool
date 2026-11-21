@@ -10,7 +10,7 @@ category and search compose in either mode. Advance the wire protocol for new fi
 
 **Implementation choices:** A stack fills exactly one native slot, including a partial
 existing stack; large unstackable items transfer once. Filters reject a whole portable
-container if any descendant is excluded. Trash deletes the selected displayed group
+container if any aegis is excluded. Trash deletes the selected displayed group
 (one instance in details), including contents, after an inline second confirmation;
 no blanket deletion. Smooth the current sprite animation by frame interpolation and
 continuous inward flow. Provide original generated mono OGG motor/grinder sounds.
@@ -19,7 +19,7 @@ continuous inward flow. Provide original generated mono OGG motor/grinder sounds
   partial/full slots and real-item conservation. Implement one destination slot.
 - [x] Add filters/category module and tests for saved tags, nested exclusions,
   prefab catalog, category/search composition and invalid network requests.
-- [x] Add authoritative trash with busy/ownership guards and descendant removal;
+- [x] Add authoritative trash with busy/ownership guards and aegis removal;
   extend protocol and panel with category, filter mode and confirmation.
 - [x] Add audio, client/server salvage activity and interpolated suction visuals;
   test stop/reset, remote activity and deterministic continuous flow.

@@ -55,8 +55,8 @@ class HeadsetSupplyPerformanceTests(HeadsetAdapterTests):
                 E.Item={ItemList={cell}};E.Util.created(cell)
                 assert(AI.candidate(E,char,item,20)==nil)
                 -- Combat autorun reloads the shared module; headset keeps its older reference.
-                package.loaded['CombatTool.util']=nil
-                require('CombatTool.util').powerSources(E)
+                package.loaded['AegisCombat.util']=nil
+                require('AegisCombat.util').powerSources(E)
                 tags.mobilebattery=true
                 E.Util.tagsChanged(method,cell,{tag='mobilebattery',newTag='mobilebattery',value='misc, mobilebattery '})
                 assert(AI.candidate(E,char,item,20)==cell,method..' failed to update source membership')

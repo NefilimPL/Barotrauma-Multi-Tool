@@ -25,7 +25,7 @@ class VacuumStorageCacheTests(LuaCase):
                 is=function(i,id) return i and not i.Removed and i.kind==id end,
                 patch=function(name,class,method,fn) hooks[name]=fn end}
             E={LuaUserData={IsTargetType=function(i,name) return i and i.kind~=nil end}}
-            require('SalvageVacuum.storage').install(G,E)
+            require('AegisVacuum.storage').install(G,E)
             G.children=function(item) return item.OwnInventory and item.OwnInventory.AllItems or {} end
         """)
 
@@ -51,7 +51,7 @@ class VacuumStorageCacheTests(LuaCase):
 
     def test_projected_salvage_capacity_updates_from_native_inventory_events(self):
         self.lua.execute("""
-            local C=require('SalvageVacuum.config');C.groups=2
+            local C=require('AegisVacuum.config');C.groups=2
             assert(G.canSalvageFit(pack,a,{{kind='gold'}}))
             assert(not G.canSalvageFit(pack,a,{{kind='gold'},{kind='uranium'}}))
             local c={kind='iron',ID=5,ParentInventory=page.OwnInventory}
@@ -100,7 +100,7 @@ class VacuumStorageCacheTests(LuaCase):
             end,AddItemToRemoveQueue=function(item)
                 hooks['stored-remove']({Item=page},{containedItem=item});item.Removed=true
             end}}
-            require('SalvageVacuum.salvage').install(G,E)
+            require('AegisVacuum.salvage').install(G,E)
             assert(G.startSalvage(ctx));local job=G.jobs[pack]
             local incoming={ID=77,kind='wrench',Condition=100,MaxCondition=100,AllowDeconstruct=true,Prefab=a.Prefab}
             assert(G.insert(pack,incoming,owner) and #job.items==2)

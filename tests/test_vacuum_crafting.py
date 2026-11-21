@@ -23,7 +23,7 @@ class VacuumCraftingTests(LuaCase):
                 has=function(p,i) return p==pack and i==page end,
                 materialRecords=function() return records end,
                 materialContainers=function() return {} end}
-            require('SalvageVacuum.crafting').install(G,E)
+            require('AegisVacuum.crafting').install(G,E)
         """)
 
     def test_worn_backpack_supplies_real_instances_and_preserves_other_sources(self):
@@ -68,7 +68,7 @@ class VacuumCraftingTests(LuaCase):
         self.lua.execute("""
             E.SERVER=true;local registered
             E.LuaUserData.RegisterType=function(name) registered=name;return name end
-            require('SalvageVacuum.crafting').install(G,E)
+            require('AegisVacuum.crafting').install(G,E)
             assert(registered:find('Barotrauma.Item, DedicatedServer',1,true))
         """)
 

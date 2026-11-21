@@ -30,7 +30,7 @@ costs and no benefits from empty cells.
 
 ### Task 1: Shared debit budget and integration
 
-**Files:** new `MULTI-TOOL-V2/Lua/AegisHeadset/power.lua`, modify
+**Files:** new `System-Aegis/Lua/AegisHeadset/power.lua`, modify
 `AegisHeadset/config.lua`, `AegisHeadset/game.lua`, new
 `tests/test_headset_power_limit.py`, update related existing tests/docs.
 

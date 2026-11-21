@@ -1,16 +1,16 @@
 -- Real isolated client. Verify protocol v2 and request a genuine remote stack withdrawal.
-assert(CLIENT and not BMTVacuum.authoritative)
-local G=BMTVacuum
+assert(CLIENT and not AegisVacuum.authoritative)
+local G=AegisVacuum
 local P={rows={}};VacuumGridNetwork=P
 function P.check(name,fn)
     local ok,err=pcall(fn)
     P.rows[#P.rows+1]=(ok and 'PASS ' or 'FAIL ')..name..(ok and '' or ': '..tostring(err))
     print('[VACUUM GRID MP] '..P.rows[#P.rows])
-    File.Write('LocalMods/MULTI-TOOL-V2/vacuum-grid-network-results.txt',table.concat(P.rows,'\n'))
+    File.Write('LocalMods/System-Aegis/vacuum-grid-network-results.txt',table.concat(P.rows,'\n'))
 end
 local original=G.onSnapshot
 G.onSnapshot=function(s) P.last=s;if original then original(s) end end
-local pack;for item in Item.ItemList do if item.HasTag('bmtgrid_mp_pack') then pack=item;break end end
+local pack;for item in Item.ItemList do if item.HasTag('aegisgrid_mp_pack') then pack=item;break end end
 assert(pack and G.context(pack,Character.Controlled).valid)
 P.pack=pack
 G.openPanel(pack)

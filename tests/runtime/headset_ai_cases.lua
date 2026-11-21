@@ -1,5 +1,5 @@
 -- Disposable native server/client: multiple automatic battery insertion cases.
-local G=BMTHeadsets
+local G=AegisHeadsets
 local room
 for h in Hull.HullList do
     if h.Submarine==Submarine.MainSub and (not room or h.Rect.Width>room.Rect.Width) then room=h end
@@ -20,7 +20,7 @@ for _,kind in ipairs({'empty headset / carried spare','low cell / carried spare'
     if kind~='low cell / floor spare' then assert(bot.Inventory.TryPutItem(spare,bot,{InvSlotType.Any})) end
     cases[#cases+1]={kind=kind,bot=bot,device=device,spare=spare,old=old}
 end
-Hook.Patch('bmt.test.ai-cases','Barotrauma.Character','Update',function(c)
+Hook.Patch('aegis.test.ai-cases','Barotrauma.Character','Update',function(c)
     for _,case in ipairs(cases) do if c==case.bot then c.Enabled=true end end
 end,Hook.HookMethodType.Before)
 Timer.Wait(function()
@@ -30,7 +30,7 @@ Timer.Wait(function()
         lines[#lines+1]=(ok and 'PASS ' or 'FAIL ')..case.kind
         case.bot.Remove()
     end
-    File.Write('LocalMods/MULTI-TOOL-V2/headset-ai-cases.txt',table.concat(lines,'\n'))
+    File.Write('LocalMods/System-Aegis/headset-ai-cases.txt',table.concat(lines,'\n'))
     print('[HEADSET AI CASES] '..table.concat(lines,'; '))
-    Hook.RemovePatch('bmt.test.ai-cases','Barotrauma.Character','Update',Hook.HookMethodType.Before)
+    Hook.RemovePatch('aegis.test.ai-cases','Barotrauma.Character','Update',Hook.HookMethodType.Before)
 end,8000)

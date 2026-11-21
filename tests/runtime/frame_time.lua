@@ -1,15 +1,15 @@
 -- Disposable server round only. Compare per-update costs on real native entities.
 assert(SERVER and Game.RoundStarted)
-local U=require('CombatTool.util')
+local U=require('AegisCombat.util')
 local owned,results={},{}
 local pos=Submarine.MainSub.WorldPosition
 for hull in Hull.HullList do if hull.Submarine==Submarine.MainSub then pos=hull.WorldPosition;break end end
 local function create(kind,point)
     local item=Item(ItemPrefab.Prefabs[kind],point or pos,nil);owned[#owned+1]=item;return item
 end
-for i=1,32 do create('combatmultitool') end
+for i=1,32 do create('aegiscombattool') end
 for i=1,1500 do create('iron',Vector2(pos.X+10000,pos.Y)) end
-local actor=Character.Create('human',pos,'bmt-frame-time',nil,0,false,true,true,nil,true,false)
+local actor=Character.Create('human',pos,'aegis-frame-time',nil,0,false,true,true,nil,true,false)
 actor.GodMode=true;actor.AIController.Enabled=false
 local pack=create('aegisvacuumpack')
 local nozzle=create('aegisvacuum')
@@ -28,10 +28,10 @@ local function measure(label,fn)
         label,times[60],times[114],times[120],total)
     results[#results+1]=row;print('[FRAME TIME] '..row)
 end
-BMTCombat.update(.01)
-measure('32 idle combat tools',function() BMTCombat.update(1/60) end)
-measure('passive skill owner checks',function() BMTCombat.updatePassiveSkills(1/60) end)
-local V=BMTVacuum
+AegisCombat.update(.01)
+measure('32 idle combat tools',function() AegisCombat.update(1/60) end)
+measure('passive skill owner checks',function() AegisCombat.updatePassiveSkills(1/60) end)
+local V=AegisVacuum
 V.resetRuntime();V.update(.01)
 local pickup=V.pickupTarget;V.pickupTarget=function() return nil end
 measure('active vacuum native world refresh',function()
@@ -43,4 +43,4 @@ end)
 V.pickupTarget=pickup
 for i=#owned,1,-1 do if not owned[i].Removed then owned[i].Remove() end end
 Timer.Wait(function() if not actor.Removed then actor.Remove() end end,3000)
-File.Write('LocalMods/MULTI-TOOL-V2/frame-time-'..tostring(_G.FrameTimeLabel or 'before')..'.txt',table.concat(results,'\n'))
+File.Write('LocalMods/System-Aegis/frame-time-'..tostring(_G.FrameTimeLabel or 'before')..'.txt',table.concat(results,'\n'))

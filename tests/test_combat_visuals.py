@@ -12,7 +12,7 @@ class VisualContractTests(LuaCase):
                 GUI={GUI={DrawLine=function() end}}}
             local G={now=0,authoritative=false,remote={received=0,rings={},shields={}},patch=function() end,
                 playCombatSound=function() sounds=sounds+1 end}
-            require('CombatTool.visuals').install(G,E,'mod')
+            require('AegisCombat.visuals').install(G,E,'mod')
             local cam={Zoom=1,WorldView={X=0,Y=100,Width=100,Height=100},WorldToScreen=function(p) return p end}
             for i=1,64 do G.onEffect('shieldhit',{x=50+i%4,y=50},0,7) end
             G.draw({},cam)
@@ -31,7 +31,7 @@ class VisualContractTests(LuaCase):
                 LuaUserData={RegisterType=function() end,CreateEnumTable=function() return {} end,CreateStatic=function() return {} end},
                 GUI={GUI={DrawLine=function() end}}}
             local G={now=0,authoritative=false,remote={received=0,rings={},shields={}},patch=function() end}
-            require('CombatTool.visuals').install(G,E,'mod')
+            require('AegisCombat.visuals').install(G,E,'mod')
             local cam={Zoom=2,Transform={M11=0,M12=2,M21=-2,M22=0,M41=100,M42=200},
                 WorldToScreen=function() error('native projection should be cached once per frame') end}
             G.onEffect('hit',{x=10,y=20},0,1);G.draw({},cam)
@@ -47,14 +47,14 @@ class VisualContractTests(LuaCase):
             local body={DrawRotation=0,Dir=1,UpdateDrawPosition=function() refreshed=true end}
             local saved={Name='LightComponent',Light={OffsetFromBody=v(11,22)}}
             local lamp={Name='LightComponent',IsOn=true,IsActive=true,LightOffset=v(670,-90),Light={}}
-            local gun={Prefab={Identifier={Value='combatmultitool'}},Scale=.068,body=body,Components={saved,lamp}}
+            local gun={Prefab={Identifier={Value='aegiscombattool'}},Scale=.068,body=body,Components={saved,lamp}}
             local G={states={[gun]={}},patch=function(_,class,method,fn,after)
                 if method=='RenderLightMap' then
                     assert(class=='Barotrauma.Lights.LightManager' and not after)
                     beforeLightMap=fn
                 end
             end}
-            require('CombatTool.visuals').install(G,env,'mod')
+            require('AegisCombat.visuals').install(G,env,'mod')
             assert(beforeLightMap,'lamp has no render-time mount correction')
             local cases={{0,1,45.56,-6.12},{math.pi/2,1,6.12,45.56},
                 {-math.pi/2,1,-6.12,-45.56},{0,-1,-45.56,-6.12},
@@ -82,7 +82,7 @@ class VisualContractTests(LuaCase):
                     if width>=3 and color.A>=180 then brightLines=(brightLines or 0)+1 end
                 end}}}
             local G={now=0,authoritative=false,remote={received=0,rings={},shields={}},patch=function() end}
-            require('CombatTool.visuals').install(G,E,'mod')
+            require('AegisCombat.visuals').install(G,E,'mod')
             local camera={Zoom=1,WorldToScreen=function(p) return p end}
             G.onEffect('wallhit',{x=0,y=0},0,1);G.draw({},camera)
             assert(sheetSize>=.22,'impact sheet is too small to read in combat')
@@ -111,7 +111,7 @@ class VisualContractTests(LuaCase):
                         return {}
                     end},GUI={GUI={DrawLine=function() error('arc must use the native discharge sprite') end}}}
             local G={now=0,remote={received=0,rings={},shields={}},patch=function() end}
-            require('CombatTool.visuals').install(G,E,'mod')
+            require('AegisCombat.visuals').install(G,E,'mod')
             G.onEffect('arc',{x=10,y=20},0,0,{x=90,y=50})
             local count=sparks
             assert(count==3,'native sparks should cover the endpoints and intermediate span')
@@ -134,7 +134,7 @@ class VisualContractTests(LuaCase):
             local ring={id=1,x=0,y=0,dx=1,dy=0,radius=6,age=0,alive=true}
             local G={now=0,authoritative=false,remote={received=0,rings={ring},shields={}},patch=function() end,
                 playCombatSound=function() sounds=(sounds or 0)+1 end}
-            require('CombatTool.visuals').install(G,E,'mod')
+            require('AegisCombat.visuals').install(G,E,'mod')
             local cam={Zoom=1,WorldToScreen=function(p) return p end}
             G.onEffect('shot',{x=0,y=0},0,1)
             signature='';G.draw({},cam);first=signature
@@ -157,7 +157,7 @@ class VisualContractTests(LuaCase):
             local G={now=0,authoritative=false,remote={received=0,shields={},rings={}},
                 patch=function(_,_,method,fn,after) if method=='DrawMap' then assert(after);drawPatch=fn end end,
                 cast=function() return nil end}
-            require('CombatTool.visuals').install(G,env,'mod')
+            require('AegisCombat.visuals').install(G,env,'mod')
             local batch={Begin=function(mode,blend) assert(mode==0 and blend=='straight');balance=(balance or 0)+1 end,End=function() balance=balance-1 end}
             local screen={Cam={Zoom=1,WorldToScreen=function(p) return p end}}
             for _,name in ipairs({'shieldhit','break','contact','hit','bounce','shot','charge'}) do G.onEffect(name,{x=0,y=0},0,1) end
@@ -193,7 +193,7 @@ class VisualContractTests(LuaCase):
                 Color=function(r,g,b,a) return {A=a or 255} end,GUI={GUI={DrawLine=function() end}}}
             local G={now=0,authoritative=false,remote={received=0,shields={},rings={}},
                 patch=function() end,cast=function(_,p) if p.y>50 then return {kind='wall'} end end}
-            require('CombatTool.visuals').install(G,env,'mod')
+            require('AegisCombat.visuals').install(G,env,'mod')
             local camera={Zoom=1,WorldToScreen=function(p) return p end}
             for _,angle in ipairs({0,math.pi/2,math.pi,-math.pi/2}) do
                 G.remote.shields={{x=0,y=0,angle=angle,energy=100}}

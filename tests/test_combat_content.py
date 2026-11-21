@@ -7,20 +7,20 @@ ROOT=Path(__file__).resolve().parents[1]
 
 class CombatContentTests(unittest.TestCase):
     def test_aiming_has_native_crosshair_and_hud_enabled(self):
-        item=ET.parse(ROOT/'MULTI-TOOL-V2/combat_tool.xml').getroot().find('Item')
+        item=ET.parse(ROOT/'System-Aegis/aegis_combat.xml').getroot().find('Item')
         ranged=item.find('RangedWeapon')
         self.assertEqual(ranged.get('drawhudwhenequipped'),'true')
         self.assertIsNotNone(ranged.find('Crosshair'))
         self.assertIsNotNone(ranged.find('CrosshairPointer'))
 
     def test_one_shared_power_slot(self):
-        item=ET.parse(ROOT/'MULTI-TOOL-V2/combat_tool.xml').getroot().find('Item')
+        item=ET.parse(ROOT/'System-Aegis/aegis_combat.xml').getroot().find('Item')
         container=item.find('ItemContainer')
         self.assertEqual(container.get('capacity'),'1')
         self.assertEqual(len(container.findall('SlotIcon')),1)
 
     def test_weapon_rig_matches_lower_grips_and_inset_lamp(self):
-        item=ET.parse(ROOT/'MULTI-TOOL-V2/combat_tool.xml').getroot().find('Item')
+        item=ET.parse(ROOT/'System-Aegis/aegis_combat.xml').getroot().find('Item')
         self.assertLess(float(item.get('scale')),.075)
         hold=item.find('Holdable')
         for attribute in ('handle1','handle2'):
@@ -35,7 +35,7 @@ class CombatContentTests(unittest.TestCase):
             self.assertLess(abs(x),80,'RepairTool barrel position uses display units, not source pixels')
 
     def test_flashlight_uses_native_directional_cone(self):
-        item=ET.parse(ROOT/'MULTI-TOOL-V2/combat_tool.xml').getroot().find('Item')
+        item=ET.parse(ROOT/'System-Aegis/aegis_combat.xml').getroot().find('Item')
         light=item.findall('LightComponent')[1]
         self.assertEqual(light.get('directional'),'true')
         self.assertEqual(light.find('LightTexture').get('texture'),'Content/Lights/lightcone.png')

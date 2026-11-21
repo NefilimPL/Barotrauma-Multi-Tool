@@ -1,6 +1,6 @@
 -- Disposable native server only: actual storage, recipes, spawner callbacks.
 assert(SERVER and Game.RoundStarted)
-local G=BMTVacuum
+local G=AegisVacuum
 local created,lines={},{}
 local function track(x) created[#created+1]=x;return x end
 local function check(name,ok)
@@ -33,7 +33,7 @@ Timer.Wait(function()
     check('native job finishes and retains final progress',not G.jobs[pack] and not G.pending[pack] and p and p.phase=='complete' and p.processed==41)
     check('native recipe removed source and kept newly collected wrench',source.Removed and not incoming.Removed and G.has(pack,incoming))
     check('unsupported materials skipped in bounded batches',p and p.done==1 and p.skipped==40)
-    File.Write('LocalMods/MULTI-TOOL-V2/salvage-progress-results.txt',table.concat(lines,'\n'))
+    File.Write('LocalMods/System-Aegis/salvage-progress-results.txt',table.concat(lines,'\n'))
     for _,x in ipairs(G.contents(pack)) do if not x.Removed then x.Remove() end end
     for i=#created,1,-1 do if not created[i].Removed then created[i].Remove() end end
 end,2500)

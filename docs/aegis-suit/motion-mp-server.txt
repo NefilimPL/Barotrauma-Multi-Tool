@@ -1,0 +1,12 @@
+WAITING for real joined client
+READY real joined client; protocol=aegis.suit.v4
+PASS 1 server=native inventory replicated client=native slots + snapshot
+PASS 2 server=latch=7.016666666660285s anchorError=0.5848557949066162 recovery=true anchorY=2.737946648077992E-26 client=live ragdoll visible, keys released
+PASS 3 server=native sonar powered while gripping client=native left sonar and collapsed right UI
+PASS 4 server=passive mode authorized; latch retained client=passive + both panels collapsed
+PASS 5 server=released by client second press client=released snapshot + ragdoll
+PASS 6 server=condition=100 skill=22 nativeCompletions=1 client=repair complete; useCalls=0 forced=0 movementSamples=30 manualCrouchSamples=30 jointSamples=360
+PASS 7 server=shots=4 originError=0.0078125 client=pulse endpoint replicated; origin rendered
+PASS 8 server=power drained during a second live latch client=second latch acquired
+PASS 9 server=power loss safely restored ragdoll client=empty battery release replicated
+RESULT passed=9 failed=0 real_joined_client=true

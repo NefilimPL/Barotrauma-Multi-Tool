@@ -1,5 +1,5 @@
 -- Disposable runtime only. Full-stack technical marker and native AI guards.
-local G=BMTHeadsets
+local G=AegisHeadsets
 local room
 for h in Hull.HullList do if h.Submarine==Submarine.MainSub then room=h;break end end
 assert(room)
@@ -17,7 +17,7 @@ local results={}
 local function check(name,fn)
     local ok,err=pcall(fn)
     results[#results+1]=(ok and (err=='SKIP' and 'SKIP ' or 'PASS ') or 'FAIL ')..name..(ok and '' or ': '..tostring(err))
-    File.Write('LocalMods/MULTI-TOOL-V2/headset-reservation-results.txt',table.concat(results,'\n'))
+    File.Write('LocalMods/System-Aegis/headset-reservation-results.txt',table.concat(results,'\n'))
 end
 check('native AI TakeItem cannot steal 80 percent headset cell',function()
     assert(bot.IsBot)

@@ -3,6 +3,72 @@
 Przeniesione opisy wcześniejszych wydań z README. Pomiary i deklaracje
 w tych wpisach dotyczą wskazanych wersji, nie bieżącego kodu roboczego.
 
+## 1.5.2 — sprzedaż kombinezonów
+
+- Cena bazowa każdego z sześciu kombinezonów: 10 000 marek; po jednej sztuce
+  w ofercie właściwego sprzedawcy, bez losowych ofert dnia.
+- Piraci u zbrojmistrza, Descendens w sklepie naukowym; Koalicja i Separatyści
+  w wojskowych placówkach własnej frakcji; Łuska i Klauni u własnych handlarzy.
+- Wyłączona sprzedaż tych strojów w pozostałych sklepach. Standardowe modyfikatory
+  cen kampanii nadal obowiązują. Receptury nie zmienione.
+- Potwierdzono sloty i wymóg modułu serwa, wirnika oraz wkładu tarczy; instrukcja
+  wyjaśnia, które podstawowe funkcje pozostają dostępne bez tych modułów.
+
+## 1.5.1 — emblematy i wykończenie frakcji
+
+- Małe znaki na pancerzu, ramieniu serwo i obudowie wirnika dla wszystkich sześciu frakcji.
+- Osobne wykończenia: pirackie spawy, ceramika Descendens, wojskowe panele Koalicji,
+  przemysłowe detale Separatystów, ceremonialne grawerunki Łuski i akcenty Klaunów.
+- 42 nowe tekstury wyposażenia oraz sześć przezroczystych emblematów PNG.
+  Wspólne części mechaniczne, układ atlasów i identyfikatory pozostają zgodne.
+- Kadry stojaków obejmują cały kombinezon wraz z butami.
+- Kadry atlasów dopasowane do rzeczywistego położenia części w każdej palecie;
+  hełmy, dłonie i łączniki są wyświetlane w całości.
+- Przegląd wariantów i zapis promptów w `docs/faction-colors/`.
+
+## 1.5.0 — kolory frakcji
+
+- Sześć kosmetycznych zestawów: Piraci (czerwony), Descendens (biały),
+  Koalicja (niebieski), Separatyści (pomarańczowy), Kościół Łuski (fioletowy),
+  Dzieci Honkomatki (zielony z żółtymi akcentami).
+- Piętnaście dodatkowych wariantów kombinezonu, serwa i wirnika z tymi samymi
+  cenami, recepturami, parametrami i funkcjami; czerwone identyfikatory zachowane.
+- Trzydzieści pięć nowych PNG dla pancerza, obrazów złożonego kombinezonu,
+  stojaków i modułów; geometria atlasu oraz przezroczystość zachowane.
+- Ramię i wirnik na postaci wyświetlają kolor rzeczywiście włożonego modułu.
+  Pamięć tekstur jest buforowana i zwalniana przy przeładowaniu moda.
+
+## 1.4.1 — dopasowanie tekstur modułów
+
+- Ikona serwa odpowiada grafitowemu ramieniu kombinezonu z czerwonymi przewodami,
+  srebrnymi przegubami i rzeczywistym chwytakiem z atlasu `suit-v2.png`.
+- Ikona wirnika odtwarza zamontowaną obudowę i cztery srebrne łopaty.
+- Wkład tarczy odpowiada parze turkusowych cylindrów widocznych w broni.
+
+## 1.4.0 — wariant bez komunikatorów
+
+- Osobny folder `System-Aegis-No-Headsets`, bez komunikatorów Aegis i ich zasobów.
+- Tarcza wymaga osobno craftowanego wkładu w dodatkowym slocie broni.
+  Wkład daje pięć blokad i odnawia jedną co 15 sekund zasilania; tarcza
+  nie zadaje obrażeń kontaktowych. Ładunek jest zachowywany po wyjęciu i zapisie.
+- Kombinezon ma dodatkowe sloty na osobno craftowane serwo oraz wirnik.
+  Funkcje ramienia i napęd wymagają odpowiadających im modułów.
+- Trzy nowe przezroczyste tekstury modułów, receptury, ikony slotów oraz opisy PL/EN.
+- Pełna wersja `System-Aegis` pozostaje w wersji 1.3.27 bez zmian.
+
+## 1.3.27 — System Aegis
+
+- Pełny, samodzielny pakiet **System Aegis** w folderze `System-Aegis`.
+- Nowe nazwy i ścieżki plików, zasobów, modułów Lua, dokumentacji i testów.
+- Identyfikatory narzędzi, kombinezonu, pocisków i efektów mają prefiks `aegis`.
+  Własne klucze tłumaczeń, zmienne globalne, hooki i protokoły sieciowe
+  również korzystają z przestrzeni Aegis.
+- Wszystkie dotychczasowe tłumaczenia nazw narzędzi wskazują markę Aegis.
+- Usunięto przypisanie do poprzedniego wpisu Workshop. Nowa publikacja
+  otrzyma własny identyfikator; paczka zawiera całe wyposażenie.
+- Przedmioty ze starymi identyfikatorami nie migrują automatycznie.
+  Mechanika, receptury i balans pozostają takie jak w 1.3.26.
+
 ## 1.3.26
 
 - Ramię używa osobnego odstępu między strzałami Gaussa i lasera pulsacyjnego.
@@ -15,7 +81,7 @@ w tych wpisach dotyczą wskazanych wersji, nie bieżącego kodu roboczego.
 - Pociski Gaussa są większe na ekranie i lecą szybciej. Mają ślad lotu,
   odgłos Gaussa i efekty trafienia dostosowane do wariantu amunicji.
 - Obie wiązki pulsacyjne mają wyraźniejszy błysk i iskry na końcu.
-  Bazowe obrażenia wszystkich odmian opisuje [instrukcja kombinezonu](docs/DESCENDANT-SUIT.md#obrażenia-ramienia).
+  Bazowe obrażenia wszystkich odmian opisuje [instrukcja kombinezonu](docs/AEGIS-SUIT.md#obrażenia-ramienia).
 
 ## 1.3.24
 
@@ -31,7 +97,7 @@ w tych wpisach dotyczą wskazanych wersji, nie bieżącego kodu roboczego.
 
 ## 1.3.23
 
-- Ramię Descendants rzadziej ponawia wyszukiwanie aktywnego celu i ponownie
+- Ramię Aegis rzadziej ponawia wyszukiwanie aktywnego celu i ponownie
   wykorzystuje obliczoną geometrię. Zachowuje płynne wygładzanie przegubów
   oraz aktualne sprawdzenie zasięgu, dostępu i drogi strzału.
 - Iskry naprawy rysuje natywny system cząstek. Bojowy multitool ogranicza
@@ -50,23 +116,23 @@ naprawa i obrona botów pozostały dostępne.
 W **1.3.21** ramię na lądzie próbuje strzelać ponad sojusznikiem lub niską
 przeszkodą: płynnie unosi lufę i czeka na bezpieczny prześwit. Ściana lub
 zbyt niski sufit nadal blokują ogień. Po usunięciu przeszkody wraca do
-zwykłego celowania. [Zachowanie i próby w grze](docs/DESCENDANT-RAISED-AIM.md).
+zwykłego celowania. [Zachowanie i próby w grze](docs/AEGIS-RAISED-AIM.md).
 
 W **1.3.20** tryb obronny używa pomniejszonej oryginalnej lufy lasera
 pulsacyjnego i jego tekstury promienia. Usunięto dublowane czerwone linie;
 chwytak i naprawa mają miękką poświatę zamiast prostokątnych pasów.
-[Wygląd i próby w grze](docs/DESCENDANT-BEAMS.md).
+[Wygląd i próby w grze](docs/AEGIS-BEAMS.md).
 
 W **1.3.19** szafka z szybą pokazuje duży hełm i fragment tułowia od przodu,
 zanikające w przyciemnionym szkle, zgodnie z grafikami podstawowej gry.
-[Porównanie z natywnymi kombinezonami](docs/DESCENDANT-RACK.md).
+[Porównanie z natywnymi kombinezonami](docs/AEGIS-RACK.md).
 
 W **1.3.18** chwyt utrzymuje ciało wyżej podczas biegu i przepuszcza je przez
 schody i podesty. Zasilany stojak ładuje baterię lub pręt. Mały sonar ma
 skaner minerałów, a podświetlenie wskazuje aktywną funkcję. Obudowa wirnika
 pozostaje nieruchoma, obracają się łopatki; podczas pływania powstają bąbelki.
-[Aktualne próby i porównanie pływania](docs/DESCENDANT-SERVICE.md).
-Paczka: [MULTI-TOOL-V2 1.3.22](output/MULTI-TOOL-V2-1.3.22.zip).
+[Aktualne próby i porównanie pływania](docs/AEGIS-SERVICE.md).
+Paczka: [System-Aegis 1.3.22](output/System-Aegis-1.3.22.zip).
 
 Od **1.3.17** ramię płynnie ustawia przeguby, a chwyt dostosowuje punkt
 podtrzymania przy przeszkodach. Naprawa jest nieco wolniejsza, obrażenia
@@ -75,13 +141,13 @@ ani ruchu postaci, również podczas oglądania panelu urządzenia.
 Chwyt podtrzymuje cel po puszczeniu klawiszy, oba panele można
 schować, a opcjonalny natywny sonar ma własny widok po lewej. Naprawa ma
 większy zasięg i tolerancję ruchu, a promienie wychodzą z końcówki narzędzia.
-[Podgląd tekstur, animacji i dźwięków](docs/descendant-suit/index.html) ·
-[Używanie i rzeczywisty zakres weryfikacji](docs/DESCENDANT-SUIT.md).
+[Podgląd tekstur, animacji i dźwięków](docs/aegis-suit/index.html) ·
+[Używanie i rzeczywisty zakres weryfikacji](docs/AEGIS-SUIT.md).
 Weryfikacja obejmuje testy regresji, klienta GPU i lokalny multiplayer.
 Szczegóły i granice próby opisano w dokumentacji. Po aktualizacji zrestartuj
 grę i serwer; obie strony potrzebują protokołu kombinezonu v5.
 
-[Pomiar FPS na dwóch rzeczywistych klientach](docs/DESCENDANT-PERFORMANCE.md)
+[Pomiar FPS na dwóch rzeczywistych klientach](docs/AEGIS-PERFORMANCE.md)
 wykazał wyraźny narzut wielu napraw naraz: około 65% niższe FPS przy ośmiu
 włączonych naprawach w scenie testowej. Raport zawiera również czasy klatek,
 pojedyncze przycięcia, obciążenie serwera i ograniczenia porównania.

@@ -1,5 +1,5 @@
 -- Optional NT CS integration; isolated server with NT enabled only.
-local G=BMTHeadsets
+local G=AegisHeadsets
 local results={}
 local function check(name,fn)
     local ok,err=pcall(fn)
@@ -69,7 +69,7 @@ check('actual NT hypotension remains paid regeneration',function()
     G.heal(c,item,1)
     assert(pressure.Strength>60 and G.energy(item)<before)
 end)
-File.Write('LocalMods/MULTI-TOOL-V2/headset-nt-results.txt',table.concat(results,'\n'))
+File.Write('LocalMods/System-Aegis/headset-nt-results.txt',table.concat(results,'\n'))
 -- NT initializes blood type with a delayed callback after Character.Create.
 -- Do not remove this fixture before that callback has finished.
 Timer.Wait(function() if not c.Removed then c.Remove() end end,3000)

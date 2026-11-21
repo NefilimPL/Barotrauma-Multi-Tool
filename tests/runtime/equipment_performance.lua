@@ -1,7 +1,7 @@
 -- Disposable server round only. Measure the remaining equipment paths on native objects.
 assert(SERVER and Game.RoundStarted)
-local U=require('CombatTool.util')
-local H=BMTHeadsets
+local U=require('AegisCombat.util')
+local H=AegisHeadsets
 local AI=require('AegisHeadset.ai')
 local owned,results={},{}
 local position=Submarine.MainSub.WorldPosition
@@ -9,14 +9,14 @@ for hull in Hull.HullList do if hull.Submarine==Submarine.MainSub then position=
 local function create(kind)
     local item=Item(ItemPrefab.Prefabs[kind],position,nil);owned[#owned+1]=item;return item
 end
-local actor=Character.Create('human',position,'bmt-equipment-perf',nil,0,false,true,true,nil,true,false)
+local actor=Character.Create('human',position,'aegis-equipment-perf',nil,0,false,true,true,nil,true,false)
 actor.GodMode=true;actor.AIController.Enabled=false
 local headset=create('aegisheadsetmk2')
 local battery=create('batterycell')
 assert(actor.Inventory.TryPutItem(headset,actor,{InvSlotType.Headset}))
 assert(headset.OwnInventory.TryPutItem(battery,0,false,false,actor))
-local small=create('multi-toolset')
-local wrench=create('wrenchscrewdrivertwoinoneset')
+local small=create('aegiscompositetool')
+local wrench=create('aegiswrenchscrewdriver')
 for i=1,3000 do create('iron') end
 local count=0;U.each(Item.ItemList,function() count=count+1 end)
 results[#results+1]='world items='..count..'; 3000 added native iron items; native human and equipment'
@@ -64,4 +64,4 @@ for i=#owned,1,-1 do if not owned[i].Removed then owned[i].Remove() end end
 -- Neurotrauma schedules initialization after character creation.
 -- Let it finish before removing this test-owned character.
 Timer.Wait(function() if not actor.Removed then actor.Remove() end end,3000)
-File.Write('LocalMods/MULTI-TOOL-V2/equipment-performance-'..tostring(_G.EquipmentPerformanceLabel or 'before')..'.txt',table.concat(results,'\n'))
+File.Write('LocalMods/System-Aegis/equipment-performance-'..tostring(_G.EquipmentPerformanceLabel or 'before')..'.txt',table.concat(results,'\n'))

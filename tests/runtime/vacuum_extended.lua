@@ -1,16 +1,16 @@
--- Test only: isolated campaign server, vanilla + LuaCs + MULTI-TOOL-V2.
-local U=require('CombatTool.util')
-local Core=require('SalvageVacuum.core')
-local G=BMTVacuum
-local R={results={},metrics={},prefix='bmtvac_20261104_',expected={},stressCount=0}
+-- Test only: isolated campaign server, vanilla + LuaCs + System-Aegis.
+local U=require('AegisCombat.util')
+local Core=require('AegisVacuum.core')
+local G=AegisVacuum
+local R={results={},metrics={},prefix='aegisvac_20261104_',expected={},stressCount=0}
 VacuumExtended=R
 for _,name in ipairs({'System.Diagnostics.Stopwatch','Barotrauma.GameMain','Barotrauma.SaveUtil',
     'Barotrauma.CampaignDataPath','Barotrauma.SubmarineInfo'}) do LuaUserData.RegisterType(name) end
 local Clock=LuaUserData.CreateStatic('System.Diagnostics.Stopwatch')
 local Main=LuaUserData.CreateStatic('Barotrauma.GameMain')
 local function write()
-    File.Write('LocalMods/MULTI-TOOL-V2/vacuum-extended-results.txt',table.concat(R.results,'\n'))
-    File.Write('LocalMods/MULTI-TOOL-V2/vacuum-extended-metrics.txt',table.concat(R.metrics,'\n'))
+    File.Write('LocalMods/System-Aegis/vacuum-extended-results.txt',table.concat(R.results,'\n'))
+    File.Write('LocalMods/System-Aegis/vacuum-extended-metrics.txt',table.concat(R.metrics,'\n'))
 end
 function R.check(name,fn)
     local ok,err=pcall(fn)
@@ -109,12 +109,12 @@ end
 function R.save()
     local manifest={}
     for key,v in pairs(R.expected) do manifest[#manifest+1]=table.concat({key,v.kind,v.condition,v.quality},'\t') end
-    File.Write('LocalMods/MULTI-TOOL-V2/vacuum-extended-expected.txt',table.concat(manifest,'\n'))
+    File.Write('LocalMods/System-Aegis/vacuum-extended-expected.txt',table.concat(manifest,'\n'))
     Main.GameSession.SubmarineInfo=LuaUserData.CreateStatic('Barotrauma.SubmarineInfo')(Submarine.MainSub)
     local save=LuaUserData.CreateStatic('Barotrauma.SaveUtil')
     R.measure('native campaign save',function() save.SaveGame(Main.GameSession.DataPath) end)
     R.path=Main.GameSession.DataPath.SavePath
-    File.Write('LocalMods/MULTI-TOOL-V2/vacuum-campaign-savepath.txt',R.path)
+    File.Write('LocalMods/System-Aegis/vacuum-campaign-savepath.txt',R.path)
     print('[VACUUM EXTENDED] Saved '..R.path)
 end
 function R.stress()
@@ -156,7 +156,7 @@ function R.stress()
     nextPage()
 end
 function R.restoreExpected()
-    local manifest=File.Read('LocalMods/MULTI-TOOL-V2/vacuum-extended-expected.txt')
+    local manifest=File.Read('LocalMods/System-Aegis/vacuum-extended-expected.txt')
     for line in manifest:gmatch('[^\r\n]+') do
         local key,kind,condition,quality=line:match('([^\t]+)\t([^\t]+)\t([^\t]+)\t([^\t]+)')
         assert(key,'invalid expected manifest')

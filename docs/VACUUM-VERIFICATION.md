@@ -34,7 +34,7 @@ Poniższe starsze próby zachowano z oznaczeniem badanej wersji. Nowy test filtr
 sprawdza ponowny odczyt tagów po wyczyszczeniu cache i rzeczywistą replikację;
 nie jest osobną próbą zapisu i odczytu całej kampanii po restarcie procesu.
 
-Paczka: `output/MULTI-TOOL-V2-1.3.4.zip`, 14 574 907 bajtów.
+Paczka: `output/System-Aegis-1.3.4.zip`, 14 574 907 bajtów.
 SHA256: `a3486c09345835382f24d72d3fb6791e4262b1c572756ea2a9669d621a6f702c`.
 
 ## Szafa, materiały i siatka — 1.3.3
@@ -240,4 +240,4 @@ Limit 10 000 nadal podlega limitom encji silnika. Rozłączenie klienta nie ozna
 zatrzymania partii, jeżeli jego postać wciąż trzyma sprawne urządzenie.
 
 Skrypty `tests/runtime/` i sterowanie klientami nie trafiają do moda.
-Paczka: `output/MULTI-TOOL-V2-1.3.3.zip`.
+Paczka: `output/System-Aegis-1.3.3.zip`.

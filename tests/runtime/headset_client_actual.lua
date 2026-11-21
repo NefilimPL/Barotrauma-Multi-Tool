@@ -1,14 +1,14 @@
 -- Disposable singleplayer client only. Run as its last Autorun script.
 if not CLIENT then return end
-File.Write('LocalMods/MULTI-TOOL-V2/headset-client-actual.txt','WAIT round initialization')
+File.Write('LocalMods/System-Aegis/headset-client-actual.txt','WAIT round initialization')
 Timer.Wait(function()
     local results={}
     local function check(name,fn)
         local ok,err=pcall(fn)
         results[#results+1]=(ok and 'PASS ' or 'FAIL ')..name..(ok and '' or ': '..tostring(err))
-        File.Write('LocalMods/MULTI-TOOL-V2/headset-client-actual.txt',table.concat(results,'\n'))
+        File.Write('LocalMods/System-Aegis/headset-client-actual.txt',table.concat(results,'\n'))
     end
-    local G=BMTHeadsets
+    local G=AegisHeadsets
     local room
     for h in Hull.HullList do if h.Submarine==Submarine.MainSub then room=h;break end end
     assert(room,'no singleplayer submarine')
@@ -56,6 +56,6 @@ Timer.Wait(function()
             assert(not G.visualError,G.visualError)
         end)
         c.Remove()
-        dofile('LocalMods/MULTI-TOOL-V2/Lua/Tests/headset_idle.lua')
+        dofile('LocalMods/System-Aegis/Lua/Tests/headset_idle.lua')
     end,1000)
 end,8000)

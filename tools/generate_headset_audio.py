@@ -68,7 +68,7 @@ def generate():
     encoder = shutil.which('ffmpeg')
     if not encoder:
         raise SystemExit('ffmpeg with libvorbis is required')
-    target = ROOT / 'MULTI-TOOL-V2/Assets/Headsets/Audio'
+    target = ROOT / 'System-Aegis/Assets/AegisHeadsets/Audio'
     target.mkdir(parents=True, exist_ok=True)
     with tempfile.TemporaryDirectory() as tmp:
         clips = [(f'shield-{name}', synth(tier)) for tier, name in enumerate(['high', 'low', 'critical', 'empty'])]

@@ -1,9 +1,9 @@
 -- Run independently on two real, isolated clients after joining the test server.
 if not CLIENT then return end
-local G=BMTVacuum
+local G=AegisVacuum
 local P={rows={},snapshots=0,transfers=0,activity=0}
 VacuumNetworkProbe=P
-local function write() File.Write('LocalMods/MULTI-TOOL-V2/vacuum-network-results.txt',table.concat(P.rows,'\n')) end
+local function write() File.Write('LocalMods/System-Aegis/vacuum-network-results.txt',table.concat(P.rows,'\n')) end
 function P.check(name,fn)
     local ok,err=pcall(fn)
     P.rows[#P.rows+1]=(ok and 'PASS ' or 'FAIL ')..name..(ok and '' or ': '..tostring(err))
@@ -14,7 +14,7 @@ local onSnapshot=G.onSnapshot
 G.onSnapshot=function(s)
     P.snapshots=P.snapshots+1;P.last=s
     if onSnapshot then onSnapshot(s) end
-    File.Write('LocalMods/MULTI-TOOL-V2/vacuum-network-last.txt',
+    File.Write('LocalMods/System-Aegis/vacuum-network-last.txt',
         string.format('pack=%d count=%d groups=%d rows=%d charge=%.4f busy=%s snapshots=%d',
             s.pack,s.count,s.groups,#s.rows,s.charge,tostring(s.busy),P.snapshots))
 end
@@ -25,7 +25,7 @@ G.onTransfer=function(id,point)
 end
 function P.find(tag)
     local found={}
-    for item in Item.ItemList do if item.HasTag('bmtvac_20261104_'..tag) then found[#found+1]=item end end
+    for item in Item.ItemList do if item.HasTag('aegisvac_20261104_'..tag) then found[#found+1]=item end end
     assert(#found==1,'tag '..tag..' count '..#found)
     return found[1]
 end

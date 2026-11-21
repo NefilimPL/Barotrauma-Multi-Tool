@@ -1,1 +1,0 @@
-pulse channel=SoundChannel (F:/_Github/Barotrauma-Multi-Tool/.runtime/descendant-client/Content/Items/Weapons/WEAPONS_laserGunShot1.ogg) playing=true

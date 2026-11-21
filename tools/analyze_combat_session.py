@@ -25,7 +25,7 @@ def main():
             value = phases[phase]
             assert value['frame_ms_n'] >= 500, (client, phase, 'too few frames')
             assert 14000 < value['frame_ms_n'] * value['frame_ms_mean'] < 16000, (client, phase, 'incomplete sample')
-            events = folder / f'LocalMods/MULTI-TOOL-V2/combat-session-events-{phase}.txt'
+            events = folder / f'LocalMods/System-Aegis/combat-session-events-{phase}.txt'
             text = events.read_text(encoding='utf-8-sig')
             assert 'authority=false' in text and 'visualError=nil' in text, (client, phase, text)
             assert 'controlled=nil' not in text, (client, phase, 'lost controlled character')
@@ -43,7 +43,7 @@ def main():
     with (OUT / 'summary.csv').open('w', newline='', encoding='utf-8') as stream:
         writer = csv.DictWriter(stream, fieldnames=list(rows[0]))
         writer.writeheader(); writer.writerows(rows)
-    server = ROOT / '.runtime/server/LocalMods/MULTI-TOOL-V2'
+    server = ROOT / '.runtime/server/LocalMods/System-Aegis'
     counters = {}
     for source in ('combat-session-server.txt', 'combat-session-followup.txt', 'combat-session-shield-stress.txt'):
         content = (server / source).read_text(encoding='utf-8-sig')

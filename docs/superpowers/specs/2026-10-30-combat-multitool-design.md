@@ -51,7 +51,7 @@ i możliwy do zmiany po testach.
    i synchronizacją. Korzysta z API i mechanizmu patchowania udostępnianego
    przez LuaCs, bez osobnej kompilowanej biblioteki C#.
 
-Nowy przedmiot powstanie obok istniejącego w pakiecie MULTI-TOOL-V2,
+Nowy przedmiot powstanie obok istniejącego w pakiecie System-Aegis,
 z własnymi identyfikatorami. Obecny multitool i jego zapisy pozostają zgodne.
 Skrypty mają działać tylko na nowych identyfikatorach. Nowe funkcje wymagają
 zgodnego Lua for Barotrauma na serwerze i klientach; single player uruchamia
@@ -252,7 +252,7 @@ i nie powoduje wystrzału ani strumienia spawalniczego.
 
 ## Wytwarzanie i noszenie
 
-Proponowana receptura: 1 obecny Multi-toolSET, 2 stopy tytanowo-aluminiowe,
+Proponowana receptura: 1 obecny aegiscompositetool, 2 stopy tytanowo-aluminiowe,
 2 miedzi, 1 FPGA i 1 fulgurium; fabrykator lub fabrykator wojskowy,
 30 s, mechanika 50 i elektryka 40. Identyfikatory surowców zostaną sprawdzone
 w docelowej wersji gry. Baterie/pręty z wejściowego multitoola muszą zostać
@@ -280,7 +280,7 @@ Własne pliki PNG z kanałem alfa oraz animacje z klatek:
 
 Dokładna liczba klatek i rozdzielczość są decyzją wykonawcy, pod warunkiem
 płynnej animacji, stałych punktów zakotwiczenia i zgodności grafiki z kolizją.
-Efekty bazowych narzędzi oraz tool.ogg można wykorzystać ponownie.
+Efekty bazowych narzędzi oraz aegis-tool.ogg można wykorzystać ponownie.
 Wszystkie używane assety muszą być wewnątrz pakietu moda.
 
 ## Logika, synchronizacja i cykl życia
@@ -360,7 +360,7 @@ z każdą skryptową bronią z innych modów.
 
 ## Źródła techniczne do planowania
 
-- Istniejące definicje: MULTI-TOOL-V2/tool.xml i filelist.xml.
+- Istniejące definicje: System-Aegis/aegis_tools.xml i filelist.xml.
 - [Kod wyboru broni i przeładowania AI](https://github.com/FakeFishGames/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource/Characters/AI/Objectives/AIObjectiveCombat.cs).
 - [Kod RangedWeapon](https://github.com/FakeFishGames/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource/Items/Components/Holdable/RangedWeapon.cs).
 - [Kod Projectile, w tym hitscan](https://github.com/FakeFishGames/Barotrauma/blob/master/Barotrauma/BarotraumaShared/SharedSource/Items/Components/Projectile.cs).

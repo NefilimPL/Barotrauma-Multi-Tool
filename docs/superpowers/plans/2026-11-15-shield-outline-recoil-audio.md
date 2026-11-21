@@ -20,7 +20,7 @@
 
 ## Task 1: Three feedback corrections
 
-Files: `MULTI-TOOL-V2/Lua/CombatTool/{physics,projectiles,network,visuals,config}.lua`, `MULTI-TOOL-V2/combat_sounds.xml`, `tests/test_combat_recoil.py`.
+Files: `System-Aegis/Lua/AegisCombat/{physics,projectiles,network,visuals,config}.lua`, `System-Aegis/aegis_combat_sounds.xml`, `tests/test_combat_recoil.py`.
 
 - [x] Add behavioral tests for native recoil at three aim angles, disabled/removed/wrong entities, authoritative firing and client shot receipt without firing on non-shot events.
 - [x] Run the tests against current code and inspect the expected failures.

@@ -9,8 +9,8 @@ sys.path.insert(0,str(ROOT/'.local-tools/python'))
 from PIL import Image
 from lupa.lua52 import LuaRuntime
 
-def validate(game):
-    mod=ROOT/'MULTI-TOOL-V2'
+def validate(game, mod=None):
+    mod=Path(mod).resolve() if mod is not None else ROOT/'System-Aegis'
     files=list(mod.glob('*.xml'))
     for path in files: ET.parse(path)
     manifest=ET.parse(mod/'filelist.xml').getroot()
@@ -31,15 +31,15 @@ def validate(game):
                             assert x>=0 and y>=0 and x+w<=image.width and y+h<=image.height,(file,ref)
                 elif asset.suffix.lower()=='.ogg':
                     assert asset.read_bytes().startswith(b'OggS'),asset
-    for file in (mod/'Assets/Headsets').glob('*.png'):
+    for file in list((mod/'Assets/AegisHeadsets').glob('*.png'))+list((mod/'Assets/AegisModules').glob('*.png')):
         with Image.open(file) as image:
             assert image.mode=='RGBA' and image.getchannel('A').getextrema()[0]==0,file
-    combat=ET.parse(mod/'combat_tool.xml').getroot().find('Item')
-    assert combat.attrib['identifier']=='combatmultitool'
+    combat=ET.parse(mod/'aegis_combat.xml').getroot().find('Item')
+    assert combat.attrib['identifier']=='aegiscombattool'
     assert combat.find('Holdable').attrib['slots']=='Any,RightHand+LeftHand'
     assert combat.find('ItemContainer').attrib['capacity']=='1'
     assert len(combat.find('CustomInterface').findall('TickBox'))==3
-    sounds=ET.parse(mod/'combat_sounds.xml').getroot()
+    sounds=ET.parse(mod/'aegis_combat_sounds.xml').getroot()
     for entry in sounds:
         ref=entry.attrib['file']
         if ref.startswith('%ModDir%/'):
@@ -53,7 +53,7 @@ def validate(game):
             with Image.open(path) as image:
                 x,y,w,h=map(int,texture.attrib['sourcerect'].split(','))
                 assert x>=0 and y>=0 and x+w<=image.width and y+h<=image.height,path
-    for path in (mod/'Assets/Combat').glob('*.png'):
+    for path in (mod/'Assets/AegisCombat').glob('*.png'):
         with Image.open(path) as image:
             assert image.mode=='RGBA' and image.getchannel('A').getextrema()[0]==0,path
             if path.stem.startswith('shield-'):assert image.size==(1254,1254)
@@ -72,9 +72,11 @@ def validate(game):
             for recipe in ET.parse(path).getroot().iter('Fabricate'):
                 for entry in recipe.findall('RequiredItem'):
                     assert entry.attrib['identifier'].lower() in known,(path,entry.attrib)
-    print(f'Content valid: {len(files)} XML, {len(scripts)} Lua 5.2 modules, alpha PNGs and frame rectangles; recipe identifiers checked={bool(game)}')
+    print(f'Content valid [{mod.name}]: {len(files)} XML, {len(scripts)} Lua 5.2 modules, alpha PNGs and frame rectangles; recipe identifiers checked={bool(game)}')
 
 if __name__=='__main__':
     parser=argparse.ArgumentParser()
     parser.add_argument('--game',type=Path)
-    validate(parser.parse_args().game)
+    parser.add_argument('--mod',type=Path,default=ROOT/'System-Aegis')
+    args=parser.parse_args()
+    validate(args.game,args.mod)

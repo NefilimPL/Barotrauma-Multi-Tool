@@ -1,12 +1,12 @@
 -- Real isolated multiplayer fixture. Native spawner publishes every entity to clients.
 assert(SERVER and Game.RoundStarted)
-local G=BMTVacuum
+local G=AegisVacuum
 local R={rows={},spawned=0,sources={}};VacuumGridServer=R
 function R.check(name,fn)
     local ok,err=pcall(fn)
     R.rows[#R.rows+1]=(ok and 'PASS ' or 'FAIL ')..name..(ok and '' or ': '..tostring(err))
     print('[VACUUM GRID MP] '..R.rows[#R.rows])
-    File.Write('LocalMods/MULTI-TOOL-V2/vacuum-grid-server-results.txt',table.concat(R.rows,'\n'))
+    File.Write('LocalMods/System-Aegis/vacuum-grid-server-results.txt',table.concat(R.rows,'\n'))
 end
 local client;for player in Client.ClientList do if player.Name=='VacuumGrid' then client=player end end
 assert(client and client.Character)
@@ -37,7 +37,7 @@ local function done(item)
     end
 end
 spawn('aegisvacuumpack',c.Inventory,function(pack)
-    R.pack=pack;pack.AddTag('bmtgrid_mp_pack');assert(c.Inventory.TryPutItem(pack,c,{InvSlotType.Bag}))
+    R.pack=pack;pack.AddTag('aegisgrid_mp_pack');assert(c.Inventory.TryPutItem(pack,c,{InvSlotType.Bag}))
     local pageNumber=0
     local function nextPage()
         pageNumber=pageNumber+1

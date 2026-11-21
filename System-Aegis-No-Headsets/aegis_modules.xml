@@ -1,0 +1,60 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Items>
+  <Item identifier="aegisshieldmodule" name="Aegis shield module" category="Equipment" tags="smallitem,aegisshieldmodule" scale="0.035" maxstacksize="1" fireproof="true" impactsoundtag="impact_metal_light">
+    <Price baseprice="600" sold="false" />
+    <Fabricate suitablefabricators="fabricator,milfabricator" requiredtime="30">
+      <RequiredSkill identifier="mechanical" level="45" />
+      <RequiredSkill identifier="electrical" level="55" />
+      <RequiredItem identifier="titaniumaluminiumalloy" amount="2" />
+      <RequiredItem identifier="copper" amount="2" />
+      <RequiredItem identifier="fpgacircuit" amount="1" />
+      <RequiredItem identifier="fulgurium" amount="1" />
+    </Fabricate>
+    <Deconstruct time="15">
+      <Item identifier="copper" />
+      <Item identifier="titaniumaluminiumalloy" />
+    </Deconstruct>
+    <InventoryIcon texture="%ModDir%/Assets/AegisModules/shield-module.png" sourcerect="0,0,1254,1254" origin="0.5,0.5" compress="false" />
+    <Sprite texture="%ModDir%/Assets/AegisModules/shield-module.png" sourcerect="0,0,1254,1254" origin="0.5,0.5" compress="false" />
+    <Body width="850" height="800" density="10" />
+    <Holdable slots="Any,RightHand" handle1="0,0" holdpos="0,0" msg="ItemMsgPickUpSelect" />
+  </Item>
+  <Item identifier="aegisservomodule" name="Aegis servo module" category="Equipment" tags="smallitem,aegisservomodule" scale="0.035" maxstacksize="1" fireproof="true" impactsoundtag="impact_metal_light">
+    <Price baseprice="900" sold="false" />
+    <Fabricate suitablefabricators="fabricator,milfabricator" requiredtime="40">
+      <RequiredSkill identifier="mechanical" level="60" />
+      <RequiredSkill identifier="electrical" level="40" />
+      <RequiredItem identifier="titaniumaluminiumalloy" amount="2" />
+      <RequiredItem identifier="copper" amount="2" />
+      <RequiredItem identifier="fpgacircuit" amount="1" />
+      <RequiredItem identifier="steel" amount="1" />
+    </Fabricate>
+    <Deconstruct time="15">
+      <Item identifier="copper" />
+      <Item identifier="titaniumaluminiumalloy" />
+    </Deconstruct>
+    <InventoryIcon texture="%ModDir%/Assets/AegisModules/servo-module.png" sourcerect="0,0,1536,1024" origin="0.5,0.5" compress="false" />
+    <Sprite texture="%ModDir%/Assets/AegisModules/servo-module.png" sourcerect="0,0,1536,1024" origin="0.5,0.5" compress="false" />
+    <Body width="850" height="800" density="10" />
+    <Holdable slots="Any,RightHand" handle1="0,0" holdpos="0,0" msg="ItemMsgPickUpSelect" />
+  </Item>
+  <Item identifier="aegisimpellermodule" name="Aegis impeller module" category="Equipment" tags="smallitem,aegisimpellermodule" scale="0.035" maxstacksize="1" fireproof="true" impactsoundtag="impact_metal_light">
+    <Price baseprice="500" sold="false" />
+    <Fabricate suitablefabricators="fabricator,milfabricator" requiredtime="30">
+      <RequiredSkill identifier="mechanical" level="50" />
+      <RequiredSkill identifier="electrical" level="25" />
+      <RequiredItem identifier="steel" amount="2" />
+      <RequiredItem identifier="titaniumaluminiumalloy" amount="1" />
+      <RequiredItem identifier="copper" amount="1" />
+      <RequiredItem identifier="plastic" amount="1" />
+    </Fabricate>
+    <Deconstruct time="15">
+      <Item identifier="copper" />
+      <Item identifier="steel" />
+    </Deconstruct>
+    <InventoryIcon texture="%ModDir%/Assets/AegisModules/impeller-module.png" sourcerect="0,0,1254,1254" origin="0.5,0.5" compress="false" />
+    <Sprite texture="%ModDir%/Assets/AegisModules/impeller-module.png" sourcerect="0,0,1254,1254" origin="0.5,0.5" compress="false" />
+    <Body width="850" height="800" density="10" />
+    <Holdable slots="Any,RightHand" handle1="0,0" holdpos="0,0" msg="ItemMsgPickUpSelect" />
+  </Item>
+</Items>

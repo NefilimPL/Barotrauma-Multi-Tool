@@ -20,7 +20,7 @@ ataku. [Klient przed](combat/shield-client-health-before.txt) ·
 
 ## Poprawka
 
-Moduł `CombatTool.shield_client` śledzi wyłącznie aktualnie wykonywany
+Moduł `AegisCombat.shield_client` śledzi wyłącznie aktualnie wykonywany
 hitscan klienta. Przy przecięciu potwierdzonej tarczy przerywa natywną kolizję
 przed atakiem, bólem, krwią i impulsem. Blok wyznacza z bieżącej pozycji
 fizyki, a smugę kończy na interpolowanym łuku renderera. Przywraca natywny
@@ -38,7 +38,7 @@ Izolowany serwer i rzeczywisty klient Barotrauma 1.13.5.0 / LuaCs c6e8829,
 ten sam zestaw 15 modów, w tym Enhanced Armaments i Neurotrauma CS.
 Broń `scp_python`, amunicja `scp_357round`, AI walki, około 550–600 jednostek
 odległości i rzeczywiste wejście celowania klienta. `GodMode=false`.
-Słuchawki zdjęto i sprawdzono brak ochrony/leczenia przez `BMTHeadsets`.
+Słuchawki zdjęto i sprawdzono brak ochrony/leczenia przez `AegisHeadsets`.
 
 Zdrowie i rany są resetowane **raz podczas przygotowania**, przed ostrzałem.
 W trakcie strzałów test utrzymuje wyłącznie tlen, ochronę przed ciśnieniem

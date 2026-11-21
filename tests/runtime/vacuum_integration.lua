@@ -1,18 +1,18 @@
 -- Test only, run on the disposable Sandbox server.
--- lua dofile('LocalMods/MULTI-TOOL-V2/Lua/Tests/vacuum_integration.lua')
-local G=BMTVacuum
-local U=require('CombatTool.util')
-local Core=require('SalvageVacuum.core')
+-- lua dofile('LocalMods/System-Aegis/Lua/Tests/vacuum_integration.lua')
+local G=AegisVacuum
+local U=require('AegisCombat.util')
+local Core=require('AegisVacuum.core')
 local results={}
 local function check(name,fn)
     local ok,err=pcall(fn)
     results[#results+1]=(ok and 'PASS ' or 'FAIL ')..name..(ok and '' or ': '..tostring(err))
     print('[VACUUM TEST] '..results[#results])
-    File.Write('LocalMods/MULTI-TOOL-V2/vacuum-results.txt',table.concat(results,'\n'))
+    File.Write('LocalMods/System-Aegis/vacuum-results.txt',table.concat(results,'\n'))
 end
 local position=Submarine.MainSub.WorldPosition
 for hull in Hull.HullList do if hull.Submarine==Submarine.MainSub then position=hull.WorldPosition;break end end
-local bot=Character.Create('human',position,'bmt-vacuum-runtime',nil,0,false,true,true,nil,true,false)
+local bot=Character.Create('human',position,'aegis-vacuum-runtime',nil,0,false,true,true,nil,true,false)
 bot.GodMode=true;bot.AIController.Enabled=false
 local function create(id) return Item(ItemPrefab.Prefabs[id],position,nil) end
 local pack=create('aegisvacuumpack')
@@ -48,7 +48,7 @@ check('loaded crate is stored whole and nested content is preserved',function()
     _G.VacuumTest.crate=crate;_G.VacuumTest.ammo=ammo
 end)
 check('portable loot includes a worn suit on a corpse',function()
-    local corpse=Character.Create('human',position,'bmt-vacuum-corpse',nil,0,false,true,true,nil,true,false)
+    local corpse=Character.Create('human',position,'aegis-vacuum-corpse',nil,0,false,true,true,nil,true,false)
     corpse.AIController.Enabled=false
     local suit=create('divingsuit')
     assert(corpse.Inventory.TryPutItem(suit,corpse,{InvSlotType.OuterClothes}))

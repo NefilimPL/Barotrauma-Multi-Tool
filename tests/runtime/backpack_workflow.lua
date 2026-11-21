@@ -1,18 +1,18 @@
 -- Native singleplayer integration probe. Disposable .runtime client only.
 assert(CLIENT and Game.IsSingleplayer and Game.RoundStarted)
-local U=require('CombatTool.util')
-local G=BMTVacuum
+local U=require('AegisCombat.util')
+local G=AegisVacuum
 local results={}
 local function check(name,fn)
     local ok,err=pcall(fn)
     results[#results+1]=(ok and 'PASS ' or 'FAIL ')..name..(ok and '' or ': '..tostring(err))
     print('[BACKPACK] '..results[#results])
-    File.Write('LocalMods/MULTI-TOOL-V2/backpack-workflow-results.txt',table.concat(results,'\n'))
+    File.Write('LocalMods/System-Aegis/backpack-workflow-results.txt',table.concat(results,'\n'))
 end
 local room
 for hull in Hull.HullList do if hull.Submarine==Submarine.MainSub then room=hull;break end end
 assert(room)
-local c=Character.Create('human',room.WorldPosition,'bmt-backpack-test',nil,0,false,true,true,nil,true,false)
+local c=Character.Create('human',room.WorldPosition,'aegis-backpack-test',nil,0,false,true,true,nil,true,false)
 c.GodMode=true;c.AIController.Enabled=false;c.TeamID=CharacterTeamType.Team1
 Character.Controlled=c
 local function create(kind) return Item(ItemPrefab.Prefabs[kind],room.WorldPosition,nil) end
@@ -70,12 +70,12 @@ check('native drag slot path inserts the original item without swapping worn pac
     local incoming=create('copper');assert(c.Inventory.TryPutItem(incoming,c,{InvSlotType.Any}))
     local env={CLIENT=true,Character=Character,Entity=Entity,LuaUserData=LuaUserData,Timer=Timer,
         Inventory={DraggingItems={incoming}},PlayerInput={PrimaryMouseButtonReleased=function() return true end}}
-    require('SalvageVacuum.manual').install(G,env)
+    require('AegisVacuum.manual').install(G,env)
     G.lastRequest[c]=nil
     local slot=c.Inventory.FindIndex(pack)
     assert(slot>=0 and c.Inventory.TryPutItem(incoming,slot,false,true,c))
     assert(G.has(pack,incoming) and c.Inventory.GetItemInLimbSlot(InvSlotType.Bag)==pack,'drag swapped the pack or lost incoming item')
-    require('SalvageVacuum.manual').install(G,_G)
+    require('AegisVacuum.manual').install(G,_G)
 end)
 check('real localized GUI shows batch action and floor toggle',function()
     local panel=G.openPanel(pack)
@@ -84,8 +84,8 @@ check('real localized GUI shows batch action and floor toggle',function()
     U.each(panel.GetAllChildren(),function(w)
         if LuaUserData.IsTargetType(w,'Barotrauma.GUIButton') then
             names[#names+1]=tostring(w.Text)
-            if tostring(w.Text):lower()==tostring(TextManager.Get('vacuum.takeselected')):lower() then batch=true end
-            if tostring(w.Text):lower()==tostring(TextManager.Get('vacuum.looseonly')):lower() then loose=true end
+            if tostring(w.Text):lower()==tostring(TextManager.Get('aegisvacuum.takeselected')):lower() then batch=true end
+            if tostring(w.Text):lower()==tostring(TextManager.Get('aegisvacuum.looseonly')):lower() then loose=true end
         end
     end)
     assert(batch and loose and not G.visualError,'batch='..tostring(batch)..' loose='..tostring(loose)..' visual='..tostring(G.visualError)..' labels='..table.concat(names,','))
@@ -97,11 +97,11 @@ check('native container inventory drag uses the matching overload and slot param
     local incoming=create('copper');assert(c.Inventory.TryPutItem(incoming,c,{InvSlotType.Any}))
     local env={CLIENT=true,Character=Character,Entity=Entity,LuaUserData=LuaUserData,Timer=Timer,
         Inventory={DraggingItems={incoming}},PlayerInput={PrimaryMouseButtonReleased=function() return true end}}
-    require('SalvageVacuum.manual').install(G,env);G.lastRequest[c]=nil
+    require('AegisVacuum.manual').install(G,env);G.lastRequest[c]=nil
     local slot=cabinet.OwnInventory.FindIndex(pack)
     assert(slot>=0 and cabinet.OwnInventory.TryPutItem(incoming,slot,false,true,c))
     assert(G.has(pack,incoming) and pack.ParentInventory==cabinet.OwnInventory)
-    require('SalvageVacuum.manual').install(G,_G)
+    require('AegisVacuum.manual').install(G,_G)
     assert(c.Inventory.TryPutItem(pack,c,{InvSlotType.Bag}));c.SelectedItem=nil
 end)
 local empty=create('aegisvacuumpack')

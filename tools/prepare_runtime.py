@@ -21,7 +21,7 @@ def prepare(game):
     for file in (game/'Data').iterdir():
         if file.is_file() and file.name.lower() not in {'bannedplayers.xml','clientpermissions.xml'}:
             shutil.copy2(file,target/'Data'/file.name)
-    shutil.copytree(ROOT/'MULTI-TOOL-V2',target/'LocalMods/MULTI-TOOL-V2',dirs_exist_ok=True)
+    shutil.copytree(ROOT/'System-Aegis',target/'LocalMods/System-Aegis',dirs_exist_ok=True)
     config=ET.parse(game/'config_player.xml')
     packages=config.getroot().find('contentpackages')
     if packages is None:
@@ -29,10 +29,10 @@ def prepare(game):
     packages.clear()
     ET.SubElement(packages,'corepackage',path='Content/ContentPackages/Vanilla.xml')
     regular=ET.SubElement(packages,'regularpackages')
-    ET.SubElement(regular,'package',path='LocalMods/MULTI-TOOL-V2/filelist.xml')
+    ET.SubElement(regular,'package',path='LocalMods/System-Aegis/filelist.xml')
     config.getroot().set('savepath',str(target/'Saves'))
     config.write(target/'config_player.xml',encoding='utf-8',xml_declaration=True)
-    ET.ElementTree(ET.Element('ServerSettings',ServerName='BMT isolated tests',IsPublic='false',
+    ET.ElementTree(ET.Element('ServerSettings',ServerName='Aegis isolated tests',IsPublic='false',
         EnableUPnP='false',MaxPlayers='2',Port='27945',QueryPort='27946')).write(
         target/'serversettings.xml',encoding='utf-8',xml_declaration=True)
     print(target)

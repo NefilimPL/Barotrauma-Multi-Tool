@@ -1,0 +1,31 @@
+<?xml version='1.0' encoding='utf-8'?>
+<infotexts language="Polish" nowhitespace="false" translatedname="Polski">
+  <entityname.aegisservosuit>Kombinezon serwomanipulacyjny Aegis — Piraci</entityname.aegisservosuit>
+  <entitydescription.aegisservosuit>Egzoszkielet do 10 000 m. Cztery sloty kolejno: bateria/pręt, amunicja, osobno craftowany moduł serwa i osobno craftowany wirnik. Moduły nie są dołączane za darmo. Ramię wymaga serwa, wspomaganie pływania wymaga wirnika. Wyjęcie serwa zwalnia trzymany cel i zatrzymuje naprawę oraz strzelanie. Obieg oddechowy, sonar i światła działają bez tych modułów. Wymaga LuaCs na kliencie i serwerze.</entitydescription.aegisservosuit>
+  <aegis.title>Ramię serwomanipulacyjne</aegis.title>
+  <aegis.off>Ramię wyłączone</aegis.off>
+  <aegis.on>Ramię włączone</aegis.on>
+  <aegis.ammo>Strzały</aegis.ammo>
+  <aegis.closedloop>Zamknięty obieg oddechowy</aegis.closedloop>
+  <aegis.repair>Naprawa / spawanie</aegis.repair>
+  <aegis.combat>Obrona</aegis.combat>
+  <aegis.grab>Chwytak</aegis.grab>
+  <aegis.grab_short>[InputType.Aim] + [InputType.Use]: złap / puść</aegis.grab_short>
+  <aegis.grab_help>Wskaż cel kursorem. Przytrzymaj [InputType.Aim] i naciśnij [InputType.Use], potem puść klawisze. Cel pozostaje podtrzymywany w powietrzu. Ponowne naciśnięcie podczas celowania puszcza go. Osoby stają się chwilowo bezwładne. Jeden luźny przedmiot albo istota, z wyjątkiem masywnych; zasięg 300. Zmiana trybu, przeszkoda, utrata zasilania lub zdjęcie kombinezonu zwalnia chwyt.</aegis.grab_help>
+  <aegis.arm_tab>Ramię</aegis.arm_tab>
+  <aegis.hide_panel>Schowaj panel; funkcja pozostaje włączona</aegis.hide_panel>
+  <aegis.sonar>Sonar</aegis.sonar>
+  <aegis.sonar_on>Sonar włączony</aegis.sonar_on>
+  <aegis.sonar_off>Sonar wyłączony</aegis.sonar_off>
+  <aegis.sonar_active>Aktywny</aegis.sonar_active>
+  <aegis.sonar_passive>Pasywny</aegis.sonar_passive>
+  <aegis.no_power>Brak zasilania</aegis.no_power>
+  <aegis.power>Zasilanie</aegis.power>
+  <aegis.air>Powietrze</aegis.air>
+  <aegis.tank>Butla tlenowa</aegis.tank>
+  <aegis.minerals>Skanowanie minerałów</aegis.minerals>
+  <aegis.servo_module>Serwo</aegis.servo_module>
+  <aegis.impeller_module>Wirnik</aegis.impeller_module>
+  <aegis.installed>włożony</aegis.installed>
+  <aegis.missing>brak</aegis.missing>
+</infotexts>

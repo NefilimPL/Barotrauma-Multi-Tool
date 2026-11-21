@@ -28,7 +28,7 @@ ustaleniami użytkownika.
 
 ## Kontekst i podejście
 
-Repozytorium zawiera pakiet MULTI-TOOL-V2 1.2.10, XML przedmiotów,
+Repozytorium zawiera pakiet System-Aegis 1.2.10, XML przedmiotów,
 moduły LuaCs, własne grafiki oraz testową instalację gry. Cel zgodności:
 Barotrauma 1.13.5.0 i aktualnie używane w projekcie LuaCs. Zmiana powinna
 rozszerzyć istniejący pakiet, korzystając z jego konwencji ładowania,
@@ -199,13 +199,13 @@ klatki mają identyczne wymiary i stabilny punkt zaczepienia.
 Efekt trafienia/pobrania pokazuje rzeczywisty kierunek od celu do wlotu.
 Brak zasysania nie może pozostawiać wiszących efektów.
 
-Zasoby w `MULTI-TOOL-V2/Assets/Vacuum/`. Prompty, podgląd animacji i opis
+Zasoby w `System-Aegis/Assets/AegisVacuum/`. Prompty, podgląd animacji i opis
 zasobów w `docs/vacuum/`, poza paczką gry. Zestaw testowy i generatory
 również pozostają poza katalogiem instalacyjnym.
 
 ## Architektura i weryfikacja
 
-Osobne definicje XML obu craftowalnych przedmiotów, moduły `Lua/SalvageVacuum/`
+Osobne definicje XML obu craftowalnych przedmiotów, moduły `Lua/AegisVacuum/`
 i autorun. Serwer lub
 symulacja single player odpowiada za transfery, zawartość, partie rozbiórki
 i kontrolę uprawnień. Klient odpowiada za panel, wygląd i zsynchronizowane

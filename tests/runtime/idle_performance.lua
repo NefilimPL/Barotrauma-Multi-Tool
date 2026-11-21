@@ -1,6 +1,6 @@
 -- Isolated server only. Measures mod updates, not whole-game FPS.
 assert(SERVER and not Game.RoundStarted)
-local U=require('CombatTool.util')
+local U=require('AegisCombat.util')
 local results={}
 local function measure(label,fn)
     local samples={}
@@ -16,7 +16,7 @@ end
 local items={}
 for i=1,3000 do items[i]=Item(ItemPrefab.Prefabs['iron'],Vector2(0,0),nil) end
 local count=0;U.each(Item.ItemList,function() count=count+1 end)
-measure('vacuum idle, '..count..' native items',BMTVacuum.update)
-measure('combat idle, '..count..' native items',BMTCombat.update)
+measure('vacuum idle, '..count..' native items',AegisVacuum.update)
+measure('combat idle, '..count..' native items',AegisCombat.update)
 for _,item in ipairs(items) do item.Remove() end
-File.Write('LocalMods/MULTI-TOOL-V2/idle-performance-'..tostring(_G.IdlePerformanceLabel or 'before')..'.txt',table.concat(results,'\n'))
+File.Write('LocalMods/System-Aegis/idle-performance-'..tostring(_G.IdlePerformanceLabel or 'before')..'.txt',table.concat(results,'\n'))

@@ -28,7 +28,7 @@ public class StartupHook
                 var harmony = Assembly.LoadFrom(Path.Combine(Root, "0Harmony.dll"));
                 var type = harmony.GetType("HarmonyLib.Harmony");
                 var hm = harmony.GetType("HarmonyLib.HarmonyMethod");
-                var instance = Activator.CreateInstance(type, new object[] { "bmt.test.vacuum.network" });
+                var instance = Activator.CreateInstance(type, new object[] { "aegis.test.vacuum.network" });
                 var postfix = Activator.CreateInstance(hm, new object[] { typeof(StartupHook).GetMethod("Tick") });
                 type.GetMethods().First(m => m.Name == "Patch" && m.GetParameters().Length == 5)
                     .Invoke(instance, new object[] { game.GetMethod("Update", All), null, postfix, null, null });

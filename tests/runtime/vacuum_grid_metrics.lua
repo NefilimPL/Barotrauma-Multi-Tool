@@ -1,6 +1,6 @@
 -- Continue vacuum_grid.lua in the same isolated SP session.
 local R=assert(VacuumGridTest)
-local G=BMTVacuum
+local G=AegisVacuum
 local c,pack,f=R.character,R.pack,R.fabricator
 if not _G.VacuumGridMetricsOnly then
 assert(c.Inventory.TryPutItem(pack,c,{InvSlotType.Bag}))
@@ -25,7 +25,7 @@ local total=0;for _,v in ipairs(values) do total=total+v end
 local result=string.format('native material refresh with %d actual root items: n=10 median=%dms max=%dms mean=%.2fms',
     #G.contents(pack),values[5],values[10],total/10)
 print('[VACUUM GRID] '..result)
-File.Write('LocalMods/MULTI-TOOL-V2/vacuum-grid-metrics.txt',result)
+File.Write('LocalMods/System-Aegis/vacuum-grid-metrics.txt',result)
 R.check('native cached material index follows inserts and does not duplicate sources',function()
     local expected=0
     for _,r in ipairs(G.materialRecords(pack)) do if r.kind=='iron' then expected=expected+1 end end

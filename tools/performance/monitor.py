@@ -39,7 +39,7 @@ def monitor(folder):
                     if not kernel.GetExitCodeProcess(handle, c.byref(exit_code)) or exit_code.value != 259:
                         continue
                     alive += 1
-                    phase_file = Path(manifest['roles'][role]) / 'LocalMods/MULTI-TOOL-V2/bmt-perf-phase.txt'
+                    phase_file = Path(manifest['roles'][role]) / 'LocalMods/System-Aegis/aegis-perf-phase.txt'
                     phase = phase_file.read_text(encoding='utf-8-sig').strip().split('|', 1)[0] if phase_file.exists() else ''
                     if role not in previous or previous[role][2] != phase:
                         phase_at[role] = now

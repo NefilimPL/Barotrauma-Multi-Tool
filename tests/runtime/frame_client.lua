@@ -1,7 +1,7 @@
 -- Disposable singleplayer client only, with the real GUI and graphics device.
 assert(CLIENT and Game.IsSingleplayer and Game.RoundStarted)
-local U=require('CombatTool.util')
-local G=BMTVacuum
+local U=require('AegisCombat.util')
+local G=AegisVacuum
 local c=assert(Character.Controlled)
 local created={}
 local function create(kind)
@@ -23,9 +23,9 @@ assert(G.insert(pack,create('copper'),c))
 G.onSnapshot(G.snapshot(G.context(pack,c),{}))
 assert(count()==initial,'native icon replacement allocated new controls')
 assert(not G.visualError,tostring(G.visualError))
-File.Write('LocalMods/MULTI-TOOL-V2/frame-client-results.txt',
+File.Write('LocalMods/System-Aegis/frame-client-results.txt',
     'PASS native GUI image construction, sprite replacement and 120 reused snapshots; controls='..initial)
 print('[FRAME CLIENT] PASS native GUI reuse; controls='..initial)
 G.closePanel()
 for i=#created,1,-1 do if not created[i].Removed then created[i].Remove() end end
-dofile('LocalMods/MULTI-TOOL-V2/Lua/Tests/shield_client.lua')
+dofile('LocalMods/System-Aegis/Lua/Tests/shield_client.lua')

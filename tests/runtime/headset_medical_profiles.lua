@@ -1,5 +1,5 @@
 -- Disposable NT CS server. Synchronous comparison isolates the price/rate.
-local G=BMTHeadsets
+local G=AegisHeadsets
 local Medical=require('AegisHeadset.medical')
 local rows={}
 local function check(name,fn)
@@ -72,5 +72,5 @@ for _,id in ipairs({'aegisheadset','aegisheadsetmk2'}) do
     end)
     item.Drop(c)
 end
-File.Write('LocalMods/MULTI-TOOL-V2/headset-profile-results.txt',table.concat(rows,'\n'))
+File.Write('LocalMods/System-Aegis/headset-profile-results.txt',table.concat(rows,'\n'))
 Timer.Wait(function() if not c.Removed then c.Remove() end end,3000)

@@ -9,7 +9,7 @@
 
 ## Global Constraints
 
-- Extend MULTI-TOOL-V2; existing multitool behavior must survive.
+- Extend System-Aegis; existing multitool behavior must survive.
 - Neurotrauma and every other medical mod remain optional.
 - Native radio: range 35000, LinkToChat, unaffected by battery depletion.
 - Server/single-player alone spends energy and changes health.
@@ -28,7 +28,7 @@
 
 ### Task 1: Energy and generic treatment policy
 
-**Files:** Create `Lua/AegisHeadset/config.lua`, `core.lua`, `treatments.lua` under MULTI-TOOL-V2; `tests/test_headset_core.py`.
+**Files:** Create `Lua/AegisHeadset/config.lua`, `core.lua`, `treatments.lua` under System-Aegis; `tests/test_headset_core.py`.
 **Interfaces:** `Core.debit(energy,cost) -> remaining,fraction`; `Core.absorb(energy,damage) -> remaining,residual`; `Treatments.classify(prefab) -> policy`; `Treatments.register(id,policy)`; `Treatments.plan(entries,budget) -> actions`.
 - [x] Write behavioral tests for proportional debit/absorption, shared healing budget, unknown harmful effects, buffs and explicit normal-value overrides.
 - [x] Run `python -m unittest discover -s tests -p test_headset_core.py`; expect missing feature failures.
@@ -46,8 +46,8 @@
 
 ### Task 3: Items and audiovisual assets
 
-**Files:** Create `regenerative_headsets.xml`, `headset_sounds.xml`, `Assets/Headsets/*`, `Lua/AegisHeadset/effects.lua`; modify manifest and Polish/English text. Create `tools/generate_headset_audio.py`, `docs/headsets/preview.html`, `PROMPTS.md` and `tests/test_headset_content.py`.
-**Interfaces:** Effects install provides `emit(character,item,kind)`, `update(dt)`, `dispose()`; server events contain entity IDs, position, event kind and energy tier. Independent protocol `bmt.headsets.v1`.
+**Files:** Create `aegis_headsets.xml`, `aegis_headset_sounds.xml`, `Assets/AegisHeadsets/*`, `Lua/AegisHeadset/effects.lua`; modify manifest and Polish/English text. Create `tools/generate_headset_audio.py`, `docs/headsets/preview.html`, `PROMPTS.md` and `tests/test_headset_content.py`.
+**Interfaces:** Effects install provides `emit(character,item,kind)`, `update(dt)`, `dispose()`; server events contain entity IDs, position, event kind and energy tier. Independent protocol `aegis.headsets.v1`.
 - [x] Add and run content contracts for two slot-compatible native radios, battery-only containers, optional dependencies and packaged references; expect FAIL.
 - [x] Generate original transparent headset sprites using built-in imagegen; render shield shimmer as code-native geometry; synthesize original three-tier impacts and power-off OGG.
 - [x] Implement items, balanced recipes/prices, localization and bounded server-to-client effects.

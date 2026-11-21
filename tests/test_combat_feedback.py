@@ -4,11 +4,11 @@ from lua_support import LuaCase
 class CombatFeedbackTests(LuaCase):
     def test_actual_held_fire_cadence_is_about_twenty_percent_faster(self):
         self.lua.execute('''
-            local C=require('CombatTool.config')
+            local C=require('AegisCombat.config')
             local charge,reload=C.chargeTime,C.reloadTime
             local function count(a,b)
                 C.chargeTime=a;C.reloadTime=b
-                local G=require('CombatTool.game').new({})
+                local G=require('AegisCombat.game').new({})
                 local component={Item={ID=1},Name='RangedWeapon'}
                 local shots=0
                 G.context=function() return {valid=true,aim=true,damage=true,mode='combat'} end
@@ -30,7 +30,7 @@ class CombatFeedbackTests(LuaCase):
             local G={now=0,cast=function() return nil end}
             local E={CLIENT=true,Game={IsSingleplayer=false},Timer={GetTime=function() return 0 end},
                 Networking={Receive=function(name,fn) if name:find('snapshot') then receive=fn end end}}
-            require('CombatTool.network').install(G,E)
+            require('AegisCombat.network').install(G,E)
             local trail={{x=0,y=0,age=0}}
             G.remote={epoch=100,rings={{id=4,x=0,y=0,trail=trail}},shields={}}
             local function packet(sequence)
@@ -47,8 +47,8 @@ class CombatFeedbackTests(LuaCase):
 
     def test_continuous_fire_is_faster_but_travel_is_slower(self):
         self.lua.execute('''
-            local C=require('CombatTool.config')
-            local G=require('CombatTool.game').new({})
+            local C=require('AegisCombat.config')
+            local G=require('AegisCombat.game').new({})
             local gun={ID=1};local component={Item=gun,Name='RangedWeapon'}
             G.context=function() return {valid=true,aim=true,damage=true,mode='combat'} end
             G.canSpend=function() return true end;G.spend=function() return true end
@@ -61,7 +61,7 @@ class CombatFeedbackTests(LuaCase):
 
     def test_trail_preserves_the_actual_ricochet_corner_and_stays_bounded(self):
         self.lua.execute('''
-            local C=require('CombatTool.core')
+            local C=require('AegisCombat.core')
             local ring=C.ring({x=0,y=0},{x=1,y=0},0)
             ring.speed=200
             C.advanceRing(ring,.1,function(a,b)
@@ -75,14 +75,14 @@ class CombatFeedbackTests(LuaCase):
 
     def test_terminal_wall_hit_has_an_event_and_character_hit_has_impulse(self):
         self.lua.execute('''
-            local Core=require('CombatTool.core')
+            local Core=require('AegisCombat.core')
             local gun={};local target={}
             local G={flags=function() return {damage=true} end,state=function() return {} end,
                 findShield=function() return nil end,
                 cast=function() return {t=.5,x=5,y=0,kind=kind,target=target,nx=-1,ny=0} end,
                 event=function(event) lastEvent=event end,
                 damage=function(_,_,_,_,_,_,impulse) deliveredImpulse=impulse end}
-            require('CombatTool.projectiles').install(G,{})
+            require('AegisCombat.projectiles').install(G,{})
             function fire(kindValue)
                 kind=kindValue
                 local r=Core.ring({x=0,y=0},{x=1,y=0},0)
@@ -97,7 +97,7 @@ class CombatFeedbackTests(LuaCase):
             local G={}
             local E={Vector2=setmetatable({Zero={X=0,Y=0}},{__call=function(_,x,y) return {X=x,Y=y} end}),
                 AfflictionPrefab={Prefabs={burn={Instantiate=function(n) return n end}}}}
-            require('CombatTool.physics').install(G,E)
+            require('AegisCombat.physics').install(G,E)
             G.damage({AddDamage=function(_,_,_,_,impulse) actualImpulse=impulse end},
                 {x=1,y=2},nil,1,0,0,{x=7,y=0})
         ''')
@@ -107,7 +107,7 @@ class CombatFeedbackTests(LuaCase):
         self.lua.execute('''
             local G={};local E={Vector2=function(x,y) return {X=x,Y=y} end,
                 SoundPlayer={PlaySound=function(tag,position) calls=(calls or 0)+1;soundTag=tag;soundPosition=position end}}
-            require('CombatTool.audio').install(G,E)
+            require('AegisCombat.audio').install(G,E)
             G.playCombatSound('shot',{x=12,y=34})
             assert(soundTag=='aegis_shot' and soundPosition.X==12 and soundPosition.Y==34)
             G.playCombatSound('wallhit',{x=4,y=8});assert(soundTag=='aegis_wallhit')

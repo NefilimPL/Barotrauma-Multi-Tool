@@ -86,7 +86,7 @@ użyty plik dźwiękowy jest istniejącym zasobem gry.
 
 **414 testów automatycznych: OK.** Walidacja 13 XML / 39 modułów Lua 5.2
 i receptur: OK. Niezależne przeglądy tarczy i rozbiórki: bez pozostających
-istotnych uwag. Paczka: `output/MULTI-TOOL-V2-1.3.10.zip`.
+istotnych uwag. Paczka: `output/System-Aegis-1.3.10.zip`.
 
 Po pełnym restarcie serwera potwierdzono 97/97 prób tarczy i 7/7 plecaka.
 ZIP zawiera 85 plików, porównanych bajt w bajt ze źródłami produkcyjnymi.

@@ -12,7 +12,7 @@
 
 ## Global Constraints
 
-- Extend MULTI-TOOL-V2, preserve existing tools and headsets.
+- Extend System-Aegis, preserve existing tools and headsets.
 - Battery in `aegisvacuum`; storage in `aegisvacuumpack`; separate fabricator recipes.
 - Vacuum occupies both hands. Portable loot includes entire loaded crates and suits on dead bodies.
 - No recipe means no salvage; no replacement iron. Preserve skipped container contents.
@@ -29,7 +29,7 @@
 
 ### Task 1: Storage and salvage policy
 
-**Files:** `Lua/SalvageVacuum/config.lua`, `core.lua`, `tests/test_vacuum_core.py`.
+**Files:** `Lua/AegisVacuum/config.lua`, `core.lua`, `tests/test_vacuum_core.py`.
 **Interfaces:** `Core.groups(items)`, `Core.canAccept(items,item)`, `Core.inCone(origin,direction,target)`, `Core.snapshot(items,children)`, `Core.debit(energy,cost)`; plain Lua data, actual items retained as references.
 
 - [x] Write tests for 100/101 grouping, 100-group capacity, heterogeneous state, nested postorder, cycles, power and geometry.
@@ -38,7 +38,7 @@
 
 ### Task 2: Native adapter and server simulation
 
-**Files:** `Lua/SalvageVacuum/game.lua`, `storage.lua`, `salvage.lua`, `runtime.lua`, `Lua/Autorun/aegisvacuum.lua`, `tests/test_vacuum_adapter.py`.
+**Files:** `Lua/AegisVacuum/game.lua`, `storage.lua`, `salvage.lua`, `runtime.lua`, `Lua/Autorun/aegisvacuum.lua`, `tests/test_vacuum_adapter.py`.
 **Interfaces:** `G.context(vacuum,character)`, `G.contents(pack)`, `G.insert(pack,item,user)`, `G.startSalvage(ctx)`, `G.withdraw(ctx,itemId)`, `G.update(dt)`.
 
 - [x] Inspect installed API for inventory serialization, deconstruction, access and native spawner callbacks.
@@ -48,7 +48,7 @@
 
 ### Task 3: Original images and item definitions
 
-**Files:** `Assets/Vacuum/*.png`, `vacuum.xml`, package manifest and PL/EN text; `docs/vacuum/PROMPTS.md`; `tests/test_vacuum_content.py`.
+**Files:** `Assets/AegisVacuum/*.png`, `aegis_vacuum.xml`, package manifest and PL/EN text; `docs/vacuum/PROMPTS.md`; `tests/test_vacuum_content.py`.
 **Interfaces:** Item IDs `aegisvacuum`, `aegisvacuumpack`, internal storage page ID if required; vacuum battery slot 0.
 
 - [x] Generate distinct backpack, vacuum and suction effects with image_gen; inspect alpha and sprite dimensions.
@@ -57,7 +57,7 @@
 
 ### Task 4: Network, panel and animation
 
-**Files:** `Lua/SalvageVacuum/network.lua`, `client.lua`, `visuals.lua`, `tests/test_vacuum_network.py`.
+**Files:** `Lua/AegisVacuum/network.lua`, `client.lua`, `visuals.lua`, `tests/test_vacuum_network.py`.
 **Interfaces:** Server handles bounded `open`, `withdraw`, `salvage`, `select` requests only from actual owning client; native character inputs control suction.
 
 - [x] Write tests for forged ownership, distant targets, stale item IDs, duplicate salvage requests and result paging; run red.

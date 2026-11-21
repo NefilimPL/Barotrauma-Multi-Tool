@@ -18,11 +18,11 @@ przed pomiarem; zmiany mają wynikać z ustalonego kosztu.
 
 - Baza: `1e14d6d`, pakiet `1.3.22`, Barotrauma `1.13.5.0`.
 - `python tools/run_tests.py`: 613 testów, wszystkie przeszły.
-- `python tools/validate_content.py --game .runtime/descendant-native`:
+- `python tools/validate_content.py --game .runtime/aegis-native`:
   poprawne 18 XML, 60 modułów Lua 5.2 i odwołania do zasobów/receptur.
 - Są odrębne lokalne kopie serwera i klientów w ignorowanym `.runtime/`.
   Podczas rozpoznania nie działały procesy Barotrauma/DedicatedServer.
-- Kopie są nieaktualne: serwer `descendant-native` ma wersję 1.3.21
+- Kopie są nieaktualne: serwer `aegis-native` ma wersję 1.3.21
   i 4 różne/brakujące pliki produkcyjne, klienci A/B mają 1.3.17
   i po 25 różnych/brakujących plików. Przed nowym pomiarem trzeba
   zsynchronizować wszystkie kopie i potwierdzić manifestami ich zgodność.
@@ -58,18 +58,18 @@ Osiem przedmiotów użytkowych należy raportować oddzielnie:
 
 | Przedmiot / identyfikator | Scenariusze poza wspólną bezczynnością |
 |---|---|
-| Klucz-śrubokręt `wrenchscrewdrivertwoinoneSET` | naprawa mechaniczna i elektryczna, użycie przez AI |
-| Kompozytowy multitool `Multi-toolSET` | naprawa, spawanie, cięcie, gaśnica, światło, pasywna nauka, AI |
-| Bojowy multitool `combatmultitool` | powyższe funkcje narzędziowe, strzelanie, rykoszety, łuki, tarcza bez ostrzału i pod ostrzałem, AI |
+| Klucz-śrubokręt `aegiswrenchscrewdriver` | naprawa mechaniczna i elektryczna, użycie przez AI |
+| Kompozytowy multitool `aegiscompositetool` | naprawa, spawanie, cięcie, gaśnica, światło, pasywna nauka, AI |
+| Bojowy multitool `aegiscombattool` | powyższe funkcje narzędziowe, strzelanie, rykoszety, łuki, tarcza bez ostrzału i pod ostrzałem, AI |
 | Komunikator `aegisheadset` | zdrowy nosiciel, leczenie wielu efektów, ciśnienie, odtwarzanie anatomii w próbie z NT, szukanie baterii przez AI |
 | Komunikator Mk II `aegisheadsetmk2` | oddzielne powtórzenie prób Mk I oraz pochłanianie serii trafień |
 | Odkurzacz `aegisvacuum` | bez plecaka, bez zasilania, zasysanie przy małej i dużej liczbie łupów, filtry, wiele odkurzaczy |
 | Plecak `aegisvacuumpack` | bez odkurzacza, magazyn 0/1000/10000 sztuk, panel zamknięty/otwarty, szukanie, pobieranie, rozbiórka, fabrykacja, sprzedaż |
-| Kombinezon `descendantservosuit` | ramię wyłączone, naprawa urządzenia, spawanie ścian, obrona z prostą i trudną linią ognia, chwyt przedmiotu i osoby, ruch nosiciela, pływanie, sonar, AI |
+| Kombinezon `aegisservosuit` | ramię wyłączone, naprawa urządzenia, spawanie ścian, obrona z prostą i trudną linią ognia, chwyt przedmiotu i osoby, ruch nosiciela, pływanie, sonar, AI |
 
 Siedem ukrytych przedmiotów też ma być objęte testami, w kontekście ich
-funkcji: `toolwe`, `toolpl`, `tooldamageflag`, `toolexton`, `toolextoff`
-(multitool), `aegisvacuumpage` (magazyn), `descendantpulsebolt` (obrona).
+funkcji: `aegistoolwelder`, `aegistoolcutter`, `aegistooldamageflag`, `aegistoolfireon`, `aegistoolfireoff`
+(multitool), `aegisvacuumpage` (magazyn), `aegispulsebolt` (obrona).
 Oddzielnie policzyć ich liczbę, czas życia, tworzenie/usuwanie i pozostające
 referencje po zmianie trybu, końcu rundy oraz rozłączeniu.
 
@@ -191,7 +191,7 @@ natywna aktualizacja zawartości również należą do kosztu plecaka.
 
 ## Porządek w plikach
 
-- Paczka `MULTI-TOOL-V2/` nadal zawiera wyłącznie zasoby produkcyjne.
+- Paczka `System-Aegis/` nadal zawiera wyłącznie zasoby produkcyjne.
   Zachować identyfikatory przedmiotów, ścieżki zasobów i punktów Autorun,
   aby nie uszkodzić zapisów, Workshop ani skryptów ładowania.
 - Dodać jasny indeks dokumentacji, pomiarów oraz sposobów uruchamiania

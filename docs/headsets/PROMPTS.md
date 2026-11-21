@@ -3,8 +3,8 @@
 Grafiki powstały narzędziem **built-in imagegen**, z prawdziwym kanałem alfa.
 Pliki 1254×1254 zapisano bez przeróbek w:
 
-- `MULTI-TOOL-V2/Assets/Headsets/headset.png`
-- `MULTI-TOOL-V2/Assets/Headsets/headset-mk2.png`
+- `System-Aegis/Assets/AegisHeadsets/headset.png`
+- `System-Aegis/Assets/AegisHeadsets/headset-mk2.png`
 
 Prompt podstawowy:
 

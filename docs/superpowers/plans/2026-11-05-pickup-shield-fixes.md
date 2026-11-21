@@ -4,7 +4,7 @@
 
 **Goal:** Fix the reported inaccessible category list, missed ground loot, mixed filtered containers, connected wires and frontal bullet leaks.
 
-**Architecture:** Preserve server authority, item identity and bounded active-only scans. Fix the native GUI order and LuaCs array representation at their boundaries; retain whole containers when all descendants qualify, otherwise extract eligible contents. Diagnose projectile leaks against native collision timing before changing interception.
+**Architecture:** Preserve server authority, item identity and bounded active-only scans. Fix the native GUI order and LuaCs array representation at their boundaries; retain whole containers when all aegis qualify, otherwise extract eligible contents. Diagnose projectile leaks against native collision timing before changing interception.
 
 **Tech Stack:** Lua 5.2 / LuaCs, Barotrauma 1.13.5.0, Python unittest/Lupa, isolated native client.
 
@@ -28,7 +28,7 @@
 
 ### Task 1: Category overlay
 
-**Files:** `Lua/SalvageVacuum/client.lua` under the production mod; `tests/test_vacuum_client.py`; native GUI probe.
+**Files:** `Lua/AegisVacuum/client.lua` under the production mod; `tests/test_vacuum_client.py`; native GUI probe.
 **Interface:** `G.updateClient()` queues the open dropdown above panel order 10. `G.closePanel()` closes and releases it.
 
 - [x] Reproduce the native list order 1 under panel order 10; add a regression for overlay order and close lifecycle.
@@ -36,7 +36,7 @@
 
 ### Task 2: Safe, responsive loot selection
 
-**Files:** `Lua/SalvageVacuum/runtime.lua`; `tests/test_vacuum_pickup.py`; active scan regressions; native pickup probe.
+**Files:** `Lua/AegisVacuum/runtime.lua`; `tests/test_vacuum_pickup.py`; active scan regressions; native pickup probe.
 **Interfaces:** `G.portable(item) -> boolean`; `G.pickupTarget(item,ctx) -> item|nil`; bounded candidate refresh.
 
 - [x] Add failing tests for a wire connected only at sparse index 2, a filtered bag with allowed and excluded children, locks above a fallback child, and nearby ground loot after thousands of distant entries.
@@ -45,7 +45,7 @@
 
 ### Task 3: Frontal projectile leaks and release
 
-**Files:** `Lua/CombatTool/shield.lua` and geometry only as evidence requires; shield regression tests and native probe; README/VACUUM/verification docs; manifest.
+**Files:** `Lua/AegisCombat/shield.lua` and geometry only as evidence requires; shield regression tests and native probe; README/VACUUM/verification docs; manifest.
 **Interfaces:** native Projectile launch/collision/hitscan hooks continue to debit energy once and suppress damage only after the shield contact.
 
 - [x] Reproduce frontal physical and hitscan shots with real projectile types; trace native queued impacts and shield segment endpoints.

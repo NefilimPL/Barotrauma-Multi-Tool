@@ -111,5 +111,5 @@ Wersja 1.3.7 dodaje [optymalizacje czasu klatki](FRAME-TIME-VERIFICATION.md):
 renderowanie tarcz, odłożone narzędzia, właściciele pasywnych bonusów,
 porcjowany skan łupu i ponowne używanie GUI.
 
-Paczka: `output/MULTI-TOOL-V2-1.3.7.zip`. Zaktualizuj hosta oraz wszystkich
+Paczka: `output/System-Aegis-1.3.7.zip`. Zaktualizuj hosta oraz wszystkich
 klientów i uruchom ponownie grę oraz serwer.

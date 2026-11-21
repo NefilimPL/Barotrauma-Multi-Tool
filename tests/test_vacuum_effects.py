@@ -15,7 +15,7 @@ class VacuumEffectsTests(LuaCase):
             end},Vector2=function(x,y) return {X=x,Y=y} end,
                 Vector3=function(x,y,z) return {X=x,Y=y,Z=z} end,
                 Entity={FindEntityByID=function() return vacuum end}}
-            require('SalvageVacuum.audio').install(G,E)
+            require('AegisVacuum.audio').install(G,E)
         """)
 
     def test_suction_loops_once_and_stops_when_use_ends(self):
@@ -57,7 +57,7 @@ class VacuumEffectsTests(LuaCase):
 
     def test_flow_moves_smoothly_inward_and_fades_at_wrap(self):
         self.lua.execute("""
-            local V=require('SalvageVacuum.core')
+            local V=require('AegisVacuum.core')
             local a=V.flow(.31,3);local b=V.flow(.311,3)
             assert(b.distance<a.distance and math.abs(a.distance-b.distance)<1)
             assert(a.alpha>=0 and a.alpha<=1)

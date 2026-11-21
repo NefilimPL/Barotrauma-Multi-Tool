@@ -46,7 +46,7 @@ def generate():
     encoder = shutil.which('ffmpeg')
     if not encoder:
         raise SystemExit('ffmpeg with libvorbis is required')
-    target = ROOT / 'MULTI-TOOL-V2/Assets/Vacuum/Audio'
+    target = ROOT / 'System-Aegis/Assets/AegisVacuum/Audio'
     target.mkdir(parents=True, exist_ok=True)
     with tempfile.TemporaryDirectory() as temporary:
         for kind, duration in [('suction', 2.0), ('salvage', .22)]:

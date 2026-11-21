@@ -1,6 +1,6 @@
 # Combat assets
 
-Runtime PNGs are stored in `MULTI-TOOL-V2/Assets/Combat/` at the repository root.
+Runtime PNGs are stored in `System-Aegis/Assets/AegisCombat/` at the repository root.
 This document and the previews are development material outside the mod package.
 
 Generated using the built-in imagegen tool, 2026-10-30. Alpha was preserved;

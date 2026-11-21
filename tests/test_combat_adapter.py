@@ -9,7 +9,7 @@ class CombatAdapterTests(LuaCase):
 
     def test_bot_combat_permission_is_automatic_but_player_checkbox_is_preserved(self):
         self.lua.execute('''
-            G=require('CombatTool.game').new({InvSlotType={RightHand=1,LeftHand=2},InputType={Aim=1}})
+            G=require('AegisCombat.game').new({InvSlotType={RightHand=1,LeftHand=2},InputType={Aim=1}})
             local damage={Name='LightComponent',IsOn=false}
             gun.Components={damage}
             local combat={Identifier={Value='combat'},Weapon=gun,Enemy={}}
@@ -31,9 +31,9 @@ class CombatAdapterTests(LuaCase):
     def setUp(self):
         super().setUp()
         self.lua.execute('''
-            G = require('CombatTool.game').new({})
-            AI = require('CombatTool.ai')
-            gun = {Prefab={Identifier={Value='combatmultitool'}},ID=42,Condition=100,Components={}}
+            G = require('AegisCombat.game').new({})
+            AI = require('AegisCombat.ai')
+            gun = {Prefab={Identifier={Value='aegiscombattool'}},ID=42,Condition=100,Components={}}
             local slots = {}
             gun.OwnInventory={GetItemAt=function(i) return slots[i] end}
             function insert(i,energy,rod)
@@ -179,7 +179,7 @@ class CombatAdapterTests(LuaCase):
             G.cast=function() return {t=.5,kind='wall'} end
             G.state(gun).shield={x=0,y=0,radius=10,angle=0,halfAngle=1.05}
             gun.WorldPosition={X=0,Y=0}
-            require('CombatTool.shield').install(G,{})
+            require('AegisCombat.shield').install(G,{})
             result=G.findShield({x=20,y=0},{x=0,y=0},nil,nil)
         ''')
         self.assertIsNone(self.lua.globals().result)

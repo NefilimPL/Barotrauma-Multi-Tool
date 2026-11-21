@@ -17,7 +17,7 @@ class ShieldContactSamplingTests(LuaCase):
                 friendly=function() return false end,cast=function() end,event=function() end,
                 shieldDebit=function() return true,false end,
                 damage=function() damage=damage+1;point={X=500,Y=0} end}
-            require('CombatTool.shield').install(G,E)
+            require('AegisCombat.shield').install(G,E)
             a={item={WorldPosition={X=0,Y=0}},brokenUntil=0,contactTimes={}}
             b={item={WorldPosition={X=0,Y=0}},brokenUntil=0,contactTimes={}}
             ctx={valid=true,aim=true,damage=true,owner={}}

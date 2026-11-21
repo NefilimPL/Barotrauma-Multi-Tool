@@ -5,7 +5,7 @@ class VacuumSalvageTests(LuaCase):
     def setUp(self):
         super().setUp()
         self.lua.execute("""
-            R=require('SalvageVacuum.recipes')
+            R=require('AegisVacuum.recipes')
             iron={Identifier='iron',Health=100};copper={Identifier='copper',Health=100}
             E={ItemPrefab={Prefabs={iron=iron,copper=copper}}}
             function recipe(id,amount,min,max)

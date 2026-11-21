@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<infotexts language="Russian" nowhitespace="false" translatedname="Русский">
+  <entityname.aegiscompositetool>Композитный мультитул Aegis</entityname.aegiscompositetool>
+  <entitydescription.aegiscompositetool>Композитный инструмент: переключает сварку и резак, светит встроенным фонариком, добавляет режим огнетушителя и использует общий кислородный баллон.</entitydescription.aegiscompositetool>
+  <label.aegischangetool>Включить режим резака</label.aegischangetool>
+  <label.aegisenableextinguisher>Включить режим огнетушителя</label.aegisenableextinguisher>
+  <label.aegisenabledamage>Включить урон по NPC</label.aegisenabledamage>
+  <entityname.aegiswrenchscrewdriver>Отвертка и гаечный ключ 2-в-1 Aegis</entityname.aegiswrenchscrewdriver>
+  <entitydescription.aegiswrenchscrewdriver>Предназначен для инженеров-подводников, двойной щелчок правой кнопкой мыши для переключения гаечных ключей/отверток.</entitydescription.aegiswrenchscrewdriver>
+</infotexts>

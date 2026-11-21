@@ -27,7 +27,7 @@ class PassageCollisionTests(LuaCase):
                 return {Body={UserData={kind='Barotrauma.Structure'}},CollisionCategories=category,
                     CollidesWith=collides or 1,distance=distance}
             end
-            G={};require('CombatTool.physics').install(G,env)
+            G={};require('AegisCombat.physics').install(G,env)
         ''')
 
     def test_platform_and_stair_fixtures_do_not_bounce_rings(self):

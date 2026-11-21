@@ -4,7 +4,7 @@ from lua_support import LuaCase
 class VacuumCoreTests(LuaCase):
     def setUp(self):
         super().setUp()
-        self.lua.execute("V=require('SalvageVacuum.core')")
+        self.lua.execute("V=require('AegisVacuum.core')")
 
     def test_groups_split_at_200_and_keep_actual_instances(self):
         self.lua.execute("""

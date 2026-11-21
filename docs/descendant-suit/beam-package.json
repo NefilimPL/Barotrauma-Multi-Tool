@@ -1,8 +1,0 @@
-{
-  "archive": "MULTI-TOOL-V2-1.3.20-descendant-beams-2026-11-17.zip",
-  "files": 128,
-  "bytes": 28517155,
-  "sha256": "12016d63ea3622f24d687fae6d96517ac702f15966c729279519b65130d2840e",
-  "runtime_files": "client and server byte-identical",
-  "validation": "597 tests;18 XML/59 Lua;SP GPU3/3;joined MP10/10"
-}

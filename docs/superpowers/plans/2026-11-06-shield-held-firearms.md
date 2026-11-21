@@ -27,7 +27,7 @@
 
 ### Task 1: Align shield mount and verify native damage
 
-**Files:** `MULTI-TOOL-V2/Lua/CombatTool/shield.lua`, `visuals.lua`, `tests/test_combat_shield_network.py`, `tests/runtime/shield_held_probe.lua`, release/verification documentation.
+**Files:** `System-Aegis/Lua/AegisCombat/shield.lua`, `visuals.lua`, `tests/test_combat_shield_network.py`, `tests/runtime/shield_held_probe.lua`, release/verification documentation.
 
 **Interfaces:** Existing `G.findShield`, `G.updateShield` and render snapshots; no protocol change.
 

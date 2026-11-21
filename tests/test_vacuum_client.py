@@ -43,7 +43,7 @@ class VacuumClientTests(LuaCase):
                 request=function(a,i,t,v) requests[#requests+1]={action=a,item=i,target=t,
                     filters=v.filters,category=v.category,kind=v.kind,confirm=v.confirm,targets=v.targets} end,
                 patch=function(n,c,m,fn) patches[n]=fn end}
-            require('SalvageVacuum.client').install(G,E)
+            require('AegisVacuum.client').install(G,E)
             function button(label)
                 for _,w in ipairs(widgets) do if w.kind=='button' and w.Text==label then return w end end
                 error('missing button '..label)
@@ -62,26 +62,26 @@ class VacuumClientTests(LuaCase):
                 (w.ToolTip:find('Iron',1,true) or w.ToolTip:find('Copper',1,true)) then cells[#cells+1]=w end end
             cells[1].OnClicked();cells[2].OnClicked()
             assert(cells[1].Selected and cells[2].Selected,'second selection replaced first')
-            assert(not button('vacuum.trash').Enabled and not button('vacuum.take').Enabled,
+            assert(not button('aegisvacuum.trash').Enabled and not button('aegisvacuum.take').Enabled,
                 'single-target actions must not pick an arbitrary item from a multiselection')
-            button('vacuum.takeselected').OnClicked()
+            button('aegisvacuum.takeselected').OnClicked()
             local r=requests[#requests];assert(r.action=='batch' and #r.targets==2)
             cells[1].OnClicked();assert(not cells[1].Selected and cells[2].Selected)
             G.onSnapshot({vacuum=pack.ID,pack=pack.ID,charge=0,groups=0,count=0,busy=false,
                 page=0,pages=1,packs={pack.ID},rows={}})
-            assert(not button('vacuum.takeselected').Enabled,'stale selection survived removal from storage')
+            assert(not button('aegisvacuum.takeselected').Enabled,'stale selection survived removal from storage')
         ''')
 
     def test_visible_storage_button_opens_backpack_without_nozzle(self):
         self.lua.execute("""
-            G.updateClient();local b=button('vacuum.open');assert(b.Visible)
+            G.updateClient();local b=button('aegisvacuum.open');assert(b.Visible)
             b.OnClicked();assert(requests[#requests].action=='open' and requests[#requests].item==pack)
         """)
 
     def test_filter_controls_protect_and_allow_independently_on_blocked_catalog_rows(self):
         self.lua.execute("""
             E.Color=function(r,g,b,a) return {r=r,g=g,b=b,a=a} end
-            G.openPanel(pack);button('vacuum.filters').OnClicked()
+            G.openPanel(pack);button('aegisvacuum.filters').OnClicked()
             local ore={id=0,kind='chalcopyrite',name='Chalcopyrite',count=1,group=0,
                 condition=0,quality=0,blocked=true}
             local snapshot={vacuum=pack.ID,pack=pack.ID,charge=0,groups=0,count=0,busy=false,
@@ -92,11 +92,11 @@ class VacuumClientTests(LuaCase):
                 if w.kind=='button' and (w.ToolTip or ''):find('Chalcopyrite',1,true) then cell=w end
             end
             assert(cell and not cell.Enabled)
-            button('vacuum.rule.protect').OnClicked();assert(cell.Enabled);cell.OnClicked()
+            button('aegisvacuum.rule.protect').OnClicked();assert(cell.Enabled);cell.OnClicked()
             assert(requests[#requests].action=='protect' and requests[#requests].target==1)
             ore.protected=true;G.onSnapshot(snapshot)
-            assert(cell.Color.g>cell.Color.r and cell.ToolTip:find('vacuum.protected',1,true))
-            button('vacuum.rule.allow').OnClicked();assert(cell.Enabled);cell.OnClicked()
+            assert(cell.Color.g>cell.Color.r and cell.ToolTip:find('aegisvacuum.protected',1,true))
+            button('aegisvacuum.rule.allow').OnClicked();assert(cell.Enabled);cell.OnClicked()
             assert(requests[#requests].action=='allow' and requests[#requests].kind=='chalcopyrite')
         """)
 
@@ -111,8 +111,8 @@ class VacuumClientTests(LuaCase):
                 if w.kind=='text' and w.Text and w.Text:find('62 / 200',1,true) then capacity=w.Text end
                 if w.kind=='text' and w.Text and w.Text:find('9 / 598',1,true) then progress=w.Text end
             end
-            assert(capacity and capacity:find('vacuum.groups',1,true) and capacity:find('vacuum.items',1,true))
-            assert(progress and progress:find('vacuum.salvaged',1,true) and progress:find('vacuum.skipped',1,true))
+            assert(capacity and capacity:find('aegisvacuum.groups',1,true) and capacity:find('aegisvacuum.items',1,true))
+            assert(progress and progress:find('aegisvacuum.salvaged',1,true) and progress:find('aegisvacuum.skipped',1,true))
         """)
 
     def test_dropped_categories_are_above_panel_and_release_keyboard_on_close(self):
@@ -132,7 +132,7 @@ class VacuumClientTests(LuaCase):
 
     def test_visible_button_prefers_operational_two_handed_nozzle(self):
         self.lua.execute("""
-            held=vacuum;G.updateClient();button('vacuum.open').OnClicked()
+            held=vacuum;G.updateClient();button('aegisvacuum.open').OnClicked()
             assert(requests[#requests].item==vacuum)
         """)
 
@@ -162,22 +162,22 @@ class VacuumClientTests(LuaCase):
 
     def test_inventory_button_is_hidden_without_a_pack(self):
         self.lua.execute("""
-            owned={};G.updateClient();assert(not button('vacuum.open').Visible)
+            owned={};G.updateClient();assert(not button('aegisvacuum.open').Visible)
         """)
 
     def test_dispose_removes_button_and_open_window_from_gui(self):
         self.lua.execute("""
-            G.updateClient();local b=button('vacuum.open');b.OnClicked()
+            G.updateClient();local b=button('aegisvacuum.open');b.OnClicked()
             G.disposeClient();assert(not b.Visible and not b.queued and b.RectTransform.Parent==nil)
         """)
 
     def test_ending_round_hides_launcher_and_closes_window_with_old_character_remaining(self):
         self.lua.execute("""
-            E.Game={RoundStarted=true};G.updateClient();button('vacuum.open').OnClicked()
+            E.Game={RoundStarted=true};G.updateClient();button('aegisvacuum.open').OnClicked()
             G.onSnapshot({vacuum=pack.ID,pack=pack.ID,charge=0,groups=0,count=0,
                 busy=false,page=0,pages=1,packs={pack.ID},rows={}})
             E.Game.RoundStarted=false;G.updateClient()
-            assert(not button('vacuum.open').Visible)
+            assert(not button('aegisvacuum.open').Visible)
             for _,w in ipairs(widgets) do if w.kind=='frame' and w.RectTransform.Parent==E.GUI.GUI.Canvas then
                 assert(not w.Visible)
             end end
@@ -190,7 +190,7 @@ class VacuumClientTests(LuaCase):
             G.openPanel(pack)
             G.onSnapshot({vacuum=pack.ID,pack=pack.ID,charge=0,groups=0,count=0,
                 busy=false,page=0,pages=1,packs={pack.ID,second.ID},rows={}})
-            button('vacuum.pack 1/2').OnClicked()
+            button('aegisvacuum.pack 1/2').OnClicked()
             assert(requests[#requests].action=='open' and requests[#requests].item==second)
         """)
 
@@ -201,20 +201,20 @@ class VacuumClientTests(LuaCase):
                 page=0,pages=1,packs={pack.ID},rows={{id=10,kind='iron',name='Iron',count=100,condition=80,quality=3,group=1}}})
             local icon,tile
             for _,w in ipairs(widgets) do
-                assert(w.Text~='vacuum.drop')
+                assert(w.Text~='aegisvacuum.drop')
                 if w.kind=='image' then icon=w end
                 if w.kind=='button' and w.ToolTip and w.ToolTip:find('Iron',1,true) then tile=w end
-                if w.kind=='button' and w.Text and w.Text:find('vacuum.pack',1,true) then assert(not w.Visible) end
+                if w.kind=='button' and w.Text and w.Text:find('aegisvacuum.pack',1,true) then assert(not w.Visible) end
             end
             assert(icon and tile and tile.Text=='')
-            tile.OnClicked();button('vacuum.stack').OnClicked()
+            tile.OnClicked();button('aegisvacuum.stack').OnClicked()
             assert(requests[#requests].action=='stack' and requests[#requests].target==10)
         """)
 
     def test_pause_hides_custom_window_instead_of_covering_native_menu(self):
         self.lua.execute("""
             G.openPanel(pack);E.GUI.GUI.PauseMenuOpen=true;G.updateClient()
-            assert(not button('vacuum.open').Visible)
+            assert(not button('aegisvacuum.open').Visible)
             for _,w in ipairs(widgets) do if w.kind=='frame' and w.RectTransform.Parent==E.GUI.GUI.Canvas then
                 assert(not w.Visible)
             end end
@@ -227,7 +227,7 @@ class VacuumClientTests(LuaCase):
             assert(dropdown and #dropdown.items==10)
             dropdown.OnSelected(nil,'medical')
             assert(requests[#requests].category=='medical')
-            button('vacuum.filters').OnClicked()
+            button('aegisvacuum.filters').OnClicked()
             assert(requests[#requests].filters)
             G.onSnapshot({vacuum=pack.ID,pack=pack.ID,charge=0,groups=0,count=0,busy=false,page=0,pages=1,
                 filters=true,category='medical',search='',group=0,packs={pack.ID},rows={{id=0,kind='iron',name='Iron',count=1,condition=0,quality=0,group=0,excluded=false}}})
@@ -242,8 +242,8 @@ class VacuumClientTests(LuaCase):
                 rows={{id=10,kind='iron',name='Iron',count=1,condition=100,quality=0,group=1}}}
             G.onSnapshot(s)
             for _,w in ipairs(widgets) do if w.kind=='button' and w.ToolTip and w.ToolTip:find('Iron',1,true) then w.OnClicked();break end end
-            button('vacuum.trash').OnClicked();assert(requests[#requests].action=='preparetrash')
+            button('aegisvacuum.trash').OnClicked();assert(requests[#requests].action=='preparetrash')
             s.trashTarget=10;s.trashToken=7;s.trashCount=1;G.onSnapshot(s)
-            button('vacuum.trashconfirm 1').OnClicked()
+            button('aegisvacuum.trashconfirm 1').OnClicked()
             assert(requests[#requests].action=='trash' and requests[#requests].confirm==7)
         """)

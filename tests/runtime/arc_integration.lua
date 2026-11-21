@@ -1,6 +1,6 @@
 -- Disposable server only: real characters, ray casts, afflictions and match FF.
-local G=BMTCombat
-local U=require('CombatTool.util')
+local G=AegisCombat
+local U=require('AegisCombat.util')
 local created,results={},{}
 local random=math.random
 local friendlyFire=Game.ServerSettings.AllowFriendlyFire
@@ -8,7 +8,7 @@ local function track(entity) created[#created+1]=entity;return entity end
 local function check(name,fn)
     local ok,err=pcall(fn)
     results[#results+1]=(ok and 'PASS ' or 'FAIL ')..name..(ok and '' or ': '..tostring(err))
-    print('[BMT ARC] '..results[#results])
+    print('[Aegis ARC] '..results[#results])
 end
 local origin=Submarine.MainSub.WorldPosition+Vector2(0,5000)
 for n=1,20 do
@@ -16,14 +16,14 @@ for n=1,20 do
     origin=origin+Vector2(0,500)
 end
 local function human(position,team)
-    local c=track(Character.Create('human',position,'bmt-arc-'..team,nil,0,false,false,true,nil,true,false))
+    local c=track(Character.Create('human',position,'aegis-arc-'..team,nil,0,false,false,true,nil,true,false))
     c.TeamID=team;c.Enabled=true;c.GodMode=false
     return c
 end
 local owner=human(origin-Vector2(250,0),CharacterTeamType.Team1)
 local enemy=human(origin+Vector2(35,0),CharacterTeamType.Team2)
 local ally=human(origin+Vector2(35,600),CharacterTeamType.Team1)
-local gun=track(Item(ItemPrefab.Prefabs['combatmultitool'],origin,nil))
+local gun=track(Item(ItemPrefab.Prefabs['aegiscombattool'],origin,nil))
 local function discharge(target)
     local point=target.AnimController.MainLimb.WorldPosition-Vector2(35,0)
     local ring={owner=owner,weapon=gun,damageMultiplier=1}
@@ -72,4 +72,4 @@ end)
 math.random=random
 Game.ServerSettings.AllowFriendlyFire=friendlyFire
 for i=#created,1,-1 do if not created[i].Removed then created[i].Remove() end end
-File.Write('LocalMods/MULTI-TOOL-V2/arc-results.txt',table.concat(results,'\n'))
+File.Write('LocalMods/System-Aegis/arc-results.txt',table.concat(results,'\n'))

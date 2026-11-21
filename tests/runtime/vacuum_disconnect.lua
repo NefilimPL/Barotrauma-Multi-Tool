@@ -1,6 +1,6 @@
 -- Test only. Server fixture: 200 recyclable tools and 20 irreducible raw items.
 local R=assert(VacuumExtended)
-local G=BMTVacuum
+local G=AegisVacuum
 local player
 for client in Client.ClientList do if client.Name=='VacuumA' then player=client.Character end end
 if not _G.VacuumDisconnectRestoreOnly then
@@ -45,7 +45,7 @@ function R.verifyDisconnect(label)
             if item.Tags:find(R.prefix..'disconnectraw',1,true) then raw=raw+1 end
         end end
         assert(raw==20,'tagged raw items lost '..raw)
-        local plan=require('SalvageVacuum.recipes').plan(_G,
+        local plan=require('AegisVacuum.recipes').plan(_G,
             {AllowDeconstruct=true,Condition=100,MaxCondition=100,Prefab=ItemPrefab.Prefabs['wrench']},R.vacuum)
         assert(plan,'no native wrench recipe')
         local yield={};for _,p in ipairs(plan) do yield[p.kind]=(yield[p.kind] or 0)+1 end

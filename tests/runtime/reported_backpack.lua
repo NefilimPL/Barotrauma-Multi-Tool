@@ -1,14 +1,14 @@
 -- Disposable native singleplayer reproduction for reported floor/shop bugs.
 assert(CLIENT and Game.IsSingleplayer and Game.RoundStarted)
-local G,U=BMTVacuum,require('CombatTool.util')
+local G,U=AegisVacuum,require('AegisCombat.util')
 local results={}
 local function check(label,fn)
  local ok,err=pcall(fn);results[#results+1]=(ok and 'PASS ' or 'FAIL ')..label..(ok and '' or ': '..tostring(err))
- File.Write('LocalMods/MULTI-TOOL-V2/reported-backpack-results.txt',table.concat(results,'\n'));print(results[#results])
+ File.Write('LocalMods/System-Aegis/reported-backpack-results.txt',table.concat(results,'\n'));print(results[#results])
 end
 local room
 for h in Hull.HullList do if h.Submarine==Submarine.MainSub then room=h;break end end
-local c=Character.Create('human',room.WorldPosition,'bmt-bag-reported',nil,0,false,true,true,nil,true,false)
+local c=Character.Create('human',room.WorldPosition,'aegis-bag-reported',nil,0,false,true,true,nil,true,false)
 c.GodMode=true;c.AIController.Enabled=false;Character.Controlled=c
 local function create(id) return Item(ItemPrefab.Prefabs[id],room.WorldPosition,nil) end
 local pack,page=create('aegisvacuumpack'),create('aegisvacuumpage')
@@ -20,10 +20,10 @@ local manager=LuaUserData.CreateStatic('Barotrauma.CargoManager')(nil)
 local function listed(item)
  local found=false;U.each(manager.GetSellableItems(c),function(it) if it==item then found=true end end);return found
 end
-local tool=create('combatmultitool')
+local tool=create('aegiscombattool')
 assert(G.insert(pack,tool,c))
 check('stored empty combat multitool is sellable',function() assert(listed(tool)) end)
-local manual=create('combatmultitool')
+local manual=create('aegiscombattool')
 assert(c.Inventory.TryPutItem(manual,c,{InvSlotType.Any}))
 check('manual insert empty combat multitool stays sellable',function()
  assert(listed(manual));assert(G.insertBatch(ctx,{manual.ID}));assert(G.has(pack,manual));assert(listed(manual))
@@ -52,7 +52,7 @@ check('floor mode collects dropped loaded combat multitool but leaves cabinet co
  assert(not G.pickupTarget(copper,ctx) and not G.pickupTarget(cabinet,ctx))
 end)
 check('production suction collects a dropped loaded welder without extracting cabinet contents',function()
- local bot=Character.Create('human',Submarine.MainSub.WorldPosition+Vector2(0,2500),'bmt-floor-loop',nil,0,false,true,true,nil,true,false)
+ local bot=Character.Create('human',Submarine.MainSub.WorldPosition+Vector2(0,2500),'aegis-floor-loop',nil,0,false,true,true,nil,true,false)
  bot.GodMode=true;bot.AIController.Enabled=false
  local nozzle,cell,bagPack,storage=create('aegisvacuum'),create('batterycell'),create('aegisvacuumpack'),create('aegisvacuumpage')
  assert(bot.Inventory.TryPutItem(bagPack,bot,{InvSlotType.Bag}))

@@ -1,14 +1,14 @@
 -- Isolated singleplayer only: genuine cabinet, materials, fabrication and icon grid.
 assert(CLIENT and Game.IsSingleplayer and Game.RoundStarted)
-local G=BMTVacuum
-local U=require('CombatTool.util')
+local G=AegisVacuum
+local U=require('AegisCombat.util')
 local R={rows={}}
 VacuumGridTest=R
 function R.check(name,fn)
     local ok,err=pcall(fn)
     R.rows[#R.rows+1]=(ok and 'PASS ' or 'FAIL ')..name..(ok and '' or ': '..tostring(err))
     print('[VACUUM GRID] '..R.rows[#R.rows])
-    File.Write('LocalMods/MULTI-TOOL-V2/vacuum-grid-results.txt',table.concat(R.rows,'\n'))
+    File.Write('LocalMods/System-Aegis/vacuum-grid-results.txt',table.concat(R.rows,'\n'))
     return ok
 end
 local room;for hull in Hull.HullList do if hull.Submarine==Submarine.MainSub then room=hull;break end end

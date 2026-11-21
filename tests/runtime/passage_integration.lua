@@ -1,22 +1,22 @@
 -- Disposable server only: native platform, hatch and breached-wall fixtures.
 -- Optional physics_baseline.lua is a copy of the pre-1.1.9 physics module.
-local G=BMTCombat
-local U=require('CombatTool.util')
+local G=AegisCombat
+local U=require('AegisCombat.util')
 LuaUserData.RegisterType('Barotrauma.Structure')
 LuaUserData.RegisterType('Barotrauma.StructurePrefab')
 local S=LuaUserData.CreateStatic('Barotrauma.Structure')
 local SP=LuaUserData.CreateStatic('Barotrauma.StructurePrefab')
 local legacy
-if File.Exists('LocalMods/MULTI-TOOL-V2/Lua/Tests/physics_baseline.lua') then
+if File.Exists('LocalMods/System-Aegis/Lua/Tests/physics_baseline.lua') then
     legacy={}
-    dofile('LocalMods/MULTI-TOOL-V2/Lua/Tests/physics_baseline.lua').install(legacy,_G)
+    dofile('LocalMods/System-Aegis/Lua/Tests/physics_baseline.lua').install(legacy,_G)
 end
 local created,results={},{}
 local function track(value) created[#created+1]=value;return value end
 local function check(name,fn)
     local ok,err=pcall(fn)
     results[#results+1]=(ok and 'PASS ' or 'FAIL ')..name..(ok and '' or ': '..tostring(err))
-    print('[BMT PASSAGE] '..results[#results])
+    print('[Aegis PASSAGE] '..results[#results])
 end
 local wallPrefab
 for wall in S.WallList do
@@ -61,4 +61,4 @@ check('closed horizontal hatch blocks, fully open hatch passes',function()
     assert(not G.cast(a,b,8,nil,true),'open hatch still blocks the ring')
 end)
 for i=#created,1,-1 do if not created[i].Removed then created[i].Remove() end end
-File.Write('LocalMods/MULTI-TOOL-V2/passage-results.txt',table.concat(results,'\n'))
+File.Write('LocalMods/System-Aegis/passage-results.txt',table.concat(results,'\n'))

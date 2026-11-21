@@ -2,7 +2,7 @@
 if not CLIENT then return end
 Timer.Wait(function()
     local gun,batch
-    local G=BMTCombat
+    local G=AegisCombat
     local previous=G.authoritative
     local remote,cast=G.remote,G.cast
     local ok,err=pcall(function()
@@ -14,7 +14,7 @@ Timer.Wait(function()
         local Sort=LuaUserData.CreateEnumTable('Microsoft.Xna.Framework.Graphics.SpriteSortMode')
         batch=SB(gm.Instance.GraphicsDevice)
         local cam=gm.GameScreen.Cam
-        gun=Item(ItemPrefab.Prefabs['combatmultitool'],Vector2.Zero,nil)
+        gun=Item(ItemPrefab.Prefabs['aegiscombattool'],Vector2.Zero,nil)
         assert(Entity.FindEntityByID(gun.ID)==gun,'native entity lookup failed')
         G.authoritative=false
         for _,dir in ipairs({1,-1}) do
@@ -43,6 +43,6 @@ Timer.Wait(function()
     if batch then batch.Dispose() end
     local result=ok and 'PASS native entity lookup and GPU shield drawing: 4 angles x 2 facings, stale snapshot position ignored'
         or 'FAIL '..tostring(err)
-    File.Write('LocalMods/MULTI-TOOL-V2/shield-client-results.txt',result)
-    print('[BMT SHIELD CLIENT] '..result)
+    File.Write('LocalMods/System-Aegis/shield-client-results.txt',result)
+    print('[Aegis SHIELD CLIENT] '..result)
 end,8000)

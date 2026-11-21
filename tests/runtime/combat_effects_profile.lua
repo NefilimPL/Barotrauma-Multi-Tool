@@ -6,7 +6,7 @@ local gm=LuaUserData.CreateStatic('Barotrauma.GameMain')
 local SB=LuaUserData.CreateStatic('Microsoft.Xna.Framework.Graphics.SpriteBatch')
 local Blend=LuaUserData.CreateStatic('Microsoft.Xna.Framework.Graphics.BlendState')
 local Sort=LuaUserData.CreateEnumTable('Microsoft.Xna.Framework.Graphics.SpriteSortMode')
-local G=BMTCombat
+local G=AegisCombat
 local batch=SB(gm.Instance.GraphicsDevice)
 local cam=gm.GameScreen.Cam
 local oldAuthority,oldRemote=G.authoritative,G.remote
@@ -31,4 +31,4 @@ end
 function P.finish()
     G.clearVisuals();G.authoritative=oldAuthority;G.remote=oldRemote;batch.Dispose()
 end
-File.Write('LocalMods/MULTI-TOOL-V2/combat-profile-ready.txt','PASS GPU probe ready')
+File.Write('LocalMods/System-Aegis/combat-profile-ready.txt','PASS GPU probe ready')

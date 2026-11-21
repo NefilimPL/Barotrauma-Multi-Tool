@@ -25,7 +25,7 @@
 ### Task 1: Client impact profile and performance correction
 
 - [x] Run tests/runtime/combat_effects_profile.lua on the isolated GPU client; record event and draw costs.
-- [x] Add a failing regression for the measured expensive path, implement the correction in CombatTool/visuals.lua, and compare the native profile.
+- [x] Add a failing regression for the measured expensive path, implement the correction in AegisCombat/visuals.lua, and compare the native profile.
 
 ### Task 2: Batch withdrawal and floor filter
 
