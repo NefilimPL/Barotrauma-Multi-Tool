@@ -1,5 +1,5 @@
 return {
-    identifier='descendantservosuit', protocol='bmt.descendant.v5',
+    identifier='descendantservosuit', protocol='bmt.descendant.v6',
     -- Longer visible links stay folded inside the original operating radius.
     reach=118, upper=76, lower=66, repairBeam=68, toolOffset=24, toolStandOff=14,
     contactSlack=32,contactGrace=.4,combatRange=1800,grabRange=300,

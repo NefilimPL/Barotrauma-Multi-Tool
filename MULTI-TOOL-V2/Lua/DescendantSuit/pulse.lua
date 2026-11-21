@@ -56,6 +56,7 @@ function M.install(G,E)
                 local sim=E.ConvertUnits.ToSimUnits(pos)
                 projectile.Shoot(owner,sim,sim,math.atan2(p.Y-muzzle.y,p.X-muzzle.x),nil,true)
                 s.shots=((s.shots or 0)+1)%65536
+                s.ballisticShot=profile.ballistic==true
                 s.lastPulse={x=p.X,y=p.Y};s.shotTime=G.now
             end,20)
         end

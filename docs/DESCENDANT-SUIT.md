@@ -1,6 +1,6 @@
 # Kombinezon serwomanipulacyjny Descendants V2
 
-Wersja **1.3.24** dla Barotrauma 1.13.5.0 / LuaCs c6e8829. Identyfikator przedmiotu: `descendantservosuit`. Obie strony multiplayera muszą mieć tę samą wersję moda. Komunikaty kombinezonu używają protokołu v5. [Poprawiona grafika szafki i porównanie z grą](DESCENDANT-RACK.md). [Próby funkcji i zmierzone prędkości pływania w 1.3.18](DESCENDANT-SERVICE.md).
+Wersja **1.3.25** dla Barotrauma 1.13.5.0 / LuaCs c6e8829. Identyfikator przedmiotu `descendantservosuit`. Obie strony multiplayera muszą mieć tę samą wersję moda. Komunikaty kombinezonu używają protokołu v6. [Poprawiona grafika szafki i porównanie z grą](DESCENDANT-RACK.md) · [Próby funkcji i zmierzone prędkości pływania w 1.3.18](DESCENDANT-SERVICE.md).
 
 [Otwórz animowany podgląd V2](descendant-suit/index.html). Działa lokalnie, bez instalowania bibliotek. Pokazuje nowy pancerz, oba stany hełmu, ramię, impulsy, iskry, wirniki i dźwięki. To demonstracja zasobów; nie zastępuje próby w grze.
 
@@ -11,7 +11,7 @@ Wersja **1.3.24** dla Barotrauma 1.13.5.0 / LuaCs c6e8829. Identyfikator przedmi
 
 Kombinezon zachowuje smukłe proporcje. Obecna poprawka dodaje trwałe podtrzymywanie celu, wspólną końcówkę promieni, tolerancję ruchu podczas naprawy, chowane panele i natywny sonar. [Zawieszenie osoby i schowane panele](descendant-suit/controls-hold.png), [osobny sonar](descendant-suit/controls-sonar.png), [szersza naprawa](descendant-suit/controls-repair.png), [przedmiot na ziemi](descendant-suit/controls-ground.png), [impuls z końcówki](descendant-suit/controls-pulse.png). Zrzuty pochodzą z gry, z włączonym oświetleniem i bez obróbki obrazu.
 
-Aktualna paczka to `output/MULTI-TOOL-V2-1.3.24.zip`.
+Aktualna paczka to `output/MULTI-TOOL-V2-1.3.25.zip`.
 
 Załóż kombinezon w slocie ubrania zewnętrznego. Włóż baterię lub pręt reaktora do pierwszego slotu i obsługiwaną skrzynkę amunicji do drugiego. Obieg oddechowy i ramię korzystają z zasilania kombinezonu. Przycisk „Ramię włączone / Ramię wyłączone” pokazuje stan, a ponowne włączenie przywraca ostatni tryb.
 
@@ -57,6 +57,22 @@ Zasilany stojak na kombinezony ładuje zainstalowane źródło — baterię lub 
 Sonar po zwinięciu pokazuje wyłącznie mały radar. `+` rozwija ustawienia; wyłączony i zwinięty sonar jest całkowicie ukryty. Przycisk **Sonar** po prawej ponownie otwiera ustawienia. **Minerały** uruchamia natywny skaner złóż w trybie aktywnym. Aktywna funkcja ramienia ma zielonkawe podświetlenie.
 
 Pływanie zmierzono na tej samej postaci: zasilany kombinezon **2,336 m/s**, zwykły **2,226**, głębinowy **1,813**, UKOS **2,326**; odpowiednio około **+5%, +29% i +0,4%**. Bez zasilania nowy kombinezon osiągnął **2,226 m/s**. To wynik opisanej próby, a nie stała premia procentowa dla każdej postaci. [Metoda i aktualna weryfikacja](DESCENDANT-SERVICE.md).
+
+## Obrażenia ramienia
+
+Wartości bazowe przed uwzględnieniem pancerza i odporności trafionej części ciała.
+
+| Amunicja | Bezpośrednie obrażenia | Dodatkowe efekty |
+|---|---|---|
+| Pulsacyjna | 16 poparzeń + 4 od eksplozji | 0,15 ogłuszenia |
+| Potrójna pulsacyjna | 7 poparzeń + 3 od eksplozji na promień. Do 30 łącznie przy trafieniu trzema promieniami | 3 promienie na strzał |
+| Gauss standardowa | 12 ran szarpanych | 0,8 krwawienia |
+| Gauss z fizykorium | 20 ran szarpanych | 1,2 krwawienia |
+| Gauss wybuchowa | 19 obrażeń od eksplozji | 0,20 ogłuszenia przy trafieniu |
+| Gauss przebijająca | 9 ran szarpanych za trafienie | 1,5 krwawienia za trafienie i do dwóch trafień w obiekty fizyczne. Mogą to być dwie części ciała jednego celu |
+
+W 1.3.25 pociski Gaussa mają większy sprite, szybszy lot, smugę, własny
+odgłos i błysk trafienia. Oba warianty lasera kończą wiązkę błyskiem i iskrami.
 
 ## Zasoby
 

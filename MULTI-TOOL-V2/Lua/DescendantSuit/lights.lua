@@ -28,6 +28,7 @@ function M.install(G,E)
         move(s.lights.helmet,owner,head,powered and 420 or 0,E.Color(190,220,255,170))
         local repairing=s.active and s.target and (s.target.kind=='repair' or s.target.kind=='weld')
         local color=flash and E.Color(255,60,65,230) or repairing and E.Color(60,175,255,210) or E.Color(185,220,255,110)
+        if flash and s.ballisticShot then color=E.Color(255,202,128,200) end
         move(s.lights.tool,owner,repairing and point or muzzle,powered and (flash and 300 or 220) or 0,color)
     end
 end

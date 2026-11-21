@@ -42,6 +42,7 @@ function M.install(G,E)
             m.WriteBoolean(s.open==true);m.WriteBoolean(s.swimming==true);m.WriteSingle(G.energy(s.item))
             m.WriteBoolean(s.active==true)
             m.WriteUInt16(s.shots or 0)
+            m.WriteBoolean(s.ballisticShot==true)
             m.WriteBoolean(s.sonar==true);m.WriteBoolean(s.sonarActive~=false)
             m.WriteBoolean(s.minerals==true)
             m.WriteUInt16(s.repairing and not s.repairing.Removed and s.repairing.ID or 0)
@@ -67,6 +68,7 @@ function M.install(G,E)
                 local open,swimming,charge=m.ReadBoolean(),m.ReadBoolean(),m.ReadSingle()
                 local active=m.ReadBoolean()
                 local shots=m.ReadUInt16()
+                local ballisticShot=m.ReadBoolean()
                 local sonar,sonarActive=m.ReadBoolean(),m.ReadBoolean()
                 local minerals=m.ReadBoolean()
                 local repairing=E.Entity.FindEntityByID(m.ReadUInt16())
@@ -94,7 +96,7 @@ function M.install(G,E)
                 if G.is(item) and owner and mode and charge==charge then
                     local s=G.state(item);seen[item]=true
                     s.owner=owner;s.mode=mode;s.open=open;s.swimming=swimming;s.charge=charge
-                    s.active=active and target~=nil;s.target=target;s.received=G.now;s.shots=shots
+                    s.active=active and target~=nil;s.target=target;s.received=G.now;s.shots=shots;s.ballisticShot=ballisticShot
                     s.sonar=sonar;s.sonarActive=sonarActive;s.lastPulse=lastPulse
                     s.minerals=minerals
                     s.repairing=repairing

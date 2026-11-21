@@ -4,6 +4,36 @@ import xml.etree.ElementTree as ET
 
 
 class DescendantBeamRenderingTests(LuaCase):
+    def test_gauss_projectiles_have_larger_sprites_and_bounded_native_effects(self):
+        mod = Path(__file__).resolve().parents[1] / 'MULTI-TOOL-V2'
+        items = ET.parse(mod / 'descendant_suit.xml').getroot()
+        for variant in ('gauss', 'physicorium', 'explosive', 'piercing'):
+            with self.subTest(variant=variant):
+                bolt = items.find(f"Item[@identifier='descendant{variant}bolt']")
+                scale = float(bolt.get('scale'))
+                self.assertGreaterEqual(scale, .30)
+                self.assertAlmostEqual(scale * float(bolt.find('Body').get('width')), 50 * .18)
+                self.assertAlmostEqual(scale * float(bolt.find('Body').get('height')), 4 * .18)
+                projectile = bolt.find('Projectile')
+                self.assertNotEqual(projectile.get('hitscan'), 'true')
+                self.assertGreaterEqual(float(projectile.get('launchimpulse')), 30)
+                trail = projectile.find("StatusEffect[@type='OnActive']/ParticleEmitter")
+                self.assertIsNotNone(trail)
+                self.assertIn(trail.get('particle'), ('ammotrail', 'ammotrailwater'))
+                self.assertLessEqual(float(trail.get('particlespersecond')), 30)
+                hit = projectile.find("StatusEffect[@type='OnImpact']/ParticleEmitter[@particle='shrapnel']")
+                self.assertIsNotNone(hit)
+
+    def test_both_pulse_variants_have_visible_impact_flashes_without_area_damage(self):
+        mod = Path(__file__).resolve().parents[1] / 'MULTI-TOOL-V2'
+        items = ET.parse(mod / 'descendant_suit.xml').getroot()
+        for variant in ('pulse', 'tri'):
+            bolt = items.find(f"Item[@identifier='descendant{variant}bolt']")
+            flash = bolt.find("Projectile/StatusEffect[@type='OnImpact']/ParticleEmitter[@particle='muzzleflashpulselaser']")
+            self.assertIsNotNone(flash)
+            self.assertGreaterEqual(float(flash.get('scalemax')), .12)
+            self.assertIsNone(bolt.find('.//Explosion'))
+
     def test_pulse_particle_does_not_shorten_the_ray_with_uniform_scaling(self):
         mod=Path(__file__).resolve().parents[1]/'MULTI-TOOL-V2'
         bolt=ET.parse(mod/'descendant_suit.xml').getroot().find("Item[@identifier='descendantpulsebolt']")

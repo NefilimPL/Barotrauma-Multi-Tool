@@ -3,6 +3,13 @@
 Przeniesione opisy wcześniejszych wydań z README. Pomiary i deklaracje
 w tych wpisach dotyczą wskazanych wersji, nie bieżącego kodu roboczego.
 
+## 1.3.25
+
+- Pociski Gaussa są większe na ekranie i lecą szybciej. Mają ślad lotu,
+  odgłos Gaussa i efekty trafienia dostosowane do wariantu amunicji.
+- Obie wiązki pulsacyjne mają wyraźniejszy błysk i iskry na końcu.
+  Bazowe obrażenia wszystkich odmian opisuje [instrukcja kombinezonu](docs/DESCENDANT-SUIT.md#obrażenia-ramienia).
+
 ## 1.3.24
 
 - Po chwilowym błędzie rysowania ramię i wirnik kombinezonu ponawiają próbę.

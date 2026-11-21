@@ -3,10 +3,10 @@ local M={}
 local profiles={
     pulselaserammobox={projectile='descendantpulsebolt',nativeCost=2.25},
     pulselaserammoboxtrilaser={projectile='descendanttribolt',nativeCost=3.5},
-    coilgunammobox={projectile='descendantgaussbolt',nativeCost=.5},
-    physicoriumammobox={projectile='descendantphysicoriumbolt',nativeCost=.5},
-    coilgunammoboxexplosive={projectile='descendantexplosivebolt',nativeCost=1},
-    coilgunammoboxpiercing={projectile='descendantpiercingbolt',nativeCost=.67},
+    coilgunammobox={projectile='descendantgaussbolt',nativeCost=.5,ballistic=true},
+    physicoriumammobox={projectile='descendantphysicoriumbolt',nativeCost=.5,ballistic=true},
+    coilgunammoboxexplosive={projectile='descendantexplosivebolt',nativeCost=1,ballistic=true},
+    coilgunammoboxpiercing={projectile='descendantpiercingbolt',nativeCost=.67,ballistic=true},
 }
 
 function M.profile(box)

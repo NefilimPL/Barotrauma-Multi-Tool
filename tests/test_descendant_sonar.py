@@ -102,6 +102,16 @@ class DescendantSnapshotTests(LuaCase):
             assert(s.shots==5 and s.target.entity==enemy and s.target.point.x==401 and s.active)
         """)
 
+    def test_last_shot_family_round_trips_even_without_target(self):
+        self.lua.execute("""
+            S.state(suit).ballisticShot=true;S.state(suit).target=nil
+            S.sendSnapshot();clientHandlers[protocol..'.snapshot'](sent)
+            assert(C.state(suit).ballisticShot==true)
+            S.state(suit).ballisticShot=false;S.now=S.now+1
+            S.sendSnapshot();clientHandlers[protocol..'.snapshot'](sent)
+            assert(C.state(suit).ballisticShot==false)
+        """)
+
     def test_smoothed_joint_angles_round_trip_without_overwriting_current_draw_pose(self):
         self.lua.execute("""
             S.state(suit).toolAngles={upper=.4,lower=-1.2,head=.8}
