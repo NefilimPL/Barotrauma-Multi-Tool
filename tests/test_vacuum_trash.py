@@ -30,6 +30,18 @@ class VacuumTrashTests(VacuumStorageCacheTests):
             assert(G.confirmTrash(ctx,a.ID,ticket.token) and #removed==1)
         """)
 
+    def test_newly_protected_nested_item_invalidates_open_trash_ticket(self):
+        self.lua.execute("""
+            local child={kind='fuel',ID=30};a.OwnInventory=inventory(a,{child})
+            child.ParentInventory=a.OwnInventory
+            local rules={protected={}}
+            G.filterRules=function() return rules end
+            local ticket=assert(G.prepareTrash(ctx,a.ID,false))
+            rules.protected.fuel=true
+            assert(not G.confirmTrash(ctx,a.ID,ticket.token) and #removed==0)
+            assert(not G.prepareTrash(ctx,a.ID,false))
+        """)
+
     def test_expired_foreign_changed_or_busy_ticket_never_deletes(self):
         self.lua.execute("""
             local t=G.prepareTrash(ctx,a.ID,false);G.now=30

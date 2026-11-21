@@ -19,9 +19,11 @@ function M.install(G,E,root)
         rotor0=A.rotor,rotor1=A.rotor,rotor2=A.rotor,rotor3=A.rotor}
     require('DescendantSuit.lights').install(G,E)
     require('DescendantSuit.ui').install(G,E)
+    local emitSparks=require('DescendantSuit.sparks').new(E)
     local colors={repair={75,190,255},weld={75,190,255},combat={255,45,45},grab={255,153,35}}
     local channels={}
     local heldPlatforms={}
+    local drawFailures=setmetatable({},{__mode='k'})
     local function restoreHeld(entity,old)
         if not entity.Removed then entity.AnimController.IgnorePlatforms=old end
         if G.heldCharacters then G.heldCharacters[entity]=nil end
@@ -39,9 +41,6 @@ function M.install(G,E,root)
     end
     -- Character.Draw already has the world transform and is lit afterwards.
     local function screen(cam,p) return E.Vector2(p.x,-p.y) end
-    local function line(batch,cam,a,b,color,width)
-        gui.DrawLine(batch,screen(cam,a),screen(cam,b),color,0,width)
-    end
     local function sprite(batch,cam,key,point,rotation,scale,origin)
         local r=rects[key]
         atlas.SourceRect=E.Rectangle(r[1],r[2],r[3],r[4])
@@ -134,31 +133,18 @@ function M.install(G,E,root)
                     end
                 else s.bubbleBudget=0 end
                 loop(entry,'beam',active~='combat' and active or nil,owner);loop(entry,'motor',s.swimming and 'impeller' or nil,owner)
-                if entry.shots~=nil and entry.shots~=(s.shots or 0) then sound('pulse',owner);s.shotTime=G.now end
+                local newShot=entry.shots~=nil and entry.shots~=(s.shots or 0)
+                if newShot then
+                    sound(s.ballisticShot and 'gauss' or 'pulse',owner);s.shotTime=G.now
+                end
                 entry.shots=s.shots or 0
-                G.updateLights(s)
+                G.updateLights(s,newShot)
                 if entry.open~=nil and entry.open~=s.open then sound('helmet',owner) end
                 if entry.mode and entry.mode~=s.mode then sound('switch',owner) end
                 local id=s.target and s.target.entity and s.target.entity.ID
                 if id and id~=entry.target then sound('servo',owner) end
                 entry.open,entry.mode,entry.target=s.open,s.mode,id
-                s.sparks=s.sparks or {}
-                for n=#s.sparks,1,-1 do
-                    local p=s.sparks[n];p.age=p.age+dt
-                    if p.age>p.life then table.remove(s.sparks,n)
-                    else p.x=p.x+p.vx*dt;p.y=p.y+p.vy*dt;p.vy=p.vy-160*dt end
-                end
-                if active=='repair' or active=='weld' then
-                    s.sparkBudget=(s.sparkBudget or 0)+dt*150
-                    local point=s.target.point
-                    while s.sparkBudget>=1 and #s.sparks<72 do
-                        s.sparkBudget=s.sparkBudget-1
-                        local angle=math.random()*math.pi*2;local speed=80+math.random()*200
-                        s.sparks[#s.sparks+1]={x=point.x,y=point.y,vx=math.cos(angle)*speed,vy=math.sin(angle)*speed,
-                            age=0,life=.12+math.random()*.18}
-                    end
-                    s.sparkBudget=math.min(s.sparkBudget,2)
-                else s.sparkBudget=0 end
+                emitSparks(s,active,s.target and s.target.point,dt)
             end
         end
         for entity,old in pairs(heldPlatforms) do if not holding[entity] then restoreHeld(entity,old) end end
@@ -192,26 +178,36 @@ function M.install(G,E,root)
                     if beam then
                         softBeam(batch,cam,pose.muzzle,beam,colors[target.kind],target.kind~='grab')
                     end
-                    for _,p in ipairs(s.sparks or {}) do
-                        local tail={x=p.x-p.vx*.022,y=p.y-p.vy*.022}
-                        local alpha=math.floor(255*(1-p.age/p.life))
-                        line(batch,cam,tail,p,E.Color(65,170,255,math.floor(alpha*.35)),4)
-                        line(batch,cam,tail,p,E.Color(220,248,255,alpha),1.2)
-                    end
                 end
             end
         end
     end
     G.patch('draw','Barotrauma.Character','Draw',function(owner,p)
-        if G.drawError then return end
+        local failure=drawFailures[owner]
+        if failure and G.now<failure.retryAt then return end
         local ok,err=pcall(draw,p['spriteBatch'],p['cam'],owner)
-        if not ok then G.drawError=tostring(err);E.printerror('[Descendant suit] Render: '..tostring(err)) end
+        if ok then
+            if failure then
+                drawFailures[owner]=nil
+                local _,other=next(drawFailures)
+                G.drawError=other and other.message or nil
+            end
+            return
+        end
+        -- A temporary draw transform failure must not disable other wearers.
+        -- Retry this wearer after a short delay and log repeated errors once.
+        local message=tostring(err)
+        G.drawError=message
+        if not failure or failure.message~=message then E.printerror('[Descendant suit] Render: '..message) end
+        drawFailures[owner]={message=message,retryAt=G.now+.25}
     end,true)
     function G.pauseClient()
         for _,entry in pairs(channels) do stop(entry.beam);stop(entry.motor) end
         channels={}
     end
     function G.clearClient()
+        for owner in pairs(drawFailures) do drawFailures[owner]=nil end
+        G.drawError=nil
         for entity,old in pairs(heldPlatforms) do restoreHeld(entity,old) end
         for _,s in pairs(G.states) do G.removeLights(s) end
         for _,entry in pairs(channels) do stop(entry.beam);stop(entry.motor);G.removeLights(entry.state) end

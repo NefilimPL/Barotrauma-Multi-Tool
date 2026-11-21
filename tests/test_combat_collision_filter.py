@@ -57,3 +57,24 @@ class PassageCollisionTests(LuaCase):
             local hit=G.cast({x=0,y=0},{x=100,y=0},0,nil,true)
             assert(hit and hit.x==60,'disabled collision fixture caused a false ricochet')
         ''')
+
+    def test_closest_hit_clips_native_traversal_without_hiding_a_nearer_later_fixture(self):
+        self.lua.execute('''
+            local visited=0
+            fixtures={fixture(2,90),fixture(2,10),fixture(2,80),fixture(2,5)}
+            env.Game.World.RayCast=function(callback,a,b,mask)
+                local limit=1
+                for _,f in ipairs(fixtures) do
+                    local fraction=f.distance/100
+                    if fraction<=limit then
+                        visited=visited+1
+                        local result=callback(f,env.Vector2(f.distance,0),env.Vector2(-1,0),fraction)
+                        if result>=0 then limit=result end
+                        if result==0 then break end
+                    end
+                end
+            end
+            local hit=G.cast({x=0,y=0},{x=100,y=0},0,nil,true)
+            assert(hit and hit.x==5,'clipped a closer fixture later in traversal')
+            assert(visited==3,'native traversal still visits walls behind the nearest hit: '..visited)
+        ''')

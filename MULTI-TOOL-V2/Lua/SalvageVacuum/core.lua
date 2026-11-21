@@ -23,10 +23,10 @@ function M.canFit(items,additional)
     return groups<=C.groups
 end
 function M.canAccept(items,item) return M.canFit(items,{item}) end
-function M.snapshot(items,children)
+function M.snapshot(items,children,skip)
     local out,seen={},{}
     local function visit(item)
-        if seen[item] then return end
+        if seen[item] or (skip and skip(item)) then return end
         seen[item]=true
         for _,child in ipairs(children(item)) do visit(child) end
         out[#out+1]=item

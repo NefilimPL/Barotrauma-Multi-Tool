@@ -26,7 +26,7 @@ function M.install(G,E)
     end
     function G.planShot(owner,state,target)
         local base,rotation,facing=G.mount(owner)
-        local rest=G.restGoal(owner)
+        local rest=G.restGoal(owner,false,base,rotation,facing)
         local land=onLand(owner)
         local key=target.entity or target.id or target
         local pinned=not state.target or state.target.entity==target.entity and state.target.id==target.id

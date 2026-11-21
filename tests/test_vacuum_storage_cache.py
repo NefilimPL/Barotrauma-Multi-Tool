@@ -29,11 +29,36 @@ class VacuumStorageCacheTests(LuaCase):
             G.children=function(item) return item.OwnInventory and item.OwnInventory.AllItems or {} end
         """)
 
+    def test_page_spawns_respect_world_budget_and_keep_existing_space_usable(self):
+        self.lua.execute("""
+            local requested=0
+            E.Entity={EntityCount=99,MaxEntityCount=100,Spawner={
+                AddItemToSpawnQueue=function() requested=requested+1 end}}
+            E.ItemPrefab={Prefabs={aegisvacuumpage={}}}
+            local release=assert(G.reserveSpawns(1))
+            assert(G.ensureSpace(pack,1),'existing slots need no entity allocation')
+            assert(not G.ensureSpace(pack,99) and requested==0 and not G.pageSpawning)
+            release()
+            assert(not G.ensureSpace(pack,99) and requested==1 and G.pageSpawning[pack])
+        """)
+
     def test_unchanged_contents_and_records_do_not_reenter_native_items(self):
         self.lua.execute("""
             G.records(G.contents(pack));reads=0;idReads=0
             for i=1,10 do local r=G.records(G.contents(pack));assert(#r==2 and r[1].kind=='iron') end
             assert(reads==0 and idReads==0,'unchanged storage was rescanned')
+        """)
+
+    def test_projected_salvage_capacity_updates_from_native_inventory_events(self):
+        self.lua.execute("""
+            local C=require('SalvageVacuum.config');C.groups=2
+            assert(G.canSalvageFit(pack,a,{{kind='gold'}}))
+            assert(not G.canSalvageFit(pack,a,{{kind='gold'},{kind='uranium'}}))
+            local c={kind='iron',ID=5,ParentInventory=page.OwnInventory}
+            page.OwnInventory.items[3]=c;hooks['stored-add']({Item=page},{containedItem=c})
+            assert(not G.canSalvageFit(pack,a,{{kind='gold'}}))
+            page.OwnInventory.items[3]=nil;hooks['stored-remove']({Item=page},{containedItem=c})
+            assert(G.canSalvageFit(pack,a,{{kind='gold'}}))
         """)
 
     def test_pickup_is_allowed_during_job_between_atomic_product_spawns(self):
@@ -64,6 +89,7 @@ class VacuumStorageCacheTests(LuaCase):
                 page.OwnInventory.items[slot+1]=item;item.ParentInventory=page.OwnInventory;return true
             end
             E.ItemPrefab={Prefabs={copper={Health=100}}}
+            G.hasSpawnRoom=function() return true end
             local callback
             E.Entity={Spawner={AddItemToSpawnQueue=function(_,inv,condition,_,fn)
                 callback=function()
@@ -131,11 +157,15 @@ class VacuumStorageCacheTests(LuaCase):
                 local p={kind='aegisvacuumpage',ID=n,ParentInventory=pack.OwnInventory}
                 local items={};for i=1,(n==3 and 99 or 100) do items[i]={kind='iron',ID=n*100+i} end
                 p.OwnInventory=inventory(p,items);pages[n]=p
+                p.OwnInventory.IsFull=function() error('native fullness check scans every occupied slot') end
             end
-            pack.OwnInventory.items=pages;reads=0
+            pack.OwnInventory.items=pages;G.contents(pack);reads=0
             local slots=G.freeSlots(pack,1)
             assert(#slots==1 and slots[1].slot==99)
             assert(reads<=101,'queried full pages slot by slot: '..reads)
+            local first=pages[1].OwnInventory.items[100]
+            pages[1].OwnInventory.items[100]=nil;hooks['stored-remove']({Item=pages[1]},{containedItem=first})
+            assert(G.freeSlots(pack,1)[1].inv==pages[1].OwnInventory)
         """)
 
     def test_reset_discards_storage_references_and_rebuilds_native_state(self):

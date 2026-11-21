@@ -1,6 +1,6 @@
 # Odkurzacz i plecak zbierający Aegis
 
-Wersja 1.3.11 zawiera dwa osobno wytwarzane przedmioty. Wymaga LuaCs na
+Wersja 1.3.24 zawiera dwa osobno wytwarzane przedmioty. Wymaga LuaCs na
 kliencie i serwerze, tak jak pozostałe urządzenia Aegis.
 
 ## Przygotowanie
@@ -39,9 +39,9 @@ odkurzacz może pobrać z niego pojedyncze dozwolone rzeczy.
 
 Kliknij widoczny przycisk **Magazyn plecaka [F]**, naciśnij **F** lub kliknij
 **prawym przyciskiem ikonę plecaka**. Okno działa również bez odkurzacza
-i bez prądu. Panel pokazuje do 100 grup,
-każda po maksymalnie 100 rzeczywistych przedmiotów tego samego typu.
-Teoretyczny limit to 10 000 przedmiotów na plecak; zagnieżdżone skrzynki
+i bez prądu. Panel pokazuje do 200 grup,
+każda po maksymalnie 200 rzeczywistych przedmiotów tego samego typu.
+Pojemność wynosi do 40 000 przedmiotów i zależy od limitu encji w rundzie. Zagnieżdżone skrzynki
 zachowują własną zawartość. Licznik nie zastępuje przedmiotów — stan,
 jakość, baterie, butle i zawartość pozostają przy konkretnych egzemplarzach.
 
@@ -68,30 +68,32 @@ jakość, baterie, butle i zawartość pozostają przy konkretnych egzemplarzach
 - Przycisk **Plecak 1/2** przełącza magazyn, jeśli masz więcej niż jeden dostępny
   plecak. Przy jednym magazynie jest ukryty. Numer oznacza kolejność wyboru.
   Bez ręcznego wyboru pierwszeństwo ma plecak założony w slocie Bag.
-- **Filtr zbierania** otwiera katalog typów ze wszystkich załadowanych modów.
-  Klik ikony przełącza zbieranie; czerwone pole z minusem oznacza pomijanie.
-  Wyszukiwarka i kategorie działają również w katalogu. Elementy konstrukcyjne
-  są trwale zablokowane. Jeśli worek lub skrzynka zawiera wykluczony przedmiot,
+- **Filtry** otwierają katalog typów ze wszystkich załadowanych modów. Wybierz
+  regułę pod siatką i kliknij ikonę. **Ignoruj (-)** oznacza typ na czerwono
+  i pomija go przy zasysaniu. **Chroń (O)** oznacza typ na zielono i zabezpiecza
+  go przed rozbiórką i koszem. **Odblokuj (!)** dopuszcza m.in. odczepioną rudę
+  do zasysania i ręcznego wkładania. Sprawdzanie dostępu, slotu i przytwierdzenia
+  działa także po odblokowaniu. Wyszukiwarka i kategorie działają w katalogu.
+  Jeśli worek lub skrzynka zawiera wykluczony przedmiot,
   pozostaje na miejscu, a odkurzacz pobiera tylko dozwoloną zawartość.
   Przykład: przy wykluczonym żelazie miedź trafia do plecaka, a żelazo zostaje
   w worku. Bez wykluczeń pojemnik jest zbierany w całości.
   Filtr jest zapisany w tagach danego plecaka i nie usuwa rzeczy
   już zebranych. Przycisk **Zawartość** wraca do magazynu.
-- **Kosz** przygotowuje usunięcie zaznaczonej grupy (do 100 sztuk) wraz
+- **Kosz** przygotowuje usunięcie zaznaczonej grupy (do 200 sztuk) wraz
   z zawartością pojemników. W widoku **Egzemplarze** usuwa tylko wskazaną sztukę
   i jej zawartość. Drugi klik **Usuń: N** potwierdza liczbę wszystkich encji.
   Potwierdzenie jest ważne 10 sekund; zmiana zawartości unieważnia operację.
   Usunięte przedmioty nie dają surowców ani nie trafiają na ziemię.
 
-Stosy po 100 są prezentacją w panelu. Zaplecze używa zapisywanych przez grę
-stron po 100 pojedynczych rzeczy, mieszczących się w natywnym protokole.
-Maksymalna pojemność nie oznacza gwarancji płynności przy 10 000 aktywnych
-przedmiotów; ograniczenia i wyniki prób są w raporcie weryfikacji.
+Grupy po 200 są prezentacją w panelu. Zaplecze używa zapisywanych przez grę
+stron po 200 pojedynczych rzeczy, mieszczących się w natywnym protokole.
+Klient i serwer używają protokołu plecaka v6 i wymagają tej samej wersji moda.
 
 Przeciągnij przedmiot ze swojego ekwipunku albo dostępnego pojemnika na
 ikonę plecaka, aby włożyć go ręcznie. Działa także dla plecaka w otwartej,
 dostępnej szafie. Pierwsza strona magazynu tworzy się automatycznie.
-Filtry zasysania nie ograniczają ręcznego wkładania. Brak miejsca, blokada
+Ręczne wkładanie respektuje regułę **Odblokuj** i dostęp do przedmiotu. Brak miejsca, blokada
 czy utrata dostępu pozostawia oryginał w jego dotychczasowym miejscu.
 
 Rzeczy z noszonego plecaka pojawiają się u sprzedawcy w **Przy sobie**,
@@ -120,7 +122,7 @@ rzeczywiste egzemplarze; nie powstaje kopia surowców. Plecak zablokowany lub
 przetwarzany przez rozbiórkę nie udostępnia materiałów maszynie.
 
 Po aktualizacji uruchom ponownie grę i serwer. Zainstaluj tę samą wersję
-1.3.8 na hoście i u wszystkich graczy.
+1.3.24 na hoście i u wszystkich graczy.
 
 ## Rozbiórka
 
@@ -151,8 +153,8 @@ liczbę rozłożonych i pominiętych, a po zakończeniu także wynik lub powód
 przerwania. Przedmioty bez receptury są sprawdzane w porcjach po maksymalnie 32,
 zamiast zajmować osobny odstęp pracy dla każdej sztuki.
 
-Liczniki **Grupy / 100** i **Sztuki / 10000** pokazują różne ograniczenia:
-jedna grupa mieści do 100 sztuk jednego typu. Większa liczba tego samego
+Liczniki **Grupy / 200** i **Sztuki / 40000** pokazują limity plecaka.
+Jedna grupa mieści do 200 sztuk jednego typu. Większa liczba tego samego
 typu zajmuje kolejne grupy. Stan, jakość i zawartość pojemników są zachowywane.
 
 Rozbiórka odtwarza zapętlony dźwięk dekonstruktora z gry; ustaje on po końcu

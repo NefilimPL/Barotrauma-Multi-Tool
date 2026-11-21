@@ -1,10 +1,10 @@
 return {
-    identifier='descendantservosuit', protocol='bmt.descendant.v5',
+    identifier='descendantservosuit', protocol='bmt.descendant.v6',
     -- Longer visible links stay folded inside the original operating radius.
     reach=118, upper=76, lower=66, repairBeam=68, toolOffset=24, toolStandOff=14,
     contactSlack=32,contactGrace=.4,combatRange=1800,grabRange=300,
     weldRate=64, grabDuration=5,
-    shotInterval=.4,shotPower=.4,ammoCost=2.25,shotDamage=20,
+    shotInterval=.4,gaussShotInterval=.25,shotPower=.4,ammoCost=2.25,shotDamage=20,
     jointEase=.075,jointSpeed=7,headSpeed=12,replicaEase=.045,toolAngleTolerance=.1,repairTrackingWidth=10,
     aimProbeInterval=.12,aimLowerDelay=.5,aimPositionTolerance=12,
     gripOcclusionGrace=3,gripReleaseRange=380,gripProbeInterval=.12,

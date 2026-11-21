@@ -9,4 +9,5 @@
   <descendant_helmet file="%ModDir%/Assets/DescendantSuit/Audio/helmet.ogg" range="350" volume="0.35" />
   <descendant_switch file="%ModDir%/Assets/DescendantSuit/Audio/switch.ogg" range="350" volume="0.25" />
   <descendant_pulse file="Content/Items/Weapons/WEAPONS_laserGunShot1.ogg" range="1800" volume="0.7" />
+  <descendant_gauss file="Content/Items/Weapons/Coilgun1.ogg" range="1800" volume="0.55" />
 </Sounds>

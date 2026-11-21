@@ -68,7 +68,7 @@
       <SlotIcon slotindex="1" texture="Content/UI/CommandUIAtlas.png" sourcerect="384,768,128,128" origin="0.5,0.5" />
       <Containable items="mobilebattery,reactorfuel" />
       <SubContainer capacity="1" maxstacksize="1" containedstateindicatorstyle="bullet">
-        <Containable items="pulselaserammo" />
+        <Containable items="pulselaserammobox,pulselaserammoboxtrilaser,coilgunammobox,physicoriumammobox,coilgunammoboxexplosive,coilgunammoboxpiercing" />
       </SubContainer>
     </ItemContainer>
     <Sonar range="6000" powerconsumption="1" minvoltage="0.5" drawhudwhenequipped="false" detectsubmarinewalls="true" displaybordersize="-0.1" characterusable="false" hasmineralscanner="true" allowuioverlap="true">
@@ -104,13 +104,103 @@
         <Affliction identifier="explosiondamage" strength="4" />
         <Affliction identifier="stun" strength="0.15" />
       </Attack>
-      <StatusEffect type="OnUse" target="This">
-        <ParticleEmitter particle="muzzleflashpulselaser" particleamount="1" scalemin="0.02" scalemax="0.03" />
-      </StatusEffect>
       <StatusEffect type="OnImpact" target="UseTarget">
-        <ParticleEmitter particle="muzzleflashpulselaser" particleamount="1" anglemin="0" anglemax="360" scalemin="0.025" scalemax="0.04" />
-        <ParticleEmitter particle="weldspark" particleamount="5" anglemin="0" anglemax="360" velocitymin="80" velocitymax="150" scalemin="0.3" scalemax="0.5" colormultiplier="255,100,100,220" />
+        <ParticleEmitter particle="muzzleflashpulselaser" particleamount="2" anglemin="0" anglemax="360" scalemin="0.12" scalemax="0.19" />
+        <ParticleEmitter particle="weldspark" particleamount="5" anglemin="0" anglemax="360" velocitymin="100" velocitymax="230" scalemin="0.4" scalemax="0.6" drawontop="true" colormultiplier="255,130,130,235" />
       </StatusEffect>
+    </Projectile>
+  </Item>
+  <Item identifier="descendanttribolt" category="Weapon" scale="0.18" hideinmenus="true">
+    <Sprite texture="Content/Items/Weapons/weapons_new.png" sourcerect="143,414,113,9" depth="0.55" />
+    <Body width="50" height="4" density="20" />
+    <Projectile characterusable="false" hitscan="true" removeonhit="true" friendlyfire="false" spread="6" staticspread="true" hitscancount="3" damagedoors="false">
+      <ParticleEmitter particle="descendantpulsetracer" particleamount="1" velocitymin="0" velocitymax="0" />
+      <Attack structuredamage="0" itemdamage="0" penetration="0.20">
+        <Affliction identifier="burn" strength="7" />
+        <Affliction identifier="explosiondamage" strength="3" />
+        <Affliction identifier="stun" strength="0.10" />
+      </Attack>
+      <StatusEffect type="OnImpact" target="UseTarget">
+        <ParticleEmitter particle="muzzleflashpulselaser" particleamount="1" anglemin="0" anglemax="360" scalemin="0.10" scalemax="0.15" />
+        <ParticleEmitter particle="weldspark" particleamount="3" anglemin="0" anglemax="360" velocitymin="100" velocitymax="210" scalemin="0.35" scalemax="0.55" drawontop="true" colormultiplier="255,130,130,235" />
+      </StatusEffect>
+    </Projectile>
+  </Item>
+  <Item identifier="descendantgaussbolt" category="Weapon" scale="0.30" hideinmenus="true">
+    <Sprite texture="Content/Items/Weapons/weapons_new.png" sourcerect="143,414,113,9" depth="0.55" />
+    <Body width="30" height="2.4" density="20" />
+    <Projectile characterusable="false" launchimpulse="42" removeonhit="true" friendlyfire="false" damagedoors="false">
+      <Attack structuredamage="0" itemdamage="0" penetration="0.14">
+        <Affliction identifier="lacerations" strength="12" />
+        <Affliction identifier="bleeding" strength="0.8" />
+        <Affliction identifier="stun" strength="0.025" />
+      </Attack>
+      <StatusEffect type="OnActive" target="This" lifetime="0.65">
+        <ParticleEmitter particle="ammotrail" copyentityangle="true" particlespersecond="30" velocitymin="-80" velocitymax="-30" scalemin="0.25" scalemax="0.4" />
+      </StatusEffect>
+      <StatusEffect type="OnImpact" target="This">
+        <ParticleEmitter particle="impactfirearm" particleamount="1" scalemin="0.6" scalemax="0.85" />
+        <ParticleEmitter particle="shrapnel" particleamount="5" anglemin="0" anglemax="360" velocitymin="110" velocitymax="310" scalemin="0.30" scalemax="0.50" />
+      </StatusEffect>
+      <StatusEffect type="OnNotContained" target="This" stackable="false" delay="0.65"><Remove /></StatusEffect>
+    </Projectile>
+  </Item>
+  <Item identifier="descendantphysicoriumbolt" category="Weapon" scale="0.30" hideinmenus="true">
+    <Sprite texture="Content/Items/Weapons/weapons_new.png" sourcerect="143,425,113,9" depth="0.55" />
+    <Body width="30" height="2.4" density="20" />
+    <Projectile characterusable="false" launchimpulse="42" removeonhit="true" friendlyfire="false" damagedoors="false">
+      <Attack structuredamage="0" itemdamage="0" penetration="0.24">
+        <Affliction identifier="lacerations" strength="20" />
+        <Affliction identifier="bleeding" strength="1.2" />
+        <Affliction identifier="stun" strength="0.05" />
+      </Attack>
+      <StatusEffect type="OnActive" target="This" lifetime="0.65">
+        <ParticleEmitter particle="ammotrail" copyentityangle="true" particlespersecond="30" velocitymin="-80" velocitymax="-30" scalemin="0.25" scalemax="0.4" colormultiplier="225,145,255" />
+      </StatusEffect>
+      <StatusEffect type="OnImpact" target="This">
+        <ParticleEmitter particle="impactfirearm" particleamount="1" scalemin="0.85" scalemax="1.15" colormultiplier="225,145,255" />
+        <ParticleEmitter particle="shrapnel" particleamount="5" anglemin="0" anglemax="360" velocitymin="110" velocitymax="310" scalemin="0.30" scalemax="0.50" />
+      </StatusEffect>
+      <StatusEffect type="OnNotContained" target="This" stackable="false" delay="0.65"><Remove /></StatusEffect>
+    </Projectile>
+  </Item>
+  <Item identifier="descendantexplosivebolt" category="Weapon" scale="0.30" hideinmenus="true">
+    <Sprite texture="Content/Items/Weapons/weapons_new.png" sourcerect="144,436,112,9" depth="0.55" />
+    <Body width="30" height="2.4" density="20" />
+    <Projectile characterusable="false" launchimpulse="42" removeonhit="true" friendlyfire="false" damagedoors="false">
+      <Attack structuredamage="0" itemdamage="0" penetration="0.10">
+        <Affliction identifier="explosiondamage" strength="19" />
+        <Affliction identifier="bleeding" strength="1" />
+        <Affliction identifier="stun" strength="0.20" />
+      </Attack>
+      <StatusEffect type="OnActive" target="This" lifetime="0.65">
+        <ParticleEmitter particle="ammotrail" copyentityangle="true" particlespersecond="30" velocitymin="-80" velocitymax="-30" scalemin="0.25" scalemax="0.4" colormultiplier="255,180,105" />
+      </StatusEffect>
+      <StatusEffect type="OnImpact" target="This">
+        <ParticleEmitter particle="explosionfireadditive" particleamount="2" scalemin="0.13" scalemax="0.23" />
+        <ParticleEmitter particle="shrapnel" particleamount="6" anglemin="0" anglemax="360" velocitymin="110" velocitymax="360" scalemin="0.30" scalemax="0.55" />
+      </StatusEffect>
+      <StatusEffect type="OnNotContained" target="This" stackable="false" delay="0.65"><Remove /></StatusEffect>
+    </Projectile>
+  </Item>
+  <Item identifier="descendantpiercingbolt" category="Weapon" scale="0.30" hideinmenus="true">
+    <Sprite texture="Content/Items/Weapons/weapons_new.png" sourcerect="144,447,112,12" depth="0.55" />
+    <Body width="30" height="2.4" density="20" />
+    <Projectile characterusable="false" launchimpulse="42" friendlyfire="false" maxtargetstohit="2" damagedoors="false">
+      <Attack structuredamage="0" itemdamage="0" penetration="0.50">
+        <Affliction identifier="lacerations" strength="9" />
+        <Affliction identifier="bleeding" strength="1.5" />
+        <Affliction identifier="stun" strength="0.0125" />
+      </Attack>
+      <StatusEffect type="OnActive" target="This" lifetime="0.65">
+        <ParticleEmitter particle="ammotrail" copyentityangle="true" particlespersecond="30" velocitymin="-80" velocitymax="-30" scalemin="0.25" scalemax="0.4" />
+      </StatusEffect>
+      <StatusEffect type="OnImpact" target="This" condition="-50" disabledeltatime="true">
+        <ParticleEmitter particle="impactfirearm" particleamount="1" scalemin="0.55" scalemax="0.75" />
+        <ParticleEmitter particle="shrapnel" particleamount="4" anglemin="0" anglemax="360" velocitymin="110" velocitymax="300" scalemin="0.30" scalemax="0.45" />
+      </StatusEffect>
+      <StatusEffect type="OnBroken" target="This"><Remove /></StatusEffect>
+      <StatusEffect type="OnNotContained" target="This" stackable="false" delay="0.65"><Remove /></StatusEffect>
     </Projectile>
   </Item>
 </Items>

@@ -48,6 +48,21 @@ class VacuumPickupTests(LuaCase):
     def test_subclasses_of_pickable_are_supported(self):
         self.lua.execute("assert(G.portable(item));assert(G.pickupTarget(item,ctx)==item)")
 
+    def test_override_accepts_only_detached_accessible_ore_and_keeps_red_pickup_rule(self):
+        self.lua.execute("""
+            item.id='chalcopyrite';pick.PickingTime=3.402823466e38
+            ctx.pack={Tags=''};G.jobs={};G.pending={}
+            require('SalvageVacuum.filters').install(G,E)
+            assert(not G.safeStorageInput(item,ctx) and not G.pickupTarget(item,ctx))
+            ctx.pack.Tags='bmt.vacuum.allow.chalcopyrite'
+            assert(G.safeStorageInput(item,ctx) and G.pickupTarget(item,ctx)==item)
+            ctx.pack.Tags=ctx.pack.Tags..',bmt.vacuum.exclude.chalcopyrite'
+            assert(G.safeStorageInput(item,ctx) and not G.pickupTarget(item,ctx))
+            pick.IsAttached=true;assert(not G.safeStorageInput(item,ctx))
+            pick.IsAttached=false;item.ParentInventory={Locked=true};assert(not G.safeStorageInput(item,ctx))
+            item.ParentInventory=nil;item.HasAccess=function() return false end;assert(not G.safeStorageInput(item,ctx))
+        """)
+
     def test_locked_source_inventory_is_not_bypassed(self):
         self.lua.execute("""
             pick.Name='Holdable'

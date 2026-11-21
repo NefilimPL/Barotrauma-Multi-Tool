@@ -18,7 +18,9 @@ function M.install(G,E)
     end
     function G.startSalvage(ctx)
         if not ctx.valid or not G.is(ctx.vacuum,C.vacuum) or G.charge(ctx.vacuum)<=0 or G.jobs[ctx.pack] or G.pending[ctx.pack] then return false end
-        local items=Core.snapshot(G.contents(ctx.pack),G.children)
+        local protected=G.filterRules and G.filterRules(ctx.pack).protected or {}
+        local skip=next(protected) and function(item) return protected[G.id(item)] end
+        local items=Core.snapshot(G.contents(ctx.pack),G.children,skip)
         G.jobs[ctx.pack]={ctx=ctx,items=items,index=1,done=0,skipped=0}
         G.salvageResults[ctx.pack]=nil
         return true
@@ -67,13 +69,12 @@ function M.install(G,E)
         if not plan then return end
         job.waiting=nil
         local children=G.children(item)
-        local remaining={}
-        for _,i in ipairs(G.contents(ctx.pack)) do if i~=item then remaining[#remaining+1]=i end end
         local extra=G.records(children)
         for _,p in ipairs(plan) do extra[#extra+1]=p end
-        if not Core.canFit(G.records(remaining),extra) then
+        if not G.canSalvageFit(ctx.pack,item,extra) then
             job.index=job.index+1;job.skipped=job.skipped+1;job.noSpace=true;return
         end
+        if not G.hasSpawnRoom(#plan) then stopJob(job,'full');return end
         if not G.ensureSpace(ctx.pack,#children+#plan) then
             job.waiting='space'
             if #G.pages(ctx.pack)>=C.pages then job.index=job.index+1;job.skipped=job.skipped+1;job.noSpace=true end
@@ -84,13 +85,18 @@ function M.install(G,E)
             if not G.insert(ctx.pack,child,ctx.owner,true) then job.index=job.index+1;job.skipped=job.skipped+1;return end
         end
         local slots=G.freeSlots(ctx.pack,#plan)
+        if #slots<#plan then stopJob(job,'full');return end
         local battery=G.source(ctx.vacuum)
+        if not battery then stopJob(job,'power');return end
+        local release=G.reserveSpawns(#plan)
+        if not release then stopJob(job,'full');return end
         local before=battery.Condition
-        if not G.spend(ctx.vacuum,C.salvageCost) then return end
+        if not G.spend(ctx.vacuum,C.salvageCost) then release(#plan);return end
         local tx={ctx=ctx,item=item,job=job,battery=battery,debit=before-battery.Condition,products={},expected=#plan}
         G.pending[ctx.pack]=tx;G.reserved[item]=true;job.index=job.index+1
         for i,p in ipairs(plan) do
             E.Entity.Spawner.AddItemToSpawnQueue(p.prefab,slots[i].inv,p.condition,nil,function(product)
+                release()
                 product.StolenDuringRound=item.StolenDuringRound
                 product.AllowStealing=item.AllowStealing
                 product.OriginalOutpost=item.OriginalOutpost

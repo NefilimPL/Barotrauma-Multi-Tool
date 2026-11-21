@@ -126,11 +126,13 @@ function M.install(G,E,root)
     end
     local function circle(batch,cam,x,y,angle,radius,color,width,phase,span,squash)
         local previous=nil
+        local cosine,sine=math.cos(angle),math.sin(angle)
+        local thickness=math.max(1,math.floor(width*cam.Zoom+.5))
         for i=0,24 do
             local a=(phase or 0)+i*(span or math.pi*2)/24
             local ux,uy=math.cos(a)*radius*(squash or .45),math.sin(a)*radius
-            local p={x=x+ux*math.cos(angle)-uy*math.sin(angle),y=y+ux*math.sin(angle)+uy*math.cos(angle)}
-            if previous then line(batch,cam,previous,p,color,width) end
+            local p=project(cam,x+ux*cosine-uy*sine,y+ux*sine+uy*cosine)
+            if previous then gui.DrawLine(batch,previous,p,color,0,thickness) end
             previous=p
         end
     end
@@ -140,12 +142,18 @@ function M.install(G,E,root)
         local radius=(r.radius+2)*(1+.1*math.sin(phase*.7))
         local squash=.45+.12*math.sin(phase*.45)
         local trail=r.trail or {}
+        local lastPoint,lastIndex
+        local thick=math.max(1,math.floor(5*cam.Zoom+.5))
+        local thin=math.max(1,math.floor(cam.Zoom+.5))
         for i=2,#trail do
             local a,b=trail[i-1],trail[i]
             local fade=math.max(0,1-((r.age or 0)-b.age)/C.trailLifetime)
             if fade>0 then
-                line(batch,cam,a,b,E.Color(20,140,255,math.floor(35*fade)),5)
-                line(batch,cam,a,b,E.Color(90,235,255,math.floor(90*fade)),1)
+                local start=lastIndex==i-1 and lastPoint or project(cam,a.x,a.y)
+                local point=project(cam,b.x,b.y)
+                gui.DrawLine(batch,start,point,E.Color(20,140,255,math.floor(35*fade)),0,thick)
+                gui.DrawLine(batch,start,point,E.Color(90,235,255,math.floor(90*fade)),0,thin)
+                lastPoint,lastIndex=point,i
             end
         end
         circle(batch,cam,r.x,r.y,angle,radius+3,E.Color(10,135,255,35),7,0,nil,squash)

@@ -3,6 +3,17 @@ local C=Core.config
 local U=require('CombatTool.util')
 local M={}
 function M.install(G,E)
+    local spawnBudget={pending=0}
+    function G.hasSpawnRoom(count)
+        local entity=E.Entity
+        return entity.EntityCount+spawnBudget.pending+count<=entity.MaxEntityCount
+    end
+    function G.reserveSpawns(count)
+        if not G.hasSpawnRoom(count) then return end
+        local budget=spawnBudget
+        budget.pending=budget.pending+count
+        return function(amount) budget.pending=budget.pending-(amount or 1) end
+    end
     function G.pages(pack)
         local out={}
         if pack and not pack.Removed and pack.OwnInventory then
@@ -20,18 +31,38 @@ function M.install(G,E)
         if not r or r.item~=item then r={kind=G.id(item),item=item,id=id};records[id]=r end
         return r
     end
-    local function add(index,item)
+    local function countKind(index,kind,delta)
+        if not index.kindCounts then return end
+        local previous=index.kindCounts[kind] or 0
+        local count=previous+delta
+        index.kindCounts[kind]=count>0 and count or nil
+        index.groupCount=index.groupCount+math.ceil(count/C.groupSize)-math.ceil(previous/C.groupSize)
+    end
+    local function add(index,item,page)
         local id=item.ID
         if not item.Removed and not index.positions[id] then
             index.items[#index.items+1]=item;index.positions[id]=#index.items
-            index.records[#index.records+1]=record(item)
+            local row=record(item)
+            index.records[#index.records+1]=row
+            countKind(index,row.kind,1)
+            if page then
+                index.itemPages[id]=page
+                index.pageCounts[page]=(index.pageCounts[page] or 0)+1
+            end
             index.view=nil
         end
     end
     local function remove(index,item)
         local id=item.ID
         local position=index.positions[id]
-        if not position then return end
+        if not position or index.items[position]~=item then return end
+        countKind(index,index.records[position].kind,-1)
+        local page=index.itemPages and index.itemPages[id]
+        if page then
+            index.itemPages[id]=nil
+            local count=index.pageCounts[page]-1
+            index.pageCounts[page]=count>0 and count or nil
+        end
         local last=index.items[#index.items]
         index.items[position]=last;index.positions[last.ID]=position
         index.records[position]=index.records[#index.records]
@@ -40,8 +71,9 @@ function M.install(G,E)
     end
     local function indexFor(pack)
         if not indexes[pack] then
-            local index={items={},positions={},records={}};indexes[pack]=index;listIndexes[index.items]=index
-            for _,page in ipairs(G.pages(pack)) do U.each(page.OwnInventory.AllItems,function(item) add(index,item) end) end
+            local index={items={},positions={},records={},kindCounts={},groupCount=0,itemPages={},pageCounts={}}
+            indexes[pack]=index;listIndexes[index.items]=index
+            for _,page in ipairs(G.pages(pack)) do U.each(page.OwnInventory.AllItems,function(item) add(index,item,page) end) end
         end
         return indexes[pack]
     end
@@ -91,21 +123,36 @@ function M.install(G,E)
         end
         return index.view
     end
-    function G.clearStorageCache() indexes={};records={};listIndexes={} end
+    function G.canSalvageFit(pack,item,additions)
+        local index=indexFor(pack)
+        local changes={}
+        local position=index.positions[item.ID]
+        if position and index.items[position]==item then changes[index.records[position].kind]=-1 end
+        for _,row in ipairs(additions) do changes[row.kind]=(changes[row.kind] or 0)+1 end
+        local groups=index.groupCount
+        for kind,delta in pairs(changes) do
+            local count=index.kindCounts[kind] or 0
+            groups=groups+math.ceil((count+delta)/C.groupSize)-math.ceil(count/C.groupSize)
+        end
+        return groups<=C.groups
+    end
+    function G.clearStorageCache()
+        indexes={};records={};listIndexes={};spawnBudget={pending=0};G.pageSpawning={}
+    end
     local function changed(container,p,inserted)
         local parent,item=container.Item,p['containedItem']
         if not parent or not item then return end
         if G.is(parent,C.pack) then
             local index=indexes[parent]
             if index and item.OwnInventory then U.each(item.OwnInventory.AllItems,function(child)
-                if inserted then add(index,child) else remove(index,child) end
+                if inserted then add(index,child,item) else remove(index,child) end
             end) end
         elseif G.is(parent,C.page) then
             local inv=parent.ParentInventory
             local pack=inv and inv.Owner
             if pack and E.LuaUserData.IsTargetType(pack,'Barotrauma.Item') and G.is(pack,C.pack) then
                 local index=indexFor(pack)
-                if inserted then add(index,item) else remove(index,item) end
+                if inserted then add(index,item,parent) else remove(index,item) end
             end
         end
         -- Any nested container can supply a machine; keep that lazy index current too.
@@ -136,11 +183,13 @@ function M.install(G,E)
     end
     function G.freeSlots(pack,limit)
         local out={}
+        local counts=indexFor(pack).pageCounts
         for _,page in ipairs(G.pages(pack)) do
             local inv=page.OwnInventory
-            if not inv.IsFull(false) then
-                for i=0,inv.Capacity-1 do if not inv.GetItemAt(i) then
-                    out[#out+1]={inv=inv,slot=i}
+            local capacity=inv.Capacity
+            if (counts[page] or 0)<capacity then
+                for i=0,capacity-1 do if not inv.GetItemAt(i) then
+                    out[#out+1]={inv=inv,slot=i,page=page}
                     if limit and #out>=limit then return out end
                 end end
             end
@@ -149,12 +198,17 @@ function M.install(G,E)
     end
     function G.ensureSpace(pack,count)
         local pages=G.pages(pack)
-        if #pages*C.pageSize-#indexFor(pack).items>=count then return true end
+        local capacity=0
+        for _,page in ipairs(pages) do capacity=capacity+page.OwnInventory.Capacity end
+        if capacity-#indexFor(pack).items>=count then return true end
         if not G.authoritative or pack.Removed or G.pageSpawning and G.pageSpawning[pack] then return false end
-        if #G.pages(pack)>=C.pages then return false end
-        G.pageSpawning=G.pageSpawning or {};G.pageSpawning[pack]=true
+        if #pages>=C.pages then return false end
+        local release=G.reserveSpawns(1)
+        if not release then return false end
+        G.pageSpawning=G.pageSpawning or {}
+        local spawning=G.pageSpawning;spawning[pack]=true
         E.Entity.Spawner.AddItemToSpawnQueue(E.ItemPrefab.Prefabs[C.page],pack.OwnInventory,nil,nil,function(page)
-            G.pageSpawning[pack]=nil
+            release();spawning[pack]=nil
             if pack.Removed or page.ParentInventory~=pack.OwnInventory then E.Entity.Spawner.AddItemToRemoveQueue(page) end
         end,false)
         return false
@@ -165,10 +219,12 @@ function M.install(G,E)
         -- job owns its input snapshot, so newly collected loot remains intact.
         if not internal and (G.pending[pack] or G.reserved[item]) then return false end
         if G.has(item,pack) then return false end
-        if not Core.canAccept(G.records(G.contents(pack)),{kind=G.id(item)}) then return false end
+        local index=indexFor(pack)
+        local count=index.kindCounts[G.id(item)] or 0
+        if count%C.groupSize==0 and index.groupCount>=C.groups then return false end
         if not G.ensureSpace(pack,1) then return false end
         for _,s in ipairs(G.freeSlots(pack,1)) do
-            if s.inv.TryPutItem(item,s.slot,false,false,user,true,true,false) then add(indexFor(pack),item);return true end
+            if s.inv.TryPutItem(item,s.slot,false,false,user,true,true,false) then add(index,item,s.page);return true end
         end
         return false
     end

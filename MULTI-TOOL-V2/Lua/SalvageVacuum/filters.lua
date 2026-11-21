@@ -3,7 +3,7 @@ local U=require('CombatTool.util')
 local M={}
 local categoryBits={medical=8,weapon=16,diving=32,equipment=64,fuel=128,electrical=256,material=1024,alien=2048,misc=32768}
 function M.install(G,E)
-    local prefix='bmt.vacuum.exclude.'
+    local prefixes={excluded='bmt.vacuum.exclude.',protected='bmt.vacuum.protect.',allowed='bmt.vacuum.allow.'}
     local cache,entries,byKind,registry={},nil,nil,nil
     local slots={any=true,righthand=true,lefthand=true,bothhands=true,head=true,
         innerclothes=true,outerclothes=true,headset=true,card=true,bag=true,healthinterface=true}
@@ -28,20 +28,24 @@ function M.install(G,E)
         return false
     end
     function G.setLooseOnly(ctx,enabled) return setTag(ctx,'bmt.vacuum.looseonly',enabled) end
-    function G.filter(pack)
+    function G.filterRules(pack)
         local tags=tostring(pack and pack.Tags or '')
         local old=cache[pack]
         if old and old.tags==tags then return old.value end
-        local value={}
+        local value={excluded={},protected={},allowed={}}
         for tag in tags:gmatch('[^,]+') do
-            if tag:sub(1,#prefix)==prefix then
-                local kind=tag:sub(#prefix+1):gsub('%%(%x%x)',function(n) return string.char(tonumber(n,16)) end)
-                value[kind]=true
+            for rule,prefix in pairs(prefixes) do
+                if tag:sub(1,#prefix)==prefix then
+                    local kind=tag:sub(#prefix+1):gsub('%%(%x%x)',function(n) return string.char(tonumber(n,16)) end)
+                    value[rule][kind]=true
+                    break
+                end
             end
         end
         if pack then cache[pack]={tags=tags,value=value} end
         return value
     end
+    function G.filter(pack) return G.filterRules(pack).excluded end
     function G.categoryMatches(prefab,category)
         if not category or category=='all' then return true end
         -- LuaCs exposes this native [Flags] enum as a number, including combinations.
@@ -93,13 +97,16 @@ function M.install(G,E)
         end
         return out
     end
-    function G.setExcluded(ctx,kind,excluded)
-        if not ctx.valid or G.jobs[ctx.pack] or G.pending[ctx.pack] or type(kind)~='string'
-            or #kind>100 or type(excluded)~='boolean' then return false end
+    local function setRule(ctx,kind,enabled,rule)
+        if not ctx.valid or type(kind)~='string' or #kind>100 then return false end
         catalog();local row=byKind[kind]
-        if not row or row.blocked then return false end
-        return setTag(ctx,prefix..encode(kind),excluded)
+        if not row or (rule=='excluded' and row.blocked and not G.filterRules(ctx.pack).allowed[kind]
+            and not G.filter(ctx.pack)[kind]) then return false end
+        return setTag(ctx,prefixes[rule]..encode(kind),enabled)
     end
+    function G.setExcluded(ctx,kind,enabled) return setRule(ctx,kind,enabled,'excluded') end
+    function G.setProtected(ctx,kind,enabled) return setRule(ctx,kind,enabled,'protected') end
+    function G.setAllowed(ctx,kind,enabled) return setRule(ctx,kind,enabled,'allowed') end
     function G.acceptsLoot(pack,item)
         local filter,seen,budget=G.filter(pack),{},0
         local function visit(node)

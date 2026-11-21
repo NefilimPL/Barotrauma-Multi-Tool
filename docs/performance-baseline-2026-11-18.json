@@ -1,0 +1,506 @@
+{
+  "status": "exploratory_baseline_not_final_before_after",
+  "base_commit": "1e14d6d",
+  "production_version": "1.3.22",
+  "cases": [
+    {
+      "scenario": "wrenchscrewdrivertwoinoneset_repair_8",
+      "run_id": "20261118T213813Z-matrix-smoke-before2",
+      "manifest_sha256": "aecd0552a1e42b8a1f4c9204c7c34dbfdb1e4afc839abe665c4814bcb0a8f737",
+      "phase_seconds": 8,
+      "warmup_seconds": 5,
+      "roles": {
+        "server": {
+          "repetitions": 1,
+          "mean_ms": 5.07425,
+          "p95_ms": 7.3228,
+          "p99_ms": 9.8218,
+          "max_ms": 10.0821,
+          "rate": 60.35739717201858,
+          "cpu_one_core_percent": 31.72666666666667,
+          "rss_peak_mb": 741.51,
+          "native_send_calls": 166,
+          "native_payload_bytes": 79214
+        },
+        "A": {
+          "repetitions": 1,
+          "mean_ms": 1.60716,
+          "p95_ms": 4.5039,
+          "p99_ms": 5.1477,
+          "max_ms": 6.46,
+          "rate": 622.2155852559795,
+          "cpu_one_core_percent": 124.83666666666666,
+          "rss_peak_mb": 1737.1,
+          "native_send_calls": null,
+          "native_payload_bytes": null
+        },
+        "B": {
+          "repetitions": 1,
+          "mean_ms": 1.60369,
+          "p95_ms": 4.2778,
+          "p99_ms": 5.0611,
+          "max_ms": 7.0365,
+          "rate": 623.5619103442685,
+          "cpu_one_core_percent": 123.79333333333334,
+          "rss_peak_mb": 1802.31,
+          "native_send_calls": null,
+          "native_payload_bytes": null
+        }
+      },
+      "activity": [
+        {
+          "phase": "wrenchscrewdrivertwoinoneset_repair_8_r1",
+          "work": [
+            17.735851287841797,
+            17.29326629638672,
+            16.399120330810547,
+            16.669780731201172,
+            17.113056182861328,
+            16.329383850097656,
+            16.56690216064453,
+            17.221458435058594
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": "multi-toolset_weld_8",
+      "run_id": "20261118T213813Z-matrix-smoke-before2",
+      "manifest_sha256": "aecd0552a1e42b8a1f4c9204c7c34dbfdb1e4afc839abe665c4814bcb0a8f737",
+      "phase_seconds": 8,
+      "warmup_seconds": 5,
+      "roles": {
+        "server": {
+          "repetitions": 1,
+          "mean_ms": 8.01914,
+          "p95_ms": 11.9509,
+          "p99_ms": 15.9806,
+          "max_ms": 25.0281,
+          "rate": 60.007293704207136,
+          "cpu_one_core_percent": 46.28,
+          "rss_peak_mb": 697.91,
+          "native_send_calls": 216,
+          "native_payload_bytes": 72545
+        },
+        "A": {
+          "repetitions": 1,
+          "mean_ms": 3.26404,
+          "p95_ms": 7.5183,
+          "p99_ms": 8.652,
+          "max_ms": 12.4974,
+          "rate": 306.3687945000674,
+          "cpu_one_core_percent": 120.64333333333333,
+          "rss_peak_mb": 1756.38,
+          "native_send_calls": null,
+          "native_payload_bytes": null
+        },
+        "B": {
+          "repetitions": 1,
+          "mean_ms": 3.40144,
+          "p95_ms": 8.1165,
+          "p99_ms": 8.7509,
+          "max_ms": 12.7497,
+          "rate": 293.99313232042897,
+          "cpu_one_core_percent": 120.64333333333333,
+          "rss_peak_mb": 1816.7,
+          "native_send_calls": null,
+          "native_payload_bytes": null
+        }
+      },
+      "activity": [
+        {
+          "phase": "multi-toolset_weld_8_r1",
+          "work": [
+            0.08232879638671875,
+            0.0914764404296875,
+            0.15218353271484375,
+            0.15218353271484375,
+            0.15218353271484375,
+            0.15218353271484375,
+            0.15218353271484375,
+            0.15218353271484375
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": "combatmultitool_shield_8",
+      "run_id": "20261118T213813Z-matrix-smoke-before2",
+      "manifest_sha256": "aecd0552a1e42b8a1f4c9204c7c34dbfdb1e4afc839abe665c4814bcb0a8f737",
+      "phase_seconds": 8,
+      "warmup_seconds": 5,
+      "roles": {
+        "server": {
+          "repetitions": 1,
+          "mean_ms": 12.72989,
+          "p95_ms": 16.0664,
+          "p99_ms": 17.9927,
+          "max_ms": 18.4389,
+          "rate": 60.167658193618166,
+          "cpu_one_core_percent": 76.43333333333334,
+          "rss_peak_mb": 698.05,
+          "native_send_calls": 162,
+          "native_payload_bytes": 69854
+        },
+        "A": {
+          "repetitions": 1,
+          "mean_ms": 10.6997,
+          "p95_ms": 18.5174,
+          "p99_ms": 20.7518,
+          "max_ms": 26.4589,
+          "rate": 93.46056431488734,
+          "cpu_one_core_percent": 111.27333333333333,
+          "rss_peak_mb": 1781.25,
+          "native_send_calls": null,
+          "native_payload_bytes": null
+        },
+        "B": {
+          "repetitions": 1,
+          "mean_ms": 11.47807,
+          "p95_ms": 18.8593,
+          "p99_ms": 23.1199,
+          "max_ms": 23.6546,
+          "rate": 87.12266086545908,
+          "cpu_one_core_percent": 113.35333333333334,
+          "rss_peak_mb": 1836.68,
+          "native_send_calls": null,
+          "native_payload_bytes": null
+        }
+      },
+      "activity": [
+        {
+          "phase": "combatmultitool_shield_8_r1",
+          "work": [
+            2.700000000000001,
+            2.700000000000001,
+            2.700000000000001,
+            2.700000000000001,
+            2.700000000000001,
+            2.700000000000001,
+            2.700000000000001,
+            2.700000000000001
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": "aegisheadset_heal_8",
+      "run_id": "20261118T215851Z-matrix-repaired-smoke",
+      "manifest_sha256": "1a53aa6332089601c54453d090470f79fe81b34fd20084fe96df68bcf4902acf",
+      "phase_seconds": 12,
+      "warmup_seconds": 5,
+      "roles": {
+        "server": {
+          "repetitions": 1,
+          "mean_ms": 2.86286,
+          "p95_ms": 4.5354,
+          "p99_ms": 5.4899,
+          "max_ms": 6.6027,
+          "rate": 60.13526898152078,
+          "cpu_one_core_percent": 19.392857142857142,
+          "rss_peak_mb": 653.09,
+          "native_send_calls": 354,
+          "native_payload_bytes": 158032
+        },
+        "A": {
+          "repetitions": 1,
+          "mean_ms": 1.93349,
+          "p95_ms": 4.2961,
+          "p99_ms": 4.9452,
+          "max_ms": 8.1945,
+          "rate": 517.1994683189466,
+          "cpu_one_core_percent": 120.61142857142856,
+          "rss_peak_mb": 1929.69,
+          "native_send_calls": null,
+          "native_payload_bytes": null
+        },
+        "B": {
+          "repetitions": 1,
+          "mean_ms": 1.87236,
+          "p95_ms": 4.03,
+          "p99_ms": 4.5313,
+          "max_ms": 7.3662,
+          "rate": 534.0853254715973,
+          "cpu_one_core_percent": 123.06285714285715,
+          "rss_peak_mb": 1944.89,
+          "native_send_calls": null,
+          "native_payload_bytes": null
+        }
+      },
+      "activity": [
+        {
+          "phase": "aegisheadset_heal_8_r1",
+          "work": [
+            35.573333621025085,
+            35.573333621025085,
+            35.573333621025085,
+            35.573333621025085,
+            35.573333621025085,
+            35.573333621025085,
+            35.573333621025085,
+            35.573333621025085
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": "aegisheadsetmk2_hit_8",
+      "run_id": "20261118T213813Z-matrix-smoke-before2",
+      "manifest_sha256": "aecd0552a1e42b8a1f4c9204c7c34dbfdb1e4afc839abe665c4814bcb0a8f737",
+      "phase_seconds": 8,
+      "warmup_seconds": 5,
+      "roles": {
+        "server": {
+          "repetitions": 1,
+          "mean_ms": 3.86596,
+          "p95_ms": 6.4478,
+          "p99_ms": 8.253,
+          "max_ms": 10.4972,
+          "rate": 60.002033967253126,
+          "cpu_one_core_percent": 27.570000000000004,
+          "rss_peak_mb": 693.81,
+          "native_send_calls": 178,
+          "native_payload_bytes": 73298
+        },
+        "A": {
+          "repetitions": 1,
+          "mean_ms": 2.80903,
+          "p95_ms": 5.5476,
+          "p99_ms": 6.1163,
+          "max_ms": 10.2668,
+          "rate": 355.99477399671775,
+          "cpu_one_core_percent": 114.44666666666667,
+          "rss_peak_mb": 1786.85,
+          "native_send_calls": null,
+          "native_payload_bytes": null
+        },
+        "B": {
+          "repetitions": 1,
+          "mean_ms": 2.80115,
+          "p95_ms": 5.4348,
+          "p99_ms": 6.1245,
+          "max_ms": 7.5415,
+          "rate": 356.9962336897346,
+          "cpu_one_core_percent": 117.56666666666666,
+          "rss_peak_mb": 1846.23,
+          "native_send_calls": null,
+          "native_payload_bytes": null
+        }
+      },
+      "activity": [
+        {
+          "phase": "aegisheadsetmk2_hit_8_r1",
+          "work": [
+            27,
+            27,
+            27,
+            27,
+            27,
+            27,
+            27,
+            27
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": "aegisvacuum_vacuum_8",
+      "run_id": "20261118T215851Z-matrix-repaired-smoke",
+      "manifest_sha256": "1a53aa6332089601c54453d090470f79fe81b34fd20084fe96df68bcf4902acf",
+      "phase_seconds": 12,
+      "warmup_seconds": 5,
+      "roles": {
+        "server": {
+          "repetitions": 1,
+          "mean_ms": 5.03979,
+          "p95_ms": 12.1508,
+          "p99_ms": 21.7869,
+          "max_ms": 71.2356,
+          "rate": 59.542418644308654,
+          "cpu_one_core_percent": 29.43285714285714,
+          "rss_peak_mb": 600.55,
+          "native_send_calls": 384,
+          "native_payload_bytes": 251348
+        },
+        "A": {
+          "repetitions": 1,
+          "mean_ms": 2.55571,
+          "p95_ms": 6.8702,
+          "p99_ms": 8.5682,
+          "max_ms": 15.8006,
+          "rate": 391.2807008619914,
+          "cpu_one_core_percent": 117.0642857142857,
+          "rss_peak_mb": 1908.01,
+          "native_send_calls": null,
+          "native_payload_bytes": null
+        },
+        "B": {
+          "repetitions": 1,
+          "mean_ms": 2.56567,
+          "p95_ms": 7.3726,
+          "p99_ms": 8.9455,
+          "max_ms": 16.8667,
+          "rate": 389.76173864916376,
+          "cpu_one_core_percent": 117.0657142857143,
+          "rss_peak_mb": 1924.88,
+          "native_send_calls": null,
+          "native_payload_bytes": null
+        }
+      },
+      "activity": [
+        {
+          "phase": "aegisvacuum_vacuum_8_r1",
+          "work": [
+            48,
+            48,
+            48,
+            48,
+            48,
+            48,
+            48,
+            48
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": "aegisvacuumpack_storage10000_1",
+      "run_id": "20261118T215851Z-matrix-repaired-smoke",
+      "manifest_sha256": "1a53aa6332089601c54453d090470f79fe81b34fd20084fe96df68bcf4902acf",
+      "phase_seconds": 12,
+      "warmup_seconds": 5,
+      "roles": {
+        "server": {
+          "repetitions": 1,
+          "mean_ms": 4.64685,
+          "p95_ms": 5.8153,
+          "p99_ms": 7.52,
+          "max_ms": 227.7736,
+          "rate": 58.21538288888577,
+          "cpu_one_core_percent": 24.96857142857143,
+          "rss_peak_mb": 762.02,
+          "native_send_calls": 300,
+          "native_payload_bytes": 154648
+        },
+        "A": {
+          "repetitions": 1,
+          "mean_ms": 1.32998,
+          "p95_ms": 4.5785,
+          "p99_ms": 5.1377,
+          "max_ms": 15.6011,
+          "rate": 751.8910058797877,
+          "cpu_one_core_percent": 125.52142857142857,
+          "rss_peak_mb": 2058.04,
+          "native_send_calls": null,
+          "native_payload_bytes": null
+        },
+        "B": {
+          "repetitions": 1,
+          "mean_ms": 1.28329,
+          "p95_ms": 4.2824,
+          "p99_ms": 4.8193,
+          "max_ms": 11.717,
+          "rate": 779.2470914602311,
+          "cpu_one_core_percent": 125.29571428571428,
+          "rss_peak_mb": 2083.3,
+          "native_send_calls": null,
+          "native_payload_bytes": null
+        }
+      },
+      "activity": [
+        {
+          "phase": "aegisvacuumpack_storage10000_1_r1",
+          "work": [
+            6.299999999999994
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": "descendantservosuit_repair_8",
+      "run_id": "20261118T205645Z-baseline-suit",
+      "manifest_sha256": "f8940649afb0bf8f2c7ab25a46c1a477e5247b9b2421589378be2cedf13bc2a2",
+      "phase_seconds": 30,
+      "warmup_seconds": 5,
+      "roles": {
+        "server": {
+          "repetitions": 3,
+          "mean_ms": 6.56246,
+          "p95_ms": 10.9137,
+          "p99_ms": 13.8378,
+          "max_ms": 19.4374,
+          "rate": 60.00127832284043,
+          "cpu_one_core_percent": null,
+          "rss_peak_mb": null,
+          "native_send_calls": null,
+          "native_payload_bytes": null
+        },
+        "A": {
+          "repetitions": 3,
+          "mean_ms": 6.95029,
+          "p95_ms": 10.2171,
+          "p99_ms": 11.7479,
+          "max_ms": 51.61,
+          "rate": 143.8788885068105,
+          "cpu_one_core_percent": null,
+          "rss_peak_mb": null,
+          "native_send_calls": null,
+          "native_payload_bytes": null
+        },
+        "B": {
+          "repetitions": 3,
+          "mean_ms": 6.82193,
+          "p95_ms": 10.6697,
+          "p99_ms": 11.9695,
+          "max_ms": 24.2574,
+          "rate": 146.58608341041318,
+          "cpu_one_core_percent": null,
+          "rss_peak_mb": null,
+          "native_send_calls": null,
+          "native_payload_bytes": null
+        }
+      },
+      "activity": [
+        {
+          "phase": "descendantservosuit_repair_8_r1",
+          "work": [
+            795.5113868713379,
+            783.5381374359131,
+            746.6109781265259,
+            767.035135269165,
+            757.3870887756348,
+            767.3464241027832,
+            752.6643381118774,
+            764.500057220459
+          ]
+        },
+        {
+          "phase": "descendantservosuit_repair_8_r2",
+          "work": [
+            794.9813957214355,
+            783.0161266326904,
+            746.1135854721069,
+            766.5241298675537,
+            756.8824253082275,
+            766.8352031707764,
+            752.162896156311,
+            763.482084274292
+          ]
+        },
+        {
+          "phase": "descendantservosuit_repair_8_r3",
+          "work": [
+            795.5114135742188,
+            783.5381374359131,
+            746.6110010147095,
+            767.5461463928223,
+            757.8916435241699,
+            767.8576526641846,
+            753.1657800674438,
+            764.5000629425049
+          ]
+        }
+      ]
+    }
+  ]
+}

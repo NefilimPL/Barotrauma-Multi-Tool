@@ -7,7 +7,9 @@ function M.install(G,E)
     local selectedId,selectedRow,cells=nil,nil,{}
     local selectedRows,batchButton,looseButton={}
     local tiles={}
-    local rowFields={'id','kind','name','count','condition','quality','excluded','blocked'}
+    local rowFields={'id','kind','name','count','condition','quality','excluded','blocked','protected','allowed'}
+    local ruleFields={filter='excluded',protect='protected',allow='allowed'}
+    local ruleMode,ruleButtons='filter',{}
     local placeholderPrefab=E.ItemPrefab and E.ItemPrefab.Prefabs[C.pack]
     local placeholder=placeholderPrefab and (placeholderPrefab.InventoryIcon or placeholderPrefab.Sprite)
     local vacuum,view,snapshot,nextRefresh=nil,{page=0,group=0,search='',category='all',filters=false},nil,0
@@ -45,7 +47,7 @@ function M.install(G,E)
         takeButton.Enabled=single or false;stackButton.Enabled=single or false
         if batchButton then batchButton.Enabled=snapshot and not snapshot.busy and next(selectedRows)~=nil and not view.filters or false end
         detailsButton.Enabled=(single and view.group==0) or false
-        trashButton.Enabled=single or false
+        trashButton.Enabled=single and not selectedRow.protected or false
         local ticket=single and snapshot.trashTarget==selectedId and snapshot.trashToken~=0
         trashButton.Text=ticket and (text('trashconfirm')..' '..snapshot.trashCount) or text('trash')
     end
@@ -64,6 +66,12 @@ function M.install(G,E)
         progress.ToolTip=text('salvagehelp')
         if view.filters then status.Text=text('filterhelp') end
         filterButton.Text=text(view.filters and 'contents' or 'filters')
+        for action,control in pairs(ruleButtons) do
+            control.Visible=view.filters;control.Selected=action==ruleMode;control.Enabled=not s.busy
+        end
+        for _,control in ipairs({takeButton,stackButton,detailsButton,trashButton,batchButton,salvageButton}) do
+            control.Visible=not view.filters
+        end
         looseButton.Selected=s.looseOnly==true
         looseButton.Enabled=not s.busy
         if not selectedId then selectedRows={} end
@@ -88,7 +96,8 @@ function M.install(G,E)
                     local current=tile.row
                     if not current then return end
                     if view.filters then
-                        if not current.blocked then view.kind=current.kind;request('filter',current.excluded and 0 or 1) end
+                        if snapshot.busy or (ruleMode=='filter' and current.blocked and not current.excluded) then return end
+                        view.kind=current.kind;request(ruleMode,current[ruleFields[ruleMode]] and 0 or 1)
                         return
                     end
                     selectedRows[current.id]=not selectedRows[current.id] and current or nil
@@ -110,7 +119,7 @@ function M.install(G,E)
             end
             tile.row=row
             local cell=tile.button
-            cell.Enabled=row~=nil and not (view.filters and (row.blocked or s.busy))
+            cell.Enabled=row~=nil and not (view.filters and (s.busy or (ruleMode=='filter' and row.blocked and not row.excluded)))
             cell.Selected=false
             if row then
                 cells[view.filters and row.kind or row.id]=cell;cell.Selected=not view.filters and selectedRows[row.id]~=nil
@@ -124,15 +133,26 @@ function M.install(G,E)
                     if E.Color then cell.Color=E.Color(53,72,65,230) end
                     cell.ToolTip=string.format('%s\n×%d | %.0f%% | Q%d',row.name,row.count,row.condition,row.quality)
                     if view.filters then
-                        cell.ToolTip=row.name..'\n'..text(row.blocked and 'blocked' or (row.excluded and 'excluded' or 'included'))
-                        if E.Color and row.excluded then cell.Color=E.Color(111,53,48,230) end
+                        cell.ToolTip=row.name..'\n'..text(row.excluded and 'excluded' or (row.blocked and 'blocked' or 'included'))
+                        if row.protected then cell.ToolTip=cell.ToolTip..'\n'..text('protected') end
+                        if row.allowed then cell.ToolTip=cell.ToolTip..'\n'..text('allowed') end
+                        if E.Color then
+                            if row.protected then cell.Color=E.Color(47,109,62,230)
+                            elseif row.excluded then cell.Color=E.Color(111,53,48,230)
+                            elseif row.allowed then cell.Color=E.Color(46,83,113,230)
+                            elseif row.blocked then cell.Color=E.Color(65,65,65,230) end
+                        end
+                    elseif row.protected then
+                        cell.ToolTip=cell.ToolTip..'\n'..text('protected')
+                        if E.Color then cell.Color=E.Color(47,109,62,230) end
                     end
                     local ok,prefab=pcall(function() return E.ItemPrefab.Prefabs[row.kind] end)
                     if not ok then prefab=nil end
                     local sprite=prefab and (prefab.InventoryIcon or prefab.Sprite)
                     tile.inventoryIcon=prefab and prefab.InventoryIcon~=nil
                     tile.icon.Sprite=sprite;tile.icon.Visible=sprite~=nil;tile.missing.Visible=sprite==nil
-                    tile.badge.Text=view.filters and (row.excluded and '−' or '+') or tostring(row.count)
+                    local marks=(row.excluded and '-' or '')..(row.protected and 'O' or '')..(row.allowed and '!' or '')
+                    tile.badge.Text=view.filters and (marks~='' and marks or (row.blocked and 'X' or '+')) or tostring(row.count)
                     tile.badge.Visible=true
                 end
                 if tile.icon.Visible then
@@ -149,6 +169,7 @@ function M.install(G,E)
     end
     function G.openPanel(item)
         G.closePanel();vacuum=item;view={page=0,group=0,search='',category='all',filters=false}
+        ruleMode='filter';ruleButtons={}
         panel=UI.Frame(UI.RectTransform(E.Vector2(.56,.86),UI.GUI.Canvas,UI.Anchor.Center), 'GUIFrame')
         UI.TextBlock(rect(panel.RectTransform,.04,.025,.75,.06),text('title'))
         button(panel.RectTransform,.82,.025,.14,.06,text('close'),G.closePanel)
@@ -207,6 +228,13 @@ function M.install(G,E)
         end)
         trashButton.ToolTip=text('trashhelp');trashButton.Enabled=false
         takeButton.Enabled=false;stackButton.Enabled=false;detailsButton.Enabled=false
+        for index,action in ipairs({'filter','protect','allow'}) do
+            local control=button(panel.RectTransform,.04+(index-1)*.31,.805,.30,.06,text('rule.'..action),function()
+                ruleMode=action
+                if snapshot then G.onSnapshot(snapshot) end
+            end)
+            control.ToolTip=text('rulehelp.'..action);control.Visible=false;ruleButtons[action]=control
+        end
         batchButton=button(panel.RectTransform,.04,.875,.55,.05,text('takeselected'),function()
             if not selectedId then return end
             view.targets={};for id in pairs(selectedRows) do view.targets[#view.targets+1]=id end

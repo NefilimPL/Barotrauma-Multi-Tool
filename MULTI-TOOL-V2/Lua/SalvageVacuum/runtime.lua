@@ -46,7 +46,7 @@ function M.install(G,E)
         refresh=nil
         refreshAt,lootAt,scanAt,salvageAt=0,0,0,0
     end
-    function G.portable(item)
+    function G.portable(item,pack)
         if not item or item.Removed or G.id(item)==C.page then return false end
         -- Match FastLoot: CanBePicked alone also describes crowbar-operated doors.
         local slotted=false
@@ -73,7 +73,7 @@ function M.install(G,E)
             if E.LuaUserData.IsTargetType(component,'Barotrauma.Items.Components.Pickable') then pick=component end
         end)
         return pick and pick.CanBePicked and not pick.IsAttached
-            and pick.PickingTime<2147483647
+            and (pick.PickingTime<2147483647 or (G.filterRules and G.filterRules(pack).allowed[G.id(item)]))
     end
     local function safeContents(item,ctx,seen,budget,pageAllowed)
         if seen[item] or budget.count>=C.pickupTreeLimit then return false end
@@ -83,7 +83,7 @@ function M.install(G,E)
         U.each(item.Components,function(component)
             if tostring(component.Name):lower()=='itemcontainer' and component.Inventory and component.Inventory.Locked then locked=true end
         end)
-        if (not internalPage and not G.portable(item)) or not item.HasAccess(ctx.owner) or item==ctx.pack or item==ctx.vacuum or locked
+        if (not internalPage and not G.portable(item,ctx.pack)) or not item.HasAccess(ctx.owner) or item==ctx.pack or item==ctx.vacuum or locked
             or (item.ParentInventory and item.ParentInventory.Locked)
             or (item.OwnInventory and item.OwnInventory.Locked) then return false end
         for _,child in ipairs(G.children(item)) do
@@ -103,7 +103,7 @@ function M.install(G,E)
             seen[node]=true
             if node==ctx.pack or node==ctx.vacuum or G.is(node,C.page) then return nil end
             if not node.HasAccess(ctx.owner) then return nil end
-            if G.portable(node) then candidates[#candidates+1]=node end
+            if G.portable(node,ctx.pack) then candidates[#candidates+1]=node end
             local inv=node.ParentInventory
             if not inv then break end
             if inv.Locked then return nil end

@@ -1,4 +1,5 @@
 local C=require('DescendantSuit.config')
+local Ammo=require('DescendantSuit.ammo')
 local M={}
 function M.layout(powered,expanded,width,height)
     local side=math.floor(math.min(240,width*.22,height*.27))
@@ -111,9 +112,9 @@ function M.install(G,E)
         for _,mode in ipairs({'repair','combat','grab'}) do buttons[mode].Selected=s.mode==mode end
         buttons.off.Selected=s.mode~='off'
         buttons.off.Text=text(s.mode=='off' and 'off' or 'on');buttons.sonar.Selected=s.sonar==true
-        local ammo=G.ammo(item)
+        local ammo,profile=G.ammo(item)
         status.Text=text('power')..': '..math.floor(s.charge or G.energy(item))..'%  |  '..
-            text('ammo')..': '..math.floor((ammo and ammo.Condition or 0)/C.ammoCost)..'\n'..
+            text('ammo')..': '..Ammo.status(ammo,profile)..(ammo and ' ('..tostring(ammo.Prefab.Name)..')' or '')..'\n'..
             text(s.open and 'air' or 'closedloop')..(s.mode=='grab' and '\n'..grabHint or '')
         local sonar,powered=G.syncSonar(item,s)
         local bounds=gui.Canvas.Rect

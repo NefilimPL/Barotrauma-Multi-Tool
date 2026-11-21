@@ -1,16 +1,24 @@
 local U=require('CombatTool.util')
 local Core=require('DescendantSuit.core')
+local Ammo=require('DescendantSuit.ammo')
 local C=Core.config
 local M={}
+local function shotPower(source)
+    return C.shotPower*(source.HasTag('reactorfuel') and C.rodMultiplier or 1)
+end
 function M.install(G,E)
     if not G.authoritative then return end
     local function remove(item) if item and not item.Removed then E.Entity.Spawner.AddEntityToRemoveQueue(item) end end
     function G.firePulse(owner,item,target)
         local s=G.state(item)
-        local ammo=G.ammo(item)
-        if not ammo or ammo.Condition<C.ammoCost or G.energy(item)<=0 then return false end
         if s.pendingPulse then return false end
+        local ammo,profile=G.ammo(item)
+        local source=G.source(item)
+        if not source or Core.charge(source.Condition,source.MaxCondition,true)<shotPower(source)
+            or Ammo.status(ammo,profile)<1 then return false end
         if G.now<(s.nextPulse or 0) then return true end
+        local prefab=E.ItemPrefab.Prefabs[profile.projectile]
+        if not prefab then return false end
         s.pendingPulse=true
         local pose=G.toolPose(owner,s)
         local world=E.Vector2(pose.muzzle.x,pose.muzzle.y)
@@ -20,8 +28,9 @@ function M.install(G,E)
                 -- Spawning is asynchronous: recheck authority, ownership, mode,
                 -- target, range and visibility before spending or firing.
                 if not G.alive or item.Removed or owner.Removed or owner.IsDead or owner.IsUnconscious or
+                    G.states[item]~=s or
                     G.equipped(owner)~=item or s.mode~='combat' or not s.target or s.target.entity~=target.entity or
-                    target.entity.Removed or target.entity.IsDead then remove(projectileItem);return end
+                    target.entity.Removed or target.entity.IsDead or G.ally(owner,target.entity) then remove(projectileItem);return end
                 local p=target.entity.WorldPosition;target.point={x=p.X,y=p.Y}
                 if G.armReady and not G.armReady(owner,s,target) then remove(projectileItem);return end
                 local mount=G.mount(owner)
@@ -31,9 +40,14 @@ function M.install(G,E)
                 if not G.visible(owner,muzzle,target) then remove(projectileItem);return end
                 local projectile=U.component(projectileItem,'Projectile')
                 if not projectile then remove(projectileItem);return end
-                local source,box=G.source(item),G.ammo(item)
-                local cost=C.shotPower*(source and source.HasTag('reactorfuel') and C.rodMultiplier or 1)
-                local ok,power,remaining=Core.payPulse(s,G.energy(item),box and box.Condition or 0,G.now,cost)
+                local source=G.source(item)
+                local box,currentProfile=G.ammo(item)
+                if not source or box~=ammo or currentProfile~=profile then remove(projectileItem);return end
+                local shots,ammoCost,condition=Ammo.status(box,profile)
+                if shots<1 then remove(projectileItem);return end
+                local charge=Core.charge(source.Condition,source.MaxCondition,true)
+                local interval=profile.ballistic and C.gaussShotInterval or C.shotInterval
+                local ok,power,remaining=Core.payPulse(s,charge,condition,G.now,shotPower(source),ammoCost,interval)
                 if not ok then remove(projectileItem);return end
                 source.Condition=power*source.MaxCondition/100;box.Condition=remaining
                 local sub=owner.Submarine
@@ -43,10 +57,10 @@ function M.install(G,E)
                 local sim=E.ConvertUnits.ToSimUnits(pos)
                 projectile.Shoot(owner,sim,sim,math.atan2(p.Y-muzzle.y,p.X-muzzle.x),nil,true)
                 s.shots=((s.shots or 0)+1)%65536
+                s.ballisticShot=profile.ballistic==true
                 s.lastPulse={x=p.X,y=p.Y};s.shotTime=G.now
             end,20)
         end
-        local prefab=E.ItemPrefab.Prefabs['descendantpulsebolt']
         if owner.Submarine then
             E.Entity.Spawner.AddItemToSpawnQueue(prefab,world-owner.Submarine.Position,owner.Submarine,nil,nil,spawned)
         else E.Entity.Spawner.AddItemToSpawnQueue(prefab,world,nil,nil,spawned) end

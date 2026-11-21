@@ -1,6 +1,6 @@
 # Kombinezon serwomanipulacyjny Descendants V2
 
-Wersja **1.3.22** dla Barotrauma 1.13.5.0 / LuaCs c6e8829. Identyfikator przedmiotu: `descendantservosuit`. Po aktualizacji **utwórz nowy egzemplarz**, aby otrzymać aktualne komponenty sonaru i grafiki stojaków. Obie strony multiplayera muszą mieć tę samą wersję moda; komunikaty kombinezonu używają protokołu v5. [Poprawiona grafika szafki i porównanie z grą](DESCENDANT-RACK.md). [Próby funkcji i zmierzone prędkości pływania1.3.18](DESCENDANT-SERVICE.md).
+Wersja **1.3.26** dla Barotrauma 1.13.5.0 / LuaCs c6e8829. Identyfikator przedmiotu `descendantservosuit`. Obie strony multiplayera muszą mieć tę samą wersję moda. Komunikaty kombinezonu używają protokołu v6. [Poprawiona grafika szafki i porównanie z grą](DESCENDANT-RACK.md) · [Próby funkcji i zmierzone prędkości pływania w 1.3.18](DESCENDANT-SERVICE.md).
 
 [Otwórz animowany podgląd V2](descendant-suit/index.html). Działa lokalnie, bez instalowania bibliotek. Pokazuje nowy pancerz, oba stany hełmu, ramię, impulsy, iskry, wirniki i dźwięki. To demonstracja zasobów; nie zastępuje próby w grze.
 
@@ -11,9 +11,9 @@ Wersja **1.3.22** dla Barotrauma 1.13.5.0 / LuaCs c6e8829. Identyfikator przedmi
 
 Kombinezon zachowuje smukłe proporcje. Obecna poprawka dodaje trwałe podtrzymywanie celu, wspólną końcówkę promieni, tolerancję ruchu podczas naprawy, chowane panele i natywny sonar. [Zawieszenie osoby i schowane panele](descendant-suit/controls-hold.png), [osobny sonar](descendant-suit/controls-sonar.png), [szersza naprawa](descendant-suit/controls-repair.png), [przedmiot na ziemi](descendant-suit/controls-ground.png), [impuls z końcówki](descendant-suit/controls-pulse.png). Zrzuty pochodzą z gry, z włączonym oświetleniem i bez obróbki obrazu.
 
-Aktualna paczka: `output/MULTI-TOOL-V2-1.3.22.zip`. Poprzednie paczki zachowano.
+Aktualna paczka to `output/MULTI-TOOL-V2-1.3.26.zip`.
 
-Załóż kombinezon w slocie ubrania zewnętrznego. Jeden widoczny panel ma dwa ograniczone sloty: pierwszy na baterię/pręt reaktora, drugi na skrzynkę amunicji lasera pulsacyjnego. Butla nie jest potrzebna. Zasilanie ramienia nie wymaga trzymania narzędzia w ręce. Przycisk „Ramię włączone / Ramię wyłączone” pokazuje stan i przełącza funkcję; ponowne włączenie przywraca ostatni tryb.
+Załóż kombinezon w slocie ubrania zewnętrznego. Włóż baterię lub pręt reaktora do pierwszego slotu i obsługiwaną skrzynkę amunicji do drugiego. Obieg oddechowy i ramię korzystają z zasilania kombinezonu. Przycisk „Ramię włączone / Ramię wyłączone” pokazuje stan, a ponowne włączenie przywraca ostatni tryb.
 
 Komendy F3 (na serwerze wymagają uprawnień):
 
@@ -27,7 +27,7 @@ spawnitem pulselaserammobox inventory 1
 Pręt zamiast baterii: `spawnitem fuelrod inventory 1`. Obsługiwane są też baterie fulgurium oraz pręty torowe i fulgurium. Panel po prawej stronie pozwala wybrać jedną funkcję:
 
 - **Naprawa / spawanie**: automatycznie wybiera pobliskie urządzenie albo sekcję ściany. Ramię ma promień ruchu 118, końcówkę wysuniętą o 24 i promień naprawczy długości do 68; podstawowy zasięg od mocowania wynosi 210 jednostek. Rozpoczęta naprawa ma dodatkowe 32 jednostki tolerancji ruchu. Krótkie zasłonięcie zachowuje cel do 0,4 s, ale w tym czasie nie naprawia przez przeszkodę. Szerszy niebieski promień i mocne iskry wychodzą z końcówki narzędzia. Natywna naprawa uwzględnia umiejętności, statystyki szybkości, jakość urządzenia, nadnaprawę, zdobywanie umiejętności i `OnRepairComplete`; narzędziowa premia wynosi +450%. Nie przejmuje urządzenia naprawianego przez inną postać. Spawanie ma bazową siłę 64 na sekundę, uwzględnia premię postaci i wywołuje natywny talent po zamknięciu zewnętrznego przecieku. Nie symuluje QTE ani nagród za ręczne trafienia w QTE.
-- **Obrona pulsacyjna**: krótkie czerwone impulsy atakują jeden widoczny wrogi cel, 360°. Zasięg 1800 jednostek gry, odstęp 0,4 s, bazowe trafienie 16 poparzeń + 4 obrażeń od eksplozji przed odpornościami celu. Wcześniej było to 420 i 4 obrażenia/s. Każdy impuls zużywa 2,25 stanu skrzynki i energię; pełna zwykła skrzynka daje 44 impulsy. Pocisk używa natywnego śladu, rozbłysków, iskier trafienia i dźwięku lasera pulsacyjnego. Natywne zasady AI rozpoznają przyjazne cele; przeszkody i postacie na linii celowania blokują wybór celu.
+- **Obrona** dobiera miniaturowy pocisk do skrzynki. Pełne skrzynki dają 132 strzały pulsacyjne, 84 potrójne, 600 standardowych Gaussa, 600 z fizykorium, 300 wybuchowych lub 447 przebijających. Potrójna amunicja wypuszcza trzy promienie na strzał, Gauss używa fizycznych pocisków, a amunicja wybuchowa zadaje obrażenia od eksplozji przy bezpośrednim trafieniu. Ramię szuka jednego wrogiego celu w promieniu 1800 jednostek. Minimalny odstęp to 0,25 s dla Gaussa i 0,40 s dla lasera. Przeszkody i postacie na linii celowania blokują wybór celu.
 - **Chwytak**: wybierz tryb, wskaż cel kursorem, przytrzymaj **PPM (Celuj)** i naciśnij **E (Użyj)**, potem puść klawisze. Podtrzymuje cel przed graczem w powietrzu, z tłumieniem ruchu i kompensacją grawitacji. Osoba jest chwilowo bezwładna; po puszczeniu wraca jej wcześniejszy stan ragdolla. Ponowne E podczas celowania puszcza cel. Chwyt gracza trwa do puszczenia, zmiany trybu, przeszkody, wyjścia poza zasięg, utraty energii, utraty przytomności lub zdjęcia kombinezonu. Panel pokazuje własne przypisania klawiszy. Łapie jeden luźny dynamiczny przedmiot albo istotę/ciało; limit wynosi 80 jednostek masy silnika dla całej istoty. Nie wyrywa zamocowanych urządzeń ani rzeczy z ekwipunków i nie chwyta podłączonych przewodów. Zasięg wynosi 300 jednostek gry. Od wersji 1.3.22 AI nie używa chwytaka; ręczne chwytanie jest dostępne dla gracza.
 
 Prawy panel chowa się przyciskiem `»`; zakładka **Ramię** przywraca go bez zmiany wybranej funkcji. **Sonar** otwiera niezależny lewy panel z własnym przyciskiem zasilania, trybem aktywnym i pasywnym oraz natywnymi echami gry do 6000 jednostek. Schowanie panelu nie wyłącza sonaru ani ramienia. Aktywny sonar pobiera bazowo 0,12 stanu zwykłej baterii/s, pasywny 0,03/s, z normalnym mnożnikiem prętów reaktora. Impulsy i reakcje AI wynikają z natywnego sonaru; to nie radar wszystkich obiektów. Sonar działa niezależnie od pojedynczej funkcji ramienia. Bez energii przestaje działać, a po wymianie źródła może wznowić żądany tryb.
@@ -57,6 +57,23 @@ Zasilany stojak na kombinezony ładuje zainstalowane źródło — baterię lub 
 Sonar po zwinięciu pokazuje wyłącznie mały radar. `+` rozwija ustawienia; wyłączony i zwinięty sonar jest całkowicie ukryty. Przycisk **Sonar** po prawej ponownie otwiera ustawienia. **Minerały** uruchamia natywny skaner złóż w trybie aktywnym. Aktywna funkcja ramienia ma zielonkawe podświetlenie.
 
 Pływanie zmierzono na tej samej postaci: zasilany kombinezon **2,336 m/s**, zwykły **2,226**, głębinowy **1,813**, UKOS **2,326**; odpowiednio około **+5%, +29% i +0,4%**. Bez zasilania nowy kombinezon osiągnął **2,226 m/s**. To wynik opisanej próby, a nie stała premia procentowa dla każdej postaci. [Metoda i aktualna weryfikacja](DESCENDANT-SERVICE.md).
+
+## Obrażenia ramienia
+
+Wartości bazowe przed uwzględnieniem pancerza i odporności trafionej części ciała.
+
+| Amunicja | Bezpośrednie obrażenia | Dodatkowe efekty |
+|---|---|---|
+| Pulsacyjna | 16 poparzeń + 4 od eksplozji | 0,15 ogłuszenia |
+| Potrójna pulsacyjna | 7 poparzeń + 3 od eksplozji na promień. Do 30 łącznie przy trafieniu trzema promieniami | 0,10 ogłuszenia na promień |
+| Gauss standardowa | 12 ran szarpanych | 0,8 krwawienia i 0,025 ogłuszenia |
+| Gauss z fizykorium | 20 ran szarpanych | 1,2 krwawienia i 0,05 ogłuszenia |
+| Gauss wybuchowa | 19 obrażeń od eksplozji | 1 krwawienia i 0,20 ogłuszenia przy trafieniu |
+| Gauss przebijająca | 9 ran szarpanych za trafienie | 1,5 krwawienia i 0,0125 ogłuszenia na trafienie. Do dwóch trafień, także w dwie części ciała jednego celu |
+
+Pociski Gaussa mają własny odgłos, smugę i efekt trafienia. Oba warianty
+lasera kończą wiązkę błyskiem i iskrami. Błysk przy lufie odpowiada rodzinie
+oddanego strzału.
 
 ## Zasoby
 

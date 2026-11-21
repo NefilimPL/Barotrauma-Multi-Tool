@@ -60,7 +60,20 @@ function M.install(G,E)
         elseif blocked then G.event('shieldhit',s,position) end
         return blocked
     end
-    function G.updateShield(s,ctx,dt)
+    local function limbPoints(target,contacts)
+        local points=contacts and contacts[target]
+        if points then return points end
+        points={}
+        U.each(target.AnimController.Limbs,function(limb)
+            if not limb.IsSevered then
+                local p=limb.WorldPosition
+                points[#points+1]=p.X;points[#points+1]=p.Y
+            end
+        end)
+        if contacts then contacts[target]=points end
+        return points
+    end
+    function G.updateShield(s,ctx,dt,contacts)
         if not ctx.valid or not ctx.aim or not ctx.damage or G.now<s.brokenUntil or not G.powered(s.item,0) then
             s.shield=nil;return
         end
@@ -69,6 +82,7 @@ function M.install(G,E)
             if source then source.item.Condition=0 end
             s.brokenUntil=G.now+C.shieldCooldown
             G.event('break',s,{x=s.item.WorldPosition.X,y=s.item.WorldPosition.Y})
+            if contacts then for character in pairs(contacts) do contacts[character]=nil end end
             s.shield=nil;return
         end
         local direction
@@ -79,20 +93,26 @@ function M.install(G,E)
             local nextContact=s.contactTimes[target] or 0
             if G.now<nextContact then return end
             local touched=nil
-            U.each(target.AnimController.Limbs,function(limb)
-                if limb.IsSevered then return end
-                local p=limb.WorldPosition
-                local dx,dy=p.X-s.shield.x,p.Y-s.shield.y
-                local dist=math.sqrt(dx*dx+dy*dy)
-                if dist>1 and math.abs(dist-C.shieldRadius)<=14 and
-                    (dx*direction.x+dy*direction.y)/dist>=math.cos(C.shieldHalfAngle) then touched={x=p.X,y=p.Y} end
-            end)
+            local points=limbPoints(target,contacts)
+            local inner,outer=math.max(1,C.shieldRadius-14)^2,(C.shieldRadius+14)^2
+            for i=1,#points,2 do
+                local x,y=points[i],points[i+1]
+                local dx,dy=x-s.shield.x,y-s.shield.y
+                local distance2=dx*dx+dy*dy
+                if distance2>=inner and distance2<=outer then
+                    local dist=math.sqrt(distance2)
+                    if dist>1 and (dx*direction.x+dy*direction.y)/dist>=math.cos(C.shieldHalfAngle) then touched={x=x,y=y} end
+                end
+            end
             if touched and not G.cast({x=pos.X,y=pos.Y},touched,0,ctx.owner,true) then
                 s.contactTimes[target]=G.now+C.shieldContactInterval
                 if G.blockShield(s,C.shieldContactCost,touched) then
                     G.damage(target,touched,ctx.owner,C.contactBurn,0,C.contactStun)
                     G.event('contact',s,touched)
                 end
+                -- Contact and break hooks may move bodies synchronously. Later
+                -- shields in this controller step must sample them again.
+                if contacts then for character in pairs(contacts) do contacts[character]=nil end end
             end
         end)
     end
