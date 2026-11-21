@@ -13,7 +13,7 @@ function M.install(G,E)
         if not s or not s.lights then return end
         s.lights.helmet.Remove();s.lights.tool.Remove();s.lights=nil
     end
-    function G.updateLights(s)
+    function G.updateLights(s,newShot)
         local owner=s.owner or (G.owner and G.owner(s.item))
         if not owner then G.removeLights(s);return end
         if not s.lights then
@@ -23,7 +23,12 @@ function M.install(G,E)
         local powered=G.energy(s.item)>0
         local head=G.attachment(owner,8,48)
         local flash=s.lastPulse and G.now-(s.shotTime or -100)<C.pulseDuration
-        local muzzle=G.toolPose(owner,s,true,flash and s.lastPulse or nil).muzzle
+        local pose=G.toolPose(owner,s,true,flash and s.lastPulse or nil)
+        local muzzle=pose.muzzle
+        if newShot and flash then
+            local particle=s.ballisticShot and 'descendantgaussmuzzle' or 'descendantpulsemuzzle'
+            E.Game.ParticleManager.CreateParticle(particle,E.Vector2(muzzle.x,muzzle.y),E.Vector2.Zero,-pose.angle)
+        end
         local point=s.target and s.target.point or muzzle
         move(s.lights.helmet,owner,head,powered and 420 or 0,E.Color(190,220,255,170))
         local repairing=s.active and s.target and (s.target.kind=='repair' or s.target.kind=='weld')

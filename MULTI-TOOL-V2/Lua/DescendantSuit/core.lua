@@ -22,11 +22,11 @@ end
 function M.toggle(s)
     return M.setMode(s,s.mode=='off' and (s.resumeMode or 'repair') or 'off')
 end
-function M.payPulse(s,power,ammo,now,powerCost,ammoCost)
+function M.payPulse(s,power,ammo,now,powerCost,ammoCost,interval)
     powerCost=powerCost or C.shotPower
     ammoCost=ammoCost or C.ammoCost
     if now<(s.nextPulse or 0) or power<powerCost or ammo<ammoCost then return false end
-    s.nextPulse=now+C.shotInterval
+    s.nextPulse=now+(interval or C.shotInterval)
     return true,power-powerCost,ammo-ammoCost
 end
 function M.grabPress(s,held)

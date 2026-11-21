@@ -133,11 +133,12 @@ function M.install(G,E,root)
                     end
                 else s.bubbleBudget=0 end
                 loop(entry,'beam',active~='combat' and active or nil,owner);loop(entry,'motor',s.swimming and 'impeller' or nil,owner)
-                if entry.shots~=nil and entry.shots~=(s.shots or 0) then
+                local newShot=entry.shots~=nil and entry.shots~=(s.shots or 0)
+                if newShot then
                     sound(s.ballisticShot and 'gauss' or 'pulse',owner);s.shotTime=G.now
                 end
                 entry.shots=s.shots or 0
-                G.updateLights(s)
+                G.updateLights(s,newShot)
                 if entry.open~=nil and entry.open~=s.open then sound('helmet',owner) end
                 if entry.mode and entry.mode~=s.mode then sound('switch',owner) end
                 local id=s.target and s.target.entity and s.target.entity.ID

@@ -82,6 +82,17 @@ class DescendantV2Tests(LuaCase):
         self.assertNotEqual(projectile.get('removeonhit'), 'true')
         self.assertIsNotNone(projectile.find("StatusEffect[@type='OnNotContained']/Remove"))
 
+    def test_supported_rounds_include_their_missing_impact_afflictions(self):
+        source = ET.parse(Path(__file__).resolve().parents[1] / 'MULTI-TOOL-V2/descendant_suit.xml')
+        for variant, expected in {'tri': {'stun': .10}, 'gauss': {'stun': .025},
+                                  'physicorium': {'stun': .05}, 'explosive': {'bleeding': 1, 'stun': .20},
+                                  'piercing': {'stun': .0125}}.items():
+            with self.subTest(variant=variant):
+                nodes = source.findall(f"./Item[@identifier='descendant{variant}bolt']/Projectile/Attack/Affliction")
+                actual = {node.get('identifier'): float(node.get('strength')) for node in nodes}
+                for status, strength in expected.items():
+                    self.assertEqual(actual.get(status), strength)
+
     def test_power_toggle_restores_last_selected_single_mode(self):
         self.lua.execute("""
             local C=require('DescendantSuit.core');local s={mode='repair',target={id=4}}
@@ -272,6 +283,25 @@ class DescendantNativeRepairTests(LuaCase):
 
 
 class DescendantLightTests(LuaCase):
+    def test_each_confirmed_shot_emits_one_family_specific_flash_at_the_muzzle(self):
+        self.lua.execute("""
+            local calls={}
+            E={Vector2=setmetatable({Zero={X=0,Y=0}}, {__call=function(_,x,y) return {X=x,Y=y} end}),
+                Color=function(...) return {...} end,Game={ParticleManager={CreateParticle=function(...) calls[#calls+1]={...} end}}}
+            E.LuaUserData={RegisterType=function() end,CreateStatic=function()
+                return function() return {Remove=function() end} end
+            end}
+            G={now=1,attachment=function() return {x=10,y=20} end,
+                toolPose=function() return {muzzle={x=33,y=44},angle=.5} end,energy=function() return 100 end}
+            require('DescendantSuit.lights').install(G,E)
+            local s={item={},owner={},mode='combat',lastPulse={x=500,y=600},shotTime=1,ballisticShot=true}
+            G.updateLights(s,true);G.updateLights(s,false)
+            assert(#calls==1 and calls[1][1]=='descendantgaussmuzzle')
+            assert(calls[1][2].X==33 and calls[1][2].Y==44 and calls[1][4]==-.5)
+            s.ballisticShot=false;G.updateLights(s,true)
+            assert(#calls==2 and calls[2][1]=='descendantpulsemuzzle')
+        """)
+
     def test_lights_wait_for_owner_replication_and_can_resolve_the_inventory_owner(self):
         self.lua.execute("""
             local count=0;local owner

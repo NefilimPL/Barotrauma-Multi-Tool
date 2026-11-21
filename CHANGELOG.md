@@ -3,6 +3,13 @@
 Przeniesione opisy wcześniejszych wydań z README. Pomiary i deklaracje
 w tych wpisach dotyczą wskazanych wersji, nie bieżącego kodu roboczego.
 
+## 1.3.26
+
+- Ramię używa osobnego odstępu między strzałami Gaussa i lasera pulsacyjnego.
+- Po strzale przy lufie pojawia się błysk właściwy dla rodziny amunicji.
+- Dodano ogłuszenie do potrójnego lasera oraz standardowej, przebijającej
+  i fizykoriowej amunicji Gaussa. Wybuchowy Gauss powoduje też krwawienie.
+
 ## 1.3.25
 
 - Pociski Gaussa są większe na ekranie i lecą szybciej. Mają ślad lotu,

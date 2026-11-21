@@ -104,9 +104,6 @@
         <Affliction identifier="explosiondamage" strength="4" />
         <Affliction identifier="stun" strength="0.15" />
       </Attack>
-      <StatusEffect type="OnUse" target="This">
-        <ParticleEmitter particle="muzzleflashpulselaser" particleamount="1" scalemin="0.07" scalemax="0.10" />
-      </StatusEffect>
       <StatusEffect type="OnImpact" target="UseTarget">
         <ParticleEmitter particle="muzzleflashpulselaser" particleamount="2" anglemin="0" anglemax="360" scalemin="0.12" scalemax="0.19" />
         <ParticleEmitter particle="weldspark" particleamount="5" anglemin="0" anglemax="360" velocitymin="100" velocitymax="230" scalemin="0.4" scalemax="0.6" drawontop="true" colormultiplier="255,130,130,235" />
@@ -121,6 +118,7 @@
       <Attack structuredamage="0" itemdamage="0" penetration="0.20">
         <Affliction identifier="burn" strength="7" />
         <Affliction identifier="explosiondamage" strength="3" />
+        <Affliction identifier="stun" strength="0.10" />
       </Attack>
       <StatusEffect type="OnImpact" target="UseTarget">
         <ParticleEmitter particle="muzzleflashpulselaser" particleamount="1" anglemin="0" anglemax="360" scalemin="0.10" scalemax="0.15" />
@@ -135,6 +133,7 @@
       <Attack structuredamage="0" itemdamage="0" penetration="0.14">
         <Affliction identifier="lacerations" strength="12" />
         <Affliction identifier="bleeding" strength="0.8" />
+        <Affliction identifier="stun" strength="0.025" />
       </Attack>
       <StatusEffect type="OnActive" target="This" lifetime="0.65">
         <ParticleEmitter particle="ammotrail" copyentityangle="true" particlespersecond="30" velocitymin="-80" velocitymax="-30" scalemin="0.25" scalemax="0.4" />
@@ -153,6 +152,7 @@
       <Attack structuredamage="0" itemdamage="0" penetration="0.24">
         <Affliction identifier="lacerations" strength="20" />
         <Affliction identifier="bleeding" strength="1.2" />
+        <Affliction identifier="stun" strength="0.05" />
       </Attack>
       <StatusEffect type="OnActive" target="This" lifetime="0.65">
         <ParticleEmitter particle="ammotrail" copyentityangle="true" particlespersecond="30" velocitymin="-80" velocitymax="-30" scalemin="0.25" scalemax="0.4" colormultiplier="225,145,255" />
@@ -170,6 +170,7 @@
     <Projectile characterusable="false" launchimpulse="42" removeonhit="true" friendlyfire="false" damagedoors="false">
       <Attack structuredamage="0" itemdamage="0" penetration="0.10">
         <Affliction identifier="explosiondamage" strength="19" />
+        <Affliction identifier="bleeding" strength="1" />
         <Affliction identifier="stun" strength="0.20" />
       </Attack>
       <StatusEffect type="OnActive" target="This" lifetime="0.65">
@@ -189,6 +190,7 @@
       <Attack structuredamage="0" itemdamage="0" penetration="0.50">
         <Affliction identifier="lacerations" strength="9" />
         <Affliction identifier="bleeding" strength="1.5" />
+        <Affliction identifier="stun" strength="0.0125" />
       </Attack>
       <StatusEffect type="OnActive" target="This" lifetime="0.65">
         <ParticleEmitter particle="ammotrail" copyentityangle="true" particlespersecond="30" velocitymin="-80" velocitymax="-30" scalemin="0.25" scalemax="0.4" />

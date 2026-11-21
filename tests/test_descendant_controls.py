@@ -224,6 +224,18 @@ class DescendantPulseOriginTests(LuaCase):
             assert(not shot and projectile.Removed and gauss.Condition==100 and pulse.Condition==100 and cell.Condition==100)
         """)
 
+    def test_gauss_shots_use_their_own_cooldown_after_the_async_payment(self):
+        self.lua.execute("""
+            box.Prefab.Identifier.Value='coilgunammobox'
+            E.ItemPrefab.Prefabs.descendantgaussbolt={}
+            assert(G.firePulse(owner,suit,target));launch()
+            assert(shot and state.ballisticShot and state.nextPulse==1.25)
+            local first=launch
+            G.now=1.24;assert(G.firePulse(owner,suit,target) and launch==first)
+            G.now=1.25;assert(G.firePulse(owner,suit,target) and launch~=first)
+            launch();assert(state.shots==2 and state.nextPulse==1.5)
+        """)
+
     def test_async_owner_loss_cancels_projectile_without_spending_resources(self):
         self.lua.execute("""
             assert(G.firePulse(owner,suit,target));G.equipped=function() return nil end;launch()

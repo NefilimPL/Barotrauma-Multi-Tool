@@ -25,4 +25,16 @@
     usemiddlecolor="False" animduration="1" priority="10">
     <sprite texture="Content/Particles/ParticleAtlas.png" sourcerect="144,440,1,68" origin="0.5,0.5" />
   </descendantpulsetracer>
+  <descendantgaussmuzzle lifetime="0.14" animduration="0.14" loopanim="false"
+    startsizemin="0.23,0.20" startsizemax="0.27,0.24" growtime="0"
+    startcolor="255,240,212,255" endcolor="255,169,90,0"
+    drawtarget="Both" drawontop="true" blendstate="Additive" priority="5">
+    <animatedsprite texture="Content/Particles/MuzzleFlashParticleSheet.png"
+      sourcerect="0,0,1024,384" columns="4" rows="3" origin="-0.1,0.6" premultiplyalpha="false" />
+  </descendantgaussmuzzle>
+  <descendantpulsemuzzle lifetime="0.12" startsizemin="0.30,0.30" startsizemax="0.43,0.43" growtime="0"
+    startcolor="255,155,147,245" endcolor="255,65,65,0"
+    drawtarget="Both" drawontop="true" blendstate="Additive" priority="5">
+    <sprite texture="Content/Particles/ParticleAtlas.png" sourcerect="256,448,64,64" />
+  </descendantpulsemuzzle>
 </Particles>

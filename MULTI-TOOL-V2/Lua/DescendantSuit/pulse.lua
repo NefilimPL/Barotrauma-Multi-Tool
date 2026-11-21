@@ -46,7 +46,8 @@ function M.install(G,E)
                 local shots,ammoCost,condition=Ammo.status(box,profile)
                 if shots<1 then remove(projectileItem);return end
                 local charge=Core.charge(source.Condition,source.MaxCondition,true)
-                local ok,power,remaining=Core.payPulse(s,charge,condition,G.now,shotPower(source),ammoCost)
+                local interval=profile.ballistic and C.gaussShotInterval or C.shotInterval
+                local ok,power,remaining=Core.payPulse(s,charge,condition,G.now,shotPower(source),ammoCost,interval)
                 if not ok then remove(projectileItem);return end
                 source.Condition=power*source.MaxCondition/100;box.Condition=remaining
                 local sub=owner.Submarine

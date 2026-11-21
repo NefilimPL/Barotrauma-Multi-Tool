@@ -14,7 +14,7 @@ spadek czasu klatki uzyskano przy widocznych naprawach kombinezonów.
 
 [Dokumentacja projektu](docs/README.md) · [Historia zmian](CHANGELOG.md)
 
-[Paczka 1.3.25 do lokalnej instalacji](output/MULTI-TOOL-V2-1.3.25.zip).
+[Paczka 1.3.26 do lokalnej instalacji](output/MULTI-TOOL-V2-1.3.26.zip).
 
 Wersja Aegis wymaga [Lua for Barotrauma / LuaCs](https://github.com/evilfactory/LuaCsForBarotrauma)
 na kliencie i serwerze. Punktem zgodności jest Barotrauma **1.13.5.0**;
