@@ -3,6 +3,24 @@
 Przeniesione opisy wcześniejszych wydań z README. Pomiary i deklaracje
 w tych wpisach dotyczą wskazanych wersji, nie bieżącego kodu roboczego.
 
+## 1.4.1 — dopasowanie tekstur modułów
+
+- Ikona serwa odpowiada grafitowemu ramieniu kombinezonu z czerwonymi przewodami,
+  srebrnymi przegubami i rzeczywistym chwytakiem z atlasu `suit-v2.png`.
+- Ikona wirnika odtwarza zamontowaną obudowę i cztery srebrne łopaty.
+- Wkład tarczy odpowiada parze turkusowych cylindrów widocznych w broni.
+
+## 1.4.0 — wariant bez komunikatorów
+
+- Osobny folder `System-Aegis-No-Headsets`, bez komunikatorów Aegis i ich zasobów.
+- Tarcza wymaga osobno craftowanego wkładu w dodatkowym slocie broni.
+  Wkład daje pięć blokad i odnawia jedną co 15 sekund zasilania; tarcza
+  nie zadaje obrażeń kontaktowych. Ładunek jest zachowywany po wyjęciu i zapisie.
+- Kombinezon ma dodatkowe sloty na osobno craftowane serwo oraz wirnik.
+  Funkcje ramienia i napęd wymagają odpowiadających im modułów.
+- Trzy nowe przezroczyste tekstury modułów, receptury, ikony slotów oraz opisy PL/EN.
+- Pełna wersja `System-Aegis` pozostaje w wersji 1.3.27 bez zmian.
+
 ## 1.3.27 — System Aegis
 
 - Pełny, samodzielny pakiet **System Aegis** w folderze `System-Aegis`.

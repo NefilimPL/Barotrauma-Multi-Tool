@@ -21,6 +21,10 @@ spadek czasu klatki uzyskano przy widocznych naprawach kombinezonów.
 [Paczka System Aegis 1.3.27](output/System-Aegis-1.3.27.zip).
 [Publikacja jako osobny mod](docs/PUBLISH.md).
 
+**Wersja bez komunikatorów, z modułową tarczą i kombinezonem:**
+[System Aegis — No Headsets](docs/NO-HEADSETS.md). Osobny folder
+`System-Aegis-No-Headsets/`; pełna wersja pozostaje bez zmian.
+
 System Aegis wymaga [Lua for Barotrauma / LuaCs](https://github.com/evilfactory/LuaCsForBarotrauma)
 na kliencie i serwerze. Punktem zgodności jest Barotrauma **1.13.5.0**;
 testowy serwer używa wydania LuaCs z 27.10.2026, commit `c6e8829`.

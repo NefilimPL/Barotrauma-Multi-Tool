@@ -3,6 +3,7 @@
 ## Korzystanie z moda
 
 - [Instalacja i LuaCs](INSTALL.md)
+- [Wersja bez komunikatorów — moduły tarczy, serwa i wirnika](NO-HEADSETS.md)
 - [Publikacja osobnego moda](PUBLISH.md)
 - [Komunikatory Aegis](HEADSETS.md)
 - [Odkurzacz i magazyn plecaka](VACUUM.md)

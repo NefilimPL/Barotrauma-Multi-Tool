@@ -7,9 +7,10 @@ sys.path.insert(0,str(ROOT/'.local-tools/python'))
 from lupa.lua52 import LuaRuntime
 
 class LuaCase(unittest.TestCase):
+    mod_directory = 'System-Aegis'
     def setUp(self):
         self.lua=LuaRuntime(unpack_returned_tuples=True)
-        self.lua.execute("package.path = ... .. '/?.lua;' .. package.path",(ROOT/'System-Aegis/Lua').as_posix())
+        self.lua.execute("package.path = ... .. '/?.lua;' .. package.path",(ROOT/self.mod_directory/'Lua').as_posix())
         self.core=self.lua.eval("require('AegisCombat.core')")
 
     def t(self,**kwargs):

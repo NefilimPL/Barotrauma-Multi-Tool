@@ -1,0 +1,84 @@
+<?xml version='1.0' encoding='utf-8'?>
+<infotexts language="Polish" nowhitespace="false" translatedname="Polski">
+  <entityname.aegisvacuum>Odkurzacz zbierający Aegis</entityname.aegisvacuum>
+  <entitydescription.aegisvacuum>Dwuręczna ssawka z wymienną baterią. Wymaga plecaka zbierającego Aegis we własnym ekwipunku i LuaCs. Celuj i przytrzymaj użycie, aby zbierać. Klawisz F otwiera magazyn. Bateria odkurzacza zasila także rozbiórkę.</entitydescription.aegisvacuum>
+  <entityname.aegisvacuumpack>Plecak zbierający Aegis</entityname.aegisvacuumpack>
+  <entitydescription.aegisvacuumpack>Załóż w slocie torby na pasie. Otwórz zawartość przyciskiem Magazyn plecaka [F], klawiszem F lub prawym kliknięciem ikony plecaka. Mieści 200 grup po maksymalnie 200 przedmiotów i zachowuje zawartość skrzynek. Plecak i odkurzacz wytwarza się osobno. Bateria znajduje się w odkurzaczu.</entitydescription.aegisvacuumpack>
+  <entityname.aegisvacuumpage>Wewnętrzny magazyn Aegis</entityname.aegisvacuumpage>
+  <aegisvacuum.title>Magazyn odkurzacza Aegis</aegisvacuum.title>
+  <aegisvacuum.salvage>Rozłóż całą zawartość</aegisvacuum.salvage>
+  <aegisvacuum.search>Szukaj przedmiotu…</aegisvacuum.search>
+  <aegisvacuum.take>Wyjmij 1</aegisvacuum.take>
+  <aegisvacuum.stack>Weź stos</aegisvacuum.stack>
+  <aegisvacuum.stackhelp>Pobierz jeden stos do jednego slotu ekwipunku, zgodnie z limitem gry. Uzupełnia istniejący stos. Nadmiar zostaje w plecaku; różna jakość i stan nie zajmą kolejnych slotów.</aegisvacuum.stackhelp>
+  <aegisvacuum.details>Egzemplarze</aegisvacuum.details>
+  <aegisvacuum.filters>Filtry</aegisvacuum.filters>
+  <aegisvacuum.contents>Zawartość</aegisvacuum.contents>
+  <aegisvacuum.filterhelp>Wybierz regułę pod siatką i kliknij przedmiot, aby ją przełączyć.</aegisvacuum.filterhelp>
+  <aegisvacuum.rule.filter>Ignoruj (-)</aegisvacuum.rule.filter>
+  <aegisvacuum.rule.protect>Chroń (O)</aegisvacuum.rule.protect>
+  <aegisvacuum.rule.allow>Odblokuj (!)</aegisvacuum.rule.allow>
+  <aegisvacuum.rulehelp.filter>Czerwone oznaczenie wyklucza ten typ z automatycznego zbierania.</aegisvacuum.rulehelp.filter>
+  <aegisvacuum.rulehelp.protect>Zielone oznaczenie chroni ten typ przed rozbiórką i wyrzuceniem do kosza.</aegisvacuum.rulehelp.protect>
+  <aegisvacuum.rulehelp.allow>Zezwala na zbieranie i wkładanie przedmiotów takich jak odczepiona ruda. Nadal obowiązują dostęp, przytwierdzenie i reguła Ignoruj przy zbieraniu.</aegisvacuum.rulehelp.allow>
+  <aegisvacuum.protected>Chroniony przed rozbiórką i koszem.</aegisvacuum.protected>
+  <aegisvacuum.allowed>Domyślny filtr tego typu jest odblokowany.</aegisvacuum.allowed>
+  <aegisvacuum.included>Zbieranie włączone. Kliknij, aby pomijać ten typ.</aegisvacuum.included>
+  <aegisvacuum.excluded>Pomijany przy zbieraniu, także wewnątrz pojemników. Kliknij, aby zbierać.</aegisvacuum.excluded>
+  <aegisvacuum.blocked>Przedmiot poza ekwipunkiem — zawsze pomijany.</aegisvacuum.blocked>
+  <aegisvacuum.trash>Kosz</aegisvacuum.trash>
+  <aegisvacuum.trashconfirm>Usuń:</aegisvacuum.trashconfirm>
+  <aegisvacuum.trashhelp>Trwale usuwa zaznaczoną grupę (lub jeden egzemplarz w szczegółach), także zawartość pojemnika. Pierwszy klik pokazuje liczbę; drugi potwierdza. Potwierdzenie wygasa po 10 sekundach.</aegisvacuum.trashhelp>
+  <aegisvacuum.category.all>Wszystkie kategorie</aegisvacuum.category.all>
+  <aegisvacuum.category.material>Materiały</aegisvacuum.category.material>
+  <aegisvacuum.category.medical>Medyczne</aegisvacuum.category.medical>
+  <aegisvacuum.category.weapon>Broń i amunicja</aegisvacuum.category.weapon>
+  <aegisvacuum.category.diving>Nurkowanie</aegisvacuum.category.diving>
+  <aegisvacuum.category.equipment>Wyposażenie</aegisvacuum.category.equipment>
+  <aegisvacuum.category.fuel>Paliwo</aegisvacuum.category.fuel>
+  <aegisvacuum.category.electrical>Elektryczne</aegisvacuum.category.electrical>
+  <aegisvacuum.category.alien>Artefakty</aegisvacuum.category.alien>
+  <aegisvacuum.category.misc>Pozostałe</aegisvacuum.category.misc>
+  <aegisvacuum.drop>Odłóż</aegisvacuum.drop>
+  <aegisvacuum.groups>Grupy</aegisvacuum.groups>
+  <aegisvacuum.items>Sztuki</aegisvacuum.items>
+  <aegisvacuum.capacityhelp>Do 200 grup po 200 sztuk. Przedmioty zachowują stan i jakość. Maksymalna pojemność zależy także od limitu obiektów w rundzie.</aegisvacuum.capacityhelp>
+  <aegisvacuum.salvaged>Rozłożono</aegisvacuum.salvaged>
+  <aegisvacuum.skipped>Pominięto</aegisvacuum.skipped>
+  <aegisvacuum.salvagestate.working>Sprawdzono</aegisvacuum.salvagestate.working>
+  <aegisvacuum.salvagestate.products>Tworzenie surowców</aegisvacuum.salvagestate.products>
+  <aegisvacuum.salvagestate.space>Przygotowanie miejsca</aegisvacuum.salvagestate.space>
+  <aegisvacuum.salvagestate.complete>Rozbiórka zakończona</aegisvacuum.salvagestate.complete>
+  <aegisvacuum.salvagestate.full>Zakończono — za mało miejsca na surowce</aegisvacuum.salvagestate.full>
+  <aegisvacuum.salvagestate.power>Przerwano — za mało energii</aegisvacuum.salvagestate.power>
+  <aegisvacuum.salvagestate.interrupted>Rozbiórka przerwana</aegisvacuum.salvagestate.interrupted>
+  <aegisvacuum.pack>Plecak</aegisvacuum.pack>
+  <aegisvacuum.power>Bateria odkurzacza</aegisvacuum.power>
+  <aegisvacuum.help>F — magazyn • celowanie + użycie — zasysanie</aegisvacuum.help>
+  <aegisvacuum.busy>Rozbiórka w toku</aegisvacuum.busy>
+  <aegisvacuum.close>Zamknij</aegisvacuum.close>
+  <aegisvacuum.open>Magazyn plecaka [F]</aegisvacuum.open>
+  <aegisvacuum.openhelp>Otwórz zawartość plecaka. Możesz też kliknąć prawym przyciskiem ikonę plecaka na pasie.</aegisvacuum.openhelp>
+  <aegisvacuum.salvagehelp>Trzymaj odkurzacz oburącz z naładowaną baterią. Rozbiórka obejmuje zawartość z chwili naciśnięcia przycisku. Możesz dalej zbierać; nowe rzeczy zostaną na następną rozbiórkę. Bez receptury, wymagające specjalnej maszyny i bez miejsca na surowce są pomijane. Postęp i wynik widać nad wyszukiwaniem.</aegisvacuum.salvagehelp>
+  <entityname.aegiscombattool>Bojowy multitool Aegis</entityname.aegiscombattool>
+  <entitydescription.aegiscombattool>Dwuręczny emiter pierścieni energetycznych i multitool techniczny. Slot 1: bateria lub pręt zasilający broń, tarczę, latarkę i narzędzia. Slot 2: osobno craftowany wkład tarczy Aegis. Bez wkładu tarcza nie działa. Blokuje pięć pocisków, nie zadaje obrażeń kontaktowych i odzyskuje jedną blokadę co 15 sekund zasilania. Wyłącz obrażenia, aby spawać/ciąć; gaśnica ma pierwszeństwo. Bot wybiera jedną funkcję dla bieżącego zadania. Zasilane narzędzie daje +2 do wszystkich pięciu umiejętności co pięć minut; licznik jest wspólny z kompozytowym multitoolem. Wymaga LuaCs na kliencie i serwerze.</entitydescription.aegiscombattool>
+  <label.aegiscombatpowerslots>Wspólne zasilanie: broń / tarcza / narzędzia</label.aegiscombatpowerslots>
+  <entityname.aegiscompositetool>Kompozytowy multitool Aegis</entityname.aegiscompositetool>
+  <entitydescription.aegiscompositetool>Kompozytowe narzędzie; przełącza spawarkę i przecinarkę, świeci wbudowaną latarką, dodaje tryb gaśnicy i korzysta ze wspólnej butli tlenowej. Trzymane z niewyczerpanym prętem paliwowym daje +2 do wszystkich pięciu umiejętności co 5 minut. Przyrost wymaga Lua for Barotrauma i ma wspólny licznik z Aegisem.</entitydescription.aegiscompositetool>
+  <label.aegischangetool>Włącz tryb przecinarki</label.aegischangetool>
+  <label.aegisenableextinguisher>Włącz tryb gaśnicy</label.aegisenableextinguisher>
+  <label.aegisenabledamage>Włącz zadawanie obrażeń NPC</label.aegisenabledamage>
+  <entityname.aegiswrenchscrewdriver>Klucz-śrubokręt 2 w 1 Aegis</entityname.aegiswrenchscrewdriver>
+  <entitydescription.aegiswrenchscrewdriver>Zaprojektowany dla inżynierów okrętów podwodnych; podwójny prawy klik przełącza tryb klucza/śrubokręta.</entitydescription.aegiswrenchscrewdriver>
+  <aegisvacuum.takeselected>Wyjmij zaznaczone</aegisvacuum.takeselected>
+  <aegisvacuum.batchhelp>Klikaj kilka ikon, aby je zaznaczyć. W widoku grup wyjmiesz wszystkie sztuki zaznaczonych grup; w szczegółach — wybrane egzemplarze. Rzeczy, które się nie zmieszczą, zostaną w plecaku.</aegisvacuum.batchhelp>
+  <aegisvacuum.looseonly>Tylko luzem</aegisvacuum.looseonly>
+  <aegisvacuum.loosehelp>Zbieraj przedmioty z podłogi, także wyrzucone narzędzia z paliwem lub amunicją. Przenośne pojemniki zabieraj w całości, bez wyciągania ich zawartości. Ustawienie zapisywane na tym plecaku.</aegisvacuum.loosehelp>
+  <entityname.aegisshieldmodule>Wkład tarczy Aegis</entityname.aegisshieldmodule>
+  <entitydescription.aegisshieldmodule>Wycraftuj osobno i włóż do slotu 2 bojowego multitoola Aegis. Ma pięć blokad pocisków: każda blokada zużywa 20% ładunku. Odnawia jedną blokadę co 15 sekund zasilania, więc dwie wracają po 30 s, a wszystkie pięć po 75 s. Regeneruje się tylko zamontowany w sprawnej, zasilanej broni. Wyjęcie i zapis zachowują częściowy ładunek; pusty wkład nie znika. Trafienia nadal pobierają energię broni. Tarcza nie zadaje obrażeń kontaktowych.</entitydescription.aegisshieldmodule>
+  <entityname.aegisservomodule>Moduł ramienia serwo Aegis</entityname.aegisservomodule>
+  <entitydescription.aegisservomodule>Wycraftuj osobno i włóż do slotu 3 kombinezonu Aegis, po zasilaniu i amunicji. Włącza naprawę, spawanie, obronę i chwytak ramienia. Wyjęcie zwalnia trzymany cel i zatrzymuje pracę ramienia. Moduł nie zastępuje skrzynki amunicji ani źródła zasilania.</entitydescription.aegisservomodule>
+  <entityname.aegisimpellermodule>Moduł wirnika Aegis</entityname.aegisimpellermodule>
+  <entitydescription.aegisimpellermodule>Wycraftuj osobno i włóż do slotu 4 kombinezonu Aegis. Włącza wspomaganie pływania wirnikiem. Wyjęcie wyłącza napęd. Obieg oddechowy, sonar i oświetlenie działają niezależnie.</entitydescription.aegisimpellermodule>
+  <label.aegisshieldslot>Wkład tarczy: 5 blokad / 15 s na jedną blokadę</label.aegisshieldslot>
+</infotexts>
