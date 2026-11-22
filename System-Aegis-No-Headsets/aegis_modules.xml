@@ -57,4 +57,23 @@
     <Body width="850" height="800" density="10" />
     <Holdable slots="Any,RightHand" handle1="0,0" holdpos="0,0" msg="ItemMsgPickUpSelect" />
   </Item>
+  <Item identifier="aegiscompressormodule" name="Aegis air compressor" category="Diving,Equipment" tags="smallitem,aegiscompressormodule" scale="0.5" maxstacksize="1" fireproof="true" impactsoundtag="impact_metal_light">
+    <Price baseprice="450" sold="false" />
+    <Fabricate suitablefabricators="fabricator,milfabricator" requiredtime="30">
+      <RequiredSkill identifier="mechanical" level="45" />
+      <RequiredSkill identifier="electrical" level="25" />
+      <RequiredItem identifier="steel" amount="1" />
+      <RequiredItem identifier="copper" amount="1" />
+      <RequiredItem identifier="plastic" amount="1" />
+      <RequiredItem identifier="fpgacircuit" amount="1" />
+    </Fabricate>
+    <Deconstruct time="15">
+      <Item identifier="steel" />
+      <Item identifier="copper" />
+    </Deconstruct>
+    <InventoryIcon texture="Content/Items/JobGear/TalentGear.png" sourcerect="0,312,58,56" origin="0.5,0.5" />
+    <Sprite texture="Content/Items/JobGear/TalentGear.png" sourcerect="7,129,56,61" origin="0.5,0.5" />
+    <Body width="50" height="55" density="20" />
+    <Holdable slots="Any,RightHand" handle1="0,0" holdpos="0,0" msg="ItemMsgPickUpSelect" />
+  </Item>
 </Items>

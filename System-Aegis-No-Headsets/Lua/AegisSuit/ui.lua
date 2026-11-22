@@ -134,9 +134,13 @@ function M.install(G,E)
             buttons.sonar.Text=text('sonar')..' ['..state(s.sonar==true)..']'
         end
         local ammo,profile=G.ammo(item)
+        local tank=G.tank(item)
+        local tankStatus=tank and ('%d%%'):format(math.floor(tank.Condition/tank.MaxCondition*100)) or text('missing')
+        local compressorStatus=text(G.module(item,'compressor') and 'installed' or 'missing')
         status.Text=text('power')..': '..math.floor(s.charge or G.energy(item))..'%  |  '..
             text('ammo')..': '..Ammo.status(ammo,profile)..(ammo and ' ('..tostring(ammo.Prefab.Name)..')' or '')..'\n'..
-            text(s.open and 'air' or 'closedloop')..'\n'..text('servo_module')..': '..text(arm and 'installed' or 'missing')..' | '..text('impeller_module')..': '..text(G.hasImpeller(item) and 'installed' or 'missing')..(s.mode=='grab' and '\n'..grabHint or '')
+            text('tank')..': '..tankStatus..' | '..text('compressor_module')..': '..compressorStatus..'\n'..
+            text('servo_module')..': '..text(arm and 'installed' or 'missing')..' | '..text('impeller_module')..': '..text(G.hasImpeller(item) and 'installed' or 'missing')..(s.mode=='grab' and '\n'..grabHint or '')
         local sonar,powered=G.syncSonar(item,s)
         local bounds=gui.Canvas.Rect
         local layout=M.layout(powered,sonarOpen,bounds.Width,bounds.Height)

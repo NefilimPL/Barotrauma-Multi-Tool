@@ -65,10 +65,10 @@
     <LightComponent canbeselected="false" isactive="false" ison="false" range="650" powerconsumption="0" directional="true" castshadows="true">
       <LightTexture texture="Content/Lights/lightcone.png" origin="0.0,0.5" size="1.0,0.42" />
     </LightComponent>
-    <ItemContainer capacity="1" slotsperrow="4" maxstacksize="1" hideitems="true" keepopenwhenequipped="true" containedstateindicatorstyle="battery">
+    <ItemContainer capacity="1" slotsperrow="3" maxstacksize="1" hideitems="true" keepopenwhenequipped="true" containedstateindicatorstyle="battery">
       <SlotIcon slotindex="0" texture="Content/UI/StatusMonitorUI.png" sourcerect="128,448,128,64" origin="0.5,0.5" />
       <SlotIcon slotindex="1" texture="Content/UI/CommandUIAtlas.png" sourcerect="384,768,128,128" origin="0.5,0.5" />
-      <Containable items="mobilebattery,reactorfuel" />
+      <Containable items="mobilebattery" />
       <SubContainer capacity="1" maxstacksize="1" containedstateindicatorstyle="bullet">
         <Containable items="pulselaserammobox,pulselaserammoboxtrilaser,coilgunammobox,physicoriumammobox,coilgunammoboxexplosive,coilgunammoboxpiercing" />
       </SubContainer>
@@ -80,6 +80,14 @@
         <Containable items="aegisimpellermodule,aegisimpellermoduledescendens,aegisimpellermodulecoalition,aegisimpellermoduleseparatists,aegisimpellermodulehusk,aegisimpellermoduleclowns" />
       </SubContainer>
       <SlotIcon slotindex="3" texture="%ModDir%/Assets/Factions/descendens/impeller-module.png" sourcerect="0,0,1254,1254" origin="0.5,0.5" />
+      <SubContainer capacity="1" maxstacksize="1">
+        <Containable items="aegiscompressormodule" />
+      </SubContainer>
+      <SlotIcon slotindex="4" texture="Content/Items/JobGear/TalentGear.png" sourcerect="0,312,58,56" origin="0.5,0.5" />
+      <SubContainer capacity="1" maxstacksize="1" containedstateindicatorstyle="tank">
+        <Containable items="oxygensource" />
+      </SubContainer>
+      <SlotIcon slotindex="5" texture="Content/UI/StatusMonitorUI.png" sourcerect="64,448,64,64" origin="0.5,0.5" />
     </ItemContainer>
     <Sonar range="6000" powerconsumption="1" minvoltage="0.5" drawhudwhenequipped="false" detectsubmarinewalls="true" displaybordersize="-0.1" characterusable="false" hasmineralscanner="true" allowuioverlap="true">
       <sound file="Content/Items/Command/SonarPing.ogg" type="OnUse" range="1000.0" frequencymultiplier="1.5" />
@@ -206,10 +214,10 @@
     <LightComponent canbeselected="false" isactive="false" ison="false" range="650" powerconsumption="0" directional="true" castshadows="true">
       <LightTexture texture="Content/Lights/lightcone.png" origin="0.0,0.5" size="1.0,0.42" />
     </LightComponent>
-    <ItemContainer capacity="1" slotsperrow="4" maxstacksize="1" hideitems="true" keepopenwhenequipped="true" containedstateindicatorstyle="battery">
+    <ItemContainer capacity="1" slotsperrow="3" maxstacksize="1" hideitems="true" keepopenwhenequipped="true" containedstateindicatorstyle="battery">
       <SlotIcon slotindex="0" texture="Content/UI/StatusMonitorUI.png" sourcerect="128,448,128,64" origin="0.5,0.5" />
       <SlotIcon slotindex="1" texture="Content/UI/CommandUIAtlas.png" sourcerect="384,768,128,128" origin="0.5,0.5" />
-      <Containable items="mobilebattery,reactorfuel" />
+      <Containable items="mobilebattery" />
       <SubContainer capacity="1" maxstacksize="1" containedstateindicatorstyle="bullet">
         <Containable items="pulselaserammobox,pulselaserammoboxtrilaser,coilgunammobox,physicoriumammobox,coilgunammoboxexplosive,coilgunammoboxpiercing" />
       </SubContainer>
@@ -221,6 +229,14 @@
         <Containable items="aegisimpellermodule,aegisimpellermoduledescendens,aegisimpellermodulecoalition,aegisimpellermoduleseparatists,aegisimpellermodulehusk,aegisimpellermoduleclowns" />
       </SubContainer>
       <SlotIcon slotindex="3" texture="%ModDir%/Assets/Factions/coalition/impeller-module.png" sourcerect="0,0,1254,1254" origin="0.5,0.5" />
+      <SubContainer capacity="1" maxstacksize="1">
+        <Containable items="aegiscompressormodule" />
+      </SubContainer>
+      <SlotIcon slotindex="4" texture="Content/Items/JobGear/TalentGear.png" sourcerect="0,312,58,56" origin="0.5,0.5" />
+      <SubContainer capacity="1" maxstacksize="1" containedstateindicatorstyle="tank">
+        <Containable items="oxygensource" />
+      </SubContainer>
+      <SlotIcon slotindex="5" texture="Content/UI/StatusMonitorUI.png" sourcerect="64,448,64,64" origin="0.5,0.5" />
     </ItemContainer>
     <Sonar range="6000" powerconsumption="1" minvoltage="0.5" drawhudwhenequipped="false" detectsubmarinewalls="true" displaybordersize="-0.1" characterusable="false" hasmineralscanner="true" allowuioverlap="true">
       <sound file="Content/Items/Command/SonarPing.ogg" type="OnUse" range="1000.0" frequencymultiplier="1.5" />
@@ -347,10 +363,10 @@
     <LightComponent canbeselected="false" isactive="false" ison="false" range="650" powerconsumption="0" directional="true" castshadows="true">
       <LightTexture texture="Content/Lights/lightcone.png" origin="0.0,0.5" size="1.0,0.42" />
     </LightComponent>
-    <ItemContainer capacity="1" slotsperrow="4" maxstacksize="1" hideitems="true" keepopenwhenequipped="true" containedstateindicatorstyle="battery">
+    <ItemContainer capacity="1" slotsperrow="3" maxstacksize="1" hideitems="true" keepopenwhenequipped="true" containedstateindicatorstyle="battery">
       <SlotIcon slotindex="0" texture="Content/UI/StatusMonitorUI.png" sourcerect="128,448,128,64" origin="0.5,0.5" />
       <SlotIcon slotindex="1" texture="Content/UI/CommandUIAtlas.png" sourcerect="384,768,128,128" origin="0.5,0.5" />
-      <Containable items="mobilebattery,reactorfuel" />
+      <Containable items="mobilebattery" />
       <SubContainer capacity="1" maxstacksize="1" containedstateindicatorstyle="bullet">
         <Containable items="pulselaserammobox,pulselaserammoboxtrilaser,coilgunammobox,physicoriumammobox,coilgunammoboxexplosive,coilgunammoboxpiercing" />
       </SubContainer>
@@ -362,6 +378,14 @@
         <Containable items="aegisimpellermodule,aegisimpellermoduledescendens,aegisimpellermodulecoalition,aegisimpellermoduleseparatists,aegisimpellermodulehusk,aegisimpellermoduleclowns" />
       </SubContainer>
       <SlotIcon slotindex="3" texture="%ModDir%/Assets/Factions/separatists/impeller-module.png" sourcerect="0,0,1254,1254" origin="0.5,0.5" />
+      <SubContainer capacity="1" maxstacksize="1">
+        <Containable items="aegiscompressormodule" />
+      </SubContainer>
+      <SlotIcon slotindex="4" texture="Content/Items/JobGear/TalentGear.png" sourcerect="0,312,58,56" origin="0.5,0.5" />
+      <SubContainer capacity="1" maxstacksize="1" containedstateindicatorstyle="tank">
+        <Containable items="oxygensource" />
+      </SubContainer>
+      <SlotIcon slotindex="5" texture="Content/UI/StatusMonitorUI.png" sourcerect="64,448,64,64" origin="0.5,0.5" />
     </ItemContainer>
     <Sonar range="6000" powerconsumption="1" minvoltage="0.5" drawhudwhenequipped="false" detectsubmarinewalls="true" displaybordersize="-0.1" characterusable="false" hasmineralscanner="true" allowuioverlap="true">
       <sound file="Content/Items/Command/SonarPing.ogg" type="OnUse" range="1000.0" frequencymultiplier="1.5" />
@@ -488,10 +512,10 @@
     <LightComponent canbeselected="false" isactive="false" ison="false" range="650" powerconsumption="0" directional="true" castshadows="true">
       <LightTexture texture="Content/Lights/lightcone.png" origin="0.0,0.5" size="1.0,0.42" />
     </LightComponent>
-    <ItemContainer capacity="1" slotsperrow="4" maxstacksize="1" hideitems="true" keepopenwhenequipped="true" containedstateindicatorstyle="battery">
+    <ItemContainer capacity="1" slotsperrow="3" maxstacksize="1" hideitems="true" keepopenwhenequipped="true" containedstateindicatorstyle="battery">
       <SlotIcon slotindex="0" texture="Content/UI/StatusMonitorUI.png" sourcerect="128,448,128,64" origin="0.5,0.5" />
       <SlotIcon slotindex="1" texture="Content/UI/CommandUIAtlas.png" sourcerect="384,768,128,128" origin="0.5,0.5" />
-      <Containable items="mobilebattery,reactorfuel" />
+      <Containable items="mobilebattery" />
       <SubContainer capacity="1" maxstacksize="1" containedstateindicatorstyle="bullet">
         <Containable items="pulselaserammobox,pulselaserammoboxtrilaser,coilgunammobox,physicoriumammobox,coilgunammoboxexplosive,coilgunammoboxpiercing" />
       </SubContainer>
@@ -503,6 +527,14 @@
         <Containable items="aegisimpellermodule,aegisimpellermoduledescendens,aegisimpellermodulecoalition,aegisimpellermoduleseparatists,aegisimpellermodulehusk,aegisimpellermoduleclowns" />
       </SubContainer>
       <SlotIcon slotindex="3" texture="%ModDir%/Assets/Factions/husk/impeller-module.png" sourcerect="0,0,1254,1254" origin="0.5,0.5" />
+      <SubContainer capacity="1" maxstacksize="1">
+        <Containable items="aegiscompressormodule" />
+      </SubContainer>
+      <SlotIcon slotindex="4" texture="Content/Items/JobGear/TalentGear.png" sourcerect="0,312,58,56" origin="0.5,0.5" />
+      <SubContainer capacity="1" maxstacksize="1" containedstateindicatorstyle="tank">
+        <Containable items="oxygensource" />
+      </SubContainer>
+      <SlotIcon slotindex="5" texture="Content/UI/StatusMonitorUI.png" sourcerect="64,448,64,64" origin="0.5,0.5" />
     </ItemContainer>
     <Sonar range="6000" powerconsumption="1" minvoltage="0.5" drawhudwhenequipped="false" detectsubmarinewalls="true" displaybordersize="-0.1" characterusable="false" hasmineralscanner="true" allowuioverlap="true">
       <sound file="Content/Items/Command/SonarPing.ogg" type="OnUse" range="1000.0" frequencymultiplier="1.5" />
@@ -629,10 +661,10 @@
     <LightComponent canbeselected="false" isactive="false" ison="false" range="650" powerconsumption="0" directional="true" castshadows="true">
       <LightTexture texture="Content/Lights/lightcone.png" origin="0.0,0.5" size="1.0,0.42" />
     </LightComponent>
-    <ItemContainer capacity="1" slotsperrow="4" maxstacksize="1" hideitems="true" keepopenwhenequipped="true" containedstateindicatorstyle="battery">
+    <ItemContainer capacity="1" slotsperrow="3" maxstacksize="1" hideitems="true" keepopenwhenequipped="true" containedstateindicatorstyle="battery">
       <SlotIcon slotindex="0" texture="Content/UI/StatusMonitorUI.png" sourcerect="128,448,128,64" origin="0.5,0.5" />
       <SlotIcon slotindex="1" texture="Content/UI/CommandUIAtlas.png" sourcerect="384,768,128,128" origin="0.5,0.5" />
-      <Containable items="mobilebattery,reactorfuel" />
+      <Containable items="mobilebattery" />
       <SubContainer capacity="1" maxstacksize="1" containedstateindicatorstyle="bullet">
         <Containable items="pulselaserammobox,pulselaserammoboxtrilaser,coilgunammobox,physicoriumammobox,coilgunammoboxexplosive,coilgunammoboxpiercing" />
       </SubContainer>
@@ -644,6 +676,14 @@
         <Containable items="aegisimpellermodule,aegisimpellermoduledescendens,aegisimpellermodulecoalition,aegisimpellermoduleseparatists,aegisimpellermodulehusk,aegisimpellermoduleclowns" />
       </SubContainer>
       <SlotIcon slotindex="3" texture="%ModDir%/Assets/Factions/clowns/impeller-module.png" sourcerect="0,0,1254,1254" origin="0.5,0.5" />
+      <SubContainer capacity="1" maxstacksize="1">
+        <Containable items="aegiscompressormodule" />
+      </SubContainer>
+      <SlotIcon slotindex="4" texture="Content/Items/JobGear/TalentGear.png" sourcerect="0,312,58,56" origin="0.5,0.5" />
+      <SubContainer capacity="1" maxstacksize="1" containedstateindicatorstyle="tank">
+        <Containable items="oxygensource" />
+      </SubContainer>
+      <SlotIcon slotindex="5" texture="Content/UI/StatusMonitorUI.png" sourcerect="64,448,64,64" origin="0.5,0.5" />
     </ItemContainer>
     <Sonar range="6000" powerconsumption="1" minvoltage="0.5" drawhudwhenequipped="false" detectsubmarinewalls="true" displaybordersize="-0.1" characterusable="false" hasmineralscanner="true" allowuioverlap="true">
       <sound file="Content/Items/Command/SonarPing.ogg" type="OnUse" range="1000.0" frequencymultiplier="1.5" />

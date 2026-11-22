@@ -3,9 +3,6 @@ local Core=require('AegisSuit.core')
 local Ammo=require('AegisSuit.ammo')
 local C=Core.config
 local M={}
-local function shotPower(source)
-    return C.shotPower*(source.HasTag('reactorfuel') and C.rodMultiplier or 1)
-end
 function M.install(G,E)
     if not G.authoritative then return end
     local function remove(item) if item and not item.Removed then E.Entity.Spawner.AddEntityToRemoveQueue(item) end end
@@ -15,7 +12,7 @@ function M.install(G,E)
         if s.pendingPulse then return false end
         local ammo,profile=G.ammo(item)
         local source=G.source(item)
-        if not source or Core.charge(source.Condition,source.MaxCondition,true)<shotPower(source)
+        if not source or Core.charge(source.Condition,source.MaxCondition,true)<C.shotPower
             or Ammo.status(ammo,profile)<1 then return false end
         if G.now<(s.nextPulse or 0) then return true end
         local prefab=E.ItemPrefab.Prefabs[profile.projectile]
@@ -48,7 +45,7 @@ function M.install(G,E)
                 if shots<1 then remove(projectileItem);return end
                 local charge=Core.charge(source.Condition,source.MaxCondition,true)
                 local interval=profile.ballistic and C.gaussShotInterval or C.shotInterval
-                local ok,power,remaining=Core.payPulse(s,charge,condition,G.now,shotPower(source),ammoCost,interval)
+                local ok,power,remaining=Core.payPulse(s,charge,condition,G.now,C.shotPower,ammoCost,interval)
                 if not ok then remove(projectileItem);return end
                 source.Condition=power*source.MaxCondition/100;box.Condition=remaining
                 local sub=owner.Submarine

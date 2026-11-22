@@ -231,8 +231,8 @@ class ModularVariantContentTests(unittest.TestCase):
         self.manifest()
         parts=ET.parse(MOD / 'aegis_modules.xml').getroot().findall('Item')
         self.assertEqual({p.get('identifier') for p in parts},
-                         {'aegisshieldmodule','aegisservomodule','aegisimpellermodule'})
-        self.assertEqual(len({p.find('InventoryIcon').get('texture') for p in parts}),3)
+                         {'aegisshieldmodule','aegisservomodule','aegisimpellermodule','aegiscompressormodule'})
+        self.assertEqual(len({p.find('InventoryIcon').get('texture') for p in parts}),4)
         for part in parts:
             self.assertIsNotNone(part.find('Fabricate/RequiredItem'))
             self.assertIsNotNone(part.find('Holdable'))
@@ -242,12 +242,21 @@ class ModularVariantContentTests(unittest.TestCase):
     def test_module_slot_filters_follow_power_and_ammunition(self):
         self.manifest()
         gun=ET.parse(MOD / 'aegis_combat.xml').find('Item/ItemContainer')
-        suit=ET.parse(MOD / 'aegis_suit.xml').find('Item/ItemContainer')
         self.assertEqual(gun.find('SubContainer/Containable').get('items'),'aegisshieldmodule')
-        for node, base in zip(suit.findall('SubContainer')[1:], ('aegisservomodule','aegisimpellermodule')):
-            self.assertEqual(set(node.find('Containable').get('items').split(',')),
-                             {base+suffix for suffix in ('','descendens','coalition','separatists','husk','clowns')})
-        self.assertEqual({n.get('slotindex') for n in suit.findall('SlotIcon')},{'0','1','2','3'})
+        for name in ('aegis_suit.xml','aegis_factions.xml'):
+            for item in ET.parse(MOD / name).findall('Item'):
+                if not item.get('identifier').startswith('aegisservosuit'):
+                    continue
+                suit=item.find('ItemContainer')
+                slots=suit.findall('SubContainer')
+                self.assertEqual(suit.find('Containable').get('items'),'mobilebattery')
+                self.assertEqual(len(slots),5)
+                for node, base in zip(slots[1:3], ('aegisservomodule','aegisimpellermodule')):
+                    self.assertEqual(set(node.find('Containable').get('items').split(',')),
+                                     {base+suffix for suffix in ('','descendens','coalition','separatists','husk','clowns')})
+                self.assertEqual([slot.find('Containable').get('items') for slot in slots[3:]],
+                                 ['aegiscompressormodule','oxygensource'])
+                self.assertEqual({n.get('slotindex') for n in suit.findall('SlotIcon')},set('012345'))
 
     def test_original_full_package_keeps_headsets_and_previous_slots(self):
         original=ROOT / 'System-Aegis'
