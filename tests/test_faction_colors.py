@@ -292,17 +292,29 @@ class FactionFrameTests(unittest.TestCase):
 
     def test_coalition_chest_and_shoulder_emblems_use_the_game_faction_icon(self):
         suit = ET.parse(MOD / 'aegis_factions.xml').find("Item[@identifier='aegisservosuitcoalition']")
-        for name, limb, plate_depth in (('Coalition emblem', 'Torso', .06),
-                                        ('Coalition emblem RightArm', 'RightArm', .02),
-                                        ('Coalition emblem LeftArm', 'LeftArm', .14)):
+        for name, limb, plate_depth, bounds in (
+            ('Coalition emblem', 'Torso', .06, (64, 37, 114, 73)),
+            ('Coalition emblem RightArm', 'RightArm', .02, (40, 9, 92, 54)),
+            ('Coalition emblem LeftArm', 'LeftArm', .14, (40, 9, 92, 54)),
+        ):
             badge = suit.find(f"Wearable/sprite[@name='{name}']")
             self.assertEqual(badge.get('limb'), limb)
             self.assertEqual(badge.get('texture'), 'Content/UI/CampaignUIAtlas2.png')
             self.assertEqual(badge.get('sourcerect'), '143,523,94,113')
             self.assertEqual(badge.get('inheritlimbdepth'), 'false')
             self.assertAlmostEqual(float(badge.get('depth')), plate_depth - .001)
-        chest = suit.find("Wearable/sprite[@name='Coalition emblem']")
-        self.assertGreaterEqual(float(chest.get('scale')), .4)
+            plate = suit.find(f"Wearable/sprite[@name='Aegis {limb}']")
+            _, _, plate_width, plate_height = map(int, plate.get('sourcerect').split(','))
+            _, _, badge_width, badge_height = map(int, badge.get('sourcerect').split(','))
+            plate_x, plate_y = map(float, plate.get('origin').split(','))
+            badge_x, badge_y = map(float, badge.get('origin').split(','))
+            scale = float(badge.get('scale')) / float(plate.get('scale'))
+            left = plate_width * plate_x - badge_width * badge_x * scale
+            top = plate_height * plate_y - badge_height * badge_y * scale
+            self.assertGreaterEqual(left, bounds[0], name)
+            self.assertGreaterEqual(top, bounds[1], name)
+            self.assertLessEqual(left + badge_width * scale, bounds[2], name)
+            self.assertLessEqual(top + badge_height * scale, bounds[3], name)
 
 
 class FactionSalesTests(unittest.TestCase):
