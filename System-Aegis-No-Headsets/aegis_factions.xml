@@ -24,7 +24,7 @@
     <ContainedSprite name="Aegis suit holder" allowedcontainertags="divingsuitcontainer" texture="%ModDir%/Assets/Factions/descendens/rack-suit.png" sourcerect="0,0,887,1774" origin="0.5,0.5" depth="0.55" compress="true" />
     <Body width="1200" height="430" density="20" />
     <Wearable slots="OuterClothes" msg="ItemMsgEquipSelect" displaycontainedstatus="true" canbeselected="false" canbepicked="true" pickkey="Select">
-      <sprite name="Aegis Head" texture="%ModDir%/Assets/Factions/descendens/suit-v2.png" sourcerect="407,2,146,124" limb="Head" scale="0.76" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="true" depth="0.5" canbehiddenbyotherwearables="false" alphaclipotherwearables="true" />
+      <sprite name="Aegis Head" texture="%ModDir%/Assets/Factions/descendens/suit-v2.png" sourcerect="407,2,146,124" limb="Head" scale="0.65" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="true" depth="0.5" canbehiddenbyotherwearables="false" alphaclipotherwearables="true" />
       <StatusEffect type="OnWearing" target="Character" PressureProtection="10000" setvalue="true" disabledeltatime="true">
         </StatusEffect>
       <damagemodifier armorsector="0,360" afflictionidentifiers="blunttrauma,gunshotwound,bitewounds,lacerations,bleeding,explosiondamage" damagemultiplier="0.6" damagesound="LimbArmor" />
@@ -159,7 +159,7 @@
     <ContainedSprite name="Aegis suit holder" allowedcontainertags="divingsuitcontainer" texture="%ModDir%/Assets/Factions/coalition/rack-suit.png" sourcerect="0,0,887,1774" origin="0.5,0.5" depth="0.55" compress="true" />
     <Body width="1200" height="430" density="20" />
     <Wearable slots="OuterClothes" msg="ItemMsgEquipSelect" displaycontainedstatus="true" canbeselected="false" canbepicked="true" pickkey="Select">
-      <sprite name="Aegis Head" texture="%ModDir%/Assets/Factions/coalition/suit-v2.png" sourcerect="407,2,146,124" limb="Head" scale="0.76" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="true" depth="0.5" canbehiddenbyotherwearables="false" alphaclipotherwearables="true" />
+      <sprite name="Aegis Head" texture="%ModDir%/Assets/Factions/coalition/suit-v2.png" sourcerect="407,2,146,124" limb="Head" scale="0.65" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="true" depth="0.5" canbehiddenbyotherwearables="false" alphaclipotherwearables="true" />
       <StatusEffect type="OnWearing" target="Character" PressureProtection="10000" setvalue="true" disabledeltatime="true">
         </StatusEffect>
       <damagemodifier armorsector="0,360" afflictionidentifiers="blunttrauma,gunshotwound,bitewounds,lacerations,bleeding,explosiondamage" damagemultiplier="0.6" damagesound="LimbArmor" />
@@ -167,12 +167,13 @@
     </Wearable>
     <Wearable slots="OuterClothes" msg="ItemMsgEquipSelect" displaycontainedstatus="true" canbeselected="false" canbepicked="true" pickkey="Select">
       <sprite name="Aegis Torso" texture="%ModDir%/Assets/Factions/coalition/suit-v2.png" sourcerect="33,2,128,124" limb="Torso" scale="0.98" rotation="0" origin="0.5,0.5" hidelimb="true" hideotherwearables="true" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="true" depth="0.5" canbehiddenbyotherwearables="false" />
-      <sprite name="Coalition emblem" texture="Content/UI/CampaignUIAtlas2.png" sourcerect="143,523,94,113" limb="Torso" scale="0.28" origin="0.22,0.65" depth="0.31" inheritscale="true" ignorelimbscale="true" inheritlimbdepth="false" canbehiddenbyotherwearables="false" />
+      <!-- Keep the insignia just in front of the stock human limb depths. -->
+      <sprite name="Coalition emblem" texture="Content/UI/CampaignUIAtlas2.png" sourcerect="143,523,94,113" limb="Torso" scale="0.43" origin="0.04,0.72" depth="0.059" inheritscale="true" ignorelimbscale="true" inheritlimbdepth="false" canbehiddenbyotherwearables="false" />
       <sprite name="Aegis Waist" texture="%ModDir%/Assets/Factions/coalition/suit-v2.png" sourcerect="219,37,138,83" limb="Waist" scale="0.6" rotation="0" origin="0.5,0.5" hidelimb="true" hideotherwearables="true" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="true" depth="0.5" canbehiddenbyotherwearables="false" />
       <sprite name="Aegis RightArm" texture="%ModDir%/Assets/Factions/coalition/suit-v2.png" sourcerect="46,131,100,122" limb="RightArm" scale="0.58" rotation="0" origin="0.5,0.5" hidelimb="true" hideotherwearables="true" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="true" depth="0.5" canbehiddenbyotherwearables="false" />
-      <sprite name="Coalition emblem RightArm" texture="Content/UI/CampaignUIAtlas2.png" sourcerect="143,523,94,113" limb="RightArm" scale="0.23" origin="0.44,1.25" depth="0.31" inheritscale="true" ignorelimbscale="true" inheritlimbdepth="false" canbehiddenbyotherwearables="false" />
+      <sprite name="Coalition emblem RightArm" texture="Content/UI/CampaignUIAtlas2.png" sourcerect="143,523,94,113" limb="RightArm" scale="0.28" origin="0.31,1.07" depth="0.019" inheritscale="true" ignorelimbscale="true" inheritlimbdepth="false" canbehiddenbyotherwearables="false" />
       <sprite name="Aegis LeftArm" texture="%ModDir%/Assets/Factions/coalition/suit-v2.png" sourcerect="46,131,100,122" limb="LeftArm" scale="0.58" rotation="0" origin="0.5,0.5" hidelimb="true" hideotherwearables="true" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="true" depth="0.5" canbehiddenbyotherwearables="false" />
-      <sprite name="Coalition emblem LeftArm" texture="Content/UI/CampaignUIAtlas2.png" sourcerect="143,523,94,113" limb="LeftArm" scale="0.23" origin="0.44,1.25" depth="0.31" inheritscale="true" ignorelimbscale="true" inheritlimbdepth="false" canbehiddenbyotherwearables="false" />
+      <sprite name="Coalition emblem LeftArm" texture="Content/UI/CampaignUIAtlas2.png" sourcerect="143,523,94,113" limb="LeftArm" scale="0.28" origin="0.31,1.07" depth="0.139" inheritscale="true" ignorelimbscale="true" inheritlimbdepth="false" canbehiddenbyotherwearables="false" />
       <sprite name="Aegis RightForearm" texture="%ModDir%/Assets/Factions/coalition/suit-v2.png" sourcerect="246,131,84,123" limb="RightForearm" scale="0.66" rotation="0" origin="0.5,0.5" hidelimb="true" hideotherwearables="true" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="true" depth="0.5" canbehiddenbyotherwearables="false" />
       <sprite name="Aegis LeftForearm" texture="%ModDir%/Assets/Factions/coalition/suit-v2.png" sourcerect="246,131,84,123" limb="LeftForearm" scale="0.66" rotation="180" origin="0.5,0.5" hidelimb="true" hideotherwearables="true" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="true" depth="0.5" canbehiddenbyotherwearables="false" />
       <sprite name="Aegis RightHand" texture="%ModDir%/Assets/Factions/coalition/suit-v2.png" sourcerect="435,145,90,99" limb="RightHand" scale="0.52" rotation="0" origin="0.5,0.5" hidelimb="true" hideotherwearables="true" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="true" depth="0.5" canbehiddenbyotherwearables="false" />
@@ -297,7 +298,7 @@
     <ContainedSprite name="Aegis suit holder" allowedcontainertags="divingsuitcontainer" texture="%ModDir%/Assets/Factions/separatists/rack-suit.png" sourcerect="0,0,887,1774" origin="0.5,0.5" depth="0.55" compress="true" />
     <Body width="1200" height="430" density="20" />
     <Wearable slots="OuterClothes" msg="ItemMsgEquipSelect" displaycontainedstatus="true" canbeselected="false" canbepicked="true" pickkey="Select">
-      <sprite name="Aegis Head" texture="%ModDir%/Assets/Factions/separatists/suit-v2.png" sourcerect="407,2,146,124" limb="Head" scale="0.76" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="true" depth="0.5" canbehiddenbyotherwearables="false" alphaclipotherwearables="true" />
+      <sprite name="Aegis Head" texture="%ModDir%/Assets/Factions/separatists/suit-v2.png" sourcerect="407,2,146,124" limb="Head" scale="0.65" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="true" depth="0.5" canbehiddenbyotherwearables="false" alphaclipotherwearables="true" />
       <StatusEffect type="OnWearing" target="Character" PressureProtection="10000" setvalue="true" disabledeltatime="true">
         </StatusEffect>
       <damagemodifier armorsector="0,360" afflictionidentifiers="blunttrauma,gunshotwound,bitewounds,lacerations,bleeding,explosiondamage" damagemultiplier="0.6" damagesound="LimbArmor" />
@@ -432,7 +433,7 @@
     <ContainedSprite name="Aegis suit holder" allowedcontainertags="divingsuitcontainer" texture="%ModDir%/Assets/Factions/husk/rack-suit.png" sourcerect="0,0,887,1774" origin="0.5,0.5" depth="0.55" compress="true" />
     <Body width="1200" height="430" density="20" />
     <Wearable slots="OuterClothes" msg="ItemMsgEquipSelect" displaycontainedstatus="true" canbeselected="false" canbepicked="true" pickkey="Select">
-      <sprite name="Aegis Head" texture="%ModDir%/Assets/Factions/husk/suit-v2.png" sourcerect="407,2,146,124" limb="Head" scale="0.76" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="true" depth="0.5" canbehiddenbyotherwearables="false" alphaclipotherwearables="true" />
+      <sprite name="Aegis Head" texture="%ModDir%/Assets/Factions/husk/suit-v2.png" sourcerect="407,2,146,124" limb="Head" scale="0.65" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="true" depth="0.5" canbehiddenbyotherwearables="false" alphaclipotherwearables="true" />
       <StatusEffect type="OnWearing" target="Character" PressureProtection="10000" setvalue="true" disabledeltatime="true">
         </StatusEffect>
       <damagemodifier armorsector="0,360" afflictionidentifiers="blunttrauma,gunshotwound,bitewounds,lacerations,bleeding,explosiondamage" damagemultiplier="0.6" damagesound="LimbArmor" />
@@ -567,7 +568,7 @@
     <ContainedSprite name="Aegis suit holder" allowedcontainertags="divingsuitcontainer" texture="%ModDir%/Assets/Factions/clowns/rack-suit.png" sourcerect="0,0,887,1774" origin="0.5,0.5" depth="0.55" compress="true" />
     <Body width="1200" height="430" density="20" />
     <Wearable slots="OuterClothes" msg="ItemMsgEquipSelect" displaycontainedstatus="true" canbeselected="false" canbepicked="true" pickkey="Select">
-      <sprite name="Aegis Head" texture="%ModDir%/Assets/Factions/clowns/suit-v2.png" sourcerect="407,2,146,124" limb="Head" scale="0.76" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="true" depth="0.5" canbehiddenbyotherwearables="false" alphaclipotherwearables="true" />
+      <sprite name="Aegis Head" texture="%ModDir%/Assets/Factions/clowns/suit-v2.png" sourcerect="407,2,146,124" limb="Head" scale="0.65" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="true" depth="0.5" canbehiddenbyotherwearables="false" alphaclipotherwearables="true" />
       <StatusEffect type="OnWearing" target="Character" PressureProtection="10000" setvalue="true" disabledeltatime="true">
         </StatusEffect>
       <damagemodifier armorsector="0,360" afflictionidentifiers="blunttrauma,gunshotwound,bitewounds,lacerations,bleeding,explosiondamage" damagemultiplier="0.6" damagesound="LimbArmor" />

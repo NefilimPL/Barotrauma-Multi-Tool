@@ -284,6 +284,26 @@ class FactionFrameTests(unittest.TestCase):
                     expected = [self.factions.frame(key, name)[i] for i in range(1, 5)]
                     self.assertEqual(list(map(int, node.get('sourcerect').split(','))), expected, (key, limb))
 
+    def test_faction_helmets_use_a_closer_fit(self):
+        for filename in ('aegis_suit.xml', 'aegis_factions.xml'):
+            for helmet in ET.parse(MOD / filename).findall("Item/Wearable/sprite[@name='Aegis Head']"):
+                self.assertLessEqual(float(helmet.get('scale')), .67)
+                self.assertEqual(helmet.get('origin'), '0.5,0.5')
+
+    def test_coalition_chest_and_shoulder_emblems_use_the_game_faction_icon(self):
+        suit = ET.parse(MOD / 'aegis_factions.xml').find("Item[@identifier='aegisservosuitcoalition']")
+        for name, limb, plate_depth in (('Coalition emblem', 'Torso', .06),
+                                        ('Coalition emblem RightArm', 'RightArm', .02),
+                                        ('Coalition emblem LeftArm', 'LeftArm', .14)):
+            badge = suit.find(f"Wearable/sprite[@name='{name}']")
+            self.assertEqual(badge.get('limb'), limb)
+            self.assertEqual(badge.get('texture'), 'Content/UI/CampaignUIAtlas2.png')
+            self.assertEqual(badge.get('sourcerect'), '143,523,94,113')
+            self.assertEqual(badge.get('inheritlimbdepth'), 'false')
+            self.assertAlmostEqual(float(badge.get('depth')), plate_depth - .001)
+        chest = suit.find("Wearable/sprite[@name='Coalition emblem']")
+        self.assertGreaterEqual(float(chest.get('scale')), .4)
+
 
 class FactionSalesTests(unittest.TestCase):
     sellers = {

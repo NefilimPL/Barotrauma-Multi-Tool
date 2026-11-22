@@ -24,7 +24,7 @@
     <ContainedSprite name="Aegis suit holder" allowedcontainertags="divingsuitcontainer" texture="%ModDir%/Assets/AegisSuit/rack-suit.png" sourcerect="0,0,887,1774" origin="0.5,0.5" depth="0.55" compress="true" />
     <Body width="1200" height="430" density="20" />
     <Wearable slots="OuterClothes" msg="ItemMsgEquipSelect" displaycontainedstatus="true" canbeselected="false" canbepicked="true" pickkey="Select">
-      <sprite name="Aegis Head" texture="%ModDir%/Assets/AegisSuit/suit-v2.png" sourcerect="407,2,146,124" limb="Head" scale="0.76" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="true" depth="0.5" canbehiddenbyotherwearables="false" alphaclipotherwearables="true" />
+      <sprite name="Aegis Head" texture="%ModDir%/Assets/AegisSuit/suit-v2.png" sourcerect="407,2,146,124" limb="Head" scale="0.65" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="true" depth="0.5" canbehiddenbyotherwearables="false" alphaclipotherwearables="true" />
       <StatusEffect type="OnWearing" target="Character" PressureProtection="10000" setvalue="true" disabledeltatime="true">
         </StatusEffect>
       <damagemodifier armorsector="0,360" afflictionidentifiers="blunttrauma,gunshotwound,bitewounds,lacerations,bleeding,explosiondamage" damagemultiplier="0.6" damagesound="LimbArmor" />
