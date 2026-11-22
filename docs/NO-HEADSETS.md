@@ -1,14 +1,14 @@
-# System Aegis 1.7.0
+# System Aegis 1.8.0
 
 Archiwum zawiera kompletny folder moda `System-Aegis/`.
-[Gotowy ZIP](../output/System-Aegis-1.7.0.zip).
+[Gotowy ZIP](../output/System-Aegis-1.8.0.zip).
 
 
 W tym wariancie są odkurzacz z plecakiem, kombinezon Aegis, bojowy multitool,
 kompozytowy multitool i klucz-śrubokręt. Nie zawiera komunikatorów Aegis,
 ich regeneracji, osłon, skryptów ani zasobów. Wymaga LuaCs na kliencie i serwerze.
 
-[Kolory, emblematy i detale frakcji](FACTION-COLORS.md) · [Podgląd palet](faction-colors/preview.html)
+[Kroje, hełmy i wyposażenie frakcji](FACTION-COLORS.md) · [Podgląd palet](faction-colors/preview.html)
 
 ## Instalacja
 

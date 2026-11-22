@@ -190,9 +190,9 @@ function M.install(G,E,root)
                         local part=G.module and G.module(item,'impeller')
                         housing=skin(Factions.key(part or item),'housing')
                         local motor=G.attachment(owner,-20,-18,true)
-                        housing.Draw(batch,screen(cam,motor),E.Color.White,housing.Origin,-bodyRotation,E.Vector2(.022,.022))
                         impeller.Draw(batch,screen(cam,motor),E.Color.White,impeller.Origin,
                             -bodyRotation+(s.swimming and G.now*14 or 0),E.Vector2(.0135,.0135))
+                        housing.Draw(batch,screen(cam,motor),E.Color.White,housing.Origin,-bodyRotation,E.Vector2(.022,.022))
                     end
                     local short=pose and (not target or (target.kind~='repair' and target.kind~='weld') or
                         (target.point.x-pose.muzzle.x)^2+(target.point.y-pose.muzzle.y)^2<=(C.repairBeam+C.contactSlack+2)^2)

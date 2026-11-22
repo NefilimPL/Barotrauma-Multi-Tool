@@ -225,15 +225,10 @@ class FactionRenderingTests(unittest.TestCase):
 
 
 class FactionFrameTests(unittest.TestCase):
-    boxes = {
-        'torso': (60, 0, 345, 258), 'waist': (400, 50, 730, 250),
-        'helmetClosed': (780, 0, 1120, 256), 'helmetOpen': (1160, 0, 1515, 256),
-        'upperArm': (75, 260, 310, 512), 'forearm': (470, 258, 670, 512),
-        'hand': (850, 280, 1070, 510), 'thigh': (1200, 256, 1460, 514),
-        'calf': (100, 514, 290, 770), 'boot': (410, 540, 730, 745),
-        'upperLink': (735, 565, 1150, 715), 'lowerLink': (1145, 570, 1536, 715),
-        'emitter': (10, 790, 370, 995),
-    }
+    atlas_cells = ('torso', 'waist', 'helmetClosed', 'helmetOpen',
+                   'upperArm', 'forearm', 'hand', 'thigh',
+                   'calf', 'boot', 'upperLink', 'lowerLink',
+                   'emitter', 'rotor', None, 'assembled')
 
     def setUp(self):
         self.lua = LuaRuntime(unpack_returned_tuples=True)
@@ -245,13 +240,28 @@ class FactionFrameTests(unittest.TestCase):
         for key in KEYS:
             with Image.open(MOD / self.factions.path(key, 'atlas')) as image:
                 alpha = image.getchannel('A').point(lambda a: 255 if a > 16 else 0)
-                for name, box in self.boxes.items():
+                for cell, name in enumerate(self.atlas_cells):
+                    left, top = cell % 4 * 384, cell // 4 * 256
+                    box = (left, top, left + 384, top + 256)
                     bounds = alpha.crop(box).getbbox()
+                    if name is None:
+                        self.assertIsNone(bounds, key)
+                        continue
+                    self.assertIsNotNone(bounds, (key, name))
                     x, y, w, h = [self.factions.frame(key, name)[i] for i in range(1, 5)]
                     self.assertLessEqual(x, bounds[0] + box[0], (key, name, 'left'))
                     self.assertLessEqual(y, bounds[1] + box[1], (key, name, 'top'))
                     self.assertGreaterEqual(x + w, bounds[2] + box[0], (key, name, 'right'))
                     self.assertGreaterEqual(y + h, bounds[3] + box[1], (key, name, 'bottom'))
+
+    def test_impeller_housings_leave_the_rotating_hub_visible(self):
+        for key in KEYS:
+            with Image.open(MOD / self.factions.path(key, 'housing')) as housing:
+                width, height = housing.size
+                center = round(width * .54), height // 2
+                self.assertLessEqual(housing.getchannel('A').getpixel(center), 16, key)
+            with Image.open(MOD / self.factions.path(key, 'impeller')) as inventory_icon:
+                self.assertGreater(inventory_icon.getchannel('A').getpixel(center), 128, key)
 
     def test_wearable_rectangles_match_palette_frames(self):
         names = {'Head': 'helmetClosed', 'Torso': 'torso', 'Waist': 'waist',

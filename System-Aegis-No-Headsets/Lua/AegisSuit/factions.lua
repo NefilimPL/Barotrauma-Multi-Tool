@@ -33,52 +33,12 @@ function F.path(key,asset)
     assert(records[F.id('suit',key)],'unknown faction palette')
     return 'Assets/Factions/'..key..'/'..name
 end
--- Generated sprites retain each part but can shift within a cell. These cached
--- UV frames keep the entire part and its local center/arm anchors visible.
-local A=require('AegisSuit.atlas')
-local frameOverrides={
-    coalition={
-        helmetClosed={826,12,220,241},
-        helmetOpen={1210,12,220,242},
-        hand={892,308,124,171},
-        thigh={1263,260,143,255},
-        boot={458,570,239,158},
-    },
-    separatists={
-        waist={446,80,219,151},
-        helmetClosed={822,12,220,241},
-        helmetOpen={1206,11,220,242},
-        hand={876,308,124,171},
-        thigh={1262,260,143,255},
-        boot={448,570,239,158},
-        upperLink={756,588,336,101},
-        lowerLink={1165,600,324,81},
-    },
-    husk={
-        waist={444,80,219,151},
-        helmetClosed={828,11,220,241},
-        helmetOpen={1212,10,220,242},
-        hand={883,308,124,171},
-        upperLink={755,588,336,101},
-        lowerLink={1164,598,319,81},
-    },
-    clowns={
-        helmetClosed={818,10,220,241},
-        helmetOpen={1202,10,220,242},
-        hand={876,308,124,171},
-        thigh={1242,258,143,255},
-        upperLink={760,588,336,101},
-        lowerLink={1154,598,319,81},
-    },
-}
-local frames={}
-for _,key in ipairs(F.order) do
-    frames[key]={}
-    for name,r in pairs(A) do frames[key][name]=(frameOverrides[key] or {})[name] or r end
-end
+-- Every style uses the same atlas slots and servo pivot coordinates.
+local frames=require('AegisSuit.atlas')
 function F.frame(key,name)
-    local r=frames[key] and frames[key][name]
-    assert(r,'unknown faction frame')
-    return r
+    assert(records[F.id('suit',key)],'unknown faction')
+    local frame=frames[name]
+    assert(frame,'unknown faction frame')
+    return frame
 end
 return F
