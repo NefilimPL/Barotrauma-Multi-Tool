@@ -17,6 +17,10 @@ function M.install(G,E,root)
     local atlasKey='pirates'
     local atlas=skin(atlasKey,'atlas')
     local impeller=E.Sprite(root..'/Assets/AegisSuit/impeller.png',E.Vector2(.5,.5))
+    -- The rotor and its housing retain their world size after texture downsampling.
+    local rotorTextureScale=1254/312
+    local bladeSize=.0135*rotorTextureScale
+    local housingSize=.022*rotorTextureScale
     local housing=skin('pirates','housing')
     local pulseHead=E.Sprite('Content/Items/Weapons/Turrets.png',E.Vector2(.5,.5))
     local beamSprite=E.Sprite('Content/Particles/ParticleAtlas.png',E.Vector2(0,.5))
@@ -191,8 +195,9 @@ function M.install(G,E,root)
                         housing=skin(Factions.key(part or item),'housing')
                         local motor=G.attachment(owner,-20,-18,true)
                         impeller.Draw(batch,screen(cam,motor),E.Color.White,impeller.Origin,
-                            -bodyRotation+(s.swimming and G.now*14 or 0),E.Vector2(.0135,.0135))
-                        housing.Draw(batch,screen(cam,motor),E.Color.White,housing.Origin,-bodyRotation,E.Vector2(.022,.022))
+                            -bodyRotation+(s.swimming and G.now*14 or 0),E.Vector2(bladeSize,bladeSize))
+                        housing.Draw(batch,screen(cam,motor),E.Color.White,housing.Origin,-bodyRotation,
+                            E.Vector2(housingSize,housingSize))
                     end
                     local short=pose and (not target or (target.kind~='repair' and target.kind~='weld') or
                         (target.point.x-pose.muzzle.x)^2+(target.point.y-pose.muzzle.y)^2<=(C.repairBeam+C.contactSlack+2)^2)

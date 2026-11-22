@@ -1,10 +1,10 @@
-# Kombinezony frakcji w Systemie Aegis 1.8.0
+# Kombinezony frakcji w Systemie Aegis 1.8.1
 
 Każda z sześciu frakcji ma własny krój kombinezonu, hełm i osłony osprzętu.
 Rozpoznasz zestawy po kształtach, materiale i widocznych oznaczeniach.
 Warianty mają te same receptury, ochronę i funkcje.
 
-[Porównaj kombinezony](faction-colors/preview.html) · [ZIP 1.8.0](../output/System-Aegis-1.8.0.zip)
+[Porównaj kombinezony](faction-colors/preview.html) · [ZIP 1.8.1](../output/System-Aegis-1.8.1.zip)
 
 | Frakcja | Motyw |
 |---|---|
@@ -13,7 +13,7 @@ Warianty mają te same receptury, ochronę i funkcje.
 | Koalicja | Kanciaste niebieskie płyty, prostokątny bursztynowy wizjer, pasy oporządzenia i gwiazda. |
 | Separatyści | Pomarańczowe osłony przemysłowe, trzy okrągłe wizjery, uchwyty i żółto-czarne pasy. |
 | Kościół Łuski | Fioletowy kaptur hełmu, żebrowane płyty w kolorze kości, wąski wizjer i zwijający się znak kultu. |
-| Dzieci Honkomatki | Zielono-żółty hełm z trzema dzwonkami, duże romby, szachownica i paski na rękawach. |
+| Dzieci Honkomatki | Biała maska z czerwonym nosem i uśmiechem, hełm z dzwonkami, szachownica i paski na rękawach. |
 
 Ramię i obudowa wirnika pokazują styl faktycznie zamontowanego modułu.
 Możesz włożyć np. niebieskie serwo i fioletowy wirnik do białego kombinezonu.
@@ -71,3 +71,5 @@ Każdy zestaw ma własny atlas animowanych części, zamknięty i otwarty hełm,
 portret na stojaku, złożony kombinezon, obudowę wirnika oraz ikony serwa i wirnika.
 Piracki zestaw jest w `Assets/AegisSuit/` i `Assets/AegisModules/`, pozostałe
 w `Assets/Factions/`. [Założenia grafik 1.8.0](faction-colors/STYLE-1.8.0.md).
+
+[Maska klauna i wyniki pomiaru szafek w 1.8.1](AEGIS-CABINET-PERFORMANCE.md).

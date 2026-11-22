@@ -54,25 +54,22 @@ function M.new(E)
             end
             if inv.Locked then return false end
             local parent=inv.Owner
-            if not parent or not E.LuaUserData.IsTargetType(parent,'Barotrauma.Item') then return false end
+            if not parent or not E.LuaUserData.IsTargetType(parent,'Barotrauma.Item') or G.is(parent,C.page) then return false end
             node=parent
         end
         return false
     end
     function G.availablePacks(character)
         local out=G.packs(character)
-        local known={};for _,pack in ipairs(out) do known[pack]=true end
         local selected=character and character.SelectedItem
-        local function visit(item,budget)
-            if budget.count>=256 then return end;budget.count=budget.count+1
-            if G.is(item,C.pack) then
-                if not known[item] and G.packAccessible(item,character) then out[#out+1]=item;known[item]=true end
-                return
+        if not selected or not E.LuaUserData.IsTargetType(selected,'Barotrauma.Item') then return out end
+        -- LuaCs already indexes items by prefab. Check only backpacks rooted in
+        -- this cabinet, then validate the current access for each candidate.
+        U.each(E.Util.GetItemsById(C.pack),function(pack)
+            if G.is(pack,C.pack) and pack.GetRootInventoryOwner()==selected and G.packAccessible(pack,character) then
+                out[#out+1]=pack
             end
-            if G.is(item,C.page) then return end
-            for _,child in ipairs(G.children(item)) do visit(child,budget) end
-        end
-        if selected and E.LuaUserData.IsTargetType(selected,'Barotrauma.Item') then visit(selected,{count=0}) end
+        end)
         return out
     end
     function G.source(vacuum)

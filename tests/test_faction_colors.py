@@ -127,7 +127,7 @@ class FactionContentTests(unittest.TestCase):
                 self.assertTrue((MOD / reference.removeprefix('%ModDir%/')).is_file(), reference)
             for kind in ('servo', 'impeller'):
                 reference = items[identifier(kind, key)].find('InventoryIcon').get('texture')
-                self.assertEqual(reference, '%ModDir%/Assets/Factions/' + key + '/' + kind + '-module.png')
+                self.assertEqual(reference, '%ModDir%/Assets/Factions/' + key + '/' + kind + '-icon.png')
 
 
 class FactionRenderingTests(unittest.TestCase):
@@ -261,7 +261,8 @@ class FactionFrameTests(unittest.TestCase):
                 center = round(width * .54), height // 2
                 self.assertLessEqual(housing.getchannel('A').getpixel(center), 16, key)
             with Image.open(MOD / self.factions.path(key, 'impeller')) as inventory_icon:
-                self.assertGreater(inventory_icon.getchannel('A').getpixel(center), 128, key)
+                icon_center=round(inventory_icon.width*.54), inventory_icon.height//2
+                self.assertGreater(inventory_icon.getchannel('A').getpixel(icon_center), 128, key)
 
     def test_wearable_rectangles_match_palette_frames(self):
         names = {'Head': 'helmetClosed', 'Torso': 'torso', 'Waist': 'waist',

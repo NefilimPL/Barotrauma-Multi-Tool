@@ -16,12 +16,12 @@
       <Item identifier="titaniumaluminiumalloy" amount="2" />
       <Item identifier="copper" />
     </Deconstruct>
-    <InventoryIcon texture="%ModDir%/Assets/Factions/descendens/packed-suit.png" sourcerect="96,173,1428,586" origin="0.5,0.5" compress="false" />
-    <Sprite texture="%ModDir%/Assets/Factions/descendens/packed-suit.png" sourcerect="96,173,1428,586" origin="0.5,0.5" depth="0.55" compress="false" />
-    <ContainedSprite name="Aegis upright suit" allowedcontainertags="divingsuitcontainervertical" texture="%ModDir%/Assets/Factions/descendens/rack-suit.png" origin="0.5,0.5" depth="0.55" compress="false" />
-    <ContainedSprite name="Aegis window suit" allowedcontainertags="divingsuitcontainerwindow" texture="%ModDir%/Assets/Factions/descendens/rack-window-v2.png" sourcerect="50,63,657,1742" origin="-0.12,-0.13" depth="0.55" compress="false" />
-    <ContainedSprite name="Aegis horizontal suit" allowedcontainertags="divingsuitcontainerhorizontal" texture="%ModDir%/Assets/Factions/descendens/packed-suit.png" sourcerect="96,173,1428,586" origin="0.5,0.5" depth="0.55" compress="false" />
-    <ContainedSprite name="Aegis suit holder" allowedcontainertags="divingsuitcontainer" texture="%ModDir%/Assets/Factions/descendens/rack-suit.png" origin="0.5,0.5" depth="0.55" compress="false" />
+    <InventoryIcon texture="%ModDir%/Assets/Factions/descendens/packed-icon.png" sourcerect="0,0,384,160" origin="0.5,0.5" compress="true" />
+    <Sprite texture="%ModDir%/Assets/Factions/descendens/packed-suit.png" sourcerect="96,173,1428,586" origin="0.5,0.5" depth="0.55" compress="true" />
+    <ContainedSprite name="Aegis upright suit" allowedcontainertags="divingsuitcontainervertical" texture="%ModDir%/Assets/Factions/descendens/rack-suit.png" sourcerect="0,0,887,1774" origin="0.5,0.5" depth="0.55" compress="true" />
+    <ContainedSprite name="Aegis window suit" allowedcontainertags="divingsuitcontainerwindow" texture="%ModDir%/Assets/Factions/descendens/rack-window-v2.png" sourcerect="50,63,657,1742" origin="-0.12,-0.13" depth="0.55" compress="true" />
+    <ContainedSprite name="Aegis horizontal suit" allowedcontainertags="divingsuitcontainerhorizontal" texture="%ModDir%/Assets/Factions/descendens/packed-suit.png" sourcerect="96,173,1428,586" origin="0.5,0.5" depth="0.55" compress="true" />
+    <ContainedSprite name="Aegis suit holder" allowedcontainertags="divingsuitcontainer" texture="%ModDir%/Assets/Factions/descendens/rack-suit.png" sourcerect="0,0,887,1774" origin="0.5,0.5" depth="0.55" compress="true" />
     <Body width="1200" height="430" density="20" />
     <Wearable slots="OuterClothes" msg="ItemMsgEquipSelect" displaycontainedstatus="true" canbeselected="false" canbepicked="true" pickkey="Select">
       <sprite name="Aegis seal Torso" texture="Content/Items/Diving/Abyss_DivingSuit.png" limb="Torso" hidelimb="true" hideotherwearables="true" inherittexturescale="true" inheritorigin="true" inheritsourcerect="true" depth="0.6" color="65,70,80,255" />
@@ -38,27 +38,27 @@
       <sprite name="Aegis seal LeftLeg" texture="Content/Items/Diving/Abyss_DivingSuit.png" limb="LeftLeg" hidelimb="true" hideotherwearables="true" inherittexturescale="true" inheritorigin="true" inheritsourcerect="true" depth="0.6" color="65,70,80,255" />
       <sprite name="Aegis seal RightFoot" texture="Content/Items/Diving/Abyss_DivingSuit.png" limb="RightFoot" hidelimb="true" hideotherwearables="true" inherittexturescale="true" inheritorigin="true" inheritsourcerect="true" depth="0.6" color="65,70,80,255" />
       <sprite name="Aegis seal LeftFoot" texture="Content/Items/Diving/Abyss_DivingSuit.png" limb="LeftFoot" hidelimb="true" hideotherwearables="true" inherittexturescale="true" inheritorigin="true" inheritsourcerect="true" depth="0.6" color="65,70,80,255" />
-      <sprite name="Aegis Head" texture="%ModDir%/Assets/Factions/descendens/suit-v2.png" sourcerect="814,5,292,246" limb="Head" scale="0.4" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="false" depth="0.5" canbehiddenbyotherwearables="false" alphaclipotherwearables="true" />
+      <sprite name="Aegis Head" texture="%ModDir%/Assets/Factions/descendens/suit-v2.png" sourcerect="814,5,292,246" limb="Head" scale="0.4" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="true" depth="0.5" canbehiddenbyotherwearables="false" alphaclipotherwearables="true" />
       <StatusEffect type="OnWearing" target="Character" PressureProtection="10000" setvalue="true" disabledeltatime="true">
         </StatusEffect>
       <damagemodifier armorsector="0,360" afflictionidentifiers="blunttrauma,gunshotwound,bitewounds,lacerations,bleeding,explosiondamage" damagemultiplier="0.6" damagesound="LimbArmor" />
       <damagemodifier armorsector="0,360" afflictiontypes="burn" damagemultiplier="0.7" />
     </Wearable>
     <Wearable slots="OuterClothes" msg="ItemMsgEquipSelect" displaycontainedstatus="true" canbeselected="false" canbepicked="true" pickkey="Select">
-      <sprite name="Aegis Torso" texture="%ModDir%/Assets/Factions/descendens/suit-v2.png" sourcerect="67,5,254,246" limb="Torso" scale="0.6" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="false" depth="0.5" canbehiddenbyotherwearables="false" />
-      <sprite name="Aegis Waist" texture="%ModDir%/Assets/Factions/descendens/suit-v2.png" sourcerect="439,74,274,166" limb="Waist" scale="0.32" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="false" depth="0.5" canbehiddenbyotherwearables="false" />
-      <sprite name="Aegis RightArm" texture="%ModDir%/Assets/Factions/descendens/suit-v2.png" sourcerect="92,262,200,244" limb="RightArm" scale="0.34" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="false" depth="0.5" canbehiddenbyotherwearables="false" />
-      <sprite name="Aegis LeftArm" texture="%ModDir%/Assets/Factions/descendens/suit-v2.png" sourcerect="92,262,200,244" limb="LeftArm" scale="0.34" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="false" depth="0.5" canbehiddenbyotherwearables="false" />
-      <sprite name="Aegis RightForearm" texture="%ModDir%/Assets/Factions/descendens/suit-v2.png" sourcerect="492,263,168,244" limb="RightForearm" scale="0.36" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="false" depth="0.5" canbehiddenbyotherwearables="false" />
-      <sprite name="Aegis LeftForearm" texture="%ModDir%/Assets/Factions/descendens/suit-v2.png" sourcerect="492,263,168,244" limb="LeftForearm" scale="0.36" rotation="180" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="false" depth="0.5" canbehiddenbyotherwearables="false" />
-      <sprite name="Aegis RightHand" texture="%ModDir%/Assets/Factions/descendens/suit-v2.png" sourcerect="870,291,180,196" limb="RightHand" scale="0.28" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="false" depth="0.5" canbehiddenbyotherwearables="false" />
-      <sprite name="Aegis LeftHand" texture="%ModDir%/Assets/Factions/descendens/suit-v2.png" sourcerect="870,291,180,196" limb="LeftHand" scale="0.28" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="false" depth="0.5" canbehiddenbyotherwearables="false" />
-      <sprite name="Aegis RightThigh" texture="%ModDir%/Assets/Factions/descendens/suit-v2.png" sourcerect="1248,260,192,248" limb="RightThigh" scale="0.42" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="false" depth="0.5" canbehiddenbyotherwearables="false" />
-      <sprite name="Aegis LeftThigh" texture="%ModDir%/Assets/Factions/descendens/suit-v2.png" sourcerect="1248,260,192,248" limb="LeftThigh" scale="0.42" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="false" depth="0.5" canbehiddenbyotherwearables="false" />
-      <sprite name="Aegis RightLeg" texture="%ModDir%/Assets/Factions/descendens/suit-v2.png" sourcerect="98,516,188,250" limb="RightLeg" scale="0.44" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="false" depth="0.5" canbehiddenbyotherwearables="false" />
-      <sprite name="Aegis LeftLeg" texture="%ModDir%/Assets/Factions/descendens/suit-v2.png" sourcerect="98,516,188,250" limb="LeftLeg" scale="0.44" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="false" depth="0.5" canbehiddenbyotherwearables="false" />
-      <sprite name="Aegis RightFoot" texture="%ModDir%/Assets/Factions/descendens/suit-v2.png" sourcerect="432,548,288,196" limb="RightFoot" scale="0.28" rotation="90" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="false" depth="0.5" canbehiddenbyotherwearables="false" />
-      <sprite name="Aegis LeftFoot" texture="%ModDir%/Assets/Factions/descendens/suit-v2.png" sourcerect="432,548,288,196" limb="LeftFoot" scale="0.28" rotation="90" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="false" depth="0.5" canbehiddenbyotherwearables="false" />
+      <sprite name="Aegis Torso" texture="%ModDir%/Assets/Factions/descendens/suit-v2.png" sourcerect="67,5,254,246" limb="Torso" scale="0.6" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="true" depth="0.5" canbehiddenbyotherwearables="false" />
+      <sprite name="Aegis Waist" texture="%ModDir%/Assets/Factions/descendens/suit-v2.png" sourcerect="439,74,274,166" limb="Waist" scale="0.32" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="true" depth="0.5" canbehiddenbyotherwearables="false" />
+      <sprite name="Aegis RightArm" texture="%ModDir%/Assets/Factions/descendens/suit-v2.png" sourcerect="92,262,200,244" limb="RightArm" scale="0.34" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="true" depth="0.5" canbehiddenbyotherwearables="false" />
+      <sprite name="Aegis LeftArm" texture="%ModDir%/Assets/Factions/descendens/suit-v2.png" sourcerect="92,262,200,244" limb="LeftArm" scale="0.34" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="true" depth="0.5" canbehiddenbyotherwearables="false" />
+      <sprite name="Aegis RightForearm" texture="%ModDir%/Assets/Factions/descendens/suit-v2.png" sourcerect="492,263,168,244" limb="RightForearm" scale="0.36" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="true" depth="0.5" canbehiddenbyotherwearables="false" />
+      <sprite name="Aegis LeftForearm" texture="%ModDir%/Assets/Factions/descendens/suit-v2.png" sourcerect="492,263,168,244" limb="LeftForearm" scale="0.36" rotation="180" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="true" depth="0.5" canbehiddenbyotherwearables="false" />
+      <sprite name="Aegis RightHand" texture="%ModDir%/Assets/Factions/descendens/suit-v2.png" sourcerect="870,291,180,196" limb="RightHand" scale="0.28" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="true" depth="0.5" canbehiddenbyotherwearables="false" />
+      <sprite name="Aegis LeftHand" texture="%ModDir%/Assets/Factions/descendens/suit-v2.png" sourcerect="870,291,180,196" limb="LeftHand" scale="0.28" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="true" depth="0.5" canbehiddenbyotherwearables="false" />
+      <sprite name="Aegis RightThigh" texture="%ModDir%/Assets/Factions/descendens/suit-v2.png" sourcerect="1248,260,192,248" limb="RightThigh" scale="0.42" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="true" depth="0.5" canbehiddenbyotherwearables="false" />
+      <sprite name="Aegis LeftThigh" texture="%ModDir%/Assets/Factions/descendens/suit-v2.png" sourcerect="1248,260,192,248" limb="LeftThigh" scale="0.42" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="true" depth="0.5" canbehiddenbyotherwearables="false" />
+      <sprite name="Aegis RightLeg" texture="%ModDir%/Assets/Factions/descendens/suit-v2.png" sourcerect="98,516,188,250" limb="RightLeg" scale="0.44" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="true" depth="0.5" canbehiddenbyotherwearables="false" />
+      <sprite name="Aegis LeftLeg" texture="%ModDir%/Assets/Factions/descendens/suit-v2.png" sourcerect="98,516,188,250" limb="LeftLeg" scale="0.44" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="true" depth="0.5" canbehiddenbyotherwearables="false" />
+      <sprite name="Aegis RightFoot" texture="%ModDir%/Assets/Factions/descendens/suit-v2.png" sourcerect="432,548,288,196" limb="RightFoot" scale="0.28" rotation="90" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="true" depth="0.5" canbehiddenbyotherwearables="false" />
+      <sprite name="Aegis LeftFoot" texture="%ModDir%/Assets/Factions/descendens/suit-v2.png" sourcerect="432,548,288,196" limb="LeftFoot" scale="0.28" rotation="90" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="true" depth="0.5" canbehiddenbyotherwearables="false" />
     </Wearable>
     <Holdable slots="RightHand+LeftHand" controlpose="true" holdpos="0,-50" handle1="-10,-20" handle2="10,-20" holdangle="45" msg="ItemMsgPickUpUse" canbeselected="false" canbepicked="true" pickkey="Use" />
     <AiTarget sightrange="1500" />
@@ -75,11 +75,11 @@
       <SubContainer capacity="1" maxstacksize="1">
         <Containable items="aegisservomodule,aegisservomoduledescendens,aegisservomodulecoalition,aegisservomoduleseparatists,aegisservomodulehusk,aegisservomoduleclowns" />
       </SubContainer>
-      <SlotIcon slotindex="2" texture="%ModDir%/Assets/Factions/descendens/servo-module.png" sourcerect="0,0,1536,1024" origin="0.5,0.5" />
+      <SlotIcon slotindex="2" texture="%ModDir%/Assets/Factions/descendens/servo-icon.png" sourcerect="0,0,256,172" origin="0.5,0.5" />
       <SubContainer capacity="1" maxstacksize="1">
         <Containable items="aegisimpellermodule,aegisimpellermoduledescendens,aegisimpellermodulecoalition,aegisimpellermoduleseparatists,aegisimpellermodulehusk,aegisimpellermoduleclowns" />
       </SubContainer>
-      <SlotIcon slotindex="3" texture="%ModDir%/Assets/Factions/descendens/impeller-module.png" sourcerect="0,0,1254,1254" origin="0.5,0.5" />
+      <SlotIcon slotindex="3" texture="%ModDir%/Assets/Factions/descendens/impeller-icon.png" sourcerect="0,0,256,256" origin="0.5,0.5" />
       <SubContainer capacity="1" maxstacksize="1">
         <Containable items="aegiscompressormodule" />
       </SubContainer>
@@ -125,8 +125,8 @@
       <Item identifier="copper" />
       <Item identifier="titaniumaluminiumalloy" />
     </Deconstruct>
-    <InventoryIcon texture="%ModDir%/Assets/Factions/descendens/servo-module.png" sourcerect="0,0,1536,1024" origin="0.5,0.5" compress="false" />
-    <Sprite texture="%ModDir%/Assets/Factions/descendens/servo-module.png" sourcerect="0,0,1536,1024" origin="0.5,0.5" compress="false" />
+    <InventoryIcon texture="%ModDir%/Assets/Factions/descendens/servo-icon.png" sourcerect="0,0,256,172" origin="0.5,0.5" compress="true" />
+    <Sprite texture="%ModDir%/Assets/Factions/descendens/servo-module.png" sourcerect="0,0,1536,1024" origin="0.5,0.5" compress="true" />
     <Body width="850" height="800" density="10" />
     <Holdable slots="Any,RightHand" handle1="0,0" holdpos="0,0" msg="ItemMsgPickUpSelect" />
   </Item>
@@ -144,8 +144,8 @@
       <Item identifier="copper" />
       <Item identifier="steel" />
     </Deconstruct>
-    <InventoryIcon texture="%ModDir%/Assets/Factions/descendens/impeller-module.png" sourcerect="0,0,1254,1254" origin="0.5,0.5" compress="false" />
-    <Sprite texture="%ModDir%/Assets/Factions/descendens/impeller-module.png" sourcerect="0,0,1254,1254" origin="0.5,0.5" compress="false" />
+    <InventoryIcon texture="%ModDir%/Assets/Factions/descendens/impeller-icon.png" sourcerect="0,0,256,256" origin="0.5,0.5" compress="true" />
+    <Sprite texture="%ModDir%/Assets/Factions/descendens/impeller-module.png" sourcerect="0,0,1254,1254" origin="0.5,0.5" compress="true" />
     <Body width="850" height="800" density="10" />
     <Holdable slots="Any,RightHand" handle1="0,0" holdpos="0,0" msg="ItemMsgPickUpSelect" />
   </Item>
@@ -165,12 +165,12 @@
       <Item identifier="titaniumaluminiumalloy" amount="2" />
       <Item identifier="copper" />
     </Deconstruct>
-    <InventoryIcon texture="%ModDir%/Assets/Factions/coalition/packed-suit.png" sourcerect="96,173,1428,586" origin="0.5,0.5" compress="false" />
-    <Sprite texture="%ModDir%/Assets/Factions/coalition/packed-suit.png" sourcerect="96,173,1428,586" origin="0.5,0.5" depth="0.55" compress="false" />
-    <ContainedSprite name="Aegis upright suit" allowedcontainertags="divingsuitcontainervertical" texture="%ModDir%/Assets/Factions/coalition/rack-suit.png" origin="0.5,0.5" depth="0.55" compress="false" />
-    <ContainedSprite name="Aegis window suit" allowedcontainertags="divingsuitcontainerwindow" texture="%ModDir%/Assets/Factions/coalition/rack-window-v2.png" sourcerect="50,63,657,1742" origin="-0.12,-0.13" depth="0.55" compress="false" />
-    <ContainedSprite name="Aegis horizontal suit" allowedcontainertags="divingsuitcontainerhorizontal" texture="%ModDir%/Assets/Factions/coalition/packed-suit.png" sourcerect="96,173,1428,586" origin="0.5,0.5" depth="0.55" compress="false" />
-    <ContainedSprite name="Aegis suit holder" allowedcontainertags="divingsuitcontainer" texture="%ModDir%/Assets/Factions/coalition/rack-suit.png" origin="0.5,0.5" depth="0.55" compress="false" />
+    <InventoryIcon texture="%ModDir%/Assets/Factions/coalition/packed-icon.png" sourcerect="0,0,384,160" origin="0.5,0.5" compress="true" />
+    <Sprite texture="%ModDir%/Assets/Factions/coalition/packed-suit.png" sourcerect="96,173,1428,586" origin="0.5,0.5" depth="0.55" compress="true" />
+    <ContainedSprite name="Aegis upright suit" allowedcontainertags="divingsuitcontainervertical" texture="%ModDir%/Assets/Factions/coalition/rack-suit.png" sourcerect="0,0,887,1774" origin="0.5,0.5" depth="0.55" compress="true" />
+    <ContainedSprite name="Aegis window suit" allowedcontainertags="divingsuitcontainerwindow" texture="%ModDir%/Assets/Factions/coalition/rack-window-v2.png" sourcerect="50,63,657,1742" origin="-0.12,-0.13" depth="0.55" compress="true" />
+    <ContainedSprite name="Aegis horizontal suit" allowedcontainertags="divingsuitcontainerhorizontal" texture="%ModDir%/Assets/Factions/coalition/packed-suit.png" sourcerect="96,173,1428,586" origin="0.5,0.5" depth="0.55" compress="true" />
+    <ContainedSprite name="Aegis suit holder" allowedcontainertags="divingsuitcontainer" texture="%ModDir%/Assets/Factions/coalition/rack-suit.png" sourcerect="0,0,887,1774" origin="0.5,0.5" depth="0.55" compress="true" />
     <Body width="1200" height="430" density="20" />
     <Wearable slots="OuterClothes" msg="ItemMsgEquipSelect" displaycontainedstatus="true" canbeselected="false" canbepicked="true" pickkey="Select">
       <sprite name="Aegis seal Torso" texture="Content/Items/Diving/Abyss_DivingSuit.png" limb="Torso" hidelimb="true" hideotherwearables="true" inherittexturescale="true" inheritorigin="true" inheritsourcerect="true" depth="0.6" color="65,70,80,255" />
@@ -187,27 +187,27 @@
       <sprite name="Aegis seal LeftLeg" texture="Content/Items/Diving/Abyss_DivingSuit.png" limb="LeftLeg" hidelimb="true" hideotherwearables="true" inherittexturescale="true" inheritorigin="true" inheritsourcerect="true" depth="0.6" color="65,70,80,255" />
       <sprite name="Aegis seal RightFoot" texture="Content/Items/Diving/Abyss_DivingSuit.png" limb="RightFoot" hidelimb="true" hideotherwearables="true" inherittexturescale="true" inheritorigin="true" inheritsourcerect="true" depth="0.6" color="65,70,80,255" />
       <sprite name="Aegis seal LeftFoot" texture="Content/Items/Diving/Abyss_DivingSuit.png" limb="LeftFoot" hidelimb="true" hideotherwearables="true" inherittexturescale="true" inheritorigin="true" inheritsourcerect="true" depth="0.6" color="65,70,80,255" />
-      <sprite name="Aegis Head" texture="%ModDir%/Assets/Factions/coalition/suit-v2.png" sourcerect="814,5,292,246" limb="Head" scale="0.4" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="false" depth="0.5" canbehiddenbyotherwearables="false" alphaclipotherwearables="true" />
+      <sprite name="Aegis Head" texture="%ModDir%/Assets/Factions/coalition/suit-v2.png" sourcerect="814,5,292,246" limb="Head" scale="0.4" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="true" depth="0.5" canbehiddenbyotherwearables="false" alphaclipotherwearables="true" />
       <StatusEffect type="OnWearing" target="Character" PressureProtection="10000" setvalue="true" disabledeltatime="true">
         </StatusEffect>
       <damagemodifier armorsector="0,360" afflictionidentifiers="blunttrauma,gunshotwound,bitewounds,lacerations,bleeding,explosiondamage" damagemultiplier="0.6" damagesound="LimbArmor" />
       <damagemodifier armorsector="0,360" afflictiontypes="burn" damagemultiplier="0.7" />
     </Wearable>
     <Wearable slots="OuterClothes" msg="ItemMsgEquipSelect" displaycontainedstatus="true" canbeselected="false" canbepicked="true" pickkey="Select">
-      <sprite name="Aegis Torso" texture="%ModDir%/Assets/Factions/coalition/suit-v2.png" sourcerect="67,5,254,246" limb="Torso" scale="0.6" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="false" depth="0.5" canbehiddenbyotherwearables="false" />
-      <sprite name="Aegis Waist" texture="%ModDir%/Assets/Factions/coalition/suit-v2.png" sourcerect="439,74,274,166" limb="Waist" scale="0.32" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="false" depth="0.5" canbehiddenbyotherwearables="false" />
-      <sprite name="Aegis RightArm" texture="%ModDir%/Assets/Factions/coalition/suit-v2.png" sourcerect="92,262,200,244" limb="RightArm" scale="0.34" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="false" depth="0.5" canbehiddenbyotherwearables="false" />
-      <sprite name="Aegis LeftArm" texture="%ModDir%/Assets/Factions/coalition/suit-v2.png" sourcerect="92,262,200,244" limb="LeftArm" scale="0.34" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="false" depth="0.5" canbehiddenbyotherwearables="false" />
-      <sprite name="Aegis RightForearm" texture="%ModDir%/Assets/Factions/coalition/suit-v2.png" sourcerect="492,263,168,244" limb="RightForearm" scale="0.36" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="false" depth="0.5" canbehiddenbyotherwearables="false" />
-      <sprite name="Aegis LeftForearm" texture="%ModDir%/Assets/Factions/coalition/suit-v2.png" sourcerect="492,263,168,244" limb="LeftForearm" scale="0.36" rotation="180" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="false" depth="0.5" canbehiddenbyotherwearables="false" />
-      <sprite name="Aegis RightHand" texture="%ModDir%/Assets/Factions/coalition/suit-v2.png" sourcerect="870,291,180,196" limb="RightHand" scale="0.28" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="false" depth="0.5" canbehiddenbyotherwearables="false" />
-      <sprite name="Aegis LeftHand" texture="%ModDir%/Assets/Factions/coalition/suit-v2.png" sourcerect="870,291,180,196" limb="LeftHand" scale="0.28" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="false" depth="0.5" canbehiddenbyotherwearables="false" />
-      <sprite name="Aegis RightThigh" texture="%ModDir%/Assets/Factions/coalition/suit-v2.png" sourcerect="1248,260,192,248" limb="RightThigh" scale="0.42" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="false" depth="0.5" canbehiddenbyotherwearables="false" />
-      <sprite name="Aegis LeftThigh" texture="%ModDir%/Assets/Factions/coalition/suit-v2.png" sourcerect="1248,260,192,248" limb="LeftThigh" scale="0.42" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="false" depth="0.5" canbehiddenbyotherwearables="false" />
-      <sprite name="Aegis RightLeg" texture="%ModDir%/Assets/Factions/coalition/suit-v2.png" sourcerect="98,516,188,250" limb="RightLeg" scale="0.44" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="false" depth="0.5" canbehiddenbyotherwearables="false" />
-      <sprite name="Aegis LeftLeg" texture="%ModDir%/Assets/Factions/coalition/suit-v2.png" sourcerect="98,516,188,250" limb="LeftLeg" scale="0.44" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="false" depth="0.5" canbehiddenbyotherwearables="false" />
-      <sprite name="Aegis RightFoot" texture="%ModDir%/Assets/Factions/coalition/suit-v2.png" sourcerect="432,548,288,196" limb="RightFoot" scale="0.28" rotation="90" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="false" depth="0.5" canbehiddenbyotherwearables="false" />
-      <sprite name="Aegis LeftFoot" texture="%ModDir%/Assets/Factions/coalition/suit-v2.png" sourcerect="432,548,288,196" limb="LeftFoot" scale="0.28" rotation="90" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="false" depth="0.5" canbehiddenbyotherwearables="false" />
+      <sprite name="Aegis Torso" texture="%ModDir%/Assets/Factions/coalition/suit-v2.png" sourcerect="67,5,254,246" limb="Torso" scale="0.6" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="true" depth="0.5" canbehiddenbyotherwearables="false" />
+      <sprite name="Aegis Waist" texture="%ModDir%/Assets/Factions/coalition/suit-v2.png" sourcerect="439,74,274,166" limb="Waist" scale="0.32" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="true" depth="0.5" canbehiddenbyotherwearables="false" />
+      <sprite name="Aegis RightArm" texture="%ModDir%/Assets/Factions/coalition/suit-v2.png" sourcerect="92,262,200,244" limb="RightArm" scale="0.34" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="true" depth="0.5" canbehiddenbyotherwearables="false" />
+      <sprite name="Aegis LeftArm" texture="%ModDir%/Assets/Factions/coalition/suit-v2.png" sourcerect="92,262,200,244" limb="LeftArm" scale="0.34" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="true" depth="0.5" canbehiddenbyotherwearables="false" />
+      <sprite name="Aegis RightForearm" texture="%ModDir%/Assets/Factions/coalition/suit-v2.png" sourcerect="492,263,168,244" limb="RightForearm" scale="0.36" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="true" depth="0.5" canbehiddenbyotherwearables="false" />
+      <sprite name="Aegis LeftForearm" texture="%ModDir%/Assets/Factions/coalition/suit-v2.png" sourcerect="492,263,168,244" limb="LeftForearm" scale="0.36" rotation="180" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="true" depth="0.5" canbehiddenbyotherwearables="false" />
+      <sprite name="Aegis RightHand" texture="%ModDir%/Assets/Factions/coalition/suit-v2.png" sourcerect="870,291,180,196" limb="RightHand" scale="0.28" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="true" depth="0.5" canbehiddenbyotherwearables="false" />
+      <sprite name="Aegis LeftHand" texture="%ModDir%/Assets/Factions/coalition/suit-v2.png" sourcerect="870,291,180,196" limb="LeftHand" scale="0.28" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="true" depth="0.5" canbehiddenbyotherwearables="false" />
+      <sprite name="Aegis RightThigh" texture="%ModDir%/Assets/Factions/coalition/suit-v2.png" sourcerect="1248,260,192,248" limb="RightThigh" scale="0.42" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="true" depth="0.5" canbehiddenbyotherwearables="false" />
+      <sprite name="Aegis LeftThigh" texture="%ModDir%/Assets/Factions/coalition/suit-v2.png" sourcerect="1248,260,192,248" limb="LeftThigh" scale="0.42" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="true" depth="0.5" canbehiddenbyotherwearables="false" />
+      <sprite name="Aegis RightLeg" texture="%ModDir%/Assets/Factions/coalition/suit-v2.png" sourcerect="98,516,188,250" limb="RightLeg" scale="0.44" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="true" depth="0.5" canbehiddenbyotherwearables="false" />
+      <sprite name="Aegis LeftLeg" texture="%ModDir%/Assets/Factions/coalition/suit-v2.png" sourcerect="98,516,188,250" limb="LeftLeg" scale="0.44" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="true" depth="0.5" canbehiddenbyotherwearables="false" />
+      <sprite name="Aegis RightFoot" texture="%ModDir%/Assets/Factions/coalition/suit-v2.png" sourcerect="432,548,288,196" limb="RightFoot" scale="0.28" rotation="90" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="true" depth="0.5" canbehiddenbyotherwearables="false" />
+      <sprite name="Aegis LeftFoot" texture="%ModDir%/Assets/Factions/coalition/suit-v2.png" sourcerect="432,548,288,196" limb="LeftFoot" scale="0.28" rotation="90" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="true" depth="0.5" canbehiddenbyotherwearables="false" />
     </Wearable>
     <Holdable slots="RightHand+LeftHand" controlpose="true" holdpos="0,-50" handle1="-10,-20" handle2="10,-20" holdangle="45" msg="ItemMsgPickUpUse" canbeselected="false" canbepicked="true" pickkey="Use" />
     <AiTarget sightrange="1500" />
@@ -224,11 +224,11 @@
       <SubContainer capacity="1" maxstacksize="1">
         <Containable items="aegisservomodule,aegisservomoduledescendens,aegisservomodulecoalition,aegisservomoduleseparatists,aegisservomodulehusk,aegisservomoduleclowns" />
       </SubContainer>
-      <SlotIcon slotindex="2" texture="%ModDir%/Assets/Factions/coalition/servo-module.png" sourcerect="0,0,1536,1024" origin="0.5,0.5" />
+      <SlotIcon slotindex="2" texture="%ModDir%/Assets/Factions/coalition/servo-icon.png" sourcerect="0,0,256,172" origin="0.5,0.5" />
       <SubContainer capacity="1" maxstacksize="1">
         <Containable items="aegisimpellermodule,aegisimpellermoduledescendens,aegisimpellermodulecoalition,aegisimpellermoduleseparatists,aegisimpellermodulehusk,aegisimpellermoduleclowns" />
       </SubContainer>
-      <SlotIcon slotindex="3" texture="%ModDir%/Assets/Factions/coalition/impeller-module.png" sourcerect="0,0,1254,1254" origin="0.5,0.5" />
+      <SlotIcon slotindex="3" texture="%ModDir%/Assets/Factions/coalition/impeller-icon.png" sourcerect="0,0,256,256" origin="0.5,0.5" />
       <SubContainer capacity="1" maxstacksize="1">
         <Containable items="aegiscompressormodule" />
       </SubContainer>
@@ -274,8 +274,8 @@
       <Item identifier="copper" />
       <Item identifier="titaniumaluminiumalloy" />
     </Deconstruct>
-    <InventoryIcon texture="%ModDir%/Assets/Factions/coalition/servo-module.png" sourcerect="0,0,1536,1024" origin="0.5,0.5" compress="false" />
-    <Sprite texture="%ModDir%/Assets/Factions/coalition/servo-module.png" sourcerect="0,0,1536,1024" origin="0.5,0.5" compress="false" />
+    <InventoryIcon texture="%ModDir%/Assets/Factions/coalition/servo-icon.png" sourcerect="0,0,256,172" origin="0.5,0.5" compress="true" />
+    <Sprite texture="%ModDir%/Assets/Factions/coalition/servo-module.png" sourcerect="0,0,1536,1024" origin="0.5,0.5" compress="true" />
     <Body width="850" height="800" density="10" />
     <Holdable slots="Any,RightHand" handle1="0,0" holdpos="0,0" msg="ItemMsgPickUpSelect" />
   </Item>
@@ -293,8 +293,8 @@
       <Item identifier="copper" />
       <Item identifier="steel" />
     </Deconstruct>
-    <InventoryIcon texture="%ModDir%/Assets/Factions/coalition/impeller-module.png" sourcerect="0,0,1254,1254" origin="0.5,0.5" compress="false" />
-    <Sprite texture="%ModDir%/Assets/Factions/coalition/impeller-module.png" sourcerect="0,0,1254,1254" origin="0.5,0.5" compress="false" />
+    <InventoryIcon texture="%ModDir%/Assets/Factions/coalition/impeller-icon.png" sourcerect="0,0,256,256" origin="0.5,0.5" compress="true" />
+    <Sprite texture="%ModDir%/Assets/Factions/coalition/impeller-module.png" sourcerect="0,0,1254,1254" origin="0.5,0.5" compress="true" />
     <Body width="850" height="800" density="10" />
     <Holdable slots="Any,RightHand" handle1="0,0" holdpos="0,0" msg="ItemMsgPickUpSelect" />
   </Item>
@@ -314,12 +314,12 @@
       <Item identifier="titaniumaluminiumalloy" amount="2" />
       <Item identifier="copper" />
     </Deconstruct>
-    <InventoryIcon texture="%ModDir%/Assets/Factions/separatists/packed-suit.png" sourcerect="96,173,1428,586" origin="0.5,0.5" compress="false" />
-    <Sprite texture="%ModDir%/Assets/Factions/separatists/packed-suit.png" sourcerect="96,173,1428,586" origin="0.5,0.5" depth="0.55" compress="false" />
-    <ContainedSprite name="Aegis upright suit" allowedcontainertags="divingsuitcontainervertical" texture="%ModDir%/Assets/Factions/separatists/rack-suit.png" origin="0.5,0.5" depth="0.55" compress="false" />
-    <ContainedSprite name="Aegis window suit" allowedcontainertags="divingsuitcontainerwindow" texture="%ModDir%/Assets/Factions/separatists/rack-window-v2.png" sourcerect="50,63,657,1742" origin="-0.12,-0.13" depth="0.55" compress="false" />
-    <ContainedSprite name="Aegis horizontal suit" allowedcontainertags="divingsuitcontainerhorizontal" texture="%ModDir%/Assets/Factions/separatists/packed-suit.png" sourcerect="96,173,1428,586" origin="0.5,0.5" depth="0.55" compress="false" />
-    <ContainedSprite name="Aegis suit holder" allowedcontainertags="divingsuitcontainer" texture="%ModDir%/Assets/Factions/separatists/rack-suit.png" origin="0.5,0.5" depth="0.55" compress="false" />
+    <InventoryIcon texture="%ModDir%/Assets/Factions/separatists/packed-icon.png" sourcerect="0,0,384,160" origin="0.5,0.5" compress="true" />
+    <Sprite texture="%ModDir%/Assets/Factions/separatists/packed-suit.png" sourcerect="96,173,1428,586" origin="0.5,0.5" depth="0.55" compress="true" />
+    <ContainedSprite name="Aegis upright suit" allowedcontainertags="divingsuitcontainervertical" texture="%ModDir%/Assets/Factions/separatists/rack-suit.png" sourcerect="0,0,887,1774" origin="0.5,0.5" depth="0.55" compress="true" />
+    <ContainedSprite name="Aegis window suit" allowedcontainertags="divingsuitcontainerwindow" texture="%ModDir%/Assets/Factions/separatists/rack-window-v2.png" sourcerect="50,63,657,1742" origin="-0.12,-0.13" depth="0.55" compress="true" />
+    <ContainedSprite name="Aegis horizontal suit" allowedcontainertags="divingsuitcontainerhorizontal" texture="%ModDir%/Assets/Factions/separatists/packed-suit.png" sourcerect="96,173,1428,586" origin="0.5,0.5" depth="0.55" compress="true" />
+    <ContainedSprite name="Aegis suit holder" allowedcontainertags="divingsuitcontainer" texture="%ModDir%/Assets/Factions/separatists/rack-suit.png" sourcerect="0,0,887,1774" origin="0.5,0.5" depth="0.55" compress="true" />
     <Body width="1200" height="430" density="20" />
     <Wearable slots="OuterClothes" msg="ItemMsgEquipSelect" displaycontainedstatus="true" canbeselected="false" canbepicked="true" pickkey="Select">
       <sprite name="Aegis seal Torso" texture="Content/Items/Diving/Abyss_DivingSuit.png" limb="Torso" hidelimb="true" hideotherwearables="true" inherittexturescale="true" inheritorigin="true" inheritsourcerect="true" depth="0.6" color="65,70,80,255" />
@@ -336,27 +336,27 @@
       <sprite name="Aegis seal LeftLeg" texture="Content/Items/Diving/Abyss_DivingSuit.png" limb="LeftLeg" hidelimb="true" hideotherwearables="true" inherittexturescale="true" inheritorigin="true" inheritsourcerect="true" depth="0.6" color="65,70,80,255" />
       <sprite name="Aegis seal RightFoot" texture="Content/Items/Diving/Abyss_DivingSuit.png" limb="RightFoot" hidelimb="true" hideotherwearables="true" inherittexturescale="true" inheritorigin="true" inheritsourcerect="true" depth="0.6" color="65,70,80,255" />
       <sprite name="Aegis seal LeftFoot" texture="Content/Items/Diving/Abyss_DivingSuit.png" limb="LeftFoot" hidelimb="true" hideotherwearables="true" inherittexturescale="true" inheritorigin="true" inheritsourcerect="true" depth="0.6" color="65,70,80,255" />
-      <sprite name="Aegis Head" texture="%ModDir%/Assets/Factions/separatists/suit-v2.png" sourcerect="814,5,292,246" limb="Head" scale="0.4" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="false" depth="0.5" canbehiddenbyotherwearables="false" alphaclipotherwearables="true" />
+      <sprite name="Aegis Head" texture="%ModDir%/Assets/Factions/separatists/suit-v2.png" sourcerect="814,5,292,246" limb="Head" scale="0.4" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="true" depth="0.5" canbehiddenbyotherwearables="false" alphaclipotherwearables="true" />
       <StatusEffect type="OnWearing" target="Character" PressureProtection="10000" setvalue="true" disabledeltatime="true">
         </StatusEffect>
       <damagemodifier armorsector="0,360" afflictionidentifiers="blunttrauma,gunshotwound,bitewounds,lacerations,bleeding,explosiondamage" damagemultiplier="0.6" damagesound="LimbArmor" />
       <damagemodifier armorsector="0,360" afflictiontypes="burn" damagemultiplier="0.7" />
     </Wearable>
     <Wearable slots="OuterClothes" msg="ItemMsgEquipSelect" displaycontainedstatus="true" canbeselected="false" canbepicked="true" pickkey="Select">
-      <sprite name="Aegis Torso" texture="%ModDir%/Assets/Factions/separatists/suit-v2.png" sourcerect="67,5,254,246" limb="Torso" scale="0.6" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="false" depth="0.5" canbehiddenbyotherwearables="false" />
-      <sprite name="Aegis Waist" texture="%ModDir%/Assets/Factions/separatists/suit-v2.png" sourcerect="439,74,274,166" limb="Waist" scale="0.32" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="false" depth="0.5" canbehiddenbyotherwearables="false" />
-      <sprite name="Aegis RightArm" texture="%ModDir%/Assets/Factions/separatists/suit-v2.png" sourcerect="92,262,200,244" limb="RightArm" scale="0.34" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="false" depth="0.5" canbehiddenbyotherwearables="false" />
-      <sprite name="Aegis LeftArm" texture="%ModDir%/Assets/Factions/separatists/suit-v2.png" sourcerect="92,262,200,244" limb="LeftArm" scale="0.34" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="false" depth="0.5" canbehiddenbyotherwearables="false" />
-      <sprite name="Aegis RightForearm" texture="%ModDir%/Assets/Factions/separatists/suit-v2.png" sourcerect="492,263,168,244" limb="RightForearm" scale="0.36" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="false" depth="0.5" canbehiddenbyotherwearables="false" />
-      <sprite name="Aegis LeftForearm" texture="%ModDir%/Assets/Factions/separatists/suit-v2.png" sourcerect="492,263,168,244" limb="LeftForearm" scale="0.36" rotation="180" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="false" depth="0.5" canbehiddenbyotherwearables="false" />
-      <sprite name="Aegis RightHand" texture="%ModDir%/Assets/Factions/separatists/suit-v2.png" sourcerect="870,291,180,196" limb="RightHand" scale="0.28" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="false" depth="0.5" canbehiddenbyotherwearables="false" />
-      <sprite name="Aegis LeftHand" texture="%ModDir%/Assets/Factions/separatists/suit-v2.png" sourcerect="870,291,180,196" limb="LeftHand" scale="0.28" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="false" depth="0.5" canbehiddenbyotherwearables="false" />
-      <sprite name="Aegis RightThigh" texture="%ModDir%/Assets/Factions/separatists/suit-v2.png" sourcerect="1248,260,192,248" limb="RightThigh" scale="0.42" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="false" depth="0.5" canbehiddenbyotherwearables="false" />
-      <sprite name="Aegis LeftThigh" texture="%ModDir%/Assets/Factions/separatists/suit-v2.png" sourcerect="1248,260,192,248" limb="LeftThigh" scale="0.42" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="false" depth="0.5" canbehiddenbyotherwearables="false" />
-      <sprite name="Aegis RightLeg" texture="%ModDir%/Assets/Factions/separatists/suit-v2.png" sourcerect="98,516,188,250" limb="RightLeg" scale="0.44" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="false" depth="0.5" canbehiddenbyotherwearables="false" />
-      <sprite name="Aegis LeftLeg" texture="%ModDir%/Assets/Factions/separatists/suit-v2.png" sourcerect="98,516,188,250" limb="LeftLeg" scale="0.44" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="false" depth="0.5" canbehiddenbyotherwearables="false" />
-      <sprite name="Aegis RightFoot" texture="%ModDir%/Assets/Factions/separatists/suit-v2.png" sourcerect="432,548,288,196" limb="RightFoot" scale="0.28" rotation="90" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="false" depth="0.5" canbehiddenbyotherwearables="false" />
-      <sprite name="Aegis LeftFoot" texture="%ModDir%/Assets/Factions/separatists/suit-v2.png" sourcerect="432,548,288,196" limb="LeftFoot" scale="0.28" rotation="90" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="false" depth="0.5" canbehiddenbyotherwearables="false" />
+      <sprite name="Aegis Torso" texture="%ModDir%/Assets/Factions/separatists/suit-v2.png" sourcerect="67,5,254,246" limb="Torso" scale="0.6" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="true" depth="0.5" canbehiddenbyotherwearables="false" />
+      <sprite name="Aegis Waist" texture="%ModDir%/Assets/Factions/separatists/suit-v2.png" sourcerect="439,74,274,166" limb="Waist" scale="0.32" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="true" depth="0.5" canbehiddenbyotherwearables="false" />
+      <sprite name="Aegis RightArm" texture="%ModDir%/Assets/Factions/separatists/suit-v2.png" sourcerect="92,262,200,244" limb="RightArm" scale="0.34" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="true" depth="0.5" canbehiddenbyotherwearables="false" />
+      <sprite name="Aegis LeftArm" texture="%ModDir%/Assets/Factions/separatists/suit-v2.png" sourcerect="92,262,200,244" limb="LeftArm" scale="0.34" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="true" depth="0.5" canbehiddenbyotherwearables="false" />
+      <sprite name="Aegis RightForearm" texture="%ModDir%/Assets/Factions/separatists/suit-v2.png" sourcerect="492,263,168,244" limb="RightForearm" scale="0.36" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="true" depth="0.5" canbehiddenbyotherwearables="false" />
+      <sprite name="Aegis LeftForearm" texture="%ModDir%/Assets/Factions/separatists/suit-v2.png" sourcerect="492,263,168,244" limb="LeftForearm" scale="0.36" rotation="180" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="true" depth="0.5" canbehiddenbyotherwearables="false" />
+      <sprite name="Aegis RightHand" texture="%ModDir%/Assets/Factions/separatists/suit-v2.png" sourcerect="870,291,180,196" limb="RightHand" scale="0.28" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="true" depth="0.5" canbehiddenbyotherwearables="false" />
+      <sprite name="Aegis LeftHand" texture="%ModDir%/Assets/Factions/separatists/suit-v2.png" sourcerect="870,291,180,196" limb="LeftHand" scale="0.28" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="true" depth="0.5" canbehiddenbyotherwearables="false" />
+      <sprite name="Aegis RightThigh" texture="%ModDir%/Assets/Factions/separatists/suit-v2.png" sourcerect="1248,260,192,248" limb="RightThigh" scale="0.42" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="true" depth="0.5" canbehiddenbyotherwearables="false" />
+      <sprite name="Aegis LeftThigh" texture="%ModDir%/Assets/Factions/separatists/suit-v2.png" sourcerect="1248,260,192,248" limb="LeftThigh" scale="0.42" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="true" depth="0.5" canbehiddenbyotherwearables="false" />
+      <sprite name="Aegis RightLeg" texture="%ModDir%/Assets/Factions/separatists/suit-v2.png" sourcerect="98,516,188,250" limb="RightLeg" scale="0.44" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="true" depth="0.5" canbehiddenbyotherwearables="false" />
+      <sprite name="Aegis LeftLeg" texture="%ModDir%/Assets/Factions/separatists/suit-v2.png" sourcerect="98,516,188,250" limb="LeftLeg" scale="0.44" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="true" depth="0.5" canbehiddenbyotherwearables="false" />
+      <sprite name="Aegis RightFoot" texture="%ModDir%/Assets/Factions/separatists/suit-v2.png" sourcerect="432,548,288,196" limb="RightFoot" scale="0.28" rotation="90" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="true" depth="0.5" canbehiddenbyotherwearables="false" />
+      <sprite name="Aegis LeftFoot" texture="%ModDir%/Assets/Factions/separatists/suit-v2.png" sourcerect="432,548,288,196" limb="LeftFoot" scale="0.28" rotation="90" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="true" depth="0.5" canbehiddenbyotherwearables="false" />
     </Wearable>
     <Holdable slots="RightHand+LeftHand" controlpose="true" holdpos="0,-50" handle1="-10,-20" handle2="10,-20" holdangle="45" msg="ItemMsgPickUpUse" canbeselected="false" canbepicked="true" pickkey="Use" />
     <AiTarget sightrange="1500" />
@@ -373,11 +373,11 @@
       <SubContainer capacity="1" maxstacksize="1">
         <Containable items="aegisservomodule,aegisservomoduledescendens,aegisservomodulecoalition,aegisservomoduleseparatists,aegisservomodulehusk,aegisservomoduleclowns" />
       </SubContainer>
-      <SlotIcon slotindex="2" texture="%ModDir%/Assets/Factions/separatists/servo-module.png" sourcerect="0,0,1536,1024" origin="0.5,0.5" />
+      <SlotIcon slotindex="2" texture="%ModDir%/Assets/Factions/separatists/servo-icon.png" sourcerect="0,0,256,172" origin="0.5,0.5" />
       <SubContainer capacity="1" maxstacksize="1">
         <Containable items="aegisimpellermodule,aegisimpellermoduledescendens,aegisimpellermodulecoalition,aegisimpellermoduleseparatists,aegisimpellermodulehusk,aegisimpellermoduleclowns" />
       </SubContainer>
-      <SlotIcon slotindex="3" texture="%ModDir%/Assets/Factions/separatists/impeller-module.png" sourcerect="0,0,1254,1254" origin="0.5,0.5" />
+      <SlotIcon slotindex="3" texture="%ModDir%/Assets/Factions/separatists/impeller-icon.png" sourcerect="0,0,256,256" origin="0.5,0.5" />
       <SubContainer capacity="1" maxstacksize="1">
         <Containable items="aegiscompressormodule" />
       </SubContainer>
@@ -423,8 +423,8 @@
       <Item identifier="copper" />
       <Item identifier="titaniumaluminiumalloy" />
     </Deconstruct>
-    <InventoryIcon texture="%ModDir%/Assets/Factions/separatists/servo-module.png" sourcerect="0,0,1536,1024" origin="0.5,0.5" compress="false" />
-    <Sprite texture="%ModDir%/Assets/Factions/separatists/servo-module.png" sourcerect="0,0,1536,1024" origin="0.5,0.5" compress="false" />
+    <InventoryIcon texture="%ModDir%/Assets/Factions/separatists/servo-icon.png" sourcerect="0,0,256,172" origin="0.5,0.5" compress="true" />
+    <Sprite texture="%ModDir%/Assets/Factions/separatists/servo-module.png" sourcerect="0,0,1536,1024" origin="0.5,0.5" compress="true" />
     <Body width="850" height="800" density="10" />
     <Holdable slots="Any,RightHand" handle1="0,0" holdpos="0,0" msg="ItemMsgPickUpSelect" />
   </Item>
@@ -442,8 +442,8 @@
       <Item identifier="copper" />
       <Item identifier="steel" />
     </Deconstruct>
-    <InventoryIcon texture="%ModDir%/Assets/Factions/separatists/impeller-module.png" sourcerect="0,0,1254,1254" origin="0.5,0.5" compress="false" />
-    <Sprite texture="%ModDir%/Assets/Factions/separatists/impeller-module.png" sourcerect="0,0,1254,1254" origin="0.5,0.5" compress="false" />
+    <InventoryIcon texture="%ModDir%/Assets/Factions/separatists/impeller-icon.png" sourcerect="0,0,256,256" origin="0.5,0.5" compress="true" />
+    <Sprite texture="%ModDir%/Assets/Factions/separatists/impeller-module.png" sourcerect="0,0,1254,1254" origin="0.5,0.5" compress="true" />
     <Body width="850" height="800" density="10" />
     <Holdable slots="Any,RightHand" handle1="0,0" holdpos="0,0" msg="ItemMsgPickUpSelect" />
   </Item>
@@ -463,12 +463,12 @@
       <Item identifier="titaniumaluminiumalloy" amount="2" />
       <Item identifier="copper" />
     </Deconstruct>
-    <InventoryIcon texture="%ModDir%/Assets/Factions/husk/packed-suit.png" sourcerect="96,173,1428,586" origin="0.5,0.5" compress="false" />
-    <Sprite texture="%ModDir%/Assets/Factions/husk/packed-suit.png" sourcerect="96,173,1428,586" origin="0.5,0.5" depth="0.55" compress="false" />
-    <ContainedSprite name="Aegis upright suit" allowedcontainertags="divingsuitcontainervertical" texture="%ModDir%/Assets/Factions/husk/rack-suit.png" origin="0.5,0.5" depth="0.55" compress="false" />
-    <ContainedSprite name="Aegis window suit" allowedcontainertags="divingsuitcontainerwindow" texture="%ModDir%/Assets/Factions/husk/rack-window-v2.png" sourcerect="50,63,657,1742" origin="-0.12,-0.13" depth="0.55" compress="false" />
-    <ContainedSprite name="Aegis horizontal suit" allowedcontainertags="divingsuitcontainerhorizontal" texture="%ModDir%/Assets/Factions/husk/packed-suit.png" sourcerect="96,173,1428,586" origin="0.5,0.5" depth="0.55" compress="false" />
-    <ContainedSprite name="Aegis suit holder" allowedcontainertags="divingsuitcontainer" texture="%ModDir%/Assets/Factions/husk/rack-suit.png" origin="0.5,0.5" depth="0.55" compress="false" />
+    <InventoryIcon texture="%ModDir%/Assets/Factions/husk/packed-icon.png" sourcerect="0,0,384,160" origin="0.5,0.5" compress="true" />
+    <Sprite texture="%ModDir%/Assets/Factions/husk/packed-suit.png" sourcerect="96,173,1428,586" origin="0.5,0.5" depth="0.55" compress="true" />
+    <ContainedSprite name="Aegis upright suit" allowedcontainertags="divingsuitcontainervertical" texture="%ModDir%/Assets/Factions/husk/rack-suit.png" sourcerect="0,0,887,1774" origin="0.5,0.5" depth="0.55" compress="true" />
+    <ContainedSprite name="Aegis window suit" allowedcontainertags="divingsuitcontainerwindow" texture="%ModDir%/Assets/Factions/husk/rack-window-v2.png" sourcerect="50,63,657,1742" origin="-0.12,-0.13" depth="0.55" compress="true" />
+    <ContainedSprite name="Aegis horizontal suit" allowedcontainertags="divingsuitcontainerhorizontal" texture="%ModDir%/Assets/Factions/husk/packed-suit.png" sourcerect="96,173,1428,586" origin="0.5,0.5" depth="0.55" compress="true" />
+    <ContainedSprite name="Aegis suit holder" allowedcontainertags="divingsuitcontainer" texture="%ModDir%/Assets/Factions/husk/rack-suit.png" sourcerect="0,0,887,1774" origin="0.5,0.5" depth="0.55" compress="true" />
     <Body width="1200" height="430" density="20" />
     <Wearable slots="OuterClothes" msg="ItemMsgEquipSelect" displaycontainedstatus="true" canbeselected="false" canbepicked="true" pickkey="Select">
       <sprite name="Aegis seal Torso" texture="Content/Items/Diving/Abyss_DivingSuit.png" limb="Torso" hidelimb="true" hideotherwearables="true" inherittexturescale="true" inheritorigin="true" inheritsourcerect="true" depth="0.6" color="65,70,80,255" />
@@ -485,27 +485,27 @@
       <sprite name="Aegis seal LeftLeg" texture="Content/Items/Diving/Abyss_DivingSuit.png" limb="LeftLeg" hidelimb="true" hideotherwearables="true" inherittexturescale="true" inheritorigin="true" inheritsourcerect="true" depth="0.6" color="65,70,80,255" />
       <sprite name="Aegis seal RightFoot" texture="Content/Items/Diving/Abyss_DivingSuit.png" limb="RightFoot" hidelimb="true" hideotherwearables="true" inherittexturescale="true" inheritorigin="true" inheritsourcerect="true" depth="0.6" color="65,70,80,255" />
       <sprite name="Aegis seal LeftFoot" texture="Content/Items/Diving/Abyss_DivingSuit.png" limb="LeftFoot" hidelimb="true" hideotherwearables="true" inherittexturescale="true" inheritorigin="true" inheritsourcerect="true" depth="0.6" color="65,70,80,255" />
-      <sprite name="Aegis Head" texture="%ModDir%/Assets/Factions/husk/suit-v2.png" sourcerect="814,5,292,246" limb="Head" scale="0.4" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="false" depth="0.5" canbehiddenbyotherwearables="false" alphaclipotherwearables="true" />
+      <sprite name="Aegis Head" texture="%ModDir%/Assets/Factions/husk/suit-v2.png" sourcerect="814,5,292,246" limb="Head" scale="0.4" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="true" depth="0.5" canbehiddenbyotherwearables="false" alphaclipotherwearables="true" />
       <StatusEffect type="OnWearing" target="Character" PressureProtection="10000" setvalue="true" disabledeltatime="true">
         </StatusEffect>
       <damagemodifier armorsector="0,360" afflictionidentifiers="blunttrauma,gunshotwound,bitewounds,lacerations,bleeding,explosiondamage" damagemultiplier="0.6" damagesound="LimbArmor" />
       <damagemodifier armorsector="0,360" afflictiontypes="burn" damagemultiplier="0.7" />
     </Wearable>
     <Wearable slots="OuterClothes" msg="ItemMsgEquipSelect" displaycontainedstatus="true" canbeselected="false" canbepicked="true" pickkey="Select">
-      <sprite name="Aegis Torso" texture="%ModDir%/Assets/Factions/husk/suit-v2.png" sourcerect="67,5,254,246" limb="Torso" scale="0.6" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="false" depth="0.5" canbehiddenbyotherwearables="false" />
-      <sprite name="Aegis Waist" texture="%ModDir%/Assets/Factions/husk/suit-v2.png" sourcerect="439,74,274,166" limb="Waist" scale="0.32" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="false" depth="0.5" canbehiddenbyotherwearables="false" />
-      <sprite name="Aegis RightArm" texture="%ModDir%/Assets/Factions/husk/suit-v2.png" sourcerect="92,262,200,244" limb="RightArm" scale="0.34" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="false" depth="0.5" canbehiddenbyotherwearables="false" />
-      <sprite name="Aegis LeftArm" texture="%ModDir%/Assets/Factions/husk/suit-v2.png" sourcerect="92,262,200,244" limb="LeftArm" scale="0.34" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="false" depth="0.5" canbehiddenbyotherwearables="false" />
-      <sprite name="Aegis RightForearm" texture="%ModDir%/Assets/Factions/husk/suit-v2.png" sourcerect="492,263,168,244" limb="RightForearm" scale="0.36" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="false" depth="0.5" canbehiddenbyotherwearables="false" />
-      <sprite name="Aegis LeftForearm" texture="%ModDir%/Assets/Factions/husk/suit-v2.png" sourcerect="492,263,168,244" limb="LeftForearm" scale="0.36" rotation="180" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="false" depth="0.5" canbehiddenbyotherwearables="false" />
-      <sprite name="Aegis RightHand" texture="%ModDir%/Assets/Factions/husk/suit-v2.png" sourcerect="870,291,180,196" limb="RightHand" scale="0.28" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="false" depth="0.5" canbehiddenbyotherwearables="false" />
-      <sprite name="Aegis LeftHand" texture="%ModDir%/Assets/Factions/husk/suit-v2.png" sourcerect="870,291,180,196" limb="LeftHand" scale="0.28" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="false" depth="0.5" canbehiddenbyotherwearables="false" />
-      <sprite name="Aegis RightThigh" texture="%ModDir%/Assets/Factions/husk/suit-v2.png" sourcerect="1248,260,192,248" limb="RightThigh" scale="0.42" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="false" depth="0.5" canbehiddenbyotherwearables="false" />
-      <sprite name="Aegis LeftThigh" texture="%ModDir%/Assets/Factions/husk/suit-v2.png" sourcerect="1248,260,192,248" limb="LeftThigh" scale="0.42" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="false" depth="0.5" canbehiddenbyotherwearables="false" />
-      <sprite name="Aegis RightLeg" texture="%ModDir%/Assets/Factions/husk/suit-v2.png" sourcerect="98,516,188,250" limb="RightLeg" scale="0.44" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="false" depth="0.5" canbehiddenbyotherwearables="false" />
-      <sprite name="Aegis LeftLeg" texture="%ModDir%/Assets/Factions/husk/suit-v2.png" sourcerect="98,516,188,250" limb="LeftLeg" scale="0.44" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="false" depth="0.5" canbehiddenbyotherwearables="false" />
-      <sprite name="Aegis RightFoot" texture="%ModDir%/Assets/Factions/husk/suit-v2.png" sourcerect="432,548,288,196" limb="RightFoot" scale="0.28" rotation="90" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="false" depth="0.5" canbehiddenbyotherwearables="false" />
-      <sprite name="Aegis LeftFoot" texture="%ModDir%/Assets/Factions/husk/suit-v2.png" sourcerect="432,548,288,196" limb="LeftFoot" scale="0.28" rotation="90" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="false" depth="0.5" canbehiddenbyotherwearables="false" />
+      <sprite name="Aegis Torso" texture="%ModDir%/Assets/Factions/husk/suit-v2.png" sourcerect="67,5,254,246" limb="Torso" scale="0.6" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="true" depth="0.5" canbehiddenbyotherwearables="false" />
+      <sprite name="Aegis Waist" texture="%ModDir%/Assets/Factions/husk/suit-v2.png" sourcerect="439,74,274,166" limb="Waist" scale="0.32" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="true" depth="0.5" canbehiddenbyotherwearables="false" />
+      <sprite name="Aegis RightArm" texture="%ModDir%/Assets/Factions/husk/suit-v2.png" sourcerect="92,262,200,244" limb="RightArm" scale="0.34" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="true" depth="0.5" canbehiddenbyotherwearables="false" />
+      <sprite name="Aegis LeftArm" texture="%ModDir%/Assets/Factions/husk/suit-v2.png" sourcerect="92,262,200,244" limb="LeftArm" scale="0.34" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="true" depth="0.5" canbehiddenbyotherwearables="false" />
+      <sprite name="Aegis RightForearm" texture="%ModDir%/Assets/Factions/husk/suit-v2.png" sourcerect="492,263,168,244" limb="RightForearm" scale="0.36" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="true" depth="0.5" canbehiddenbyotherwearables="false" />
+      <sprite name="Aegis LeftForearm" texture="%ModDir%/Assets/Factions/husk/suit-v2.png" sourcerect="492,263,168,244" limb="LeftForearm" scale="0.36" rotation="180" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="true" depth="0.5" canbehiddenbyotherwearables="false" />
+      <sprite name="Aegis RightHand" texture="%ModDir%/Assets/Factions/husk/suit-v2.png" sourcerect="870,291,180,196" limb="RightHand" scale="0.28" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="true" depth="0.5" canbehiddenbyotherwearables="false" />
+      <sprite name="Aegis LeftHand" texture="%ModDir%/Assets/Factions/husk/suit-v2.png" sourcerect="870,291,180,196" limb="LeftHand" scale="0.28" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="true" depth="0.5" canbehiddenbyotherwearables="false" />
+      <sprite name="Aegis RightThigh" texture="%ModDir%/Assets/Factions/husk/suit-v2.png" sourcerect="1248,260,192,248" limb="RightThigh" scale="0.42" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="true" depth="0.5" canbehiddenbyotherwearables="false" />
+      <sprite name="Aegis LeftThigh" texture="%ModDir%/Assets/Factions/husk/suit-v2.png" sourcerect="1248,260,192,248" limb="LeftThigh" scale="0.42" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="true" depth="0.5" canbehiddenbyotherwearables="false" />
+      <sprite name="Aegis RightLeg" texture="%ModDir%/Assets/Factions/husk/suit-v2.png" sourcerect="98,516,188,250" limb="RightLeg" scale="0.44" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="true" depth="0.5" canbehiddenbyotherwearables="false" />
+      <sprite name="Aegis LeftLeg" texture="%ModDir%/Assets/Factions/husk/suit-v2.png" sourcerect="98,516,188,250" limb="LeftLeg" scale="0.44" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="true" depth="0.5" canbehiddenbyotherwearables="false" />
+      <sprite name="Aegis RightFoot" texture="%ModDir%/Assets/Factions/husk/suit-v2.png" sourcerect="432,548,288,196" limb="RightFoot" scale="0.28" rotation="90" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="true" depth="0.5" canbehiddenbyotherwearables="false" />
+      <sprite name="Aegis LeftFoot" texture="%ModDir%/Assets/Factions/husk/suit-v2.png" sourcerect="432,548,288,196" limb="LeftFoot" scale="0.28" rotation="90" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="true" depth="0.5" canbehiddenbyotherwearables="false" />
     </Wearable>
     <Holdable slots="RightHand+LeftHand" controlpose="true" holdpos="0,-50" handle1="-10,-20" handle2="10,-20" holdangle="45" msg="ItemMsgPickUpUse" canbeselected="false" canbepicked="true" pickkey="Use" />
     <AiTarget sightrange="1500" />
@@ -522,11 +522,11 @@
       <SubContainer capacity="1" maxstacksize="1">
         <Containable items="aegisservomodule,aegisservomoduledescendens,aegisservomodulecoalition,aegisservomoduleseparatists,aegisservomodulehusk,aegisservomoduleclowns" />
       </SubContainer>
-      <SlotIcon slotindex="2" texture="%ModDir%/Assets/Factions/husk/servo-module.png" sourcerect="0,0,1536,1024" origin="0.5,0.5" />
+      <SlotIcon slotindex="2" texture="%ModDir%/Assets/Factions/husk/servo-icon.png" sourcerect="0,0,256,172" origin="0.5,0.5" />
       <SubContainer capacity="1" maxstacksize="1">
         <Containable items="aegisimpellermodule,aegisimpellermoduledescendens,aegisimpellermodulecoalition,aegisimpellermoduleseparatists,aegisimpellermodulehusk,aegisimpellermoduleclowns" />
       </SubContainer>
-      <SlotIcon slotindex="3" texture="%ModDir%/Assets/Factions/husk/impeller-module.png" sourcerect="0,0,1254,1254" origin="0.5,0.5" />
+      <SlotIcon slotindex="3" texture="%ModDir%/Assets/Factions/husk/impeller-icon.png" sourcerect="0,0,256,256" origin="0.5,0.5" />
       <SubContainer capacity="1" maxstacksize="1">
         <Containable items="aegiscompressormodule" />
       </SubContainer>
@@ -572,8 +572,8 @@
       <Item identifier="copper" />
       <Item identifier="titaniumaluminiumalloy" />
     </Deconstruct>
-    <InventoryIcon texture="%ModDir%/Assets/Factions/husk/servo-module.png" sourcerect="0,0,1536,1024" origin="0.5,0.5" compress="false" />
-    <Sprite texture="%ModDir%/Assets/Factions/husk/servo-module.png" sourcerect="0,0,1536,1024" origin="0.5,0.5" compress="false" />
+    <InventoryIcon texture="%ModDir%/Assets/Factions/husk/servo-icon.png" sourcerect="0,0,256,172" origin="0.5,0.5" compress="true" />
+    <Sprite texture="%ModDir%/Assets/Factions/husk/servo-module.png" sourcerect="0,0,1536,1024" origin="0.5,0.5" compress="true" />
     <Body width="850" height="800" density="10" />
     <Holdable slots="Any,RightHand" handle1="0,0" holdpos="0,0" msg="ItemMsgPickUpSelect" />
   </Item>
@@ -591,8 +591,8 @@
       <Item identifier="copper" />
       <Item identifier="steel" />
     </Deconstruct>
-    <InventoryIcon texture="%ModDir%/Assets/Factions/husk/impeller-module.png" sourcerect="0,0,1254,1254" origin="0.5,0.5" compress="false" />
-    <Sprite texture="%ModDir%/Assets/Factions/husk/impeller-module.png" sourcerect="0,0,1254,1254" origin="0.5,0.5" compress="false" />
+    <InventoryIcon texture="%ModDir%/Assets/Factions/husk/impeller-icon.png" sourcerect="0,0,256,256" origin="0.5,0.5" compress="true" />
+    <Sprite texture="%ModDir%/Assets/Factions/husk/impeller-module.png" sourcerect="0,0,1254,1254" origin="0.5,0.5" compress="true" />
     <Body width="850" height="800" density="10" />
     <Holdable slots="Any,RightHand" handle1="0,0" holdpos="0,0" msg="ItemMsgPickUpSelect" />
   </Item>
@@ -612,12 +612,12 @@
       <Item identifier="titaniumaluminiumalloy" amount="2" />
       <Item identifier="copper" />
     </Deconstruct>
-    <InventoryIcon texture="%ModDir%/Assets/Factions/clowns/packed-suit.png" sourcerect="96,173,1428,586" origin="0.5,0.5" compress="false" />
-    <Sprite texture="%ModDir%/Assets/Factions/clowns/packed-suit.png" sourcerect="96,173,1428,586" origin="0.5,0.5" depth="0.55" compress="false" />
-    <ContainedSprite name="Aegis upright suit" allowedcontainertags="divingsuitcontainervertical" texture="%ModDir%/Assets/Factions/clowns/rack-suit.png" origin="0.5,0.5" depth="0.55" compress="false" />
-    <ContainedSprite name="Aegis window suit" allowedcontainertags="divingsuitcontainerwindow" texture="%ModDir%/Assets/Factions/clowns/rack-window-v2.png" sourcerect="50,63,657,1742" origin="-0.12,-0.13" depth="0.55" compress="false" />
-    <ContainedSprite name="Aegis horizontal suit" allowedcontainertags="divingsuitcontainerhorizontal" texture="%ModDir%/Assets/Factions/clowns/packed-suit.png" sourcerect="96,173,1428,586" origin="0.5,0.5" depth="0.55" compress="false" />
-    <ContainedSprite name="Aegis suit holder" allowedcontainertags="divingsuitcontainer" texture="%ModDir%/Assets/Factions/clowns/rack-suit.png" origin="0.5,0.5" depth="0.55" compress="false" />
+    <InventoryIcon texture="%ModDir%/Assets/Factions/clowns/packed-icon.png" sourcerect="0,0,384,160" origin="0.5,0.5" compress="true" />
+    <Sprite texture="%ModDir%/Assets/Factions/clowns/packed-suit.png" sourcerect="96,173,1428,586" origin="0.5,0.5" depth="0.55" compress="true" />
+    <ContainedSprite name="Aegis upright suit" allowedcontainertags="divingsuitcontainervertical" texture="%ModDir%/Assets/Factions/clowns/rack-suit.png" sourcerect="0,0,887,1774" origin="0.5,0.5" depth="0.55" compress="true" />
+    <ContainedSprite name="Aegis window suit" allowedcontainertags="divingsuitcontainerwindow" texture="%ModDir%/Assets/Factions/clowns/rack-window-v2.png" sourcerect="50,63,657,1742" origin="-0.12,-0.13" depth="0.55" compress="true" />
+    <ContainedSprite name="Aegis horizontal suit" allowedcontainertags="divingsuitcontainerhorizontal" texture="%ModDir%/Assets/Factions/clowns/packed-suit.png" sourcerect="96,173,1428,586" origin="0.5,0.5" depth="0.55" compress="true" />
+    <ContainedSprite name="Aegis suit holder" allowedcontainertags="divingsuitcontainer" texture="%ModDir%/Assets/Factions/clowns/rack-suit.png" sourcerect="0,0,887,1774" origin="0.5,0.5" depth="0.55" compress="true" />
     <Body width="1200" height="430" density="20" />
     <Wearable slots="OuterClothes" msg="ItemMsgEquipSelect" displaycontainedstatus="true" canbeselected="false" canbepicked="true" pickkey="Select">
       <sprite name="Aegis seal Torso" texture="Content/Items/Diving/Abyss_DivingSuit.png" limb="Torso" hidelimb="true" hideotherwearables="true" inherittexturescale="true" inheritorigin="true" inheritsourcerect="true" depth="0.6" color="65,70,80,255" />
@@ -634,27 +634,27 @@
       <sprite name="Aegis seal LeftLeg" texture="Content/Items/Diving/Abyss_DivingSuit.png" limb="LeftLeg" hidelimb="true" hideotherwearables="true" inherittexturescale="true" inheritorigin="true" inheritsourcerect="true" depth="0.6" color="65,70,80,255" />
       <sprite name="Aegis seal RightFoot" texture="Content/Items/Diving/Abyss_DivingSuit.png" limb="RightFoot" hidelimb="true" hideotherwearables="true" inherittexturescale="true" inheritorigin="true" inheritsourcerect="true" depth="0.6" color="65,70,80,255" />
       <sprite name="Aegis seal LeftFoot" texture="Content/Items/Diving/Abyss_DivingSuit.png" limb="LeftFoot" hidelimb="true" hideotherwearables="true" inherittexturescale="true" inheritorigin="true" inheritsourcerect="true" depth="0.6" color="65,70,80,255" />
-      <sprite name="Aegis Head" texture="%ModDir%/Assets/Factions/clowns/suit-v2.png" sourcerect="814,5,292,246" limb="Head" scale="0.4" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="false" depth="0.5" canbehiddenbyotherwearables="false" alphaclipotherwearables="true" />
+      <sprite name="Aegis Head" texture="%ModDir%/Assets/Factions/clowns/suit-v2.png" sourcerect="814,5,292,246" limb="Head" scale="0.4" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="true" depth="0.5" canbehiddenbyotherwearables="false" alphaclipotherwearables="true" />
       <StatusEffect type="OnWearing" target="Character" PressureProtection="10000" setvalue="true" disabledeltatime="true">
         </StatusEffect>
       <damagemodifier armorsector="0,360" afflictionidentifiers="blunttrauma,gunshotwound,bitewounds,lacerations,bleeding,explosiondamage" damagemultiplier="0.6" damagesound="LimbArmor" />
       <damagemodifier armorsector="0,360" afflictiontypes="burn" damagemultiplier="0.7" />
     </Wearable>
     <Wearable slots="OuterClothes" msg="ItemMsgEquipSelect" displaycontainedstatus="true" canbeselected="false" canbepicked="true" pickkey="Select">
-      <sprite name="Aegis Torso" texture="%ModDir%/Assets/Factions/clowns/suit-v2.png" sourcerect="67,5,254,246" limb="Torso" scale="0.6" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="false" depth="0.5" canbehiddenbyotherwearables="false" />
-      <sprite name="Aegis Waist" texture="%ModDir%/Assets/Factions/clowns/suit-v2.png" sourcerect="439,74,274,166" limb="Waist" scale="0.32" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="false" depth="0.5" canbehiddenbyotherwearables="false" />
-      <sprite name="Aegis RightArm" texture="%ModDir%/Assets/Factions/clowns/suit-v2.png" sourcerect="92,262,200,244" limb="RightArm" scale="0.34" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="false" depth="0.5" canbehiddenbyotherwearables="false" />
-      <sprite name="Aegis LeftArm" texture="%ModDir%/Assets/Factions/clowns/suit-v2.png" sourcerect="92,262,200,244" limb="LeftArm" scale="0.34" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="false" depth="0.5" canbehiddenbyotherwearables="false" />
-      <sprite name="Aegis RightForearm" texture="%ModDir%/Assets/Factions/clowns/suit-v2.png" sourcerect="492,263,168,244" limb="RightForearm" scale="0.36" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="false" depth="0.5" canbehiddenbyotherwearables="false" />
-      <sprite name="Aegis LeftForearm" texture="%ModDir%/Assets/Factions/clowns/suit-v2.png" sourcerect="492,263,168,244" limb="LeftForearm" scale="0.36" rotation="180" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="false" depth="0.5" canbehiddenbyotherwearables="false" />
-      <sprite name="Aegis RightHand" texture="%ModDir%/Assets/Factions/clowns/suit-v2.png" sourcerect="870,291,180,196" limb="RightHand" scale="0.28" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="false" depth="0.5" canbehiddenbyotherwearables="false" />
-      <sprite name="Aegis LeftHand" texture="%ModDir%/Assets/Factions/clowns/suit-v2.png" sourcerect="870,291,180,196" limb="LeftHand" scale="0.28" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="false" depth="0.5" canbehiddenbyotherwearables="false" />
-      <sprite name="Aegis RightThigh" texture="%ModDir%/Assets/Factions/clowns/suit-v2.png" sourcerect="1248,260,192,248" limb="RightThigh" scale="0.42" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="false" depth="0.5" canbehiddenbyotherwearables="false" />
-      <sprite name="Aegis LeftThigh" texture="%ModDir%/Assets/Factions/clowns/suit-v2.png" sourcerect="1248,260,192,248" limb="LeftThigh" scale="0.42" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="false" depth="0.5" canbehiddenbyotherwearables="false" />
-      <sprite name="Aegis RightLeg" texture="%ModDir%/Assets/Factions/clowns/suit-v2.png" sourcerect="98,516,188,250" limb="RightLeg" scale="0.44" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="false" depth="0.5" canbehiddenbyotherwearables="false" />
-      <sprite name="Aegis LeftLeg" texture="%ModDir%/Assets/Factions/clowns/suit-v2.png" sourcerect="98,516,188,250" limb="LeftLeg" scale="0.44" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="false" depth="0.5" canbehiddenbyotherwearables="false" />
-      <sprite name="Aegis RightFoot" texture="%ModDir%/Assets/Factions/clowns/suit-v2.png" sourcerect="432,548,288,196" limb="RightFoot" scale="0.28" rotation="90" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="false" depth="0.5" canbehiddenbyotherwearables="false" />
-      <sprite name="Aegis LeftFoot" texture="%ModDir%/Assets/Factions/clowns/suit-v2.png" sourcerect="432,548,288,196" limb="LeftFoot" scale="0.28" rotation="90" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="false" depth="0.5" canbehiddenbyotherwearables="false" />
+      <sprite name="Aegis Torso" texture="%ModDir%/Assets/Factions/clowns/suit-v2.png" sourcerect="67,5,254,246" limb="Torso" scale="0.6" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="true" depth="0.5" canbehiddenbyotherwearables="false" />
+      <sprite name="Aegis Waist" texture="%ModDir%/Assets/Factions/clowns/suit-v2.png" sourcerect="439,74,274,166" limb="Waist" scale="0.32" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="true" depth="0.5" canbehiddenbyotherwearables="false" />
+      <sprite name="Aegis RightArm" texture="%ModDir%/Assets/Factions/clowns/suit-v2.png" sourcerect="92,262,200,244" limb="RightArm" scale="0.34" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="true" depth="0.5" canbehiddenbyotherwearables="false" />
+      <sprite name="Aegis LeftArm" texture="%ModDir%/Assets/Factions/clowns/suit-v2.png" sourcerect="92,262,200,244" limb="LeftArm" scale="0.34" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="true" depth="0.5" canbehiddenbyotherwearables="false" />
+      <sprite name="Aegis RightForearm" texture="%ModDir%/Assets/Factions/clowns/suit-v2.png" sourcerect="492,263,168,244" limb="RightForearm" scale="0.36" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="true" depth="0.5" canbehiddenbyotherwearables="false" />
+      <sprite name="Aegis LeftForearm" texture="%ModDir%/Assets/Factions/clowns/suit-v2.png" sourcerect="492,263,168,244" limb="LeftForearm" scale="0.36" rotation="180" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="true" depth="0.5" canbehiddenbyotherwearables="false" />
+      <sprite name="Aegis RightHand" texture="%ModDir%/Assets/Factions/clowns/suit-v2.png" sourcerect="870,291,180,196" limb="RightHand" scale="0.28" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="true" depth="0.5" canbehiddenbyotherwearables="false" />
+      <sprite name="Aegis LeftHand" texture="%ModDir%/Assets/Factions/clowns/suit-v2.png" sourcerect="870,291,180,196" limb="LeftHand" scale="0.28" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="true" depth="0.5" canbehiddenbyotherwearables="false" />
+      <sprite name="Aegis RightThigh" texture="%ModDir%/Assets/Factions/clowns/suit-v2.png" sourcerect="1248,260,192,248" limb="RightThigh" scale="0.42" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="true" depth="0.5" canbehiddenbyotherwearables="false" />
+      <sprite name="Aegis LeftThigh" texture="%ModDir%/Assets/Factions/clowns/suit-v2.png" sourcerect="1248,260,192,248" limb="LeftThigh" scale="0.42" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="true" depth="0.5" canbehiddenbyotherwearables="false" />
+      <sprite name="Aegis RightLeg" texture="%ModDir%/Assets/Factions/clowns/suit-v2.png" sourcerect="98,516,188,250" limb="RightLeg" scale="0.44" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="true" depth="0.5" canbehiddenbyotherwearables="false" />
+      <sprite name="Aegis LeftLeg" texture="%ModDir%/Assets/Factions/clowns/suit-v2.png" sourcerect="98,516,188,250" limb="LeftLeg" scale="0.44" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="true" depth="0.5" canbehiddenbyotherwearables="false" />
+      <sprite name="Aegis RightFoot" texture="%ModDir%/Assets/Factions/clowns/suit-v2.png" sourcerect="432,548,288,196" limb="RightFoot" scale="0.28" rotation="90" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="true" depth="0.5" canbehiddenbyotherwearables="false" />
+      <sprite name="Aegis LeftFoot" texture="%ModDir%/Assets/Factions/clowns/suit-v2.png" sourcerect="432,548,288,196" limb="LeftFoot" scale="0.28" rotation="90" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="true" depth="0.5" canbehiddenbyotherwearables="false" />
     </Wearable>
     <Holdable slots="RightHand+LeftHand" controlpose="true" holdpos="0,-50" handle1="-10,-20" handle2="10,-20" holdangle="45" msg="ItemMsgPickUpUse" canbeselected="false" canbepicked="true" pickkey="Use" />
     <AiTarget sightrange="1500" />
@@ -671,11 +671,11 @@
       <SubContainer capacity="1" maxstacksize="1">
         <Containable items="aegisservomodule,aegisservomoduledescendens,aegisservomodulecoalition,aegisservomoduleseparatists,aegisservomodulehusk,aegisservomoduleclowns" />
       </SubContainer>
-      <SlotIcon slotindex="2" texture="%ModDir%/Assets/Factions/clowns/servo-module.png" sourcerect="0,0,1536,1024" origin="0.5,0.5" />
+      <SlotIcon slotindex="2" texture="%ModDir%/Assets/Factions/clowns/servo-icon.png" sourcerect="0,0,256,172" origin="0.5,0.5" />
       <SubContainer capacity="1" maxstacksize="1">
         <Containable items="aegisimpellermodule,aegisimpellermoduledescendens,aegisimpellermodulecoalition,aegisimpellermoduleseparatists,aegisimpellermodulehusk,aegisimpellermoduleclowns" />
       </SubContainer>
-      <SlotIcon slotindex="3" texture="%ModDir%/Assets/Factions/clowns/impeller-module.png" sourcerect="0,0,1254,1254" origin="0.5,0.5" />
+      <SlotIcon slotindex="3" texture="%ModDir%/Assets/Factions/clowns/impeller-icon.png" sourcerect="0,0,256,256" origin="0.5,0.5" />
       <SubContainer capacity="1" maxstacksize="1">
         <Containable items="aegiscompressormodule" />
       </SubContainer>
@@ -721,8 +721,8 @@
       <Item identifier="copper" />
       <Item identifier="titaniumaluminiumalloy" />
     </Deconstruct>
-    <InventoryIcon texture="%ModDir%/Assets/Factions/clowns/servo-module.png" sourcerect="0,0,1536,1024" origin="0.5,0.5" compress="false" />
-    <Sprite texture="%ModDir%/Assets/Factions/clowns/servo-module.png" sourcerect="0,0,1536,1024" origin="0.5,0.5" compress="false" />
+    <InventoryIcon texture="%ModDir%/Assets/Factions/clowns/servo-icon.png" sourcerect="0,0,256,172" origin="0.5,0.5" compress="true" />
+    <Sprite texture="%ModDir%/Assets/Factions/clowns/servo-module.png" sourcerect="0,0,1536,1024" origin="0.5,0.5" compress="true" />
     <Body width="850" height="800" density="10" />
     <Holdable slots="Any,RightHand" handle1="0,0" holdpos="0,0" msg="ItemMsgPickUpSelect" />
   </Item>
@@ -740,8 +740,8 @@
       <Item identifier="copper" />
       <Item identifier="steel" />
     </Deconstruct>
-    <InventoryIcon texture="%ModDir%/Assets/Factions/clowns/impeller-module.png" sourcerect="0,0,1254,1254" origin="0.5,0.5" compress="false" />
-    <Sprite texture="%ModDir%/Assets/Factions/clowns/impeller-module.png" sourcerect="0,0,1254,1254" origin="0.5,0.5" compress="false" />
+    <InventoryIcon texture="%ModDir%/Assets/Factions/clowns/impeller-icon.png" sourcerect="0,0,256,256" origin="0.5,0.5" compress="true" />
+    <Sprite texture="%ModDir%/Assets/Factions/clowns/impeller-module.png" sourcerect="0,0,1254,1254" origin="0.5,0.5" compress="true" />
     <Body width="850" height="800" density="10" />
     <Holdable slots="Any,RightHand" handle1="0,0" holdpos="0,0" msg="ItemMsgPickUpSelect" />
   </Item>
