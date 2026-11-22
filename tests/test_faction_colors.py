@@ -241,9 +241,10 @@ class FactionFrameTests(unittest.TestCase):
         for key in KEYS:
             with Image.open(MOD / self.factions.path(key, 'atlas')) as image:
                 alpha = image.getchannel('A').point(lambda a: 255 if a > 16 else 0)
+                cell_width, cell_height = image.width // 4, image.height // 4
                 for cell, name in enumerate(self.atlas_cells):
-                    left, top = cell % 4 * 384, cell // 4 * 256
-                    box = (left, top, left + 384, top + 256)
+                    left, top = cell % 4 * cell_width, cell // 4 * cell_height
+                    box = (left, top, left + cell_width, top + cell_height)
                     bounds = alpha.crop(box).getbbox()
                     if name is None:
                         self.assertIsNone(bounds, key)

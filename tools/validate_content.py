@@ -56,7 +56,8 @@ def validate(game, mod=None):
     for path in (mod/'Assets/AegisCombat').glob('*.png'):
         with Image.open(path) as image:
             assert image.mode=='RGBA' and image.getchannel('A').getextrema()[0]==0,path
-            if path.stem.startswith('shield-'):assert image.size==(1254,1254)
+            if path.stem.startswith('shield-'):
+                assert image.size in {(624,624),(1254,1254)}, (path, image.size)
     lua=LuaRuntime()
     scripts=list((mod/'Lua').rglob('*.lua'))
     for path in scripts:lua.execute('assert(load(...))',path.read_text(encoding='utf-8'))

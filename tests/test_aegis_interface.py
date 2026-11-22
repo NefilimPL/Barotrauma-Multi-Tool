@@ -2,12 +2,33 @@ import unittest
 import xml.etree.ElementTree as ET
 from pathlib import Path
 from lua_support import LuaCase
+from PIL import Image
 
 ROOT = Path(__file__).resolve().parents[1]
 MOD = ROOT / 'System-Aegis-No-Headsets'
 
 
 class PresentationContentTests(unittest.TestCase):
+    def test_suit_cabinets_use_compact_portraits_and_one_shell_per_limb(self):
+        for filename in ('aegis_suit.xml', 'aegis_factions.xml'):
+            for suit in ET.parse(MOD / filename).getroot().findall('Item'):
+                if not suit.get('identifier', '').startswith('aegisservosuit'):
+                    continue
+                window = suit.find("ContainedSprite[@allowedcontainertags='divingsuitcontainerwindow']")
+                width, height = map(int, window.get('sourcerect').split(',')[2:])
+                self.assertGreater(width, 550)
+                self.assertLess(height, width * 1.6)
+                plates = [node for node in suit.iter('sprite') if node.get('texture').endswith('/suit-v2.png')]
+                self.assertEqual(len(plates), 15)
+                shell = [node for node in suit.iter('sprite') if node.get('hidelimb') == 'true']
+                self.assertEqual(set(shell), {node for node in plates if node.get('limb') != 'Head'})
+                for plate in shell:
+                    self.assertEqual(plate.get('hideotherwearables'), 'true')
+                    self.assertEqual(plate.get('canbehiddenbyotherwearables'), 'false')
+                path = MOD / plates[0].get('texture').removeprefix('%ModDir%/')
+                with Image.open(path) as atlas:
+                    self.assertEqual(atlas.size, (768, 512))
+
     def test_public_package_has_no_variant_qualifier(self):
         self.assertEqual(ET.parse(MOD / 'filelist.xml').getroot().get('name'), 'System Aegis')
 
@@ -183,14 +204,31 @@ class CombinedPanelClientTests(LuaCase):
                 return str(self.value)
         self.lua.globals().native_text = LocalizedText
         self.lua.execute("""
-            local w=H.status;local value=w.Text;rawset(w,'Text',nil)
+            local w=H.shieldStatus;local value=w.Text;rawset(w,'Text',nil)
             setmetatable(w,{
                 __index=function(_,key) if key=='Text' then return native_text(value) end end,
                 __newindex=function(t,key,v) if key=='Text' then value=v else rawset(t,key,v) end end})
             H.update(.1)
-            assert(type(H.status.Text)=='userdata')
-            assert(tostring(H.status.Text):find('3/5',1,true))
+            assert(type(H.shieldStatus.Text)=='userdata')
+            assert(tostring(H.shieldStatus.Text):find('3/5',1,true))
             assert(H.panel.Visible and H.toolHost.Visible and H.armHost.Visible)
+        """)
+
+    def test_shield_text_has_its_own_readable_line_from_first_frame(self):
+        self.lua.execute("""
+            H.update(.1)
+            assert(H.shieldStatus and H.shieldStatus.Visible)
+            local scale=H.shieldStatus.TextScale
+            assert(scale>=.8 and not H.shieldStatus.AutoScaleVertical and not H.shieldStatus.Wrap)
+            assert(H.status.Text:find('80%%') and not H.status.Text:find('shield'))
+            for _,charges in ipairs({0,1,5}) do
+                E.AegisCombat.shieldCharges=function() return charges end
+                H.update(.1)
+                assert(H.shieldStatus.Text:find(tostring(charges)..'/5',1,true))
+                assert(H.shieldStatus.TextScale==scale)
+            end
+            tool.Prefab.Identifier.Value='aegiscompositetool';H.update(.1)
+            assert(not H.shieldStatus.Visible)
         """)
 
     def test_native_hud_filter_preserves_server_authorization_and_other_components(self):

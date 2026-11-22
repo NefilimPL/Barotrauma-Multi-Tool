@@ -8,7 +8,7 @@ function M.install(G,E,root)
     E.LuaUserData.RegisterType('Microsoft.Xna.Framework.Graphics.BlendState')
     local blend=E.LuaUserData.CreateStatic('Microsoft.Xna.Framework.Graphics.BlendState')
     local backpack=E.Sprite(root..'/Assets/AegisVacuum/backpack.png',E.Vector2(.5,.5))
-    local stream=E.Sprite(root..'/Assets/AegisVacuum/suction.png',E.Vector2(1,.5))
+    local stream
     local effects={}
     function G.onTransfer(id,point) effects[#effects+1]={id=id,x=point.x,y=point.y,age=0} end
     function G.updateVisuals(dt)
@@ -50,19 +50,18 @@ function M.install(G,E,root)
                     end
                     local active=G.suctionActive(item,state)
                     if active then
+                        if not stream then stream=E.Sprite(root..'/Assets/AegisVacuum/suction.png',E.Vector2(1,.5)) end
                         local direction,rotation=G.direction(item)
                         -- Sheet points left-to-right; rotate its inlet to face the nozzle.
                         local frame,fraction=Core.animation(G.now)
                         for layer=0,1 do
                             local f=(frame+layer)%16
                             local col,row=f%4,math.floor(f/4)
-                            local x,y=math.floor(col*1451/4),math.floor(row*1084/4)
-                            local right,bottom=math.floor((col+1)*1451/4),math.floor((row+1)*1084/4)
-                            stream.SourceRect=E.Rectangle(x,y,right-x,bottom-y)
-                            stream.Origin=E.Vector2(right-x,(bottom-y)/2)
+                            stream.SourceRect=E.Rectangle(col*182,row*136,182,136)
+                            stream.Origin=E.Vector2(182,68)
                             local weight=layer==0 and (1-fraction) or fraction
                             stream.Draw(batch,screen(cam,origin),E.Color(150,240,255,math.floor(78*weight)),stream.Origin,-rotation+math.pi,
-                                E.Vector2(C.range/(right-x)*cam.Zoom,.35*cam.Zoom))
+                                E.Vector2(C.range/182*cam.Zoom,.35*(271/136)*cam.Zoom))
                         end
                         -- Continuous world-space streaks travel inward independently of sheet frames.
                         for n=1,18 do
@@ -94,13 +93,13 @@ function M.install(G,E,root)
     G.draw=draw
     function G.clearEffects() effects={} end
     G.patch('draw','Barotrauma.GameScreen','DrawMap',function(screenObj,p)
-        if G.visualError then return end
+        if G.visualError or (not next(G.states) and #effects==0) then return end
         local batch=p['spriteBatch']
         batch.Begin(sort.Deferred,blend.NonPremultiplied)
         local ok,err=pcall(draw,batch,screenObj.Cam)
         batch.End()
         if not ok then G.visualError=tostring(err);E.printerror('[Aegis Vacuum] Render: '..tostring(err)) end
     end,true)
-    function G.disposeVisuals() backpack.Remove();stream.Remove();effects={} end
+    function G.disposeVisuals() backpack.Remove();if stream then stream.Remove() end;effects={} end
 end
 return M

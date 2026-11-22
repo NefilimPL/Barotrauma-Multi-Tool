@@ -11,9 +11,6 @@ function M.install(G,E,root)
     local blend=E.LuaUserData.CreateStatic('Microsoft.Xna.Framework.Graphics.BlendState')
     local assets={}
     local project
-    for _,name in ipairs({'shield-active','shield-hit','shield-break','shield-contact'}) do
-        assets[name]=E.Sprite(root..'/Assets/AegisCombat/'..name..'.png',E.Vector2(.5,.5))
-    end
     function G.updateFlashlights()
         for item in pairs(G.states or {}) do
             if not item.Removed and U.itemId(item)==C.identifier and item.body then
@@ -102,13 +99,17 @@ function M.install(G,E,root)
     local function frame(sprite,index)
         index=math.max(0,math.min(15,index))
         local column,row=index%4,math.floor(index/4)
-        local x,y=math.floor(column*1254/4),math.floor(row*1254/4)
-        local w,h=math.floor((column+1)*1254/4)-x,math.floor((row+1)*1254/4)-y
+        local w,h=156,156
+        local x,y=column*w,row*h
         sprite.SourceRect=E.Rectangle(x,y,w,h)
         return E.Vector2(w/2,h/2)
     end
     local function drawSheet(batch,cam,name,index,point,angle,sx,sy,alpha,band)
         local sprite=assets[name]
+        if not sprite then
+            sprite=E.Sprite(root..'/Assets/AegisCombat/'..name..'.png',E.Vector2(.5,.5))
+            assets[name]=sprite
+        end
         local origin=frame(sprite,index)
         if band then
             local rect=sprite.SourceRect
@@ -119,7 +120,7 @@ function M.install(G,E,root)
         end
         local screen=project(cam,point.x,point.y)
         sprite.Draw(batch,screen,E.Color(255,255,255,math.floor(255*(alpha or 1))),origin,-angle,
-            E.Vector2(sx*cam.Zoom,sy*cam.Zoom))
+            E.Vector2(sx*cam.Zoom*(1254/624),sy*cam.Zoom*(1254/624)))
     end
     local function line(batch,cam,a,b,color,width)
         gui.DrawLine(batch,project(cam,a.x,a.y),project(cam,b.x,b.y),color,0,math.max(1,math.floor(width*cam.Zoom+.5)))

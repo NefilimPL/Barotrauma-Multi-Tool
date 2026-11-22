@@ -10,9 +10,9 @@ function M.install(E)
     local nativeClass,nativeMethod='Barotrauma.Items.Components.ItemComponent','ShouldDrawHUD'
     local nativePhase=E.Hook.HookMethodType.Before
     E.Hook.Patch('aegis.hud.native',nativeClass,nativeMethod,function(component,p)
+        if not E.Game.RoundStarted or tostring(component.Name):lower()~='custominterface' then return end
         local id=U.itemId(component.Item)
-        if tostring(component.Name):lower()=='custominterface' and
-            (id=='aegiscombattool' or id=='aegiscompositetool') then
+        if id=='aegiscombattool' or id=='aegiscompositetool' then
             p.PreventExecution=true;return false
         end
     end,nativePhase)
@@ -52,9 +52,10 @@ function M.install(E)
         local flags=H.item and R.flags(H.item)
         if flags then R.setDamage(H.item,not flags.damage) end
     end)
-    local status=UI.TextBlock(rect(H.toolHost.RectTransform,.05,.73,.90,.25),'')
-    status.TextScale=.8;status.Wrap=true;status.AutoScaleVertical=true
-    H.status=status
+    local status=UI.TextBlock(rect(H.toolHost.RectTransform,.05,.74,.90,.12),'')
+    local shieldStatus=UI.TextBlock(rect(H.toolHost.RectTransform,.05,.87,.90,.12),'')
+    status.TextScale=.85;shieldStatus.TextScale=.85
+    H.status,H.shieldStatus=status,shieldStatus
     function H.setOpen(value) H.open=value==true end
     local function equipped(character)
         if not character or character.Removed or character.IsDead or character.IsUnconscious or not character.Inventory then return end
@@ -68,6 +69,21 @@ function M.install(E)
         for _,w in ipairs({panel,tab,H.toolHost,H.armHost}) do w.Visible=false;w.RemoveFromGUIUpdateList() end
         H.item=nil;H.suit=nil
     end
+    local width,height,showTool,showSuit
+    local function resize(hasTool,hasSuit)
+        local bounds=canvas.Rect
+        if width==bounds.Width and height==bounds.Height and showTool==hasTool and showSuit==hasSuit then return end
+        width,height,showTool,showSuit=bounds.Width,bounds.Height,hasTool,hasSuit
+        local layout=Model.layout(hasTool,hasSuit,width,height)
+        panel.RectTransform.Resize(E.Vector2(layout.width/width,layout.height/height))
+        tab.RectTransform.Resize(E.Vector2(math.min(200,width*.23)/width,.035))
+        title.RectTransform.Resize(E.Vector2(.78,layout.header*.78))
+        H.hideButton.RectTransform.Resize(E.Vector2(.10,layout.header*.78))
+        H.toolHost.RectTransform.RelativeOffset=E.Vector2(0,layout.toolY)
+        H.toolHost.RectTransform.Resize(E.Vector2(1,layout.toolH))
+        H.armHost.RectTransform.RelativeOffset=E.Vector2(0,layout.armY)
+        H.armHost.RectTransform.Resize(E.Vector2(1,layout.armH))
+    end
     function H.update(dt)
         local owner=E.Character.Controlled
         local game=E.Game
@@ -77,16 +93,7 @@ function M.install(E)
         local suit=E.AegisSuit and E.AegisSuit.equipped(owner)
         H.item,H.suit=tool,suit
         if not tool and not suit then hide();return end
-        local bounds=canvas.Rect
-        local layout=Model.layout(tool~=nil,suit~=nil,bounds.Width,bounds.Height)
-        panel.RectTransform.Resize(E.Vector2(layout.width/bounds.Width,layout.height/bounds.Height))
-        tab.RectTransform.Resize(E.Vector2(math.min(200,bounds.Width*.23)/bounds.Width,.035))
-        title.RectTransform.Resize(E.Vector2(.78,layout.header*.78))
-        H.hideButton.RectTransform.Resize(E.Vector2(.10,layout.header*.78))
-        H.toolHost.RectTransform.RelativeOffset=E.Vector2(0,layout.toolY)
-        H.toolHost.RectTransform.Resize(E.Vector2(1,layout.toolH))
-        H.armHost.RectTransform.RelativeOffset=E.Vector2(0,layout.armY)
-        H.armHost.RectTransform.Resize(E.Vector2(1,layout.armH))
+        resize(tool~=nil,suit~=nil)
         H.toolHost.Visible=H.open and tool~=nil;H.armHost.Visible=H.open and suit~=nil
         panel.Visible=H.open;tab.Visible=not H.open
         local summary='AEGIS'
@@ -107,19 +114,14 @@ function M.install(E)
             H.damageButton.Text=text('damage')..': '..text(flags and flags.damage and 'on' or 'off')
             local power=tool.OwnInventory and tool.OwnInventory.GetItemAt(0)
             local charge=power and power.MaxCondition>0 and math.floor(power.Condition/power.MaxCondition*100) or 0
-            local statusText=text('power')..': '..tostring(charge)..'%'
+            status.Text=text('power')..': '..tostring(charge)..'%'
+            shieldStatus.Visible=combat
             if combat then
                 local cartridge=tool.OwnInventory and tool.OwnInventory.GetItemAt(1)
                 local installed=U.itemId(cartridge)=='aegisshieldmodule'
                 local charges=E.AegisCombat and E.AegisCombat.shieldCharges(tool) or 0
-                statusText=statusText..' | '..text('shield')..': '..(installed and (tostring(charges)..'/5') or text('missing'))
-                H.status.RectTransform.RelativeOffset=E.Vector2(.05,.72)
-                H.status.RectTransform.Resize(E.Vector2(.90,.25))
-            else
-                H.status.RectTransform.RelativeOffset=E.Vector2(.05,.73)
-                H.status.RectTransform.Resize(E.Vector2(.90,.25))
+                shieldStatus.Text=text('shield')..': '..(installed and (tostring(charges)..'/5') or text('missing'))
             end
-            status.Text=statusText
         end
         if suit then
             local s=E.AegisSuit.state(suit)

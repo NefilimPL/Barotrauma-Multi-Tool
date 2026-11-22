@@ -14,14 +14,11 @@ function M.install(G,E,root)
         end
         return skins[path]
     end
-    local atlasKey='pirates'
-    local atlas=skin(atlasKey,'atlas')
     local impeller=E.Sprite(root..'/Assets/AegisSuit/impeller.png',E.Vector2(.5,.5))
     -- The rotor and its housing retain their world size after texture downsampling.
     local rotorTextureScale=1254/312
     local bladeSize=.0135*rotorTextureScale
     local housingSize=.022*rotorTextureScale
-    local housing=skin('pirates','housing')
     local pulseHead=E.Sprite('Content/Items/Weapons/Turrets.png',E.Vector2(.5,.5))
     local beamSprite=E.Sprite('Content/Particles/ParticleAtlas.png',E.Vector2(0,.5))
     -- Native neutral, feathered trail. The pulse itself is rendered only by
@@ -55,17 +52,15 @@ function M.install(G,E,root)
     end
     -- Character.Draw already has the world transform and is lit afterwards.
     local function screen(cam,p) return E.Vector2(p.x,-p.y) end
-    local function sprite(batch,cam,key,point,rotation,scale,origin)
-        local base=A[rects[key]]
-        local r=Factions.frame(atlasKey,rects[key])
-        if origin then origin=E.Vector2(origin.X+(r[3]-base[3])/2,origin.Y+(r[4]-base[4])/2) end
+    local function sprite(batch,cam,atlas,key,point,rotation,scale,origin)
+        local r=A[rects[key]]
         atlas.SourceRect=E.Rectangle(r[1],r[2],r[3],r[4])
         atlas.Origin=origin or E.Vector2(r[3]/2,r[4]/2)
         atlas.Draw(batch,screen(cam,point),E.Color.White,atlas.Origin,rotation or 0,E.Vector2(scale,scale))
     end
-    local function link(batch,cam,key,a,b,span,origin)
+    local function link(batch,cam,atlas,key,a,b,span,origin)
         local dx,dy=b.x-a.x,b.y-a.y
-        sprite(batch,cam,key,a,-math.atan2(dy,dx),math.sqrt(dx*dx+dy*dy)/span,origin)
+        sprite(batch,cam,atlas,key,a,-math.atan2(dy,dx),math.sqrt(dx*dx+dy*dy)/span,origin)
     end
     local function drawPulseHead(batch,cam,pose)
         -- Original pulse-laser rail/barrel, uniformly miniaturized. Origins
@@ -168,44 +163,42 @@ function M.install(G,E,root)
             stop(entry.beam);stop(entry.motor);G.removeLights(entry.state);channels[item]=nil
         end end
     end
-    local function draw(batch,cam,drawOwner)
-        for item,s in pairs(G.states) do
-            local owner=s.owner or G.owner(item)
-            if owner==drawOwner and G.equipped(owner)==item then
-                local base,bodyRotation,facing=G.mount(owner,true)
-                local sp=cam.WorldToScreen(E.Vector2(base.x,base.y))
-                local viewport=gui.Canvas.Rect
-                if sp.X> -300 and sp.Y> -300 and sp.X<viewport.Width+300 and sp.Y<viewport.Height+300 then
-                    local target=s.target
-                    if target and target.entity and not target.entity.Removed and target.kind~='weld' then target.point=U.point(target.entity.WorldPosition) end
-                    local pose
-                    if s.hasArm then
-                        local part=G.module and G.module(item,'servo')
-                        atlasKey=Factions.key(part or item)
-                        atlas=skin(atlasKey,'atlas')
-                        local flash=s.lastPulse and G.now-(s.shotTime or -100)<C.pulseDuration
-                        pose=G.toolPose(owner,s,true,flash and s.lastPulse or nil)
-                        link(batch,cam,'upper',base,pose.elbow,250,E.Vector2(44,50))
-                        link(batch,cam,'lower',pose.elbow,pose.tip,247,E.Vector2(39,41))
-                        if s.mode=='combat' then drawPulseHead(batch,cam,pose)
-                        else sprite(batch,cam,target and target.kind=='grab' and 'orange' or 'blue',pose.tip,-pose.angle,.16,E.Vector2(37,54)) end
-                    end
-                    if s.hasImpeller then
-                        local part=G.module and G.module(item,'impeller')
-                        housing=skin(Factions.key(part or item),'housing')
-                        local motor=G.attachment(owner,-20,-18,true)
-                        impeller.Draw(batch,screen(cam,motor),E.Color.White,impeller.Origin,
-                            -bodyRotation+(s.swimming and G.now*14 or 0),E.Vector2(bladeSize,bladeSize))
-                        housing.Draw(batch,screen(cam,motor),E.Color.White,housing.Origin,-bodyRotation,
-                            E.Vector2(housingSize,housingSize))
-                    end
-                    local short=pose and (not target or (target.kind~='repair' and target.kind~='weld') or
-                        (target.point.x-pose.muzzle.x)^2+(target.point.y-pose.muzzle.y)^2<=(C.repairBeam+C.contactSlack+2)^2)
-                    local beam=pose and target and target.kind~='combat' and s.active and short and target.point
-                    if beam then
-                        softBeam(batch,cam,pose.muzzle,beam,colors[target.kind],target.kind~='grab')
-                    end
-                end
+    local function draw(batch,cam,owner)
+        if not next(G.states) then return end
+        local item=G.equipped(owner)
+        local s=item and G.states[item]
+        if not s or (s.owner and s.owner~=owner) or not (s.hasArm or s.hasImpeller) then return end
+        local base,bodyRotation,facing=G.mount(owner,true)
+        local sp=cam.WorldToScreen(E.Vector2(base.x,base.y))
+        local viewport=gui.Canvas.Rect
+        if sp.X> -300 and sp.Y> -300 and sp.X<viewport.Width+300 and sp.Y<viewport.Height+300 then
+            local target=s.target
+            if target and target.entity and not target.entity.Removed and target.kind~='weld' then target.point=U.point(target.entity.WorldPosition) end
+            local pose
+            if s.hasArm then
+                local part=G.module and G.module(item,'servo')
+                local atlas=skin(Factions.key(part or item),'atlas')
+                local flash=s.lastPulse and G.now-(s.shotTime or -100)<C.pulseDuration
+                pose=G.toolPose(owner,s,true,flash and s.lastPulse or nil)
+                link(batch,cam,atlas,'upper',base,pose.elbow,125,E.Vector2(22,25))
+                link(batch,cam,atlas,'lower',pose.elbow,pose.tip,123.5,E.Vector2(19.5,20.5))
+                if s.mode=='combat' then drawPulseHead(batch,cam,pose)
+                else sprite(batch,cam,atlas,target and target.kind=='grab' and 'orange' or 'blue',pose.tip,-pose.angle,.32,E.Vector2(18.5,27)) end
+            end
+            if s.hasImpeller then
+                local part=G.module and G.module(item,'impeller')
+                local housing=skin(Factions.key(part or item),'housing')
+                local motor=G.attachment(owner,-20,-18,true)
+                impeller.Draw(batch,screen(cam,motor),E.Color.White,impeller.Origin,
+                    -bodyRotation+(s.swimming and G.now*14 or 0),E.Vector2(bladeSize,bladeSize))
+                housing.Draw(batch,screen(cam,motor),E.Color.White,housing.Origin,-bodyRotation,
+                    E.Vector2(housingSize,housingSize))
+            end
+            local short=pose and (not target or (target.kind~='repair' and target.kind~='weld') or
+                (target.point.x-pose.muzzle.x)^2+(target.point.y-pose.muzzle.y)^2<=(C.repairBeam+C.contactSlack+2)^2)
+            local beam=pose and target and target.kind~='combat' and s.active and short and target.point
+            if beam then
+                softBeam(batch,cam,pose.muzzle,beam,colors[target.kind],target.kind~='grab')
             end
         end
     end
