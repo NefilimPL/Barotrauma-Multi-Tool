@@ -9,15 +9,27 @@ MOD = ROOT / 'System-Aegis-No-Headsets'
 
 
 class PresentationContentTests(unittest.TestCase):
-    def test_suit_cabinets_use_compact_portraits_and_one_shell_per_limb(self):
+    def test_suit_cabinets_use_full_height_glass_inserts(self):
         for filename in ('aegis_suit.xml', 'aegis_factions.xml'):
             for suit in ET.parse(MOD / filename).getroot().findall('Item'):
                 if not suit.get('identifier', '').startswith('aegisservosuit'):
                     continue
                 window = suit.find("ContainedSprite[@allowedcontainertags='divingsuitcontainerwindow']")
-                width, height = map(int, window.get('sourcerect').split(',')[2:])
-                self.assertGreater(width, 550)
-                self.assertLess(height, width * 1.6)
+                x, y, width, height = map(int, window.get('sourcerect').split(','))
+                scale = float(suit.get('scale'))
+                self.assertAlmostEqual(width * scale, 38.5, delta=1)
+                self.assertAlmostEqual(height * scale, 104.5, delta=1)
+                path = MOD / window.get('texture').removeprefix('%ModDir%/')
+                with Image.open(path) as image:
+                    alpha = image.getchannel('A').crop((x, y, x + width, y + height))
+                    for level in (.25, .5, .75, .95):
+                        self.assertGreater(alpha.getpixel((width // 2, int(height * level))), 160, path)
+
+    def test_suits_use_one_shell_per_limb(self):
+        for filename in ('aegis_suit.xml', 'aegis_factions.xml'):
+            for suit in ET.parse(MOD / filename).getroot().findall('Item'):
+                if not suit.get('identifier', '').startswith('aegisservosuit'):
+                    continue
                 plates = [node for node in suit.iter('sprite') if node.get('texture').endswith('/suit-v2.png')]
                 self.assertEqual(len(plates), 15)
                 shell = [node for node in suit.iter('sprite') if node.get('hidelimb') == 'true']
