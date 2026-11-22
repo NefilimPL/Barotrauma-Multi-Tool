@@ -29,6 +29,12 @@ function M.install(G,E)
         local anim=owner.AnimController
         local limb=anim and anim.GetLimb and anim.GetLimb(E.LimbType.Head)
         local angle=limb and limb.body and limb.body.Rotation or rotation or 0
+        local direction=angle+((facing or 1)<0 and -math.pi or 0)
+        if limb and limb.WorldPosition then
+            local point=limb.WorldPosition
+            head={x=point.X+math.cos(direction)*10-math.sin(angle)*5,
+                y=point.Y+math.sin(direction)*10+math.cos(angle)*5}
+        end
         local flash=s.lastPulse and G.now-(s.shotTime or -100)<C.pulseDuration
         local pose=G.toolPose(owner,s,true,flash and s.lastPulse or nil)
         local muzzle=pose.muzzle
@@ -37,8 +43,8 @@ function M.install(G,E)
             E.Game.ParticleManager.CreateParticle(particle,E.Vector2(muzzle.x,muzzle.y),E.Vector2.Zero,-pose.angle)
         end
         local point=s.target and s.target.point or muzzle
-        move(s.lights.helmet,owner,head,650,E.Color(190,220,255,170))
-        s.lights.helmet.Rotation=angle+((facing or 1)<0 and -math.pi or 0)
+        move(s.lights.helmet,owner,head,650,E.Color(225,237,255,175))
+        s.lights.helmet.Rotation=direction
         s.lights.helmet.Enabled=powered
         local repairing=s.active and s.target and (s.target.kind=='repair' or s.target.kind=='weld')
         local color=flash and E.Color(255,60,65,230) or repairing and E.Color(60,175,255,210) or E.Color(185,220,255,110)

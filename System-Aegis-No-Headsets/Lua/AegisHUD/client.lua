@@ -80,6 +80,9 @@ function M.install(E)
         local bounds=canvas.Rect
         local layout=Model.layout(tool~=nil,suit~=nil,bounds.Width,bounds.Height)
         panel.RectTransform.Resize(E.Vector2(layout.width/bounds.Width,layout.height/bounds.Height))
+        tab.RectTransform.Resize(E.Vector2(math.min(200,bounds.Width*.23)/bounds.Width,.035))
+        title.RectTransform.Resize(E.Vector2(.78,layout.header*.78))
+        H.hideButton.RectTransform.Resize(E.Vector2(.10,layout.header*.78))
         H.toolHost.RectTransform.RelativeOffset=E.Vector2(0,layout.toolY)
         H.toolHost.RectTransform.Resize(E.Vector2(1,layout.toolH))
         H.armHost.RectTransform.RelativeOffset=E.Vector2(0,layout.armY)
@@ -120,7 +123,7 @@ function M.install(E)
         end
         if suit then
             local s=E.AegisSuit.state(suit)
-            summary=summary..' | '..text('arm')..': '..tostring(E.TextManager.Get('aegis.'..(s.mode or 'off')))
+            summary=summary..' | '..tostring(E.TextManager.Get('aegis.'..(s.mode or 'off')))
         end
         tab.Text=summary;tab.ToolTip=text('expand')
         if panel.Visible then panel.AddToGUIUpdateList(false,8) else tab.AddToGUIUpdateList(false,9) end

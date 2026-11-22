@@ -1,7 +1,7 @@
-# System Aegis 1.8.2
+# System Aegis 1.8.3
 
 Archiwum zawiera kompletny folder moda `System-Aegis/`.
-[Gotowy ZIP](../output/System-Aegis-1.8.2.zip).
+[Gotowy ZIP](../output/System-Aegis-1.8.3.zip).
 
 
 W tym wariancie są odkurzacz z plecakiem, kombinezon Aegis, bojowy multitool,
@@ -75,7 +75,10 @@ przed atakami od tyłu, ciśnieniem ani pobliskimi eksplozjami.
 
 Bez serwa nie ma ramienia ani jego funkcji; przyciski ramienia są nieaktywne.
 Wyjęcie serwa zwalnia trzymany cel, zatrzymuje naprawę i anuluje oczekujący
-strzał. Bez wirnika nie działa napęd. Panel pokazuje poziom tlenu i zamontowane moduły.
+strzał. Wirnik z baterią zwiększa docelową prędkość pływania o 50%. Panel pokazuje
+poziom tlenu, zamontowane moduły oraz pracę napędu. Przycisk **Pokaż sloty**
+otwiera natywną siatkę modułów, baterii i amunicji. Zwiń panel Aegis albo
+kliknij **Schowaj sloty**, aby ją zamknąć.
 
 W suchym pomieszczeniu z bezpiecznym powietrzem postać oddycha z otoczenia.
 Kompresor uzupełnia wtedy zwykłą butlę w tempie 2% na sekundę i zużywa 0,2%

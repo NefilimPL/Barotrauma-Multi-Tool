@@ -1,16 +1,16 @@
-# Kombinezony frakcji w Systemie Aegis 1.8.2
+# Kombinezony frakcji w Systemie Aegis 1.8.3
 
 Każda z sześciu frakcji ma własny krój kombinezonu, hełm i osłony osprzętu.
 Rozpoznasz zestawy po kształtach, materiale i widocznych oznaczeniach.
 Warianty mają te same receptury, ochronę i funkcje.
 
-[Porównaj kombinezony](faction-colors/preview.html) · [ZIP 1.8.2](../output/System-Aegis-1.8.2.zip)
+[Porównaj kombinezony](faction-colors/preview.html) · [ZIP 1.8.3](../output/System-Aegis-1.8.3.zip)
 
 | Frakcja | Motyw |
 |---|---|
 | Piraci | Czerwone płyty z nitami, mosiężny iluminator z kratą, zewnętrzne węże i czaszka z kluczami. |
 | Descendens | Gładkie białe osłony, szeroka fasetowana szyba w kobalcie i turkusowe szewrony. |
-| Koalicja | Kanciaste niebieskie płyty, prostokątny bursztynowy wizjer, pasy oporządzenia i gwiazda. |
+| Koalicja | Granatowe płyty abordażowe z białymi pasami, bursztynowy wizjer i znak Koalicji z gry na pancerzu. |
 | Separatyści | Pomarańczowe osłony przemysłowe, trzy okrągłe wizjery, uchwyty i żółto-czarne pasy. |
 | Kościół Łuski | Fioletowy kaptur hełmu, żebrowane płyty w kolorze kości, wąski wizjer i zwijający się znak kultu. |
 | Dzieci Honkomatki | Biała maska z czerwonym nosem i uśmiechem, hełm z dzwonkami, szachownica i paski na rękawach. |

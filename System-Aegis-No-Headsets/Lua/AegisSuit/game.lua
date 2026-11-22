@@ -448,17 +448,8 @@ function M.new(E)
                         elseif not powered then s.target=nil end
                         if s.hasArm and not advanced and G.advanceTool then G.advanceTool(owner,s,dt) end
                         if not s.target then Core.ready(s,nil,G.now) end
-                        local anim=owner.AnimController
-                        if powered and s.hasImpeller and anim.InWater and anim.TargetMovement then
-                            local movement=anim.TargetMovement
-                            local length=math.sqrt(movement.X^2+movement.Y^2)
-                            if length>.1 and anim.Collider then
-                                local paid=G.spend(item,C.rates.swim*dt)
-                                if paid>0 then
-                                    anim.Collider.ApplyForce(E.Vector2(movement.X/length,movement.Y/length)*anim.Collider.Mass*C.swimForce*paid,C.swimSpeed)
-                                    s.swimming=true
-                                end
-                            end
+                        if powered and s.hasImpeller and G.isSwimming(owner.AnimController) then
+                            s.swimming=G.spend(item,C.rates.swim*dt)>0
                         end
                     end
                 end
@@ -500,6 +491,7 @@ function M.new(E)
         if G.authoritative then
             E.Util.RegisterItemGroup('aegis.suit.repairables',function(item) return U.component(item,'Repairable')~=nil end)
         end
+        G.installSwimBoost()
         G.patch('breathing','Barotrauma.Character','UpdateOxygen',function(owner,p)
             local item=G.equipped(owner)
             if item then G.breathe(owner,item,p['deltaTime']) end
@@ -509,6 +501,7 @@ function M.new(E)
         E.Hook.Add('stop','aegis.suit.dispose',G.dispose)
     end
     require('AegisSuit.modules').install(G,E)
+    require('AegisSuit.swim').install(G,E)
     return G
 end
 return M

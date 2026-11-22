@@ -15,5 +15,5 @@ return {
     scanInterval=.2, snapshotInterval=.1, servoDelay=.1, pressure=10000,
     maxGrabMass=80,grabForce=18,grabSpeed=10,grabSpring=100,grabDamping=20,grabAcceleration=120,
     gripLift=85,dockChargeRate=.5,
-    grabHoldDistance=120,sonarRate=.12,pulseDuration=.14,controlBurst=4,controlRate=10,swimForce=3,swimSpeed=5,
+    grabHoldDistance=120,sonarRate=.12,pulseDuration=.14,controlBurst=4,controlRate=10,swimMultiplier=1.5,
 }

@@ -31,4 +31,8 @@
   <entityname.aegiscompressormodule>Kompresor powietrza Aegis</entityname.aegiscompressormodule>
   <entitydescription.aegiscompressormodule>Włóż do slotu 5 kombinezonu, a butlę tlenową do slotu 6. Zasilany baterią kompresor automatycznie napełnia zwykłą butlę w suchym pomieszczeniu z bezpiecznym powietrzem.</entitydescription.aegiscompressormodule>
   <aegis.compressor_module>Kompresor</aegis.compressor_module>
+  <aegis.slots_show>Pokaż sloty</aegis.slots_show>
+  <aegis.slots_hide>Schowaj sloty</aegis.slots_hide>
+  <aegis.impeller_active>aktywny</aegis.impeller_active>
+  <aegis.repair_short>Naprawa</aegis.repair_short>
 </infotexts>

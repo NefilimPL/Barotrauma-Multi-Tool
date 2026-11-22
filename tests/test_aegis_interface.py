@@ -24,7 +24,7 @@ class PresentationContentTests(unittest.TestCase):
                 self.assertEqual(component.get('drawhudwhenequipped'), 'true')
                 self.assertEqual(len(component.findall('TickBox')), 3)
 
-    def test_flashlights_use_real_narrow_cone_textures(self):
+    def test_flashlights_use_directional_cones_with_wider_helmet_beams(self):
         combat = ET.parse(MOD / 'aegis_combat.xml').find('Item').findall('LightComponent')[1]
         tools = ET.parse(MOD / 'aegis_tools.xml').getroot()
         composite = next(n for n in tools.findall('Item') if n.get('identifier') == 'aegiscompositetool')
@@ -34,14 +34,23 @@ class PresentationContentTests(unittest.TestCase):
                 if suit.get('identifier', '').startswith('aegisservosuit'):
                     lights.append(suit.find('LightComponent'))
         self.assertEqual(len(lights), 8)
-        for light in lights:
+        for index, light in enumerate(lights):
             self.assertIsNotNone(light)
             self.assertGreater(float(light.get('range')),0)
             self.assertEqual(light.get('directional'), 'true')
             texture = light.find('LightTexture')
             self.assertEqual(texture.get('texture'), 'Content/Lights/lightcone.png')
             width, height = map(float, texture.get('size').split(','))
-            self.assertLessEqual(height / width, .5)
+            if index < 2:
+                self.assertLessEqual(height / width, .5)
+            else:
+                self.assertGreaterEqual(height / width, .75)
+
+    def test_suit_slots_start_collapsed_in_each_variant(self):
+        for filename in ('aegis_suit.xml', 'aegis_factions.xml'):
+            for suit in ET.parse(MOD / filename).getroot().findall('Item'):
+                if suit.get('identifier', '').startswith('aegisservosuit'):
+                    self.assertEqual(suit.find('ItemContainer').get('keepopenwhenequipped'), 'false')
 
 
 class NativeControlRelayTests(LuaCase):
@@ -113,6 +122,7 @@ class CombinedPanelModelTests(LuaCase):
             for _,size in ipairs({{1280,720},{1920,1080},{3440,1440}}) do
                 local r=M.layout(true,true,size[1],size[2])
                 assert(r.width<=size[1]*.4 and r.height<=size[2]*.85)
+                assert(r.width<=300 and r.height<=350)
                 assert(r.toolY+r.toolH<=r.armY and r.armY+r.armH<=1)
             end
         """)
@@ -253,7 +263,9 @@ class SuitConeLightTests(LuaCase):
             end
             local E={LuaUserData={RegisterType=function() end,CreateStatic=function() return source end},
                 Vector2=function(x,y) return {X=x,Y=y} end,Color=function() return {} end,LimbType={Head=1}}
-            local owner={AnimController={GetLimb=function() return {body={Rotation=math.pi/4}} end}}
+            local owner={AnimController={GetLimb=function()
+                return {body={Rotation=math.pi/4},WorldPosition={X=100,Y=200}}
+            end}}
             local item={Prefab={ConfigElement={GetChildElement=function(name) assert(name=='LightComponent');return template end}}}
             local s={item=item,owner=owner}
             local G={now=0,energy=function() return power end,
@@ -263,9 +275,37 @@ class SuitConeLightTests(LuaCase):
             G.updateLights(s,false)
             assert(s.lights.helmet.template==template and s.lights.helmet.Range>0)
             assert(s.lights.helmet.Enabled and s.lights.helmet.Rotation==math.pi/4)
+            assert(s.lights.helmet.Position.X>100 and s.lights.helmet.Position.X<111)
+            assert(s.lights.helmet.Position.Y>200 and s.lights.helmet.Position.Y<212)
             facing=-1;G.updateLights(s,false);assert(s.lights.helmet.Rotation==math.pi/4-math.pi)
             power=0;G.updateLights(s,false);assert(s.lights.helmet.Range==650 and not s.lights.helmet.Enabled)
             assert(s.lights.tool.Range>0 and not s.lights.tool.Enabled)
             G.removeLights(s);assert(removed==2 and s.lights==nil)
+        """)
+
+
+class SuitSwimBoostTests(LuaCase):
+    mod_directory = 'System-Aegis-No-Headsets'
+
+    def test_boost_only_applies_to_a_powered_impeller_during_the_swim_step(self):
+        self.lua.execute("""
+            local owner,suit,boost={},{},true
+            local power=10
+            local G={equipped=function(c) assert(c==owner);return suit end,
+                hasImpeller=function() return boost end,
+                energy=function() return power end}
+            local E={Vector2=function(x,y) return {X=x,Y=y} end}
+            local before,after
+            G.patch=function(_,class,method,fn,isAfter)
+                assert(class=='Barotrauma.HumanoidAnimController' and method=='UpdateSwimming')
+                if isAfter then after=fn else before=fn end
+            end
+            require('AegisSuit.swim').install(G,E);G.installSwimBoost()
+            local movement=E.Vector2(2,0)
+            local anim={Character=owner,InWater=true,TargetMovement=movement}
+            before(anim);assert(anim.TargetMovement.X==3);after(anim);assert(anim.TargetMovement==movement)
+            power=0;before(anim);assert(anim.TargetMovement==movement);after(anim)
+            power=10;boost=false;before(anim);assert(anim.TargetMovement==movement);after(anim)
+            boost=true;anim.InWater=false;before(anim);assert(anim.TargetMovement==movement);after(anim)
         """)
 

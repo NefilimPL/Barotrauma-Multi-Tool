@@ -24,20 +24,20 @@
     <ContainedSprite name="Aegis suit holder" allowedcontainertags="divingsuitcontainer" texture="%ModDir%/Assets/AegisSuit/rack-suit.png" sourcerect="0,0,887,1774" origin="0.5,0.5" depth="0.55" compress="true" />
     <Body width="1200" height="430" density="20" />
     <Wearable slots="OuterClothes" msg="ItemMsgEquipSelect" displaycontainedstatus="true" canbeselected="false" canbepicked="true" pickkey="Select">
-      <sprite name="Aegis seal Torso" texture="Content/Items/Diving/Abyss_DivingSuit.png" limb="Torso" hidelimb="true" hideotherwearables="true" inherittexturescale="true" inheritorigin="true" inheritsourcerect="true" depth="0.6" color="65,70,80,255" />
-      <sprite name="Aegis seal Waist" texture="Content/Items/Diving/Abyss_DivingSuit.png" limb="Waist" hidelimb="true" hideotherwearables="true" inherittexturescale="true" inheritorigin="true" inheritsourcerect="true" depth="0.6" color="65,70,80,255" />
-      <sprite name="Aegis seal RightArm" texture="Content/Items/Diving/Abyss_DivingSuit.png" limb="RightArm" hidelimb="true" hideotherwearables="true" inherittexturescale="true" inheritorigin="true" inheritsourcerect="true" depth="0.6" color="65,70,80,255" />
-      <sprite name="Aegis seal LeftArm" texture="Content/Items/Diving/Abyss_DivingSuit.png" limb="LeftArm" hidelimb="true" hideotherwearables="true" inherittexturescale="true" inheritorigin="true" inheritsourcerect="true" depth="0.6" color="65,70,80,255" />
-      <sprite name="Aegis seal RightForearm" texture="Content/Items/Diving/Abyss_DivingSuit.png" limb="RightForearm" hidelimb="true" hideotherwearables="true" inherittexturescale="true" inheritorigin="true" inheritsourcerect="true" depth="0.6" color="65,70,80,255" />
-      <sprite name="Aegis seal LeftForearm" texture="Content/Items/Diving/Abyss_DivingSuit.png" limb="LeftForearm" hidelimb="true" hideotherwearables="true" inherittexturescale="true" inheritorigin="true" inheritsourcerect="true" depth="0.6" color="65,70,80,255" />
-      <sprite name="Aegis seal RightHand" texture="Content/Items/Diving/Abyss_DivingSuit.png" limb="RightHand" hidelimb="true" hideotherwearables="true" inherittexturescale="true" inheritorigin="true" inheritsourcerect="true" depth="0.6" color="65,70,80,255" />
-      <sprite name="Aegis seal LeftHand" texture="Content/Items/Diving/Abyss_DivingSuit.png" limb="LeftHand" hidelimb="true" hideotherwearables="true" inherittexturescale="true" inheritorigin="true" inheritsourcerect="true" depth="0.6" color="65,70,80,255" />
-      <sprite name="Aegis seal RightThigh" texture="Content/Items/Diving/Abyss_DivingSuit.png" limb="RightThigh" hidelimb="true" hideotherwearables="true" inherittexturescale="true" inheritorigin="true" inheritsourcerect="true" depth="0.6" color="65,70,80,255" />
-      <sprite name="Aegis seal LeftThigh" texture="Content/Items/Diving/Abyss_DivingSuit.png" limb="LeftThigh" hidelimb="true" hideotherwearables="true" inherittexturescale="true" inheritorigin="true" inheritsourcerect="true" depth="0.6" color="65,70,80,255" />
-      <sprite name="Aegis seal RightLeg" texture="Content/Items/Diving/Abyss_DivingSuit.png" limb="RightLeg" hidelimb="true" hideotherwearables="true" inherittexturescale="true" inheritorigin="true" inheritsourcerect="true" depth="0.6" color="65,70,80,255" />
-      <sprite name="Aegis seal LeftLeg" texture="Content/Items/Diving/Abyss_DivingSuit.png" limb="LeftLeg" hidelimb="true" hideotherwearables="true" inherittexturescale="true" inheritorigin="true" inheritsourcerect="true" depth="0.6" color="65,70,80,255" />
-      <sprite name="Aegis seal RightFoot" texture="Content/Items/Diving/Abyss_DivingSuit.png" limb="RightFoot" hidelimb="true" hideotherwearables="true" inherittexturescale="true" inheritorigin="true" inheritsourcerect="true" depth="0.6" color="65,70,80,255" />
-      <sprite name="Aegis seal LeftFoot" texture="Content/Items/Diving/Abyss_DivingSuit.png" limb="LeftFoot" hidelimb="true" hideotherwearables="true" inherittexturescale="true" inheritorigin="true" inheritsourcerect="true" depth="0.6" color="65,70,80,255" />
+      <sprite name="Aegis seal Torso" texture="%ModDir%/Assets/AegisSuit/empty-seal.png" limb="Torso" hidelimb="true" hideotherwearables="true" inherittexturescale="false" origin="0.5,0.5" sourcerect="0,0,4,4" depth="0.6" />
+      <sprite name="Aegis seal Waist" texture="%ModDir%/Assets/AegisSuit/empty-seal.png" limb="Waist" hidelimb="true" hideotherwearables="true" inherittexturescale="false" origin="0.5,0.5" sourcerect="0,0,4,4" depth="0.6" />
+      <sprite name="Aegis seal RightArm" texture="%ModDir%/Assets/AegisSuit/empty-seal.png" limb="RightArm" hidelimb="true" hideotherwearables="true" inherittexturescale="false" origin="0.5,0.5" sourcerect="0,0,4,4" depth="0.6" />
+      <sprite name="Aegis seal LeftArm" texture="%ModDir%/Assets/AegisSuit/empty-seal.png" limb="LeftArm" hidelimb="true" hideotherwearables="true" inherittexturescale="false" origin="0.5,0.5" sourcerect="0,0,4,4" depth="0.6" />
+      <sprite name="Aegis seal RightForearm" texture="%ModDir%/Assets/AegisSuit/empty-seal.png" limb="RightForearm" hidelimb="true" hideotherwearables="true" inherittexturescale="false" origin="0.5,0.5" sourcerect="0,0,4,4" depth="0.6" />
+      <sprite name="Aegis seal LeftForearm" texture="%ModDir%/Assets/AegisSuit/empty-seal.png" limb="LeftForearm" hidelimb="true" hideotherwearables="true" inherittexturescale="false" origin="0.5,0.5" sourcerect="0,0,4,4" depth="0.6" />
+      <sprite name="Aegis seal RightHand" texture="%ModDir%/Assets/AegisSuit/empty-seal.png" limb="RightHand" hidelimb="true" hideotherwearables="true" inherittexturescale="false" origin="0.5,0.5" sourcerect="0,0,4,4" depth="0.6" />
+      <sprite name="Aegis seal LeftHand" texture="%ModDir%/Assets/AegisSuit/empty-seal.png" limb="LeftHand" hidelimb="true" hideotherwearables="true" inherittexturescale="false" origin="0.5,0.5" sourcerect="0,0,4,4" depth="0.6" />
+      <sprite name="Aegis seal RightThigh" texture="%ModDir%/Assets/AegisSuit/empty-seal.png" limb="RightThigh" hidelimb="true" hideotherwearables="true" inherittexturescale="false" origin="0.5,0.5" sourcerect="0,0,4,4" depth="0.6" />
+      <sprite name="Aegis seal LeftThigh" texture="%ModDir%/Assets/AegisSuit/empty-seal.png" limb="LeftThigh" hidelimb="true" hideotherwearables="true" inherittexturescale="false" origin="0.5,0.5" sourcerect="0,0,4,4" depth="0.6" />
+      <sprite name="Aegis seal RightLeg" texture="%ModDir%/Assets/AegisSuit/empty-seal.png" limb="RightLeg" hidelimb="true" hideotherwearables="true" inherittexturescale="false" origin="0.5,0.5" sourcerect="0,0,4,4" depth="0.6" />
+      <sprite name="Aegis seal LeftLeg" texture="%ModDir%/Assets/AegisSuit/empty-seal.png" limb="LeftLeg" hidelimb="true" hideotherwearables="true" inherittexturescale="false" origin="0.5,0.5" sourcerect="0,0,4,4" depth="0.6" />
+      <sprite name="Aegis seal RightFoot" texture="%ModDir%/Assets/AegisSuit/empty-seal.png" limb="RightFoot" hidelimb="true" hideotherwearables="true" inherittexturescale="false" origin="0.5,0.5" sourcerect="0,0,4,4" depth="0.6" />
+      <sprite name="Aegis seal LeftFoot" texture="%ModDir%/Assets/AegisSuit/empty-seal.png" limb="LeftFoot" hidelimb="true" hideotherwearables="true" inherittexturescale="false" origin="0.5,0.5" sourcerect="0,0,4,4" depth="0.6" />
       <sprite name="Aegis Head" texture="%ModDir%/Assets/AegisSuit/suit-v2.png" sourcerect="814,5,292,246" limb="Head" scale="0.4" rotation="0" origin="0.5,0.5" hidelimb="false" hideotherwearables="false" inheritlimbdepth="true" inheritscale="true" ignorelimbscale="true" compress="true" depth="0.5" canbehiddenbyotherwearables="false" alphaclipotherwearables="true" />
       <StatusEffect type="OnWearing" target="Character" PressureProtection="10000" setvalue="true" disabledeltatime="true">
         </StatusEffect>
@@ -63,9 +63,9 @@
     <Holdable slots="RightHand+LeftHand" controlpose="true" holdpos="0,-50" handle1="-10,-20" handle2="10,-20" holdangle="45" msg="ItemMsgPickUpUse" canbeselected="false" canbepicked="true" pickkey="Use" />
     <AiTarget sightrange="1500" />
     <LightComponent canbeselected="false" isactive="false" ison="false" range="650" powerconsumption="0" directional="true" castshadows="true">
-      <LightTexture texture="Content/Lights/lightcone.png" origin="0.0,0.5" size="1.0,0.42" />
+      <LightTexture texture="Content/Lights/lightcone.png" origin="0.025,0.5" size="1.0,0.80" />
     </LightComponent>
-    <ItemContainer capacity="1" slotsperrow="3" maxstacksize="1" hideitems="true" keepopenwhenequipped="true" containedstateindicatorstyle="battery">
+    <ItemContainer capacity="1" slotsperrow="3" maxstacksize="1" hideitems="true" keepopenwhenequipped="false" containedstateindicatorstyle="battery">
       <SlotIcon slotindex="0" texture="Content/UI/StatusMonitorUI.png" sourcerect="128,448,128,64" origin="0.5,0.5" />
       <SlotIcon slotindex="1" texture="Content/UI/CommandUIAtlas.png" sourcerect="384,768,128,128" origin="0.5,0.5" />
       <Containable items="mobilebattery" />

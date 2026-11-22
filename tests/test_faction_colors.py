@@ -123,7 +123,8 @@ class FactionContentTests(unittest.TestCase):
             references = [n.get('texture') for n in suit.iter() if n.get('texture', '').startswith('%ModDir%/Assets/')]
             self.assertTrue(references)
             for reference in references:
-                self.assertTrue(reference.startswith('%ModDir%/Assets/Factions/' + key + '/'), reference)
+                self.assertTrue(reference.startswith('%ModDir%/Assets/Factions/' + key + '/')
+                                or reference == '%ModDir%/Assets/AegisSuit/empty-seal.png', reference)
                 self.assertTrue((MOD / reference.removeprefix('%ModDir%/')).is_file(), reference)
             for kind in ('servo', 'impeller'):
                 reference = items[identifier(kind, key)].find('InventoryIcon').get('texture')

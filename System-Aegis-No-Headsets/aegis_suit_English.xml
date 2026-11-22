@@ -31,4 +31,8 @@
   <entityname.aegiscompressormodule>Aegis air compressor</entityname.aegiscompressormodule>
   <entitydescription.aegiscompressormodule>Install in suit slot 5 and put an oxygen tank in slot 6. The compressor uses battery power to refill a standard tank in dry, breathable air.</entitydescription.aegiscompressormodule>
   <aegis.compressor_module>Compressor</aegis.compressor_module>
+  <aegis.slots_show>Show slots</aegis.slots_show>
+  <aegis.slots_hide>Hide slots</aegis.slots_hide>
+  <aegis.impeller_active>active</aegis.impeller_active>
+  <aegis.repair_short>Repair</aegis.repair_short>
 </infotexts>
