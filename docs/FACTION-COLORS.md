@@ -1,10 +1,10 @@
-# Kolory frakcji — System Aegis 1.6.0
+# Kolory frakcji — System Aegis 1.6.1
 
 System Aegis zawiera sześć kosmetycznych zestawów kombinezonu,
 ramienia serwo i wirnika. Wybierz wariant po nazwie frakcji w fabrykatorze
 lub sklepie. Warianty mają takie same receptury, koszty, ochronę i funkcje.
 
-[Podgląd wszystkich palet](faction-colors/preview.html) · [ZIP 1.6.0](../output/System-Aegis-1.6.0.zip)
+[Podgląd wszystkich palet](faction-colors/preview.html) · [ZIP 1.6.1](../output/System-Aegis-1.6.1.zip)
 
 | Frakcja | Kolor | Emblemat i detale |
 |---|---|---|

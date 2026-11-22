@@ -19,8 +19,11 @@ function M.install(G,E)
         if not s.lights then
             local template=s.item.Prefab.ConfigElement.GetChildElement('LightComponent')
             s.lights={helmet=Source(template),
-                tool=Source(E.Vector2(0,0),0,E.Color(0,0,0,0),nil)}
+                tool=Source(E.Vector2(0,0),120,E.Color(185,220,255,110),nil)}
         end
+        -- Keep a valid shadow volume while switching power. A zero-radius source
+        -- can leave the native renderer with an empty pending raycast polygon.
+        s.lights.helmet.Enabled=false;s.lights.tool.Enabled=false
         local powered=G.energy(s.item)>0
         local head,rotation,facing=G.attachment(owner,8,48)
         local anim=owner.AnimController
@@ -34,14 +37,14 @@ function M.install(G,E)
             E.Game.ParticleManager.CreateParticle(particle,E.Vector2(muzzle.x,muzzle.y),E.Vector2.Zero,-pose.angle)
         end
         local point=s.target and s.target.point or muzzle
-        move(s.lights.helmet,owner,head,powered and 650 or 0,E.Color(190,220,255,170))
+        move(s.lights.helmet,owner,head,650,E.Color(190,220,255,170))
         s.lights.helmet.Rotation=angle+((facing or 1)<0 and -math.pi or 0)
         s.lights.helmet.Enabled=powered
         local repairing=s.active and s.target and (s.target.kind=='repair' or s.target.kind=='weld')
         local color=flash and E.Color(255,60,65,230) or repairing and E.Color(60,175,255,210) or E.Color(185,220,255,110)
         if flash and s.ballisticShot then color=E.Color(255,202,128,200) end
         local toolActive=powered and s.hasArm==true and (flash or repairing)
-        move(s.lights.tool,owner,repairing and point or muzzle,toolActive and (flash and 300 or 120) or 0,color)
+        move(s.lights.tool,owner,repairing and point or muzzle,flash and 300 or 120,color)
         s.lights.tool.Enabled=toolActive==true
     end
 end

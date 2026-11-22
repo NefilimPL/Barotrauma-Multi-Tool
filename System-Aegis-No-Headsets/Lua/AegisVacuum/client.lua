@@ -186,7 +186,7 @@ function M.install(G,E)
                     if E.Color then cell.Color=E.Color(53,72,65,230) end
                     cell.ToolTip=string.format('%s\n×%d | %.0f%% | Q%d',row.name,row.count,row.condition,row.quality)
                     if row.protected then
-                        cell.ToolTip=cell.ToolTip..'\n'..text('protected')
+                        cell.ToolTip=tostring(cell.ToolTip)..'\n'..text('protected')
                         if E.Color then cell.Color=E.Color(47,109,62,230) end
                     end
                     local ok,prefab=pcall(function() return E.ItemPrefab.Prefabs[row.kind] end)

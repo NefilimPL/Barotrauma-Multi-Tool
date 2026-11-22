@@ -104,18 +104,19 @@ function M.install(E)
             H.damageButton.Text=text('damage')..': '..text(flags and flags.damage and 'on' or 'off')
             local power=tool.OwnInventory and tool.OwnInventory.GetItemAt(0)
             local charge=power and power.MaxCondition>0 and math.floor(power.Condition/power.MaxCondition*100) or 0
-            status.Text=text('power')..': '..charge..'%'
+            local statusText=text('power')..': '..tostring(charge)..'%'
             if combat then
                 local cartridge=tool.OwnInventory and tool.OwnInventory.GetItemAt(1)
                 local installed=U.itemId(cartridge)=='aegisshieldmodule'
                 local charges=E.AegisCombat and E.AegisCombat.shieldCharges(tool) or 0
-                status.Text=status.Text..' | '..text('shield')..': '..(installed and (charges..'/5') or text('missing'))
+                statusText=statusText..' | '..text('shield')..': '..(installed and (tostring(charges)..'/5') or text('missing'))
                 H.status.RectTransform.RelativeOffset=E.Vector2(.05,.72)
                 H.status.RectTransform.Resize(E.Vector2(.90,.25))
             else
                 H.status.RectTransform.RelativeOffset=E.Vector2(.05,.73)
                 H.status.RectTransform.Resize(E.Vector2(.90,.25))
             end
+            status.Text=statusText
         end
         if suit then
             local s=E.AegisSuit.state(suit)

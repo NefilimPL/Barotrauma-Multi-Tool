@@ -62,7 +62,7 @@
     </Wearable>
     <Holdable slots="RightHand+LeftHand" controlpose="true" holdpos="0,-50" handle1="-10,-20" handle2="10,-20" holdangle="45" msg="ItemMsgPickUpUse" canbeselected="false" canbepicked="true" pickkey="Use" />
     <AiTarget sightrange="1500" />
-    <LightComponent canbeselected="false" isactive="false" ison="false" range="0" powerconsumption="0" directional="true" castshadows="true">
+    <LightComponent canbeselected="false" isactive="false" ison="false" range="650" powerconsumption="0" directional="true" castshadows="true">
       <LightTexture texture="Content/Lights/lightcone.png" origin="0.0,0.5" size="1.0,0.42" />
     </LightComponent>
     <ItemContainer capacity="1" slotsperrow="4" maxstacksize="1" hideitems="true" keepopenwhenequipped="true" containedstateindicatorstyle="battery">
@@ -203,7 +203,7 @@
     </Wearable>
     <Holdable slots="RightHand+LeftHand" controlpose="true" holdpos="0,-50" handle1="-10,-20" handle2="10,-20" holdangle="45" msg="ItemMsgPickUpUse" canbeselected="false" canbepicked="true" pickkey="Use" />
     <AiTarget sightrange="1500" />
-    <LightComponent canbeselected="false" isactive="false" ison="false" range="0" powerconsumption="0" directional="true" castshadows="true">
+    <LightComponent canbeselected="false" isactive="false" ison="false" range="650" powerconsumption="0" directional="true" castshadows="true">
       <LightTexture texture="Content/Lights/lightcone.png" origin="0.0,0.5" size="1.0,0.42" />
     </LightComponent>
     <ItemContainer capacity="1" slotsperrow="4" maxstacksize="1" hideitems="true" keepopenwhenequipped="true" containedstateindicatorstyle="battery">
@@ -344,7 +344,7 @@
     </Wearable>
     <Holdable slots="RightHand+LeftHand" controlpose="true" holdpos="0,-50" handle1="-10,-20" handle2="10,-20" holdangle="45" msg="ItemMsgPickUpUse" canbeselected="false" canbepicked="true" pickkey="Use" />
     <AiTarget sightrange="1500" />
-    <LightComponent canbeselected="false" isactive="false" ison="false" range="0" powerconsumption="0" directional="true" castshadows="true">
+    <LightComponent canbeselected="false" isactive="false" ison="false" range="650" powerconsumption="0" directional="true" castshadows="true">
       <LightTexture texture="Content/Lights/lightcone.png" origin="0.0,0.5" size="1.0,0.42" />
     </LightComponent>
     <ItemContainer capacity="1" slotsperrow="4" maxstacksize="1" hideitems="true" keepopenwhenequipped="true" containedstateindicatorstyle="battery">
@@ -485,7 +485,7 @@
     </Wearable>
     <Holdable slots="RightHand+LeftHand" controlpose="true" holdpos="0,-50" handle1="-10,-20" handle2="10,-20" holdangle="45" msg="ItemMsgPickUpUse" canbeselected="false" canbepicked="true" pickkey="Use" />
     <AiTarget sightrange="1500" />
-    <LightComponent canbeselected="false" isactive="false" ison="false" range="0" powerconsumption="0" directional="true" castshadows="true">
+    <LightComponent canbeselected="false" isactive="false" ison="false" range="650" powerconsumption="0" directional="true" castshadows="true">
       <LightTexture texture="Content/Lights/lightcone.png" origin="0.0,0.5" size="1.0,0.42" />
     </LightComponent>
     <ItemContainer capacity="1" slotsperrow="4" maxstacksize="1" hideitems="true" keepopenwhenequipped="true" containedstateindicatorstyle="battery">
@@ -626,7 +626,7 @@
     </Wearable>
     <Holdable slots="RightHand+LeftHand" controlpose="true" holdpos="0,-50" handle1="-10,-20" handle2="10,-20" holdangle="45" msg="ItemMsgPickUpUse" canbeselected="false" canbepicked="true" pickkey="Use" />
     <AiTarget sightrange="1500" />
-    <LightComponent canbeselected="false" isactive="false" ison="false" range="0" powerconsumption="0" directional="true" castshadows="true">
+    <LightComponent canbeselected="false" isactive="false" ison="false" range="650" powerconsumption="0" directional="true" castshadows="true">
       <LightTexture texture="Content/Lights/lightcone.png" origin="0.0,0.5" size="1.0,0.42" />
     </LightComponent>
     <ItemContainer capacity="1" slotsperrow="4" maxstacksize="1" hideitems="true" keepopenwhenequipped="true" containedstateindicatorstyle="battery">

@@ -36,6 +36,7 @@ class PresentationContentTests(unittest.TestCase):
         self.assertEqual(len(lights), 8)
         for light in lights:
             self.assertIsNotNone(light)
+            self.assertGreater(float(light.get('range')),0)
             self.assertEqual(light.get('directional'), 'true')
             texture = light.find('LightTexture')
             self.assertEqual(texture.get('texture'), 'Content/Lights/lightcone.png')
@@ -164,6 +165,24 @@ class CombinedPanelClientTests(LuaCase):
             H=require('AegisHUD.client').install(E)
         """)
 
+    def test_native_localized_text_userdata_does_not_break_combined_panel(self):
+        class LocalizedText:
+            def __init__(self, value):
+                self.value = value
+            def __str__(self):
+                return str(self.value)
+        self.lua.globals().native_text = LocalizedText
+        self.lua.execute("""
+            local w=H.status;local value=w.Text;rawset(w,'Text',nil)
+            setmetatable(w,{
+                __index=function(_,key) if key=='Text' then return native_text(value) end end,
+                __newindex=function(t,key,v) if key=='Text' then value=v else rawset(t,key,v) end end})
+            H.update(.1)
+            assert(type(H.status.Text)=='userdata')
+            assert(tostring(H.status.Text):find('3/5',1,true))
+            assert(H.panel.Visible and H.toolHost.Visible and H.armHost.Visible)
+        """)
+
     def test_native_hud_filter_preserves_server_authorization_and_other_components(self):
         self.lua.execute("""
             ci.Item=tool;local p={};assert(nativePatch(ci,p)==false and p.PreventExecution)
@@ -227,7 +246,8 @@ class SuitConeLightTests(LuaCase):
     def test_helmet_uses_native_cone_template_follows_head_and_loses_power(self):
         self.lua.execute("""
             local template={cone=true};local sources={};local removed=0;local facing=1;local power=100
-            local function source(arg)
+            local function source(arg,radius)
+                assert(radius==nil or radius>0,"zero-radius light constructor")
                 local light={template=arg,Remove=function() removed=removed+1 end}
                 sources[#sources+1]=light;return light
             end
@@ -244,7 +264,8 @@ class SuitConeLightTests(LuaCase):
             assert(s.lights.helmet.template==template and s.lights.helmet.Range>0)
             assert(s.lights.helmet.Enabled and s.lights.helmet.Rotation==math.pi/4)
             facing=-1;G.updateLights(s,false);assert(s.lights.helmet.Rotation==math.pi/4-math.pi)
-            power=0;G.updateLights(s,false);assert(s.lights.helmet.Range==0 and not s.lights.helmet.Enabled)
+            power=0;G.updateLights(s,false);assert(s.lights.helmet.Range==650 and not s.lights.helmet.Enabled)
+            assert(s.lights.tool.Range>0 and not s.lights.tool.Enabled)
             G.removeLights(s);assert(removed==2 and s.lights==nil)
         """)
 

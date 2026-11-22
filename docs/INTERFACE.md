@@ -1,4 +1,6 @@
-# Panel i ochrona — System Aegis 1.6.0
+# Panel i ochrona — System Aegis 1.6.1
+
+[Poprawki błędów i wyniki sprawdzeń 1.6.1](HOTFIX-1.6.1.md).
 
 Przy trzymaniu multitoola lub noszeniu kombinezonu po prawej jest jeden panel AEGIS.
 Przycisk `>` zwija całość do małej zakładki ze stanem sprzętu. Kliknięcie zakładki
@@ -24,4 +26,4 @@ Dotychczas zapisane reguły nadal działają.
 Latarki mają wąski stożek zamiast oświetlania całego otoczenia. Wkład tarczy jest
 widoczny jako przedmiot w slocie broni, bez dużej kopii nakładanej na jej grafikę.
 
-[Gotowy ZIP](../output/System-Aegis-1.6.0.zip) · [Sloty, moduły i craftowanie](NO-HEADSETS.md)
+[Gotowy ZIP](../output/System-Aegis-1.6.1.zip) · [Sloty, moduły i craftowanie](NO-HEADSETS.md)

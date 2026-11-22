@@ -1,7 +1,7 @@
-# System Aegis 1.6.0
+# System Aegis 1.6.1
 
 Archiwum zawiera kompletny folder moda `System-Aegis/`.
-[Gotowy ZIP](../output/System-Aegis-1.6.0.zip).
+[Gotowy ZIP](../output/System-Aegis-1.6.1.zip).
 
 
 W tym wariancie są odkurzacz z plecakiem, kombinezon Aegis, bojowy multitool,
