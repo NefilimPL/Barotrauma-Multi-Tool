@@ -1,10 +1,10 @@
-# Kombinezony frakcji w Systemie Aegis 1.8.1
+# Kombinezony frakcji w Systemie Aegis 1.8.2
 
 Każda z sześciu frakcji ma własny krój kombinezonu, hełm i osłony osprzętu.
 Rozpoznasz zestawy po kształtach, materiale i widocznych oznaczeniach.
 Warianty mają te same receptury, ochronę i funkcje.
 
-[Porównaj kombinezony](faction-colors/preview.html) · [ZIP 1.8.1](../output/System-Aegis-1.8.1.zip)
+[Porównaj kombinezony](faction-colors/preview.html) · [ZIP 1.8.2](../output/System-Aegis-1.8.2.zip)
 
 | Frakcja | Motyw |
 |---|---|

@@ -117,7 +117,6 @@
         <RequiredItem items="reactorfuel" type="Contained" />
         <Affliction identifier="aegis_fuelrod_repairboost" amount="1" />
       </StatusEffect>
-      <!-- Passive skills are granted by the shared authoritative Lua timer. -->
     </Holdable>
     <ItemComponent characterusable="true">
       <RequiredItems identifier="aegistoolcutter" type="Contained" excludebroken="false" excludefullcondition="true" />
