@@ -11,7 +11,6 @@ local ok,err=pcall(function()
     require('AegisCombat.physics').install(G,_G)
     require('AegisCombat.network').install(G,_G)
     if G.authoritative then
-        require('AegisCombat.passive_skills').install(G,_G)
         require('AegisCombat.shield').install(G,_G)
         require('AegisCombat.projectiles').install(G,_G)
     end

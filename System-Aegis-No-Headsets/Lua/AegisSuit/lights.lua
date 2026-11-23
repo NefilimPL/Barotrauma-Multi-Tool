@@ -17,11 +17,24 @@ function M.install(G,E)
         local owner=s.owner or (G.owner and G.owner(s.item))
         if not owner then G.removeLights(s);return end
         if not s.lights then
-            s.lights={helmet=Source(E.Vector2(0,0),0,E.Color(0,0,0,0),nil),
-                tool=Source(E.Vector2(0,0),0,E.Color(0,0,0,0),nil)}
+            local template=s.item.Prefab.ConfigElement.GetChildElement('LightComponent')
+            s.lights={helmet=Source(template),
+                tool=Source(E.Vector2(0,0),120,E.Color(185,220,255,110),nil)}
         end
+        -- Keep a valid shadow volume while switching power. A zero-radius source
+        -- can leave the native renderer with an empty pending raycast polygon.
+        s.lights.helmet.Enabled=false;s.lights.tool.Enabled=false
         local powered=G.energy(s.item)>0
-        local head=G.attachment(owner,8,48)
+        local head,rotation,facing=G.attachment(owner,8,48)
+        local anim=owner.AnimController
+        local limb=anim and anim.GetLimb and anim.GetLimb(E.LimbType.Head)
+        local angle=limb and limb.body and limb.body.Rotation or rotation or 0
+        local direction=angle+((facing or 1)<0 and -math.pi or 0)
+        if limb and limb.WorldPosition then
+            local point=limb.WorldPosition
+            head={x=point.X+math.cos(direction)*10-math.sin(angle)*5,
+                y=point.Y+math.sin(direction)*10+math.cos(angle)*5}
+        end
         local flash=s.lastPulse and G.now-(s.shotTime or -100)<C.pulseDuration
         local pose=G.toolPose(owner,s,true,flash and s.lastPulse or nil)
         local muzzle=pose.muzzle
@@ -30,11 +43,15 @@ function M.install(G,E)
             E.Game.ParticleManager.CreateParticle(particle,E.Vector2(muzzle.x,muzzle.y),E.Vector2.Zero,-pose.angle)
         end
         local point=s.target and s.target.point or muzzle
-        move(s.lights.helmet,owner,head,powered and 420 or 0,E.Color(190,220,255,170))
+        move(s.lights.helmet,owner,head,650,E.Color(225,237,255,175))
+        s.lights.helmet.Rotation=direction
+        s.lights.helmet.Enabled=powered
         local repairing=s.active and s.target and (s.target.kind=='repair' or s.target.kind=='weld')
         local color=flash and E.Color(255,60,65,230) or repairing and E.Color(60,175,255,210) or E.Color(185,220,255,110)
         if flash and s.ballisticShot then color=E.Color(255,202,128,200) end
-        move(s.lights.tool,owner,repairing and point or muzzle,powered and (flash and 300 or 220) or 0,color)
+        local toolActive=powered and s.hasArm==true and (flash or repairing)
+        move(s.lights.tool,owner,repairing and point or muzzle,flash and 300 or 120,color)
+        s.lights.tool.Enabled=toolActive==true
     end
 end
 return M

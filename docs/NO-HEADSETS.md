@@ -1,29 +1,30 @@
-# System Aegis 1.5.2 — wersja bez komunikatorów
+# System Aegis 1.8.10
 
-Osobny, kompletny folder moda: `System-Aegis-No-Headsets/`.
-[Gotowy ZIP](../output/System-Aegis-No-Headsets-1.5.2.zip).
-Pełna wersja `System-Aegis/` pozostaje bez zmian.
+Archiwum zawiera kompletny folder moda `System-Aegis/`.
+[Gotowy ZIP](../output/System-Aegis-1.8.10.zip).
+
 
 W tym wariancie są odkurzacz z plecakiem, kombinezon Aegis, bojowy multitool,
 kompozytowy multitool i klucz-śrubokręt. Nie zawiera komunikatorów Aegis,
 ich regeneracji, osłon, skryptów ani zasobów. Wymaga LuaCs na kliencie i serwerze.
 
-[Kolory, emblematy i detale frakcji](FACTION-COLORS.md) · [Podgląd palet](faction-colors/preview.html)
+[Kroje, hełmy i wyposażenie frakcji](FACTION-COLORS.md) · [Podgląd palet](faction-colors/preview.html)
 
 ## Instalacja
 
-1. Skopiuj `System-Aegis-No-Headsets` do `Barotrauma/LocalMods/`.
-2. Włącz pakiet **System Aegis (No Headsets)**. Włączaj jedną wersję Aegis naraz,
+1. Skopiuj folder `System-Aegis` z archiwum do `Barotrauma/LocalMods/`.
+2. Włącz pakiet **System Aegis**. Włączaj jedną wersję Aegis naraz,
    ponieważ wersje używają tych samych identyfikatorów wyposażenia.
-3. Uruchom grę ponownie. Utwórz nowe egzemplarze broni i kombinezonu,
-   aby mieć nowe sloty. Moduły wytwarza się i wkłada osobno; nie są dołączane
-   przy zakupie ani wytworzeniu wyposażenia.
+3. Uruchom grę ponownie. Moduły wytwarza się i wkłada osobno.
+   Przy aktualizacji kombinezonu wyjmij pręt paliwowy i włóż baterię.
+
+[Nowy panel i ochrona przed rozbiórką](INTERFACE.md).
 
 ## Używanie bez modułów
 
 Można założyć sam kombinezon. Bez serwa nie działa ramię, a bez wirnika napęd.
-Podstawowa ochrona, oddychanie, światła i sonar pozostają dostępne zgodnie
-z wymaganiami zasilania. Bojowy multitool bez wkładu tarczy nadal działa jako
+Kombinezon chroni przed ciśnieniem. Ramię, napęd, sonar i latarka potrzebują baterii.
+Do oddychania poza bezpiecznym powietrzem potrzebna jest osobna butla. Bojowy multitool bez wkładu tarczy nadal działa jako
 broń i narzędzie, lecz nie blokuje pocisków. Pozostałe multitoole nie potrzebują
 wkładu tarczy. Moduły są osobnymi przedmiotami wkładanymi do slotów, nie bonusami
 odblokowywanymi samym posiadaniem ich w ekwipunku.
@@ -65,16 +66,28 @@ przed atakami od tyłu, ciśnieniem ani pobliskimi eksplozjami.
 
 | Slot | Zawartość | Rola |
 |---|---|---|
-| 1 | Bateria lub pręt paliwowy | Zasilanie |
+| 1 | Bateria | Zasilanie |
 | 2 | Obsługiwana skrzynka amunicji | Amunicja ramienia |
 | 3 | Moduł serwa (`aegisservomodule`) | Naprawa, spawanie, obrona i chwytak |
 | 4 | Moduł wirnika (`aegisimpellermodule`) | Wspomaganie pływania |
+| 5 | Kompresor (`aegiscompressormodule`) | Automatyczne napełnianie zwykłej butli |
+| 6 | Butla tlenowa | Zapas do oddychania |
 
 Bez serwa nie ma ramienia ani jego funkcji; przyciski ramienia są nieaktywne.
 Wyjęcie serwa zwalnia trzymany cel, zatrzymuje naprawę i anuluje oczekujący
-strzał. Bez wirnika nie działa napęd. Obieg oddechowy, sonar i oświetlenie
-nadal korzystają ze źródła zasilania niezależnie od tych modułów.
-Panel kombinezonu pokazuje obecność lub brak obu modułów.
+strzał. Wirnik z baterią zwiększa docelową prędkość pływania o 50%. Panel pokazuje
+poziom tlenu, zamontowane moduły oraz pracę napędu. Przycisk **Pokaż sloty**
+otwiera natywną siatkę modułów, baterii i amunicji. Zwiń panel Aegis albo
+kliknij **Schowaj sloty**, aby ją zamknąć.
+
+W suchym pomieszczeniu z bezpiecznym powietrzem postać oddycha z otoczenia.
+Kompresor uzupełnia wtedy zwykłą butlę w tempie 2% na sekundę i zużywa 0,2%
+baterii na sekundę pracy. Pod wodą, w próżni i w niebezpiecznej atmosferze
+postać oddycha z butli także przy rozładowanej baterii. Kompresor obsługuje
+butle oznaczone w grze jako napełnialne.
+
+Boty noszące Aegis montują dostępne serwa, wirniki i kompresory. Przy 10% tlenu
+lub mniej szukają pełniejszej butli przed pozostałym wyposażeniem.
 
 ## Craftowanie
 
@@ -86,6 +99,7 @@ sprzedawane przez sklepy. Podane poziomy oznaczają mechanikę / elektrykę.
 | Wkład tarczy | 2 stopy tytanowo-aluminiowe, 2 miedzi, 1 FPGA, 1 fulgurium | 30 s | 45 / 55 |
 | Moduł serwa | 2 stopy tytanowo-aluminiowe, 2 miedzi, 1 FPGA, 1 stal | 40 s | 60 / 40 |
 | Moduł wirnika | 2 stale, 1 stop tytanowo-aluminiowy, 1 miedź, 1 plastik | 30 s | 50 / 25 |
+| Kompresor | 1 stal, 1 miedź, 1 plastik, 1 FPGA | 30 s | 45 / 25 |
 
 Receptury są w `aegis_modules.xml`. Limit blokad i regenerację ustawiają
 `shieldCharges` oraz `shieldRechargeSeconds` w `Lua/AegisCombat/config.lua`.
@@ -99,6 +113,8 @@ spawnitem aegisshieldmodule inventory 1
 spawnitem aegisservosuit inventory 1
 spawnitem aegisservomodule inventory 1
 spawnitem aegisimpellermodule inventory 1
+spawnitem aegiscompressormodule inventory 1
+spawnitem oxygentank inventory 1
 spawnitem batterycell inventory 3
 spawnitem pulselaserammobox inventory 1
 spawnitem aegisvacuum inventory 1
@@ -119,7 +135,8 @@ ikona ekwipunku i ikona nowego slotu:
 - [Moduł serwa](../System-Aegis-No-Headsets/Assets/AegisModules/servo-module.png)
 - [Wirnik](../System-Aegis-No-Headsets/Assets/AegisModules/impeller-module.png)
 
-Wygenerowano wbudowanym narzędziem image generation, bez skalowania lub
+Kompresor korzysta ze sprite’a przenośnej pompy z gry. Pozostałe grafiki
+wygenerowano wbudowanym narzędziem image generation, bez skalowania lub
 przemalowywania plików źródłowych. [Komplet promptów](modular-assets/PROMPTS.md).
 
 ## Sprawdzenia
@@ -127,7 +144,7 @@ przemalowywania plików źródłowych. [Komplet promptów](modular-assets/PROMPT
 ```powershell
 python tools/run_tests.py
 python tools/validate_content.py --mod System-Aegis-No-Headsets --game 'D:/SteamLibrary/steamapps/common/Barotrauma'
-python tools/package_mod.py --mod System-Aegis-No-Headsets
+python tools/package_mod.py --mod System-Aegis-No-Headsets --package-name System-Aegis
 ```
 
 Testy obejmują limit blokad, kolejkę regeneracji, brak zasilania, pauzę,
@@ -135,4 +152,3 @@ przekładanie i odtwarzanie wkładu, natywny float stanu, przechwytywanie pocisk
 limit predykcji klienta, synchronizację modułów, przerwanie naprawy oraz
 anulowanie strzału po wyjęciu serwa. Sprawdzono XML, składnię Lua 5.2,
 referencje i przezroczystość grafik oraz identyfikatory materiałów z gry.
-Próba rozgrywki tego wariantu w silniku gry nie była jeszcze wykonywana.

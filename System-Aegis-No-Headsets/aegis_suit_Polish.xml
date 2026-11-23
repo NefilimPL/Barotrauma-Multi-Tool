@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <infotexts language="Polish" nowhitespace="false" translatedname="Polski">
   <entityname.aegisservosuit>Kombinezon serwomanipulacyjny Aegis — Piraci</entityname.aegisservosuit>
-  <entitydescription.aegisservosuit>Egzoszkielet do 10 000 m. Cztery sloty kolejno: bateria/pręt, amunicja, osobno craftowany moduł serwa i osobno craftowany wirnik. Moduły nie są dołączane za darmo. Ramię wymaga serwa, wspomaganie pływania wymaga wirnika. Wyjęcie serwa zwalnia trzymany cel i zatrzymuje naprawę oraz strzelanie. Obieg oddechowy, sonar i światła działają bez tych modułów. Wymaga LuaCs na kliencie i serwerze.</entitydescription.aegisservosuit>
+  <entitydescription.aegisservosuit>Egzoszkielet do 10 000 m. Sloty: bateria, amunicja, serwo, wirnik, kompresor i butla tlenowa. Do napędu, ramienia, sonaru i latarki potrzebna jest bateria. Pod wodą kombinezon zużywa tlen z butli. Kompresor napełnia butlę w bezpiecznym powietrzu. Moduły wytwarza się osobno. Wymaga LuaCs na kliencie i serwerze.</entitydescription.aegisservosuit>
   <aegis.title>Ramię serwomanipulacyjne</aegis.title>
   <aegis.off>Ramię wyłączone</aegis.off>
   <aegis.on>Ramię włączone</aegis.on>
@@ -28,4 +28,11 @@
   <aegis.impeller_module>Wirnik</aegis.impeller_module>
   <aegis.installed>włożony</aegis.installed>
   <aegis.missing>brak</aegis.missing>
+  <entityname.aegiscompressormodule>Kompresor powietrza Aegis</entityname.aegiscompressormodule>
+  <entitydescription.aegiscompressormodule>Włóż do slotu 5 kombinezonu, a butlę tlenową do slotu 6. Zasilany baterią kompresor automatycznie napełnia zwykłą butlę w suchym pomieszczeniu z bezpiecznym powietrzem.</entitydescription.aegiscompressormodule>
+  <aegis.compressor_module>Kompresor</aegis.compressor_module>
+  <aegis.slots_show>Pokaż sloty</aegis.slots_show>
+  <aegis.slots_hide>Schowaj sloty</aegis.slots_hide>
+  <aegis.impeller_active>aktywny</aegis.impeller_active>
+  <aegis.repair_short>Naprawa</aegis.repair_short>
 </infotexts>

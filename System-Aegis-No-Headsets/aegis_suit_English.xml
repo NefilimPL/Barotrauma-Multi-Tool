@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <infotexts language="English" nowhitespace="false" translatedname="English">
   <entityname.aegisservosuit>Aegis servo suit — Pirates</entityname.aegisservosuit>
-  <entitydescription.aegisservosuit>Powered exosuit rated to 10,000 m. Four slots in order: battery/reactor rod, ammunition, separately crafted servo arm module, separately crafted impeller module. No free modules are included. Arm functions require the servo; powered swimming requires the impeller. Removing the servo releases held targets and stops repair and firing. Life support, sonar and lights work without these modules. Requires client and server LuaCs.</entitydescription.aegisservosuit>
+  <entitydescription.aegisservosuit>Exosuit rated to 10,000 m. Slots: battery, ammunition, servo, impeller, compressor and oxygen tank. The arm, thruster, sonar and light require a battery. The suit draws from the tank underwater. The compressor refills the tank in breathable air. Craft modules separately. Requires client and server LuaCs.</entitydescription.aegisservosuit>
   <aegis.title>Servo arm</aegis.title>
   <aegis.off>Arm off</aegis.off>
   <aegis.on>Arm on</aegis.on>
@@ -28,4 +28,11 @@
   <aegis.impeller_module>Impeller</aegis.impeller_module>
   <aegis.installed>installed</aegis.installed>
   <aegis.missing>missing</aegis.missing>
+  <entityname.aegiscompressormodule>Aegis air compressor</entityname.aegiscompressormodule>
+  <entitydescription.aegiscompressormodule>Install in suit slot 5 and put an oxygen tank in slot 6. The compressor uses battery power to refill a standard tank in dry, breathable air.</entitydescription.aegiscompressormodule>
+  <aegis.compressor_module>Compressor</aegis.compressor_module>
+  <aegis.slots_show>Show slots</aegis.slots_show>
+  <aegis.slots_hide>Hide slots</aegis.slots_hide>
+  <aegis.impeller_active>active</aegis.impeller_active>
+  <aegis.repair_short>Repair</aegis.repair_short>
 </infotexts>

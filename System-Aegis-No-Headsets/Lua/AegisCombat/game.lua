@@ -144,13 +144,11 @@ function Module.new(E)
         AI.executing={}
         AI.activeCombat={}
         if G.clearProjectiles then G.clearProjectiles() end
-        if G.clearPassiveSkills then G.clearPassiveSkills() end
         if G.clearShieldTracking then G.clearShieldTracking() end
         if G.clearVisuals then G.clearVisuals() end
     end
     function G.dispose()
         G.cleanup()
-        if G.disposePassiveSkills then G.disposePassiveSkills() end
         if G.disposeDiagnostics then G.disposeDiagnostics() end
         if E.Hook and E.Hook.Remove then
             E.Hook.Remove('think','aegis.combat.update')

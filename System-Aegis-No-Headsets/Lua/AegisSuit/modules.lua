@@ -1,13 +1,23 @@
 local C=require('AegisSuit.config')
 local Factions=require('AegisSuit.factions')
+local U=require('AegisCombat.util')
 local M={}
+local slots={servo=C.servoSlot,impeller=C.impellerSlot,compressor=C.compressorSlot}
+function M.matches(part,kind)
+    if not part or part.Removed then return false end
+    if kind=='compressor' then return U.itemId(part)=='aegiscompressormodule' end
+    return Factions.is(part,kind)
+end
+function M.is(part,kind)
+    return M.matches(part,kind) and part.Condition>0
+end
 function M.install(G,E)
     function G.module(item,kind)
-        local slot=kind=='servo' and C.servoSlot or kind=='impeller' and C.impellerSlot or nil
+        local slot=slots[kind]
         if not slot then return nil end
         local inv=G.container(item,1)
         local part=inv and inv.GetItemAt(slot)
-        if part and not part.Removed and part.Condition>0 and Factions.is(part,kind) then return part end
+        if M.is(part,kind) then return part end
     end
     function G.hasArm(item) return G.module(item,'servo')~=nil end
     function G.hasImpeller(item) return G.module(item,'impeller')~=nil end

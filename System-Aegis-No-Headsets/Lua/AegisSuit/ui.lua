@@ -1,5 +1,6 @@
 local C=require('AegisSuit.config')
 local Ammo=require('AegisSuit.ammo')
+local U=require('AegisCombat.util')
 local M={}
 function M.layout(powered,expanded,width,height)
     local side=math.floor(math.min(240,width*.22,height*.27))
@@ -16,31 +17,56 @@ function M.install(G,E)
     local function button(parent,x,y,w,h,label,fn)
         local b=UI.Button(rect(parent,x,y,w,h),label)
         b.SelectedColor=E.Color(95,150,125,255)
+        if b.TextBlock then b.TextBlock.AutoScaleHorizontal=true end
         b.OnClicked=function() fn();return true end
         return b
     end
     local function equipped() return G.equipped(E.Character.Controlled) end
-    local panel=UI.Frame(UI.RectTransform(E.Vector2(.24,.40),gui.Canvas,UI.Anchor.CenterRight),'GUIFrame')
+    local hud=E.AegisHUD
+    local panel=UI.Frame(UI.RectTransform(E.Vector2(hud and 1 or .24,hud and 1 or .40),
+        hud and hud.armHost.RectTransform or gui.Canvas,hud and UI.Anchor.TopLeft or UI.Anchor.CenterRight),'GUIFrame')
     G.panel=panel
     local panelOpen,sonarOpen=true,false
+    local slots
+    local function closeSlots()
+        if not slots then return end
+        if not slots.Item.Removed then
+            slots.KeepOpenWhenEquipped=false
+            slots.Inventory.HideTimer=0
+            slots.Inventory.OpenState=0
+        end
+        slots=nil
+    end
     UI.TextBlock(rect(panel,.05,.02,.79,.10),text('title'))
-    G.panelHideButton=button(panel,.87,.02,.10,.10,'»',function() panelOpen=false end)
+    G.panelHideButton=button(panel,.87,.02,.10,.10,'»',function() panelOpen=false;closeSlots() end)
+    G.panelHideButton.Visible=not hud
     G.panelHideButton.ToolTip=text('hide_panel')
     local rightTab=UI.Button(UI.RectTransform(E.Vector2(.075,.052),gui.Canvas,UI.Anchor.CenterRight),text('arm_tab'))
     G.panelShowButton=rightTab
     rightTab.OnClicked=function() panelOpen=true;return true end
     local buttons={}
     for n,mode in ipairs({'off','repair','combat','grab'}) do
-        buttons[mode]=button(panel,.05,.15+(n-1)*.115,.90,.10,text(mode),function()
+        buttons[mode]=button(panel,.05+((n-1)%2)*.46,.14+math.floor((n-1)/2)*.17,.44,.15,
+            text(mode=='repair' and 'repair_short' or mode),function()
             local item=equipped()
             if item then G.requestMode(item,mode=='off' and 'toggle' or mode) end
         end)
     end
+    buttons.repair.ToolTip=text('repair')
     buttons.grab.ToolTip=E.InputTypeLString(E.TextManager.Get('aegis.grab_help'),false)
-    buttons.sonar=button(panel,.05,.61,.90,.10,text('sonar'),function() sonarOpen=not sonarOpen end)
+    buttons.sonar=button(panel,.05,.48,.44,.15,text('sonar'),function() sonarOpen=not sonarOpen end)
+    G.slotsButton=button(panel,.51,.48,.44,.15,text('slots_show'),function()
+        local item=equipped()
+        if slots then closeSlots()
+        elseif item then
+            slots=U.component(item,'ItemContainer')
+            if slots then slots.KeepOpenWhenEquipped=true end
+        end
+    end)
     G.panelButtons=buttons
-    local status=UI.TextBlock(rect(panel,.05,.74,.90,.24),'')
+    local status=UI.TextBlock(rect(panel,.05,.67,.90,.30),'')
     G.panelStatus=status
+    status.TextScale=.8;status.Wrap=true;status.AutoScaleVertical=true
 
     local sonarPanel=UI.Frame(UI.RectTransform(E.Vector2(.37,.54),gui.Canvas,UI.Anchor.CenterLeft),'GUIFrame')
     sonarPanel.RectTransform.RelativeOffset=E.Vector2(.008,0)
@@ -94,30 +120,52 @@ function M.install(G,E)
         view.RectTransform.Resize(E.Vector2(1,1))
         G.sonarView=view
     end
-    local panelMode,grabHint,nextHint=nil,'',0
+    local panelMode=nil
     function G.updateSuitUI(dt)
+        -- Autorun order is not guaranteed, and the shared HUD can be hot-reloaded.
+        if E.AegisHUD and hud~=E.AegisHUD then
+            hud=E.AegisHUD;panelOpen=true
+            panel.RectTransform.Parent=hud.armHost.RectTransform
+            panel.RectTransform.SetPosition(UI.Anchor.TopLeft)
+            panel.RectTransform.RelativeOffset=E.Vector2(0,0)
+            panel.RectTransform.Resize(E.Vector2(1,1))
+        end
         local item=equipped()
-        panel.Visible=item~=nil and panelOpen;rightTab.Visible=item~=nil and not panelOpen
+        panel.Visible=item~=nil and panelOpen and (not hud or hud.open)
+        G.panelHideButton.Visible=not hud
+        if not panel.Visible or (slots and slots.Item~=item) then closeSlots() end
+        G.slotsButton.Selected=slots~=nil
+        G.slotsButton.Text=text(slots and 'slots_hide' or 'slots_show')
+        rightTab.Visible=not hud and item~=nil and not panelOpen
         sonarPanel.Visible=false;leftTab.Visible=false
         if not item then detach();return end
         local s=G.state(item)
         if panelMode~=s.mode then
-            panel.RectTransform.Resize(E.Vector2(.24,s.mode=='grab' and .45 or .40));panelMode=s.mode
-        end
-        if s.mode=='grab' and G.now>=nextHint then
-            grabHint=tostring(E.InputTypeLString(E.TextManager.Get('aegis.grab_short'),false))
-            buttons.grab.ToolTip=E.InputTypeLString(E.TextManager.Get('aegis.grab_help'),false)
-            nextHint=G.now+1
+            if not hud then panel.RectTransform.Resize(E.Vector2(.20,.24)) end
+            panelMode=s.mode
         end
         local arm=G.hasArm(item)
         for _,mode in ipairs({'repair','combat','grab'}) do buttons[mode].Selected=s.mode==mode;buttons[mode].Enabled=arm end
         buttons.off.Enabled=arm
         buttons.off.Selected=s.mode~='off'
         buttons.off.Text=text(s.mode=='off' and 'off' or 'on');buttons.sonar.Selected=s.sonar==true
+        if hud then
+            local function state(on) return tostring(E.TextManager.Get('aegishud.'..(on and 'on' or 'off'))) end
+            for _,mode in ipairs({'repair','combat','grab'}) do
+                buttons[mode].Text=text(mode=='repair' and 'repair_short' or mode)..' ['..state(s.mode==mode)..']'
+            end
+            buttons.off.Text=text('arm_tab')..': '..state(s.mode~='off')
+            buttons.sonar.Text=text('sonar')..' ['..state(s.sonar==true)..']'
+        end
         local ammo,profile=G.ammo(item)
+        local tank=G.tank(item)
+        local tankStatus=tank and ('%d%%'):format(math.floor(tank.Condition/tank.MaxCondition*100)) or text('missing')
+        local compressorStatus=text(G.module(item,'compressor') and 'installed' or 'missing')
         status.Text=text('power')..': '..math.floor(s.charge or G.energy(item))..'%  |  '..
-            text('ammo')..': '..Ammo.status(ammo,profile)..(ammo and ' ('..tostring(ammo.Prefab.Name)..')' or '')..'\n'..
-            text(s.open and 'air' or 'closedloop')..'\n'..text('servo_module')..': '..text(arm and 'installed' or 'missing')..' | '..text('impeller_module')..': '..text(G.hasImpeller(item) and 'installed' or 'missing')..(s.mode=='grab' and '\n'..grabHint or '')
+            text('ammo')..': '..Ammo.status(ammo,profile)..'\n'..
+            text('tank')..': '..tankStatus..' | '..text('compressor_module')..': '..compressorStatus..'\n'..
+            text('servo_module')..': '..text(arm and 'installed' or 'missing')..' | '..text('impeller_module')..': '..
+            text(s.swimming and 'impeller_active' or G.hasImpeller(item) and 'installed' or 'missing')
         local sonar,powered=G.syncSonar(item,s)
         local bounds=gui.Canvas.Rect
         local layout=M.layout(powered,sonarOpen,bounds.Width,bounds.Height)
@@ -140,10 +188,13 @@ function M.install(G,E)
             hosted.frame.Visible=layout.visible and powered
             if layout.visible and powered then sonar.UpdateHUDComponentSpecific(E.Character.Controlled,dt,E.Game.GameScreen.Cam) end
         end
-        if panel.Visible then panel.AddToGUIUpdateList(false,8) else rightTab.AddToGUIUpdateList(false,9) end
+        if not hud then
+            if panel.Visible then panel.AddToGUIUpdateList(false,8) else rightTab.AddToGUIUpdateList(false,9) end
+        end
         if sonarPanel.Visible then sonarPanel.AddToGUIUpdateList(false,8) end
     end
     function G.clearSuitUI()
+        closeSlots()
         detach()
         for _,frame in ipairs({panel,rightTab,sonarPanel,leftTab}) do frame.Visible=false;frame.RemoveFromGUIUpdateList() end
     end

@@ -41,8 +41,7 @@ function M.new(E)
     function G.source(item)
         local inv=G.container(item,1)
         local source=inv and inv.GetItemAt(0)
-        if source and not source.Removed and source.MaxCondition>0 and
-            (source.HasTag('mobilebattery') or source.HasTag('reactorfuel')) then return source end
+        if source and not source.Removed and source.MaxCondition>0 and source.HasTag('mobilebattery') then return source end
     end
     function G.ammo(item)
         local inv=G.container(item,1)
@@ -57,7 +56,6 @@ function M.new(E)
     function G.spend(item,cost)
         local source=G.source(item)
         if not source then return 0 end
-        cost=cost*(source.HasTag('reactorfuel') and C.rodMultiplier or 1)
         local value,fraction=Core.debit(G.energy(item),cost)
         source.Condition=value*source.MaxCondition/100
         return fraction
@@ -68,16 +66,31 @@ function M.new(E)
         return {hull=hull~=nil,wet=not anim or anim.HeadInWater,
             oxygen=hull and hull.OxygenPercentage or 0,pressure=hull and hull.LethalPressure or 100}
     end
+    function G.tank(item)
+        local inv=G.container(item,1)
+        local tank=inv and inv.GetItemAt(C.tankSlot)
+        if tank and not tank.Removed and tank.MaxCondition>0 and tank.HasTag('oxygensource') then return tank end
+    end
     function G.breathe(owner,item,dt)
         local s=G.state(item)
         local air=G.air(owner)
         s.open=Core.breathable(air)
         owner.UseHullOxygen=s.open
-        if s.open then owner.OxygenAvailable=air.oxygen;return end
-        local usable=G.energy(item)>0
-        owner.OxygenAvailable=usable and 100 or 0
-        if G.authoritative and usable and owner.NeedsAir and not owner.IsDead then
-            G.spend(item,C.lifeSupportRate*math.min(dt,.1))
+        local tank=G.tank(item)
+        owner.OxygenAvailable=s.open and air.oxygen or (tank and tank.Condition>0 and 100 or 0)
+        if not G.authoritative or not tank or owner.IsDead then return end
+        dt=math.min(dt,.1)
+        if s.open then
+            if not tank.HasTag('refillableoxygensource') or not G.module(item,'compressor') then return end
+            local missing=1-tank.Condition/tank.MaxCondition
+            local seconds=math.min(dt,missing*100/C.tankRefillRate)
+            if seconds<=0 then return end
+            local fraction=G.spend(item,C.compressorPowerRate*seconds)
+            if fraction>0 then
+                tank.Condition=math.min(tank.MaxCondition,tank.Condition+tank.MaxCondition*C.tankRefillRate/100*seconds*fraction)
+            end
+        elseif owner.NeedsAir and tank.Condition>0 then
+            tank.Condition=math.max(0,tank.Condition-C.tankUseRate*dt)
         end
     end
     function G.attachment(owner,x,y,draw)
@@ -435,17 +448,8 @@ function M.new(E)
                         elseif not powered then s.target=nil end
                         if s.hasArm and not advanced and G.advanceTool then G.advanceTool(owner,s,dt) end
                         if not s.target then Core.ready(s,nil,G.now) end
-                        local anim=owner.AnimController
-                        if powered and s.hasImpeller and anim.InWater and anim.TargetMovement then
-                            local movement=anim.TargetMovement
-                            local length=math.sqrt(movement.X^2+movement.Y^2)
-                            if length>.1 and anim.Collider then
-                                local paid=G.spend(item,C.rates.swim*dt)
-                                if paid>0 then
-                                    anim.Collider.ApplyForce(E.Vector2(movement.X/length,movement.Y/length)*anim.Collider.Mass*C.swimForce*paid,C.swimSpeed)
-                                    s.swimming=true
-                                end
-                            end
+                        if powered and s.hasImpeller and G.isSwimming(owner.AnimController) then
+                            s.swimming=G.spend(item,C.rates.swim*dt)>0
                         end
                     end
                 end
@@ -487,6 +491,7 @@ function M.new(E)
         if G.authoritative then
             E.Util.RegisterItemGroup('aegis.suit.repairables',function(item) return U.component(item,'Repairable')~=nil end)
         end
+        G.installSwimBoost()
         G.patch('breathing','Barotrauma.Character','UpdateOxygen',function(owner,p)
             local item=G.equipped(owner)
             if item then G.breathe(owner,item,p['deltaTime']) end
@@ -496,6 +501,7 @@ function M.new(E)
         E.Hook.Add('stop','aegis.suit.dispose',G.dispose)
     end
     require('AegisSuit.modules').install(G,E)
+    require('AegisSuit.swim').install(G,E)
     return G
 end
 return M

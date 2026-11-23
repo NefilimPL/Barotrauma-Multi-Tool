@@ -3,6 +3,18 @@
 Przeniesione opisy wcześniejszych wydań z README. Pomiary i deklaracje
 w tych wpisach dotyczą wskazanych wersji, nie bieżącego kodu roboczego.
 
+## 1.6.0 — wspólny panel i czytelna ochrona przed rozbiórką
+
+- Publiczna nazwa pakietu: System Aegis; archiwum i folder wydania mają nazwę System-Aegis.
+- Jeden zwijany panel multitoola i ramienia kombinezonu. Osobne przyciski trybów,
+  oznaczenia WŁ./WYŁ., energia oraz liczba gotowych blokad tarczy.
+- Lista nazwanych typów zamiast niejednoznacznego klikania kafelków w trybie edycji.
+  Niezależne kolumny ochrony, zbierania i wyjątków; szybka ochrona typu w magazynie.
+  Dotychczasowe zasady zapisane w plecaku i ochrona przyszłych egzemplarzy zachowane.
+- Węższe stożki latarki broni, multitoola i hełmu. Zwykłe światło dookólne przy
+  nieaktywnym ramieniu usunięte; błyski i poświata naprawy pozostają miejscowe.
+- Wkład tarczy pozostaje w slocie i nie jest dodatkowo rysowany na modelu broni.
+
 ## 1.5.2 — sprzedaż kombinezonów
 
 - Cena bazowa każdego z sześciu kombinezonów: 10 000 marek; po jednej sztuce

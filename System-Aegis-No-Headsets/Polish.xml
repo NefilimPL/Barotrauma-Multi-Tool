@@ -12,9 +12,9 @@
   <aegisvacuum.stack>Weź stos</aegisvacuum.stack>
   <aegisvacuum.stackhelp>Pobierz jeden stos do jednego slotu ekwipunku, zgodnie z limitem gry. Uzupełnia istniejący stos. Nadmiar zostaje w plecaku; różna jakość i stan nie zajmą kolejnych slotów.</aegisvacuum.stackhelp>
   <aegisvacuum.details>Egzemplarze</aegisvacuum.details>
-  <aegisvacuum.filters>Filtry</aegisvacuum.filters>
+  <aegisvacuum.filters>Ochrona i zbieranie</aegisvacuum.filters>
   <aegisvacuum.contents>Zawartość</aegisvacuum.contents>
-  <aegisvacuum.filterhelp>Wybierz regułę pod siatką i kliknij przedmiot, aby ją przełączyć.</aegisvacuum.filterhelp>
+  <aegisvacuum.filterhelp>Ustaw TAK przy typach, których nie chcesz rozbierać.</aegisvacuum.filterhelp>
   <aegisvacuum.rule.filter>Ignoruj (-)</aegisvacuum.rule.filter>
   <aegisvacuum.rule.protect>Chroń (O)</aegisvacuum.rule.protect>
   <aegisvacuum.rule.allow>Odblokuj (!)</aegisvacuum.rule.allow>
@@ -61,10 +61,10 @@
   <aegisvacuum.openhelp>Otwórz zawartość plecaka. Możesz też kliknąć prawym przyciskiem ikonę plecaka na pasie.</aegisvacuum.openhelp>
   <aegisvacuum.salvagehelp>Trzymaj odkurzacz oburącz z naładowaną baterią. Rozbiórka obejmuje zawartość z chwili naciśnięcia przycisku. Możesz dalej zbierać; nowe rzeczy zostaną na następną rozbiórkę. Bez receptury, wymagające specjalnej maszyny i bez miejsca na surowce są pomijane. Postęp i wynik widać nad wyszukiwaniem.</aegisvacuum.salvagehelp>
   <entityname.aegiscombattool>Bojowy multitool Aegis</entityname.aegiscombattool>
-  <entitydescription.aegiscombattool>Dwuręczny emiter pierścieni energetycznych i multitool techniczny. Slot 1: bateria lub pręt zasilający broń, tarczę, latarkę i narzędzia. Slot 2: osobno craftowany wkład tarczy Aegis. Bez wkładu tarcza nie działa. Blokuje pięć pocisków, nie zadaje obrażeń kontaktowych i odzyskuje jedną blokadę co 15 sekund zasilania. Wyłącz obrażenia, aby spawać/ciąć; gaśnica ma pierwszeństwo. Bot wybiera jedną funkcję dla bieżącego zadania. Zasilane narzędzie daje +2 do wszystkich pięciu umiejętności co pięć minut; licznik jest wspólny z kompozytowym multitoolem. Wymaga LuaCs na kliencie i serwerze.</entitydescription.aegiscombattool>
+  <entitydescription.aegiscombattool>Dwuręczny emiter pierścieni energetycznych i multitool techniczny. Slot 1: bateria lub pręt zasilający broń, tarczę, latarkę i narzędzia. Slot 2: osobno craftowany wkład tarczy Aegis. Bez wkładu tarcza nie działa. Blokuje pięć pocisków, nie zadaje obrażeń kontaktowych i odzyskuje jedną blokadę co 15 sekund zasilania. Wyłącz obrażenia, aby spawać/ciąć; gaśnica ma pierwszeństwo. Bot wybiera jedną funkcję dla bieżącego zadania. Wymaga LuaCs na kliencie i serwerze.</entitydescription.aegiscombattool>
   <label.aegiscombatpowerslots>Wspólne zasilanie: broń / tarcza / narzędzia</label.aegiscombatpowerslots>
   <entityname.aegiscompositetool>Kompozytowy multitool Aegis</entityname.aegiscompositetool>
-  <entitydescription.aegiscompositetool>Kompozytowe narzędzie; przełącza spawarkę i przecinarkę, świeci wbudowaną latarką, dodaje tryb gaśnicy i korzysta ze wspólnej butli tlenowej. Trzymane z niewyczerpanym prętem paliwowym daje +2 do wszystkich pięciu umiejętności co 5 minut. Przyrost wymaga Lua for Barotrauma i ma wspólny licznik z Aegisem.</entitydescription.aegiscompositetool>
+  <entitydescription.aegiscompositetool>Kompozytowe narzędzie; przełącza spawarkę i przecinarkę, świeci wbudowaną latarką, dodaje tryb gaśnicy i korzysta ze wspólnej butli tlenowej.</entitydescription.aegiscompositetool>
   <label.aegischangetool>Włącz tryb przecinarki</label.aegischangetool>
   <label.aegisenableextinguisher>Włącz tryb gaśnicy</label.aegisenableextinguisher>
   <label.aegisenabledamage>Włącz zadawanie obrażeń NPC</label.aegisenabledamage>
@@ -81,34 +81,67 @@
   <entityname.aegisimpellermodule>Moduł wirnika Aegis — Piraci</entityname.aegisimpellermodule>
   <entitydescription.aegisimpellermodule>Wycraftuj osobno i włóż do slotu 4 kombinezonu Aegis. Włącza wspomaganie pływania wirnikiem. Wyjęcie wyłącza napęd. Obieg oddechowy, sonar i oświetlenie działają niezależnie.</entitydescription.aegisimpellermodule>
   <label.aegisshieldslot>Wkład tarczy: 5 blokad / 15 s na jedną blokadę</label.aegisshieldslot>
-  <entityname.aegisservosuitdescendens>Kombinezon serwomanipulacyjny Aegis — Descendens</entityname.aegisservosuitdescendens>
-  <entitydescription.aegisservosuitdescendens>Egzoszkielet do 10 000 m. Cztery sloty kolejno: bateria/pręt, amunicja, osobno craftowany moduł serwa i osobno craftowany wirnik. Moduły nie są dołączane za darmo. Ramię wymaga serwa, wspomaganie pływania wymaga wirnika. Wyjęcie serwa zwalnia trzymany cel i zatrzymuje naprawę oraz strzelanie. Obieg oddechowy, sonar i światła działają bez tych modułów. Wymaga LuaCs na kliencie i serwerze.</entitydescription.aegisservosuitdescendens>
-  <entityname.aegisservomoduledescendens>Moduł ramienia serwo Aegis — Descendens</entityname.aegisservomoduledescendens>
+  <entityname.aegisservosuitdescendens>Kombinezon serwomanipulacyjny Aegis — Potomkowie</entityname.aegisservosuitdescendens>
+  <entitydescription.aegisservosuitdescendens>Egzoszkielet do 10 000 m. Sloty: bateria, amunicja, serwo, wirnik, kompresor i butla tlenowa. Do napędu, ramienia, sonaru i latarki potrzebna jest bateria. Pod wodą kombinezon zużywa tlen z butli. Kompresor napełnia butlę w bezpiecznym powietrzu. Moduły wytwarza się osobno. Wymaga LuaCs na kliencie i serwerze.</entitydescription.aegisservosuitdescendens>
+  <entityname.aegisservomoduledescendens>Moduł ramienia serwo Aegis — Potomkowie</entityname.aegisservomoduledescendens>
   <entitydescription.aegisservomoduledescendens>Wycraftuj osobno i włóż do slotu 3 kombinezonu Aegis, po zasilaniu i amunicji. Włącza naprawę, spawanie, obronę i chwytak ramienia. Wyjęcie zwalnia trzymany cel i zatrzymuje pracę ramienia. Moduł nie zastępuje skrzynki amunicji ani źródła zasilania.</entitydescription.aegisservomoduledescendens>
-  <entityname.aegisimpellermoduledescendens>Moduł wirnika Aegis — Descendens</entityname.aegisimpellermoduledescendens>
+  <entityname.aegisimpellermoduledescendens>Moduł wirnika Aegis — Potomkowie</entityname.aegisimpellermoduledescendens>
   <entitydescription.aegisimpellermoduledescendens>Wycraftuj osobno i włóż do slotu 4 kombinezonu Aegis. Włącza wspomaganie pływania wirnikiem. Wyjęcie wyłącza napęd. Obieg oddechowy, sonar i oświetlenie działają niezależnie.</entitydescription.aegisimpellermoduledescendens>
   <entityname.aegisservosuitcoalition>Kombinezon serwomanipulacyjny Aegis — Koalicja</entityname.aegisservosuitcoalition>
-  <entitydescription.aegisservosuitcoalition>Egzoszkielet do 10 000 m. Cztery sloty kolejno: bateria/pręt, amunicja, osobno craftowany moduł serwa i osobno craftowany wirnik. Moduły nie są dołączane za darmo. Ramię wymaga serwa, wspomaganie pływania wymaga wirnika. Wyjęcie serwa zwalnia trzymany cel i zatrzymuje naprawę oraz strzelanie. Obieg oddechowy, sonar i światła działają bez tych modułów. Wymaga LuaCs na kliencie i serwerze.</entitydescription.aegisservosuitcoalition>
+  <entitydescription.aegisservosuitcoalition>Egzoszkielet do 10 000 m. Sloty: bateria, amunicja, serwo, wirnik, kompresor i butla tlenowa. Do napędu, ramienia, sonaru i latarki potrzebna jest bateria. Pod wodą kombinezon zużywa tlen z butli. Kompresor napełnia butlę w bezpiecznym powietrzu. Moduły wytwarza się osobno. Wymaga LuaCs na kliencie i serwerze.</entitydescription.aegisservosuitcoalition>
   <entityname.aegisservomodulecoalition>Moduł ramienia serwo Aegis — Koalicja</entityname.aegisservomodulecoalition>
   <entitydescription.aegisservomodulecoalition>Wycraftuj osobno i włóż do slotu 3 kombinezonu Aegis, po zasilaniu i amunicji. Włącza naprawę, spawanie, obronę i chwytak ramienia. Wyjęcie zwalnia trzymany cel i zatrzymuje pracę ramienia. Moduł nie zastępuje skrzynki amunicji ani źródła zasilania.</entitydescription.aegisservomodulecoalition>
   <entityname.aegisimpellermodulecoalition>Moduł wirnika Aegis — Koalicja</entityname.aegisimpellermodulecoalition>
   <entitydescription.aegisimpellermodulecoalition>Wycraftuj osobno i włóż do slotu 4 kombinezonu Aegis. Włącza wspomaganie pływania wirnikiem. Wyjęcie wyłącza napęd. Obieg oddechowy, sonar i oświetlenie działają niezależnie.</entitydescription.aegisimpellermodulecoalition>
   <entityname.aegisservosuitseparatists>Kombinezon serwomanipulacyjny Aegis — Separatyści</entityname.aegisservosuitseparatists>
-  <entitydescription.aegisservosuitseparatists>Egzoszkielet do 10 000 m. Cztery sloty kolejno: bateria/pręt, amunicja, osobno craftowany moduł serwa i osobno craftowany wirnik. Moduły nie są dołączane za darmo. Ramię wymaga serwa, wspomaganie pływania wymaga wirnika. Wyjęcie serwa zwalnia trzymany cel i zatrzymuje naprawę oraz strzelanie. Obieg oddechowy, sonar i światła działają bez tych modułów. Wymaga LuaCs na kliencie i serwerze.</entitydescription.aegisservosuitseparatists>
+  <entitydescription.aegisservosuitseparatists>Egzoszkielet do 10 000 m. Sloty: bateria, amunicja, serwo, wirnik, kompresor i butla tlenowa. Do napędu, ramienia, sonaru i latarki potrzebna jest bateria. Pod wodą kombinezon zużywa tlen z butli. Kompresor napełnia butlę w bezpiecznym powietrzu. Moduły wytwarza się osobno. Wymaga LuaCs na kliencie i serwerze.</entitydescription.aegisservosuitseparatists>
   <entityname.aegisservomoduleseparatists>Moduł ramienia serwo Aegis — Separatyści</entityname.aegisservomoduleseparatists>
   <entitydescription.aegisservomoduleseparatists>Wycraftuj osobno i włóż do slotu 3 kombinezonu Aegis, po zasilaniu i amunicji. Włącza naprawę, spawanie, obronę i chwytak ramienia. Wyjęcie zwalnia trzymany cel i zatrzymuje pracę ramienia. Moduł nie zastępuje skrzynki amunicji ani źródła zasilania.</entitydescription.aegisservomoduleseparatists>
   <entityname.aegisimpellermoduleseparatists>Moduł wirnika Aegis — Separatyści</entityname.aegisimpellermoduleseparatists>
   <entitydescription.aegisimpellermoduleseparatists>Wycraftuj osobno i włóż do slotu 4 kombinezonu Aegis. Włącza wspomaganie pływania wirnikiem. Wyjęcie wyłącza napęd. Obieg oddechowy, sonar i oświetlenie działają niezależnie.</entitydescription.aegisimpellermoduleseparatists>
   <entityname.aegisservosuithusk>Kombinezon serwomanipulacyjny Aegis — Kościół Łuski</entityname.aegisservosuithusk>
-  <entitydescription.aegisservosuithusk>Egzoszkielet do 10 000 m. Cztery sloty kolejno: bateria/pręt, amunicja, osobno craftowany moduł serwa i osobno craftowany wirnik. Moduły nie są dołączane za darmo. Ramię wymaga serwa, wspomaganie pływania wymaga wirnika. Wyjęcie serwa zwalnia trzymany cel i zatrzymuje naprawę oraz strzelanie. Obieg oddechowy, sonar i światła działają bez tych modułów. Wymaga LuaCs na kliencie i serwerze.</entitydescription.aegisservosuithusk>
+  <entitydescription.aegisservosuithusk>Egzoszkielet do 10 000 m. Sloty: bateria, amunicja, serwo, wirnik, kompresor i butla tlenowa. Do napędu, ramienia, sonaru i latarki potrzebna jest bateria. Pod wodą kombinezon zużywa tlen z butli. Kompresor napełnia butlę w bezpiecznym powietrzu. Moduły wytwarza się osobno. Wymaga LuaCs na kliencie i serwerze.</entitydescription.aegisservosuithusk>
   <entityname.aegisservomodulehusk>Moduł ramienia serwo Aegis — Kościół Łuski</entityname.aegisservomodulehusk>
   <entitydescription.aegisservomodulehusk>Wycraftuj osobno i włóż do slotu 3 kombinezonu Aegis, po zasilaniu i amunicji. Włącza naprawę, spawanie, obronę i chwytak ramienia. Wyjęcie zwalnia trzymany cel i zatrzymuje pracę ramienia. Moduł nie zastępuje skrzynki amunicji ani źródła zasilania.</entitydescription.aegisservomodulehusk>
   <entityname.aegisimpellermodulehusk>Moduł wirnika Aegis — Kościół Łuski</entityname.aegisimpellermodulehusk>
   <entitydescription.aegisimpellermodulehusk>Wycraftuj osobno i włóż do slotu 4 kombinezonu Aegis. Włącza wspomaganie pływania wirnikiem. Wyjęcie wyłącza napęd. Obieg oddechowy, sonar i oświetlenie działają niezależnie.</entitydescription.aegisimpellermodulehusk>
   <entityname.aegisservosuitclowns>Kombinezon serwomanipulacyjny Aegis — Dzieci Honkomatki</entityname.aegisservosuitclowns>
-  <entitydescription.aegisservosuitclowns>Egzoszkielet do 10 000 m. Cztery sloty kolejno: bateria/pręt, amunicja, osobno craftowany moduł serwa i osobno craftowany wirnik. Moduły nie są dołączane za darmo. Ramię wymaga serwa, wspomaganie pływania wymaga wirnika. Wyjęcie serwa zwalnia trzymany cel i zatrzymuje naprawę oraz strzelanie. Obieg oddechowy, sonar i światła działają bez tych modułów. Wymaga LuaCs na kliencie i serwerze.</entitydescription.aegisservosuitclowns>
+  <entitydescription.aegisservosuitclowns>Egzoszkielet do 10 000 m. Sloty: bateria, amunicja, serwo, wirnik, kompresor i butla tlenowa. Do napędu, ramienia, sonaru i latarki potrzebna jest bateria. Pod wodą kombinezon zużywa tlen z butli. Kompresor napełnia butlę w bezpiecznym powietrzu. Moduły wytwarza się osobno. Wymaga LuaCs na kliencie i serwerze.</entitydescription.aegisservosuitclowns>
   <entityname.aegisservomoduleclowns>Moduł ramienia serwo Aegis — Dzieci Honkomatki</entityname.aegisservomoduleclowns>
   <entitydescription.aegisservomoduleclowns>Wycraftuj osobno i włóż do slotu 3 kombinezonu Aegis, po zasilaniu i amunicji. Włącza naprawę, spawanie, obronę i chwytak ramienia. Wyjęcie zwalnia trzymany cel i zatrzymuje pracę ramienia. Moduł nie zastępuje skrzynki amunicji ani źródła zasilania.</entitydescription.aegisservomoduleclowns>
   <entityname.aegisimpellermoduleclowns>Moduł wirnika Aegis — Dzieci Honkomatki</entityname.aegisimpellermoduleclowns>
   <entitydescription.aegisimpellermoduleclowns>Wycraftuj osobno i włóż do slotu 4 kombinezonu Aegis. Włącza wspomaganie pływania wirnikiem. Wyjęcie wyłącza napęd. Obieg oddechowy, sonar i oświetlenie działają niezależnie.</entitydescription.aegisimpellermoduleclowns>
+  <aegishud.collapse>Zwiń cały panel</aegishud.collapse>
+  <aegishud.expand>Rozwiń sterowanie sprzętem</aegishud.expand>
+  <aegishud.tool>Multitool</aegishud.tool>
+  <aegishud.arm>Ramię</aegishud.arm>
+  <aegishud.weld>Spawanie</aegishud.weld>
+  <aegishud.cut>Cięcie</aegishud.cut>
+  <aegishud.extinguish>Gaśnica</aegishud.extinguish>
+  <aegishud.combat>Broń</aegishud.combat>
+  <aegishud.damage>Obrażenia NPC</aegishud.damage>
+  <aegishud.on>WŁ.</aegishud.on>
+  <aegishud.off>WYŁ.</aegishud.off>
+  <aegishud.power>Energia</aegishud.power>
+  <aegishud.shield>Tarcza</aegishud.shield>
+  <aegishud.missing>brak wkładu</aegishud.missing>
+  <aegishud.waiting>oczekiwanie</aegishud.waiting>
+  <aegisvacuum.protectiontitle>Co zachować?</aegisvacuum.protectiontitle>
+  <aegisvacuum.typename>Typ przedmiotu</aegisvacuum.typename>
+  <aegisvacuum.protectcolumn>Nie rozbieraj</aegisvacuum.protectcolumn>
+  <aegisvacuum.collectcolumn>Zbieraj</aegisvacuum.collectcolumn>
+  <aegisvacuum.unblockcolumn>Wyjątek</aegisvacuum.unblockcolumn>
+  <aegisvacuum.yes>TAK</aegisvacuum.yes>
+  <aegisvacuum.no>NIE</aegisvacuum.no>
+  <aegisvacuum.blockedshort>Blokada</aegisvacuum.blockedshort>
+  <aegisvacuum.unblock>Zezwól</aegisvacuum.unblock>
+  <aegisvacuum.revoke>Cofnij</aegisvacuum.revoke>
+  <aegisvacuum.protecttype>Chroń typ</aegisvacuum.protecttype>
+  <aegisvacuum.protection_on>Typ chroniony [TAK]</aegisvacuum.protection_on>
+  <aegisvacuum.protecttypehelp>Ochrona obejmuje wszystkie egzemplarze tego typu, także zebrane później. Rozbiórka i kosz je pomijają. Dotyczy też przedmiotów w pojemnikach.</aegisvacuum.protecttypehelp>
+  <aegisvacuum.collectionhelp>TAK: zbieraj ten typ. NIE: pomijaj go przy zbieraniu i wkładaniu. Nie zmienia ochrony przed rozbiórką.</aegisvacuum.collectionhelp>
+  <aegisvacuum.unblockhelp>Wyjątek znosi domyślną blokadę zbierania tego typu. Nie wyłącza ochrony rozbiórki.</aegisvacuum.unblockhelp>
+  <aegisvacuum.ruleshelp>Nie rozbieraj: TAK zachowuje wszystkie obecne i przyszłe sztuki tego typu.
+Zbieraj osobno decyduje o przyjmowaniu przedmiotów do plecaka.
+Wyjątek jest potrzebny tylko dla typów z domyślną blokadą. Zasady zapisują się w plecaku.</aegisvacuum.ruleshelp>
 </infotexts>

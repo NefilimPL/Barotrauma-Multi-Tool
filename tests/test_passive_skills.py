@@ -1,4 +1,26 @@
-from lua_support import LuaCase
+from lua_support import ROOT, LuaCase
+
+
+class ModularReleaseSkillTests(LuaCase):
+    mod_directory = 'System-Aegis-No-Headsets'
+
+    def test_combat_autorun_does_not_install_periodic_training(self):
+        self.lua.execute("""
+            SERVER=true
+            CLIENT=false
+            package.preload['AegisCombat.game']=function()
+                return {new=function() return {authoritative=true,dispose=function() end} end}
+            end
+            for _,name in ipairs({'physics','network','shield','projectiles','runtime','diagnostics'}) do
+                package.preload['AegisCombat.'..name]=function() return {install=function() end} end
+            end
+            package.preload['AegisCombat.passive_skills']=function()
+                return {install=function(G) G.updatePassiveSkills=function() end end}
+            end
+        """)
+        autorun = ROOT / self.mod_directory / 'Lua/Autorun/aegiscombattool.lua'
+        self.lua.execute(autorun.read_text(encoding='utf-8'), str(autorun.parent))
+        self.assertIsNone(self.lua.eval('AegisCombat.updatePassiveSkills'))
 
 
 class PassiveSkillTests(LuaCase):

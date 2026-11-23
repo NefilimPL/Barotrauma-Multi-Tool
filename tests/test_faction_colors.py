@@ -123,11 +123,12 @@ class FactionContentTests(unittest.TestCase):
             references = [n.get('texture') for n in suit.iter() if n.get('texture', '').startswith('%ModDir%/Assets/')]
             self.assertTrue(references)
             for reference in references:
-                self.assertTrue(reference.startswith('%ModDir%/Assets/Factions/' + key + '/'), reference)
+                self.assertTrue(reference.startswith('%ModDir%/Assets/Factions/' + key + '/')
+                                or reference == '%ModDir%/Assets/AegisSuit/empty-seal.png', reference)
                 self.assertTrue((MOD / reference.removeprefix('%ModDir%/')).is_file(), reference)
             for kind in ('servo', 'impeller'):
                 reference = items[identifier(kind, key)].find('InventoryIcon').get('texture')
-                self.assertEqual(reference, '%ModDir%/Assets/Factions/' + key + '/' + kind + '-module.png')
+                self.assertEqual(reference, '%ModDir%/Assets/Factions/' + key + '/' + kind + '-icon.png')
 
 
 class FactionRenderingTests(unittest.TestCase):
@@ -225,15 +226,10 @@ class FactionRenderingTests(unittest.TestCase):
 
 
 class FactionFrameTests(unittest.TestCase):
-    boxes = {
-        'torso': (60, 0, 345, 258), 'waist': (400, 50, 730, 250),
-        'helmetClosed': (780, 0, 1120, 256), 'helmetOpen': (1160, 0, 1515, 256),
-        'upperArm': (75, 260, 310, 512), 'forearm': (470, 258, 670, 512),
-        'hand': (850, 280, 1070, 510), 'thigh': (1200, 256, 1460, 514),
-        'calf': (100, 514, 290, 770), 'boot': (410, 540, 730, 745),
-        'upperLink': (735, 565, 1150, 715), 'lowerLink': (1145, 570, 1536, 715),
-        'emitter': (10, 790, 370, 995),
-    }
+    atlas_cells = ('torso', 'waist', 'helmetClosed', 'helmetOpen',
+                   'upperArm', 'forearm', 'hand', 'thigh',
+                   'calf', 'boot', 'upperLink', 'lowerLink',
+                   'emitter', 'rotor', None, 'assembled')
 
     def setUp(self):
         self.lua = LuaRuntime(unpack_returned_tuples=True)
@@ -245,13 +241,30 @@ class FactionFrameTests(unittest.TestCase):
         for key in KEYS:
             with Image.open(MOD / self.factions.path(key, 'atlas')) as image:
                 alpha = image.getchannel('A').point(lambda a: 255 if a > 16 else 0)
-                for name, box in self.boxes.items():
+                cell_width, cell_height = image.width // 4, image.height // 4
+                for cell, name in enumerate(self.atlas_cells):
+                    left, top = cell % 4 * cell_width, cell // 4 * cell_height
+                    box = (left, top, left + cell_width, top + cell_height)
                     bounds = alpha.crop(box).getbbox()
+                    if name is None:
+                        self.assertIsNone(bounds, key)
+                        continue
+                    self.assertIsNotNone(bounds, (key, name))
                     x, y, w, h = [self.factions.frame(key, name)[i] for i in range(1, 5)]
                     self.assertLessEqual(x, bounds[0] + box[0], (key, name, 'left'))
                     self.assertLessEqual(y, bounds[1] + box[1], (key, name, 'top'))
                     self.assertGreaterEqual(x + w, bounds[2] + box[0], (key, name, 'right'))
                     self.assertGreaterEqual(y + h, bounds[3] + box[1], (key, name, 'bottom'))
+
+    def test_impeller_housings_leave_the_rotating_hub_visible(self):
+        for key in KEYS:
+            with Image.open(MOD / self.factions.path(key, 'housing')) as housing:
+                width, height = housing.size
+                center = round(width * .54), height // 2
+                self.assertLessEqual(housing.getchannel('A').getpixel(center), 16, key)
+            with Image.open(MOD / self.factions.path(key, 'impeller')) as inventory_icon:
+                icon_center=round(inventory_icon.width*.54), inventory_icon.height//2
+                self.assertGreater(inventory_icon.getchannel('A').getpixel(icon_center), 128, key)
 
     def test_wearable_rectangles_match_palette_frames(self):
         names = {'Head': 'helmetClosed', 'Torso': 'torso', 'Waist': 'waist',
@@ -270,6 +283,49 @@ class FactionFrameTests(unittest.TestCase):
                     name = names[limb]
                     expected = [self.factions.frame(key, name)[i] for i in range(1, 5)]
                     self.assertEqual(list(map(int, node.get('sourcerect').split(','))), expected, (key, limb))
+
+    def test_faction_helmets_use_a_closer_fit(self):
+        for filename in ('aegis_suit.xml', 'aegis_factions.xml'):
+            for helmet in ET.parse(MOD / filename).findall("Item/Wearable/sprite[@name='Aegis Head']"):
+                self.assertLessEqual(float(helmet.get('scale')), .67)
+                self.assertEqual(helmet.get('origin'), '0.5,0.5')
+
+    def test_profile_boots_follow_the_native_foot_angle(self):
+        for filename in ('aegis_suit.xml', 'aegis_factions.xml'):
+            for suit in ET.parse(MOD / filename).findall('Item'):
+                identifier = suit.get('identifier', '')
+                if not identifier.startswith('aegisservosuit'):
+                    continue
+                for limb in ('LeftFoot', 'RightFoot'):
+                    foot = suit.find(f"Wearable/sprite[@name='Aegis {limb}']")
+                    self.assertIsNotNone(foot, (identifier, limb))
+                    self.assertEqual(float(foot.get('rotation', '0')), 0, (identifier, limb))
+
+    def test_coalition_chest_and_shoulder_emblems_use_the_game_faction_icon(self):
+        suit = ET.parse(MOD / 'aegis_factions.xml').find("Item[@identifier='aegisservosuitcoalition']")
+        for name, limb, plate_depth, bounds in (
+            ('Coalition emblem', 'Torso', .06, (64, 37, 114, 73)),
+            ('Coalition emblem RightArm', 'RightArm', .02, (40, 9, 92, 54)),
+            ('Coalition emblem LeftArm', 'LeftArm', .14, (40, 9, 92, 54)),
+        ):
+            badge = suit.find(f"Wearable/sprite[@name='{name}']")
+            self.assertEqual(badge.get('limb'), limb)
+            self.assertEqual(badge.get('texture'), 'Content/UI/CampaignUIAtlas2.png')
+            self.assertEqual(badge.get('sourcerect'), '143,523,94,113')
+            self.assertEqual(badge.get('inheritlimbdepth'), 'false')
+            self.assertAlmostEqual(float(badge.get('depth')), plate_depth - .001)
+            plate = suit.find(f"Wearable/sprite[@name='Aegis {limb}']")
+            _, _, plate_width, plate_height = map(int, plate.get('sourcerect').split(','))
+            _, _, badge_width, badge_height = map(int, badge.get('sourcerect').split(','))
+            plate_x, plate_y = map(float, plate.get('origin').split(','))
+            badge_x, badge_y = map(float, badge.get('origin').split(','))
+            scale = float(badge.get('scale')) / float(plate.get('scale'))
+            left = plate_width * plate_x - badge_width * badge_x * scale
+            top = plate_height * plate_y - badge_height * badge_y * scale
+            self.assertGreaterEqual(left, bounds[0], name)
+            self.assertGreaterEqual(top, bounds[1], name)
+            self.assertLessEqual(left + badge_width * scale, bounds[2], name)
+            self.assertLessEqual(top + badge_height * scale, bounds[3], name)
 
 
 class FactionSalesTests(unittest.TestCase):
