@@ -96,9 +96,10 @@ a osoba staje się chwilowo bezwładna. Ponowne E przy trzymanym PPM puszcza cel
 Przy zmienionym sterowaniu użyj przycisków pokazanych w panelu kombinezonu.
 Łapie jeden luźny, ruchomy przedmiot albo istotę poniżej limitu masy;
 nie wyrywa zamocowanych urządzeń ani rzeczy z ekwipunków.
-Zasięg wynosi 300 jednostek gry. Chwyt gracza nie ma limitu 5 sekund;
-zmiana trybu, przeszkoda, wyjście poza zasięg, brak energii lub zdjęcie
-kombinezonu zwalnia cel. Nie trzeba trzymać narzędzia w ręce.
+Zasięg podnoszenia wynosi 300 jednostek gry. Chwytak stopniowo wyhamowuje
+cel i próbuje przeprowadzić go obok przeszkody. Trwała blokada, wyjście poza
+zasięg, zmiana trybu, brak energii lub zdjęcie kombinezonu zwalnia cel.
+Nie trzeba trzymać narzędzia w ręce.
 Przycisk `»` chowa prawy panel; zakładka **Ramię** otwiera go ponownie.
 **Sonar** otwiera niezależny panel po lewej. Jego przycisk zasilania oraz
 tryby aktywny/pasywny sterują natywnym sonarem. `«` zwija go do małego radaru,

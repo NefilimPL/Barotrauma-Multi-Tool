@@ -3,7 +3,7 @@ local C=require('AegisCombat.config')
 local P={}
 function P.install(G,E)
     local function is(value,name) return value and E.LuaUserData.IsTargetType(value,'Barotrauma.'..name) end
-    local collisionMask,collisionNone
+    local collisionMask,collisionNone,collisionItemBlocking
     function G.friendly(a,b) return a and b and (a==b or a.IsFriendly(b)) or false end
     function G.direction(item)
         local angle=item.body.TransformedRotation
@@ -24,7 +24,7 @@ function P.install(G,E)
     end
     -- Ray-cast each submarine coordinate space and outside space, admitting
     -- only fixtures that belong to that space. All public positions are world units.
-    function G.cast(a,b,radius,owner,wallsOnly,allCharacters)
+    function G.cast(a,b,radius,owner,wallsOnly,allCharacters,gripTarget)
         if not collisionMask then
             E.LuaUserData.RegisterType('Barotrauma.Physics')
             local physics=E.LuaUserData.CreateStatic('Barotrauma.Physics')
@@ -33,6 +33,7 @@ function P.install(G,E)
             collisionMask=physics.CollisionCharacter+physics.CollisionWall+physics.CollisionLevel+
                 physics.CollisionItemBlocking+physics.CollisionProjectile+physics.CollisionLagCompensationBody
             collisionNone=physics.CollisionNone
+            collisionItemBlocking=physics.CollisionItemBlocking
         end
         local nearest=nil
         local dx,dy=b.x-a.x,b.y-a.y
@@ -66,10 +67,13 @@ function P.install(G,E)
                     else
                         local item=is(data,'Item') and data or is(fixture.UserData,'Item') and fixture.UserData
                         if not item and is(data,'Items.Components.ItemComponent') then item=data.Item end
-                        if item then
+                        if item and item~=gripTarget and item.Submarine==sub then
                             local door=U.component(item,'Door')
-                            if door and item.Submarine==sub and not door.CanBeTraversed then kind='wall';blocker=item end
-                        elseif not sub and data and not is(data,'Submarine') and
+                            if (door and not door.CanBeTraversed) or
+                                (not door and gripTarget and fixture.CollisionCategories==collisionItemBlocking) then
+                                kind='wall';blocker=item
+                            end
+                        elseif not item and not sub and data and not is(data,'Submarine') and
                             (E.LuaUserData.IsTargetType(data,'Voronoi2.VoronoiCell') or is(data,'LevelObject')) then kind='wall' end
                     end
                     if kind and (not nearest or fraction<nearest.t) then

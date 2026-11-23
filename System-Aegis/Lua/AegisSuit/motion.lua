@@ -37,8 +37,8 @@ function M.install(G,E)
         local gap
         if state.grip and not state.grip.character then
             local p=owner.WorldPosition
-            local offset=state.grip.wantedOffset or state.grip.offset
-            point={x=p.X+offset.x,y=p.Y+offset.y};gap=0
+            local offset=state.grip.originalOffset
+            point=state.grip.waypoint or {x=p.X+offset.x,y=p.Y+offset.y};gap=0
         end
         if state.lastPulse and G.now-(state.shotTime or -100)<C.pulseDuration then point=state.lastPulse end
         if not state.toolAngles then state.toolAngles=M.angles(Core.toolPose(base,nil,rest,facing,rotation),rotation) end

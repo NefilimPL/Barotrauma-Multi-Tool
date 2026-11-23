@@ -66,6 +66,14 @@ class AegisToolGeometryTests(LuaCase):
 
 
 class AegisHoldMathTests(LuaCase):
+    def test_grip_brakes_fast_lateral_motion_gradually(self):
+        self.lua.execute("""
+            local C=require('AegisSuit.core')
+            local a=C.holdAcceleration({x=0,y=0},{x=8,y=0},{x=0,y=-9.82})
+            local nextSpeed=8+a.x/60
+            assert(nextSpeed>7.2 and nextSpeed<8,'spring erased too much momentum in one physics step')
+        """)
+
     def test_stationary_hold_cancels_gravity_and_damps_downward_velocity(self):
         self.lua.execute("""
             local C=require('AegisSuit.core')
