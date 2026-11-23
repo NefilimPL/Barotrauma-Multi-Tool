@@ -81,11 +81,11 @@
   <entityname.aegisimpellermodule>Moduł wirnika Aegis — Piraci</entityname.aegisimpellermodule>
   <entitydescription.aegisimpellermodule>Wycraftuj osobno i włóż do slotu 4 kombinezonu Aegis. Włącza wspomaganie pływania wirnikiem. Wyjęcie wyłącza napęd. Obieg oddechowy, sonar i oświetlenie działają niezależnie.</entitydescription.aegisimpellermodule>
   <label.aegisshieldslot>Wkład tarczy: 5 blokad / 15 s na jedną blokadę</label.aegisshieldslot>
-  <entityname.aegisservosuitdescendens>Kombinezon serwomanipulacyjny Aegis — Descendens</entityname.aegisservosuitdescendens>
+  <entityname.aegisservosuitdescendens>Kombinezon serwomanipulacyjny Aegis — Potomkowie</entityname.aegisservosuitdescendens>
   <entitydescription.aegisservosuitdescendens>Egzoszkielet do 10 000 m. Sloty: bateria, amunicja, serwo, wirnik, kompresor i butla tlenowa. Do napędu, ramienia, sonaru i latarki potrzebna jest bateria. Pod wodą kombinezon zużywa tlen z butli. Kompresor napełnia butlę w bezpiecznym powietrzu. Moduły wytwarza się osobno. Wymaga LuaCs na kliencie i serwerze.</entitydescription.aegisservosuitdescendens>
-  <entityname.aegisservomoduledescendens>Moduł ramienia serwo Aegis — Descendens</entityname.aegisservomoduledescendens>
+  <entityname.aegisservomoduledescendens>Moduł ramienia serwo Aegis — Potomkowie</entityname.aegisservomoduledescendens>
   <entitydescription.aegisservomoduledescendens>Wycraftuj osobno i włóż do slotu 3 kombinezonu Aegis, po zasilaniu i amunicji. Włącza naprawę, spawanie, obronę i chwytak ramienia. Wyjęcie zwalnia trzymany cel i zatrzymuje pracę ramienia. Moduł nie zastępuje skrzynki amunicji ani źródła zasilania.</entitydescription.aegisservomoduledescendens>
-  <entityname.aegisimpellermoduledescendens>Moduł wirnika Aegis — Descendens</entityname.aegisimpellermoduledescendens>
+  <entityname.aegisimpellermoduledescendens>Moduł wirnika Aegis — Potomkowie</entityname.aegisimpellermoduledescendens>
   <entitydescription.aegisimpellermoduledescendens>Wycraftuj osobno i włóż do slotu 4 kombinezonu Aegis. Włącza wspomaganie pływania wirnikiem. Wyjęcie wyłącza napęd. Obieg oddechowy, sonar i oświetlenie działają niezależnie.</entitydescription.aegisimpellermoduledescendens>
   <entityname.aegisservosuitcoalition>Kombinezon serwomanipulacyjny Aegis — Koalicja</entityname.aegisservosuitcoalition>
   <entitydescription.aegisservosuitcoalition>Egzoszkielet do 10 000 m. Sloty: bateria, amunicja, serwo, wirnik, kompresor i butla tlenowa. Do napędu, ramienia, sonaru i latarki potrzebna jest bateria. Pod wodą kombinezon zużywa tlen z butli. Kompresor napełnia butlę w bezpiecznym powietrzu. Moduły wytwarza się osobno. Wymaga LuaCs na kliencie i serwerze.</entitydescription.aegisservosuitcoalition>

@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
 <Items>
-  <Item identifier="aegisservosuitdescendens" category="Diving,Equipment" tags="diving,deepdiving,human,aegisservosuit,divinggear_wearableindoors" scale="0.06" fireproof="true" allowdroppingonswapwith="diving" impactsoundtag="impact_metal_heavy" addedrepairspeedmultiplier="4.5" cannotrepairfail="true" name="Aegis servo suit — Descendens">
+  <Item identifier="aegisservosuitdescendens" category="Diving,Equipment" tags="diving,deepdiving,human,aegisservosuit,divinggear_wearableindoors" scale="0.06" fireproof="true" allowdroppingonswapwith="diving" impactsoundtag="impact_metal_heavy" addedrepairspeedmultiplier="4.5" cannotrepairfail="true" name="Aegis servo suit — Descendants">
     <Price baseprice="10000" sold="false" soldelsewhere="false" minavailable="1" maxavailable="1" canbespecial="false">
       <Price storeidentifier="merchantresearch" sold="true" multiplier="1.0" />
     </Price>
@@ -97,7 +97,7 @@
       <icon identifier="" texture="Content/UI/MainIconsAtlas.png" sourcerect="346,416,4,4" origin="0.5,0.5" />
     </Sonar>
   </Item>
-  <Item identifier="aegisservomoduledescendens" name="Aegis servo arm module — Descendens" category="Equipment" tags="smallitem,aegisservomodule" scale="0.035" maxstacksize="1" fireproof="true" impactsoundtag="impact_metal_light">
+  <Item identifier="aegisservomoduledescendens" name="Aegis servo arm module — Descendants" category="Equipment" tags="smallitem,aegisservomodule" scale="0.035" maxstacksize="1" fireproof="true" impactsoundtag="impact_metal_light">
     <Price baseprice="900" sold="false" />
     <Fabricate suitablefabricators="fabricator,milfabricator" requiredtime="40">
       <RequiredSkill identifier="mechanical" level="60" />
@@ -116,7 +116,7 @@
     <Body width="850" height="800" density="10" />
     <Holdable slots="Any,RightHand" handle1="0,0" holdpos="0,0" msg="ItemMsgPickUpSelect" />
   </Item>
-  <Item identifier="aegisimpellermoduledescendens" name="Aegis impeller module — Descendens" category="Equipment" tags="smallitem,aegisimpellermodule" scale="0.035" maxstacksize="1" fireproof="true" impactsoundtag="impact_metal_light">
+  <Item identifier="aegisimpellermoduledescendens" name="Aegis impeller module — Descendants" category="Equipment" tags="smallitem,aegisimpellermodule" scale="0.035" maxstacksize="1" fireproof="true" impactsoundtag="impact_metal_light">
     <Price baseprice="500" sold="false" />
     <Fabricate suitablefabricators="fabricator,milfabricator" requiredtime="30">
       <RequiredSkill identifier="mechanical" level="50" />

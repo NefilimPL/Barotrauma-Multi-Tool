@@ -1,15 +1,15 @@
-# Kombinezony frakcji w Systemie Aegis 1.8.9
+# Kombinezony frakcji w Systemie Aegis 1.8.10
 
 Każda z sześciu frakcji ma własny krój kombinezonu, hełm i osłony osprzętu.
 Rozpoznasz zestawy po kształtach, materiale i widocznych oznaczeniach.
 Warianty mają te same receptury, ochronę i funkcje.
 
-[Porównaj kombinezony](faction-colors/preview.html) · [ZIP 1.8.9](../output/System-Aegis-1.8.9.zip)
+[Porównaj kombinezony](faction-colors/preview.html) · [ZIP 1.8.10](../output/System-Aegis-1.8.10.zip)
 
 | Frakcja | Motyw |
 |---|---|
 | Piraci | Czerwone płyty z nitami, mosiężny iluminator z kratą, zewnętrzne węże i czaszka z kluczami. |
-| Descendens | Gładkie białe osłony, szeroka fasetowana szyba w kobalcie i turkusowe szewrony. |
+| Potomkowie | Gładkie białe osłony, szeroka fasetowana szyba w kobalcie i turkusowe szewrony. |
 | Koalicja | Granatowe płyty abordażowe z białymi pasami, bursztynowy wizjer i znak Koalicji z gry na pancerzu. |
 | Separatyści | Pomarańczowe osłony przemysłowe, trzy okrągłe wizjery, uchwyty i żółto-czarne pasy. |
 | Kościół Łuski | Fioletowy kaptur hełmu, żebrowane płyty w kolorze kości, wąski wizjer i zwijający się znak kultu. |
@@ -27,13 +27,13 @@ u przypisanego handlarza. Nie trafia do oferty pozostałych sklepów.
 | Wariant | Sprzedawca |
 |---|---|
 | Piraci — czerwony | Zbrojmistrz (`merchantarmory`) |
-| Descendens — biały | Sklep placówki naukowej (`merchantresearch`) |
+| Potomkowie — biały | Sklep placówki naukowej (`merchantresearch`) |
 | Koalicja — niebieski | Sklep placówki wojskowej Koalicji (`merchantmilitary`) |
 | Separatyści — pomarańczowy | Sklep placówki wojskowej Separatystów (`merchantmilitary`) |
 | Kościół Łuski — fioletowy | Handlarz Łuski (`merchanthusk`) |
 | Dzieci Honkomatki — zielono-żółty | Handlarz Klaunów (`merchantclown`) |
 
-Piraci i Descendens nie mają osobnych handlarzy w podstawowej grze; przypisano
+Piraci i Potomkowie nie mają osobnych handlarzy w podstawowej grze; przypisano
 im powyższe rodzaje sklepów. Niebieski i pomarańczowy wariant wymagają placówki
 odpowiedniej frakcji; kultowe warianty uwzględniają również drugą frakcję placówki.
 Wyłączono losowe oferty dnia. Reputacja, umiejętności i inne standardowe
@@ -45,7 +45,7 @@ Receptury craftowania pozostają dostępne.
 | Frakcja | Kombinezon | Serwo | Wirnik |
 |---|---|---|---|
 | Piraci | `aegisservosuit` | `aegisservomodule` | `aegisimpellermodule` |
-| Descendens | `aegisservosuitdescendens` | `aegisservomoduledescendens` | `aegisimpellermoduledescendens` |
+| Potomkowie | `aegisservosuitdescendens` | `aegisservomoduledescendens` | `aegisimpellermoduledescendens` |
 | Koalicja | `aegisservosuitcoalition` | `aegisservomodulecoalition` | `aegisimpellermodulecoalition` |
 | Separatyści | `aegisservosuitseparatists` | `aegisservomoduleseparatists` | `aegisimpellermoduleseparatists` |
 | Kościół Łuski | `aegisservosuithusk` | `aegisservomodulehusk` | `aegisimpellermodulehusk` |

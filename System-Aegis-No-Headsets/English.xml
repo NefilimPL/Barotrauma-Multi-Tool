@@ -81,11 +81,11 @@
   <entityname.aegisimpellermodule>Aegis impeller module — Pirates</entityname.aegisimpellermodule>
   <entitydescription.aegisimpellermodule>Craft separately and install in slot 4 of the Aegis servo suit. Enables the underwater propulsion impeller. Removing it disables powered swimming assistance. Life support, sonar and lights remain independent.</entitydescription.aegisimpellermodule>
   <label.aegisshieldslot>Shield cartridge: 5 blocks / 15 s per restored block</label.aegisshieldslot>
-  <entityname.aegisservosuitdescendens>Aegis servo suit — Descendens</entityname.aegisservosuitdescendens>
+  <entityname.aegisservosuitdescendens>Aegis servo suit — Descendants</entityname.aegisservosuitdescendens>
   <entitydescription.aegisservosuitdescendens>Exosuit rated to 10,000 m. Slots: battery, ammunition, servo, impeller, compressor and oxygen tank. The arm, thruster, sonar and light require a battery. The suit draws from the tank underwater. The compressor refills the tank in breathable air. Craft modules separately. Requires client and server LuaCs.</entitydescription.aegisservosuitdescendens>
-  <entityname.aegisservomoduledescendens>Aegis servo arm module — Descendens</entityname.aegisservomoduledescendens>
+  <entityname.aegisservomoduledescendens>Aegis servo arm module — Descendants</entityname.aegisservomoduledescendens>
   <entitydescription.aegisservomoduledescendens>Craft separately and install in slot 3 of the Aegis servo suit, after power and ammunition. Enables every arm function: repair, welding, combat and tractor beam. Removing it releases the held target and stops arm work. It does not replace the ammunition box or power source.</entitydescription.aegisservomoduledescendens>
-  <entityname.aegisimpellermoduledescendens>Aegis impeller module — Descendens</entityname.aegisimpellermoduledescendens>
+  <entityname.aegisimpellermoduledescendens>Aegis impeller module — Descendants</entityname.aegisimpellermoduledescendens>
   <entitydescription.aegisimpellermoduledescendens>Craft separately and install in slot 4 of the Aegis servo suit. Enables the underwater propulsion impeller. Removing it disables powered swimming assistance. Life support, sonar and lights remain independent.</entitydescription.aegisimpellermoduledescendens>
   <entityname.aegisservosuitcoalition>Aegis servo suit — Coalition</entityname.aegisservosuitcoalition>
   <entitydescription.aegisservosuitcoalition>Exosuit rated to 10,000 m. Slots: battery, ammunition, servo, impeller, compressor and oxygen tank. The arm, thruster, sonar and light require a battery. The suit draws from the tank underwater. The compressor refills the tank in breathable air. Craft modules separately. Requires client and server LuaCs.</entitydescription.aegisservosuitcoalition>
