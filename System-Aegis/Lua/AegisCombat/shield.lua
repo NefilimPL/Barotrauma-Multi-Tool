@@ -63,15 +63,23 @@ function M.install(G,E)
     local function limbPoints(target,contacts)
         local points=contacts and contacts[target]
         if points then return points end
-        points={}
+        points={minX=math.huge,maxX=-math.huge,minY=math.huge,maxY=-math.huge}
         U.each(target.AnimController.Limbs,function(limb)
             if not limb.IsSevered then
                 local p=limb.WorldPosition
-                points[#points+1]=p.X;points[#points+1]=p.Y
+                local x,y=p.X,p.Y
+                points[#points+1]=x;points[#points+1]=y
+                if x<points.minX then points.minX=x end
+                if x>points.maxX then points.maxX=x end
+                if y<points.minY then points.minY=y end
+                if y>points.maxY then points.maxY=y end
             end
         end)
         if contacts then contacts[target]=points end
         return points
+    end
+    local function outsideRange(points,x,y,radius)
+        return points.maxX<x-radius or points.minX>x+radius or points.maxY<y-radius or points.minY>y+radius
     end
     function G.updateShield(s,ctx,dt,contacts)
         if not ctx.valid or not ctx.aim or not ctx.damage or G.now<s.brokenUntil or not G.powered(s.item,0) then
@@ -88,20 +96,31 @@ function M.install(G,E)
         local direction
         s.shield,direction=geometry(s.item)
         local pos=s.item.WorldPosition
+        local radius=C.shieldRadius+14
+        local inner,outer=math.max(1,C.shieldRadius-14)^2,radius*radius
+        local facing=math.cos(C.shieldHalfAngle)
         U.each(E.Character.CharacterList,function(target)
-            if not s.shield or target.Removed or target.IsDead or G.friendly(ctx.owner,target) then return end
+            if not s.shield then return end
+            local sx,sy=s.shield.x,s.shield.y
+            local points=contacts and contacts[target]
+            -- A character's origin can be far from a ragdolled limb. Only
+            -- reject by the bounds of the exact points sampled this tick.
+            if points and outsideRange(points,sx,sy,radius) then return end
+            if target.Removed or target.IsDead or G.friendly(ctx.owner,target) then return end
             local nextContact=s.contactTimes[target] or 0
             if G.now<nextContact then return end
+            if not points then
+                points=limbPoints(target,contacts)
+                if outsideRange(points,sx,sy,radius) then return end
+            end
             local touched=nil
-            local points=limbPoints(target,contacts)
-            local inner,outer=math.max(1,C.shieldRadius-14)^2,(C.shieldRadius+14)^2
             for i=1,#points,2 do
                 local x,y=points[i],points[i+1]
-                local dx,dy=x-s.shield.x,y-s.shield.y
+                local dx,dy=x-sx,y-sy
                 local distance2=dx*dx+dy*dy
                 if distance2>=inner and distance2<=outer then
                     local dist=math.sqrt(distance2)
-                    if dist>1 and (dx*direction.x+dy*direction.y)/dist>=math.cos(C.shieldHalfAngle) then touched={x=x,y=y} end
+                    if dist>1 and (dx*direction.x+dy*direction.y)/dist>=facing then touched={x=x,y=y} end
                 end
             end
             if touched and not G.cast({x=pos.X,y=pos.Y},touched,0,ctx.owner,true) then
