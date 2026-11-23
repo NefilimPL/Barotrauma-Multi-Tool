@@ -290,6 +290,17 @@ class FactionFrameTests(unittest.TestCase):
                 self.assertLessEqual(float(helmet.get('scale')), .67)
                 self.assertEqual(helmet.get('origin'), '0.5,0.5')
 
+    def test_profile_boots_follow_the_native_foot_angle(self):
+        for filename in ('aegis_suit.xml', 'aegis_factions.xml'):
+            for suit in ET.parse(MOD / filename).findall('Item'):
+                identifier = suit.get('identifier', '')
+                if not identifier.startswith('aegisservosuit'):
+                    continue
+                for limb in ('LeftFoot', 'RightFoot'):
+                    foot = suit.find(f"Wearable/sprite[@name='Aegis {limb}']")
+                    self.assertIsNotNone(foot, (identifier, limb))
+                    self.assertEqual(float(foot.get('rotation', '0')), 0, (identifier, limb))
+
     def test_coalition_chest_and_shoulder_emblems_use_the_game_faction_icon(self):
         suit = ET.parse(MOD / 'aegis_factions.xml').find("Item[@identifier='aegisservosuitcoalition']")
         for name, limb, plate_depth, bounds in (
