@@ -10,7 +10,7 @@ class PassageCollisionTests(LuaCase):
                     __sub=function(a,b) return vec(a.X-b.X,a.Y-b.Y) end})
             end
             local physics={CollisionNone=0,CollisionCharacter=1,CollisionWall=2,CollisionLevel=4,
-                CollisionItemBlocking=8,CollisionProjectile=16,CollisionLagCompensationBody=32}
+                CollisionItemBlocking=8,CollisionProjectile=16,CollisionLagCompensationBody=32,CollisionPlatform=64}
             env={LuaUserData={IsTargetType=function(value,name) return value.kind==name end,
                     RegisterType=function() end,CreateStatic=function() return physics end,
                     CreateEnumTable=function() return {None=0} end},
@@ -61,6 +61,16 @@ class PassageCollisionTests(LuaCase):
         self.lua.execute('''
             fixtures={fixture(256,15)}
             assert(not G.cast({x=0,y=0},{x=100,y=0},0,nil,true),'repair-only fixture blocked an open hole')
+        ''')
+
+    def test_item_haul_paths_respect_platforms_that_the_ragdoll_can_pass(self):
+        self.lua.execute('''
+            local platform=fixture(64,30);fixtures={platform}
+            local a,b={x=0,y=0},{x=100,y=0}
+            local held={kind='Barotrauma.Item'}
+            local hit=G.cast(a,b,12,nil,true,false,held,true)
+            assert(hit and hit.blocker==platform.Body.UserData,'item route guides through a platform')
+            assert(not G.cast(a,b,12,nil,true,false,{kind='Barotrauma.Character'}))
         ''')
 
     def test_disabled_collision_fixture_is_ignored_but_solid_wall_remains(self):

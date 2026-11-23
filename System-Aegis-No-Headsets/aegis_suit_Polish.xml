@@ -11,7 +11,7 @@
   <aegis.combat>Obrona</aegis.combat>
   <aegis.grab>Chwytak</aegis.grab>
   <aegis.grab_short>[InputType.Aim] + [InputType.Use]: złap / puść</aegis.grab_short>
-  <aegis.grab_help>Wskaż cel kursorem. Przytrzymaj [InputType.Aim] i naciśnij [InputType.Use], potem puść klawisze. Cel pozostaje podtrzymywany w powietrzu. Ponowne naciśnięcie podczas celowania puszcza go. Osoby stają się chwilowo bezwładne. Jeden luźny przedmiot albo istota, z wyjątkiem masywnych; zasięg 300. Zmiana trybu, przeszkoda, utrata zasilania lub zdjęcie kombinezonu zwalnia chwyt.</aegis.grab_help>
+  <aegis.grab_help>Wskaż cel kursorem. Przytrzymaj [InputType.Aim] i naciśnij [InputType.Use], potem puść klawisze. Chwytak podtrzymuje luźny przedmiot lub istotę, także martwą. Zasięg złapania wynosi 300. Cel pozostaje złapany przy przeszkodzie. Zwolnij chwyt ponownym naciśnięciem podczas celowania. Chwyt zwalnia się też po utracie zasilania, zmianie trybu, zdjęciu kombinezonu lub wyjściu poza zasięg podtrzymania.</aegis.grab_help>
   <aegis.arm_tab>Ramię</aegis.arm_tab>
   <aegis.hide_panel>Schowaj panel; funkcja pozostaje włączona</aegis.hide_panel>
   <aegis.sonar>Sonar</aegis.sonar>

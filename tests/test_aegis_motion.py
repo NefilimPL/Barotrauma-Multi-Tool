@@ -82,7 +82,7 @@ class AegisGripContactRecoveryTests(LuaCase):
             assert(C.contact(s,t,0))
             t.visible=false;t.distance=240;assert(C.contact(s,t,2))
             t.distance=210;assert(C.contact(s,t,4),'progressing target dropped during recovery')
-            assert(not C.contact(s,t,8),'stationary target stayed stuck against a permanent wall')
+            assert(C.contact(s,t,8),'stalled target was released without player input')
         """)
 
     def test_established_grip_survives_brief_frame_occlusion_and_release_margin(self):
@@ -114,10 +114,26 @@ class AegisGripAnchorPlannerTests(LuaCase):
         self.lua.execute("""
             local M=require('AegisSuit.grip')
             local function cast(a,b)
-                if a.x<0 and b.x>=0 then return {t=.5,x=0,y=10,nx=-1,ny=0} end
+                if (a.x<0)~=(b.x<0) then
+                    local t=-a.x/(b.x-a.x);local y=a.y+(b.y-a.y)*t
+                    if y<65 then return {t=t,x=0,y=y,nx=a.x<0 and -1 or 1,ny=0} end
+                end
             end
             local goal,recovering=M.anchor({x=50,y=0},{x=100,y=45},{x=-50,y=0},true,cast)
             assert(recovering and 50+goal.x<0 and goal.y>0,'guide crossed the wall')
+        """)
+
+    def test_permanent_wall_does_not_walk_a_target_out_of_range(self):
+        self.lua.execute("""
+            local M=require('AegisSuit.grip')
+            local function cast(a,b)
+                if (a.x<255)~=(b.x<255) then
+                    local t=(255-a.x)/(b.x-a.x)
+                    return {t=t,x=255,y=a.y+(b.y-a.y)*t,nx=a.x<255 and -1 or 1,ny=0}
+                end
+            end
+            local goal,recovering,waiting=M.anchor({x=0,y=0},{x=115,y=40},{x=280,y=0},false,cast)
+            assert(recovering and waiting and goal.x==280 and goal.y==0,'grip walks along an impassable wall')
         """)
 
     def test_open_space_preserves_original_hold_offset(self):
@@ -128,13 +144,49 @@ class AegisGripAnchorPlannerTests(LuaCase):
             assert(not recovering and goal.x==110 and goal.y==45)
         """)
 
-    def test_permanent_wall_and_invalid_or_distant_target_still_release(self):
+    def test_horizontal_motion_checks_for_a_ledge_below_a_tall_body(self):
+        self.lua.execute("""
+            local M=require('AegisSuit.grip')
+            local function cast(a,b,radius)
+                if a.x<0 and b.x>0 then
+                    local t=-a.x/(b.x-a.x)
+                    local y=a.y+(b.y-a.y)*t
+                    if y> -30 and y-radius< -35 then return {t=t,x=0,y=y,nx=-1,ny=0} end
+                end
+            end
+            local _,recovering=M.anchor({x=50,y=0},{x=75,y=0},{x=-80,y=0},true,cast)
+            assert(recovering,'ragdoll was pulled along a centerline that leaves its feet in the ledge')
+        """)
+
+    def test_a_wall_does_not_release_grip_but_invalid_or_distant_targets_do(self):
         self.lua.execute("""
             local C=require('AegisSuit.core')
             local t={id='g1',kind='grab',free=true,visible=true,distance=200}
             local s={mode='grab',target=t,grip={}}
             assert(C.contact(s,t,0));t.visible=false
-            assert(not C.contact(s,t,10))
+            local kept,working=C.contact(s,t,10);assert(kept and working)
             t.visible=true;t.distance=1000;assert(not C.contact(s,t,11))
             t.distance=100;t.free=false;assert(not C.contact(s,t,12))
+        """)
+
+    def test_finite_obstacle_above_the_first_detour_can_be_routed_around(self):
+        self.lua.execute("""
+            local M=require('AegisSuit.grip')
+            local function cast(a,b)
+                if a.x<0 and b.x>=0 then
+                    local t=-a.x/(b.x-a.x);local y=a.y+(b.y-a.y)*t
+                    if y<85 then return {t=t,x=0,y=y,nx=-1,ny=0} end
+                end
+            end
+            local owner={x=50,y=0};local preferred={x=100,y=45};local body={x=-100,y=0}
+            local goal,recovery,waiting=M.anchor(owner,preferred,body,false,cast)
+            assert(recovery and not waiting and goal.y>85,'short detour cannot clear the obstacle')
+            for _=1,50 do
+                goal=M.anchor(owner,preferred,body,false,cast)
+                local nextPoint={x=body.x+(owner.x+goal.x-body.x)*.2,
+                    y=body.y+(owner.y+goal.y-body.y)*.2}
+                assert(not cast(body,nextPoint),'detour moved through the wall')
+                body=nextPoint
+            end
+            assert(body.x>130 and math.abs(body.y-45)<10,'target did not reach the normal anchor')
         """)

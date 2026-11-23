@@ -91,14 +91,15 @@ aby otrzymać aktualne komponenty i skalę złożonego przedmiotu na ziemi.
 W panelu po prawej wybierz naprawę/spawanie, obronę lub chwytak.
 Przycisk „Ramię włączone/wyłączone” przełącza funkcję ramienia.
 Chwytak: wybierz ten tryb, wskaż cel kursorem, przytrzymaj **PPM (Celuj)**
-i naciśnij **E (Użyj)**, potem puść klawisze. Cel pozostaje zawieszony,
-a osoba staje się chwilowo bezwładna. Ponowne E przy trzymanym PPM puszcza cel.
+i naciśnij **E (Użyj)**, potem puść klawisze. Cel pozostaje podtrzymywany,
+a żywa istota wiotczeje na czas chwytu. Ponowne E przy trzymanym PPM puszcza cel.
 Przy zmienionym sterowaniu użyj przycisków pokazanych w panelu kombinezonu.
-Łapie jeden luźny, ruchomy przedmiot albo istotę poniżej limitu masy;
+Łapie jeden luźny, ruchomy przedmiot do 80 jednostek masy albo istotę, także martwą;
 nie wyrywa zamocowanych urządzeń ani rzeczy z ekwipunków.
 Zasięg podnoszenia wynosi 300 jednostek gry. Chwytak stopniowo wyhamowuje
-cel i próbuje przeprowadzić go obok przeszkody. Trwała blokada, wyjście poza
-zasięg, zmiana trybu, brak energii lub zdjęcie kombinezonu zwalnia cel.
+cel i próbuje przeprowadzić go obok przeszkody. Gdy przejście jest zablokowane,
+chwytak trzyma cel po dostępnej stronie. Wyjście poza zasięg podtrzymania,
+zmiana trybu, brak energii lub zdjęcie kombinezonu zwalnia cel.
 Nie trzeba trzymać narzędzia w ręce.
 Przycisk `»` chowa prawy panel; zakładka **Ramię** otwiera go ponownie.
 **Sonar** otwiera niezależny panel po lewej. Jego przycisk zasilania oraz

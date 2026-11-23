@@ -11,7 +11,7 @@
   <aegis.combat>Defense</aegis.combat>
   <aegis.grab>Tractor beam</aegis.grab>
   <aegis.grab_short>[InputType.Aim] + [InputType.Use]: grab / release</aegis.grab_short>
-  <aegis.grab_help>Point at the target. Hold [InputType.Aim] and press [InputType.Use], then release the keys. The target stays suspended. Press again while aiming to release. Creatures become temporarily limp. One loose object or creature, excluding massive targets; range 300. Changing mode, an obstacle, power loss or removing the suit releases the grip.</aegis.grab_help>
+  <aegis.grab_help>Point at the target. Hold [InputType.Aim] and press [InputType.Use], then release the keys. The claw holds one loose object or creature, living or dead. Acquisition range is 300. The claw keeps its grip at obstacles. Press again while aiming to release. Changing mode, losing power, removing the suit or moving beyond holding range releases the grip.</aegis.grab_help>
   <aegis.arm_tab>Arm</aegis.arm_tab>
   <aegis.hide_panel>Hide panel; the function stays enabled</aegis.hide_panel>
   <aegis.sonar>Sonar</aegis.sonar>

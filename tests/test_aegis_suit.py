@@ -224,6 +224,41 @@ class AegisAdapterTests(LuaCase):
             assert(not s.target,'a new Use press while aiming should release the target')
         """)
 
+    def test_manual_grab_can_start_on_a_visible_limb_of_a_large_enemy(self):
+        self.lua.execute("""
+            E.Game.RoundStarted=true;E.InputType={Aim=1,Use=2};G.nextOwners=1
+            wearer.WorldPosition={X=0,Y=0};wearer.AimRefPosition=wearer.WorldPosition
+            wearer.CursorWorldPosition={X=200,Y=0};wearer.IsKeyDown=function() return true end
+            local body={Enabled=true,Mass=400,BodyType=2}
+            local limb={WorldPosition={X=200,Y=0},body=body}
+            local enemy={ID=1,isCharacter=true,IsDead=true,Mass=1000,WorldPosition={X=420,Y=100},
+                AnimController={Collider={Enabled=false},MainLimb=limb,Limbs={limb}}}
+            E.Character={CharacterList={wearer,enemy}};E.Item={ItemList={}}
+            G.cast=function(a,b) if b.y>50 then return {kind='wall'} end end
+            G.hold=function(_,_,target) return target.entity==enemy end
+            local s=G.state(suit);s.mode='grab'
+            G.update(1/60)
+            assert(s.active and s.target.entity==enemy,'aiming at the exposed limb did not start the grip')
+        """)
+
+    def test_held_creature_stays_in_range_after_aimed_limb_swings_away(self):
+        self.lua.execute("""
+            E.Game.RoundStarted=true;E.InputType={Aim=1,Use=2};G.nextOwners=1
+            wearer.WorldPosition={X=0,Y=0};wearer.IsKeyDown=function() return false end
+            local body={Enabled=true,Mass=200,BodyType=2}
+            local grabbed={WorldPosition={X=410,Y=0},body=body}
+            local nearby={WorldPosition={X=295,Y=0},body=body}
+            local creature={isCharacter=true,WorldPosition={X=450,Y=0},
+                AnimController={Collider=body,Limbs={grabbed,nearby}}}
+            local s=G.state(suit);s.mode='grab';s.grip={}
+            s.target={id='g1',kind='grab',entity=creature,limb=grabbed}
+            G.hold=function() return true end
+            G.update(1/60)
+            assert(s.active and s.target.entity==creature,'held creature was dropped while a limb was in range')
+            nearby.IsSevered=true;G.update(1/60)
+            assert(not s.active and not s.target,'a severed limb incorrectly extended the grip range')
+        """)
+
     def test_removed_repair_target_is_replaced_by_a_visible_device(self):
         self.lua.execute("""
             E.Game.RoundStarted=true;G.nextOwners=1
@@ -387,13 +422,12 @@ class AegisAdapterTests(LuaCase):
             prop.body.Enabled=false;assert(not G.portable(prop))
         """)
 
-    def test_grab_checks_whole_creature_mass_instead_of_its_light_collider(self):
+    def test_grab_accepts_living_or_dead_creatures_above_the_item_mass_limit(self):
         self.lua.execute("""
             local body={Enabled=true,BodyType=2,Mass=4}
             local creature={isCharacter=true,Mass=40,AnimController={Collider=body}}
             assert(G.grabbable(creature))
-            creature.Mass=500;assert(not G.grabbable(creature))
-            creature.Mass=80;assert(G.grabbable(creature))
+            creature.Mass=500;assert(G.grabbable(creature))
             creature.IsDead=true;assert(G.grabbable(creature))
             creature.Removed=true;assert(not G.grabbable(creature))
         """)
@@ -407,9 +441,9 @@ class AegisAdapterTests(LuaCase):
             prop.body.Mass=0/0;assert(not G.grabbable(prop))
         """)
 
-    def test_retained_massive_creature_is_rejected_before_charging_power(self):
+    def test_retained_creature_without_a_movable_body_is_rejected_before_charging_power(self):
         self.lua.execute("""
-            local creature={isCharacter=true,Mass=500,AnimController={Collider={Enabled=true,Mass=4}}}
+            local creature={isCharacter=true,Mass=500,AnimController={Collider={Enabled=true,Mass=4,BodyType=0}}}
             local before=battery.Condition
             assert(not G.perform(wearer,suit,{kind='grab',entity=creature,point={x=20,y=20}},.1))
             assert(battery.Condition==before)

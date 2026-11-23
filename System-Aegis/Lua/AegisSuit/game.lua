@@ -133,12 +133,15 @@ function M.new(E)
     local function position(entity)
         local p=entity.WorldPosition;return {x=p.X,y=p.Y}
     end
+    local function grabLimb(limb)
+        return limb and not limb.IsSevered and not limb.Hidden and limb.body and limb.body.Enabled
+    end
     function G.repairEligible(owner,item)
         return item and not item.Removed and not item.ParentInventory and
             (not item.HasAccess or item.HasAccess(owner))
     end
     function G.visible(owner,base,t)
-        local hit=G.cast(base,t.point,0,owner,t.kind~='combat',true)
+        local hit=G.cast(base,t.point,0,owner,t.kind~='combat',true,t.kind=='grab' and t.entity or nil)
         if not hit then return true end
         if hit.kind=='character' then return hit.target==t.entity end
         if t.kind=='weld' then
@@ -174,8 +177,15 @@ function M.new(E)
         if not target then return end
         if E.LuaUserData.IsTargetType(target,'Barotrauma.Character') then
             local anim=target.AnimController
+            if not anim then return end
             if anim.Collider and anim.Collider.Enabled then return anim.Collider end
-            return anim.MainLimb and anim.MainLimb.body or anim.Collider
+            local main=anim.MainLimb
+            if main and not main.IsSevered and main.body and main.body.Enabled then return main.body end
+            local body
+            U.each(anim.Limbs,function(limb)
+                if not body and not limb.IsSevered and limb.body and limb.body.Enabled then body=limb.body end
+            end)
+            return body
         end
         return target.body
     end
@@ -202,12 +212,12 @@ function M.new(E)
         local body=G.body(target)
         if not body or not body.Enabled or not movable(body) then return false end
         local character=E.LuaUserData.IsTargetType(target,'Barotrauma.Character')
-        if not character and not G.portable(target) then return false end
-        local mass=character and target.Mass or body.Mass
-        return type(mass)=='number' and mass>0 and mass<=C.maxGrabMass
+        local mass=body.Mass
+        if type(mass)~='number' or not (mass>0 and mass<math.huge) then return false end
+        return character or (mass<=C.maxGrabMass and G.portable(target))
     end
-    function G.gather(owner,s)
-        local targets,base={},G.mount(owner)
+    function G.gather(owner,s,grabOrigin)
+        local targets,base={},grabOrigin or G.mount(owner)
         local automatic=owner.IsBot
         local function add(t,range)
             if s.target and s.target.id==t.id and (t.kind=='repair' or t.kind=='weld') then range=range+C.contactSlack end
@@ -217,8 +227,10 @@ function M.new(E)
             local bound=range
             if t.kind=='weld' then bound=bound+math.sqrt(t.entity.Rect.Width^2+t.entity.Rect.Height^2) end
             if t.distance<=bound then
-                t.visible=t.kind=='combat' and G.visibleFromTool(owner,s,t,true) or
-                    (t.kind~='combat' and G.visible(owner,base,t))
+                if t.kind~='grab' or not grabOrigin then
+                    t.visible=t.kind=='combat' and G.visibleFromTool(owner,s,t,true) or
+                        (t.kind~='combat' and G.visible(owner,base,t))
+                end
                 t.distance=math.sqrt((t.point.x-base.x)^2+(t.point.y-base.y)^2)
                 if t.distance<=range then
                     if t.kind=='grab' and not Core.grabAllowed(s,t.id,G.now) then t.free=false end
@@ -253,14 +265,22 @@ function M.new(E)
                 if other~=owner and not other.Removed then
                     local p=other.WorldPosition
                     local range=not automatic and s.mode=='grab' and C.grabRange or C.combatRange
-                    if (p.X-base.x)^2+(p.Y-base.y)^2>range^2 then return end
+                    if not grabOrigin and (p.X-base.x)^2+(p.Y-base.y)^2>range^2 then return end
                     local friendly=(automatic or s.mode=='combat') and G.ally(owner,other)
                     if not friendly and not other.IsDead and (automatic or s.mode=='combat') then
                         add({id='c'..other.ID,kind='combat',entity=other,point=position(other),hostile=true,alive=true},C.combatRange)
                     end
                     if not automatic and s.mode=='grab' then
                         if G.grabbable(other) then
-                            add({id='g'..other.ID,kind='grab',entity=other,point=position(other),free=true},C.grabRange)
+                            local id='g'..other.ID
+                            add({id=id,kind='grab',entity=other,point={x=p.X,y=p.Y},free=true},C.grabRange)
+                            if grabOrigin then
+                                U.each(other.AnimController.Limbs,function(limb)
+                                    if grabLimb(limb) then
+                                        add({id=id,kind='grab',entity=other,point=position(limb),limb=limb,free=true},C.grabRange)
+                                    end
+                                end)
+                            end
                         end
                     end
                 end
@@ -366,9 +386,16 @@ function M.new(E)
                         -- every tick; only acquisition needs the world candidate scan.
                         -- Bots still rescan while working so threats can preempt repair.
                         local acquire=owner.IsBot or (not s.target and (s.mode~='grab' or s.acquireGrab))
+                        local acquiredGrab=false
                         if G.now>=s.nextScan and (owner.IsBot or s.mode~='off') and powered and acquire then
                             s.nextScan=G.now+C.scanInterval
-                            local candidates=G.gather(owner,s)
+                            local origin
+                            if s.mode=='grab' and not owner.IsBot then
+                                local aim=owner.AimRefPosition
+                                if owner.Submarine then aim=aim+owner.Submarine.Position end
+                                origin={x=aim.X,y=aim.Y}
+                            end
+                            local candidates=G.gather(owner,s,origin)
                             if owner.IsBot then
                                 local old=s.target
                                 local mode,target=Core.ai(candidates)
@@ -378,17 +405,13 @@ function M.new(E)
                                 local selected=Core.choose(s.mode,candidates,s.target and s.target.id)
                                 -- A missing scan candidate gets a per-frame contact/grace check.
                                 if s.mode~='repair' or not s.target or (selected and selected.id==s.target.id) then s.target=selected end
-                            elseif s.target then
-                                if not s.grip then s.target=Core.choose('grab',candidates,s.target.id) end
-                            else
-                                if s.acquireGrab then
-                                    s.acquireGrab=false
-                                    local cursor=owner.CursorWorldPosition
-                                    local aim=owner.AimRefPosition
-                                    if owner.Submarine then aim=aim+owner.Submarine.Position end
-                                    s.target=Core.aimGrab({x=aim.X,y=aim.Y},{x=cursor.X,y=cursor.Y},candidates)
-                                    s.grabStarted=G.now
-                                end
+                            elseif s.acquireGrab then
+                                s.acquireGrab=false
+                                local cursor=owner.CursorWorldPosition
+                                s.target=Core.aimGrab(origin,{x=cursor.X,y=cursor.Y},candidates,function(t)
+                                    return G.visible(owner,origin,t)
+                                end)
+                                acquiredGrab=s.target~=nil
                             end
                         end
                         local target=s.target
@@ -397,10 +420,36 @@ function M.new(E)
                         end
                         local advanced=false
                         if target and not target.entity.Removed and powered then
-                            if target.kind~='weld' then target.point=position(target.entity)
-                            else local q=target.entity.SectionPosition(target.section,true);target.point={x=q.X,y=q.Y} end
-                            local base=target.kind=='grab' and s.grip and position(owner) or G.mount(owner)
-                            target.distance=math.sqrt((target.point.x-base.x)^2+(target.point.y-base.y)^2)
+                            local grab=target.kind=='grab'
+                            if not acquiredGrab then
+                                if target.kind=='weld' then
+                                    local q=target.entity.SectionPosition(target.section,true);target.point={x=q.X,y=q.Y}
+                                else
+                                    local limb=target.limb
+                                    target.point=position(grabLimb(limb) and limb or target.entity)
+                                end
+                                local base=grab and s.grip and position(owner) or G.mount(owner)
+                                if not (grab and s.grip) and target.kind~='combat' then
+                                    target.visible=G.visible(owner,base,target)
+                                end
+                                target.distance=math.sqrt((target.point.x-base.x)^2+(target.point.y-base.y)^2)
+                                if grab and s.grip and target.distance>C.gripReleaseRange and
+                                    E.LuaUserData.IsTargetType(target.entity,'Barotrauma.Character') then
+                                    local nearest=target.distance^2
+                                    local function consider(part)
+                                        local p=part.WorldPosition
+                                        nearest=math.min(nearest,(p.X-base.x)^2+(p.Y-base.y)^2)
+                                    end
+                                    consider(target.entity)
+                                    if nearest>C.gripReleaseRange^2 then
+                                        local anim=target.entity.AnimController
+                                        U.each(anim and anim.Limbs,function(limb)
+                                            if grabLimb(limb) then consider(limb) end
+                                        end)
+                                    end
+                                    target.distance=math.sqrt(nearest)
+                                end
+                            else target.visible=true end
                             if target.kind=='combat' then
                                 target.alive=not target.entity.IsDead;target.hostile=not G.ally(owner,target.entity)
                                 target.trackable=target.alive and target.hostile and target.distance<=C.combatRange
@@ -409,21 +458,17 @@ function M.new(E)
                                 -- Visibility and armReady now share the actual advanced
                                 -- firing pose; the async shot still rechecks fresh geometry.
                                 target.visible=target.trackable and G.visibleFromTool(owner,s,target,false)
-                            else
-                                target.visible=G.visible(owner,base,target)
-                                -- Wall visibility resolves the actual near-face contact.
-                                target.distance=math.sqrt((target.point.x-base.x)^2+(target.point.y-base.y)^2)
                             end
                             if target.kind=='repair' then target.damaged=target.entity.Condition<target.entity.MaxCondition-.01 end
                             if target.kind=='weld' then target.damaged=target.entity.SectionDamage(target.section)>.01 end
-                            if target.kind=='grab' then
+                            if grab then
                                 target.free=G.grabbable(target.entity) and (not G.canHold or G.canHold(target.entity,s))
                                 s.grabStarted=s.grabStarted or G.now
                             end
                             local retained,contact=Core.contact(s,target,G.now)
                             if retained then
                                 if not advanced and G.advanceTool then G.advanceTool(owner,s,dt);advanced=true end
-                                if contact and Core.ready(s,target.id,G.now) then s.active=G.perform(owner,item,target,dt) end
+                                if contact and (grab or Core.ready(s,target.id,G.now)) then s.active=G.perform(owner,item,target,dt) end
                             else s.target=nil end
                         elseif not powered then s.target=nil end
                         if not advanced and G.advanceTool then G.advanceTool(owner,s,dt) end
