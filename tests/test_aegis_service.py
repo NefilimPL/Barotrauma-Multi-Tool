@@ -52,6 +52,49 @@ class ServiceGripTests(LuaCase):
             assert(calls[#calls].force.X<0,'item is not following claw endpoint')
         """)
 
+    def test_loose_item_follows_a_clear_waypoint_when_claw_is_behind_a_wall(self):
+        self.lua.execute("""
+            target.character=false;target.WorldPosition.X=-50;owner.WorldPosition.X=50
+            carrier.LinearVelocity.X=0
+            G.toolPose=function() return {muzzle={x=90,y=20}} end
+            G.cast=function(a,b)
+                if a.x<0 and b.x>=0 then
+                    local t=-a.x/(b.x-a.x)
+                    return {t=t,x=0,y=a.y+(b.y-a.y)*t,nx=-1,ny=0}
+                end
+            end
+            assert(G.hold(owner,suit,state.target,1/60))
+            assert(calls[#calls].force.Y>100,'item was pulled straight into the wall')
+        """)
+
+    def test_wall_recovery_does_not_drag_held_target_with_carrier_velocity(self):
+        self.lua.execute("""
+            G.cast=function(a,b) return {t=.5,x=a.x,y=a.y,nx=-1,ny=0} end
+            assert(G.hold(owner,suit,state.target,1/60))
+            assert(math.abs(calls[#calls].force.X)<.01,'carrier pulled the target out of its safe position')
+        """)
+
+    def test_claw_turning_toward_waypoint_does_not_cancel_recovery(self):
+        self.lua.execute("""
+            target.character=false;target.WorldPosition.X=-50;owner.WorldPosition.X=-150
+            carrier.LinearVelocity.X=0
+            local muzzle={x=-50,y=50}
+            G.toolPose=function() return {muzzle=muzzle} end
+            G.cast=function(a,b)
+                if a.x<0 and b.x>=0 then
+                    local t=-a.x/(b.x-a.x)
+                    return {t=t,x=0,y=a.y+(b.y-a.y)*t,nx=-1,ny=0}
+                end
+            end
+            assert(G.hold(owner,suit,state.target,1/60))
+            owner.WorldPosition.X=50;muzzle.x=100;G.now=.2
+            assert(G.hold(owner,suit,state.target,1/60))
+            local waypoint=assert(state.grip.waypoint)
+            muzzle.x=waypoint.x;muzzle.y=waypoint.y;G.now=.4
+            assert(G.hold(owner,suit,state.target,1/60))
+            assert(state.grip.waypoint,'claw stopped routing around the wall before clearing it')
+        """)
+
 
 class ServiceTrackingTests(LuaCase):
     def setUp(self):
@@ -69,7 +112,7 @@ class ServiceTrackingTests(LuaCase):
         self.lua.execute("""
             local M=require('AegisSuit.grip')
             local function cast(a,b) if b.y>200 then return {t=.5,x=b.x,y=200,nx=0,ny=-1} end end
-            local goal,recovery=M.anchor({x=0,y=70},{x=120,y=85},{x=110,y=150},true,cast,false)
+            local goal,recovery=M.anchor({x=0,y=70},{x=120,y=85},{x=110,y=150},true,cast)
             assert(recovery and goal.y>=45,'small ceiling obstruction pulled body down to wearer feet')
         """)
 
@@ -79,7 +122,7 @@ class ServiceTrackingTests(LuaCase):
             local function cast(a,b)
                 if b.y>81 then return {t=.5,x=b.x,y=81,nx=0,ny=-1} end
             end
-            local goal,recovery,waiting=M.anchor({x=0,y=0},{x=120,y=85},{x=130,y=0},true,cast,false)
+            local goal,recovery,waiting=M.anchor({x=0,y=0},{x=120,y=85},{x=130,y=0},true,cast)
             assert(recovery and not waiting and goal.y>=25,'body left on floor despite safe low lift')
             assert(goal.y+50<=81,'head pushed through ceiling')
         """)

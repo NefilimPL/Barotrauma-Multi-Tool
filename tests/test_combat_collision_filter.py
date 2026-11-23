@@ -44,6 +44,19 @@ class PassageCollisionTests(LuaCase):
             assert(hit.blocker==f.Body.UserData)
         ''')
 
+    def test_grip_path_detours_around_blocking_equipment_and_ignores_its_own_target(self):
+        self.lua.execute('''
+            local held=fixture(8,20)
+            local obstacle=fixture(8,50)
+            held.Body.UserData.kind='Barotrauma.Item'
+            obstacle.Body.UserData.kind='Barotrauma.Item'
+            fixtures={held,obstacle}
+            local a,b={x=0,y=0},{x=100,y=0}
+            local hit=G.cast(a,b,0,nil,true,false,held.Body.UserData)
+            assert(hit and hit.blocker==obstacle.Body.UserData,'grip path missed blocking equipment')
+            assert(not G.cast(a,b,0,nil,true),'equipment changed the normal weapon ray')
+        ''')
+
     def test_repair_target_for_destroyed_wall_does_not_close_its_hole(self):
         self.lua.execute('''
             fixtures={fixture(256,15)}

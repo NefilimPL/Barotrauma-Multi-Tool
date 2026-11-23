@@ -74,6 +74,17 @@ class AegisMotionMathTests(LuaCase):
 
 
 class AegisGripContactRecoveryTests(LuaCase):
+    def test_held_target_keeps_grip_while_making_progress_around_an_obstruction(self):
+        self.lua.execute("""
+            local C=require('AegisSuit.core')
+            local t={id='g1',kind='grab',free=true,visible=true,distance=270}
+            local s={mode='grab',target=t,grip={}}
+            assert(C.contact(s,t,0))
+            t.visible=false;t.distance=240;assert(C.contact(s,t,2))
+            t.distance=210;assert(C.contact(s,t,4),'progressing target dropped during recovery')
+            assert(not C.contact(s,t,8),'stationary target stayed stuck against a permanent wall')
+        """)
+
     def test_established_grip_survives_brief_frame_occlusion_and_release_margin(self):
         self.lua.execute("""
             local C=require('AegisSuit.core')
@@ -94,7 +105,7 @@ class AegisGripAnchorPlannerTests(LuaCase):
             local function cast(a,b)
                 if b.y>90 then return {t=.5,x=b.x,y=90,nx=0,ny=-1} end
             end
-            local goal,recovering=M.anchor({x=0,y=60},{x=120,y=45},{x=120,y=80},true,cast,false)
+            local goal,recovering=M.anchor({x=0,y=60},{x=120,y=45},{x=120,y=80},true,cast)
             assert(recovering and goal.y<=45,'low ceiling was ignored')
             assert(goal.y>=0,'blocked body was forced toward the floor')
         """)
@@ -105,7 +116,7 @@ class AegisGripAnchorPlannerTests(LuaCase):
             local function cast(a,b)
                 if a.x<0 and b.x>=0 then return {t=.5,x=0,y=10,nx=-1,ny=0} end
             end
-            local goal,recovering=M.anchor({x=50,y=0},{x=100,y=45},{x=-50,y=0},true,cast,true)
+            local goal,recovering=M.anchor({x=50,y=0},{x=100,y=45},{x=-50,y=0},true,cast)
             assert(recovering and 50+goal.x<0 and goal.y>0,'guide crossed the wall')
         """)
 
@@ -113,7 +124,7 @@ class AegisGripAnchorPlannerTests(LuaCase):
         self.lua.execute("""
             local M=require('AegisSuit.grip')
             local offset={x=110,y=45}
-            local goal,recovering=M.anchor({x=0,y=60},offset,{x=110,y=105},true,function() end,false)
+            local goal,recovering=M.anchor({x=0,y=60},offset,{x=110,y=105},true,function() end)
             assert(not recovering and goal.x==110 and goal.y==45)
         """)
 

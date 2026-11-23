@@ -355,8 +355,8 @@ function M.new(E)
                         if powered then G.spend(item,C.lightRate*dt) end
                         if s.target and s.target.entity.Removed then s.target=nil end
                         Core.expireGrab(s,G.now)
-                        local held=not owner.IsBot and s.mode=='grab' and owner.IsKeyDown(E.InputType.Aim) and owner.IsKeyDown(E.InputType.Use)
-                        if Core.grabPress(s,held) then
+                        local held=not owner.IsBot and s.mode=='grab' and owner.IsKeyDown(E.InputType.Use)
+                        if Core.grabPress(s,held) and owner.IsKeyDown(E.InputType.Aim) then
                             if s.target then
                                 if G.releaseGrip then G.releaseGrip(s) end
                                 s.target=nil;s.grabStarted=nil
@@ -399,7 +399,7 @@ function M.new(E)
                         if target and not target.entity.Removed and powered then
                             if target.kind~='weld' then target.point=position(target.entity)
                             else local q=target.entity.SectionPosition(target.section,true);target.point={x=q.X,y=q.Y} end
-                            local base=G.mount(owner)
+                            local base=target.kind=='grab' and s.grip and position(owner) or G.mount(owner)
                             target.distance=math.sqrt((target.point.x-base.x)^2+(target.point.y-base.y)^2)
                             if target.kind=='combat' then
                                 target.alive=not target.entity.IsDead;target.hostile=not G.ally(owner,target.entity)

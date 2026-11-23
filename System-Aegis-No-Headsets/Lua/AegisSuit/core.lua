@@ -59,8 +59,10 @@ function M.holdOffset(owner,point)
     return {x=dx*scale,y=clamp(dy*scale,45,120)}
 end
 function M.holdAcceleration(error,relativeVelocity,gravity)
-    local x=error.x*C.grabSpring-relativeVelocity.x*C.grabDamping
-    local y=error.y*C.grabSpring-relativeVelocity.y*C.grabDamping
+    local speed=math.sqrt(relativeVelocity.x^2+relativeVelocity.y^2)
+    local damping=speed>0 and math.min(C.grabDamping,C.grabBrakeAcceleration/speed) or C.grabDamping
+    local x=error.x*C.grabSpring-relativeVelocity.x*damping
+    local y=error.y*C.grabSpring-relativeVelocity.y*damping
     local length=math.sqrt(x*x+y*y)
     if length>C.grabAcceleration then x=x/length*C.grabAcceleration;y=y/length*C.grabAcceleration end
     return {x=x-gravity.x,y=y-gravity.y}
@@ -119,8 +121,18 @@ function M.contact(s,target,now)
     end
     if s.mode=='grab' and s.grip then
         if not target.free or not target.distance or target.distance>C.gripReleaseRange then return false,false end
-        if target.visible then s.contactId=target.id;s.contactAt=now;return true,true end
-        if s.contactId==target.id and now-(s.contactAt or -100)<=C.gripOcclusionGrace then return true,true end
+        local grip=s.grip
+        if target.visible then
+            s.contactId=target.id;s.contactAt=now;grip.closestDistance=target.distance
+            return true,true
+        end
+        if s.contactId==target.id and now-(s.contactAt or -100)<=C.gripOcclusionGrace then
+            grip.closestDistance=grip.closestDistance or target.distance
+            if target.distance<=grip.closestDistance-C.gripProgressDistance then
+                grip.closestDistance=target.distance;s.contactAt=now
+            end
+            return true,true
+        end
         return false,false
     end
     if M.choose(s.mode,{target},target.id) then

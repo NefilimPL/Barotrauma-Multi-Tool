@@ -191,6 +191,39 @@ class AegisAdapterTests(LuaCase):
             assert(s.target and s.target.id=='i1' and not s.active,'brief occlusion switched devices')
         """)
 
+    def test_turning_the_arm_does_not_put_an_established_grip_out_of_range(self):
+        self.lua.execute("""
+            E.Game.RoundStarted=true;E.InputType={Aim=1,Use=2};G.nextOwners=1
+            wearer.WorldPosition={X=0,Y=0};wearer.IsKeyDown=function() return false end
+            G.mount=function() return {x=-22,y=18} end
+            G.cast=function() end
+            G.perform=function() return true end
+            local prop={WorldPosition={X=370,Y=0},body={Enabled=true,BodyType=2,Mass=10}}
+            local s=G.state(suit);s.mode='grab';s.grip={}
+            s.target={id='g1',kind='grab',entity=prop};s.actionId='g1';s.readyAt=0
+            G.update(.1)
+            assert(s.target and s.active,'arm rotation dropped an in-range held target')
+        """)
+
+    def test_aiming_again_while_use_stays_held_does_not_release_the_grip(self):
+        self.lua.execute("""
+            E.Game.RoundStarted=true;E.InputType={Aim=1,Use=2};G.nextOwners=1
+            local aim,use=true,true
+            wearer.WorldPosition={X=0,Y=0}
+            wearer.IsKeyDown=function(key) if key==1 then return aim end;return use end
+            G.cast=function() end
+            G.perform=function() return true end
+            local prop={WorldPosition={X=100,Y=0},body={Enabled=true,BodyType=2,Mass=10}}
+            local s=G.state(suit);s.mode='grab';s.grip={};s.grabHeld=true
+            s.target={id='g1',kind='grab',entity=prop};s.actionId='g1';s.readyAt=0
+            aim=false;G.update(.1)
+            aim=true;G.update(.1)
+            assert(s.target and s.active,'resuming aim was counted as a new Use press')
+            use=false;G.update(.1)
+            use=true;G.update(.1)
+            assert(not s.target,'a new Use press while aiming should release the target')
+        """)
+
     def test_removed_repair_target_is_replaced_by_a_visible_device(self):
         self.lua.execute("""
             E.Game.RoundStarted=true;G.nextOwners=1
