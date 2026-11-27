@@ -17,7 +17,7 @@
       <Item identifier="copper" />
     </Deconstruct>
     <InventoryIcon texture="%ModDir%/Assets/Factions/descendens/packed-icon.png" sourcerect="0,0,384,160" origin="0.5,0.5" compress="true" />
-    <Sprite texture="%ModDir%/Assets/Factions/descendens/packed-suit.png" sourcerect="96,173,1428,586" origin="0.5,0.5" depth="0.55" compress="true" />
+    <Sprite texture="%ModDir%/Assets/Factions/descendens/dropped-suit.png" sourcerect="0,0,1280,960" origin="0.5,0.73" depth="0.55" compress="true" />
     <ContainedSprite name="Aegis upright suit" allowedcontainertags="divingsuitcontainervertical" texture="%ModDir%/Assets/Factions/descendens/rack-suit.png" sourcerect="0,0,887,1774" origin="0.5,0.5" depth="0.55" compress="true" />
     <ContainedSprite name="Aegis window suit" allowedcontainertags="divingsuitcontainerwindow" texture="%ModDir%/Assets/Factions/descendens/rack-window-v2.png" sourcerect="0,0,640,1744" origin="-0.12,-0.14" depth="0.55" compress="true" />
     <ContainedSprite name="Aegis horizontal suit" allowedcontainertags="divingsuitcontainerhorizontal" texture="%ModDir%/Assets/Factions/descendens/packed-suit.png" sourcerect="96,173,1428,586" origin="0.5,0.5" depth="0.55" compress="true" />
@@ -152,7 +152,7 @@
       <Item identifier="copper" />
     </Deconstruct>
     <InventoryIcon texture="%ModDir%/Assets/Factions/coalition/packed-icon.png" sourcerect="0,0,384,160" origin="0.5,0.5" compress="true" />
-    <Sprite texture="%ModDir%/Assets/Factions/coalition/packed-suit.png" sourcerect="96,173,1428,586" origin="0.5,0.5" depth="0.55" compress="true" />
+    <Sprite texture="%ModDir%/Assets/Factions/coalition/dropped-suit.png" sourcerect="0,0,1280,960" origin="0.5,0.73" depth="0.55" compress="true" />
     <ContainedSprite name="Aegis upright suit" allowedcontainertags="divingsuitcontainervertical" texture="%ModDir%/Assets/Factions/coalition/rack-suit.png" sourcerect="0,0,887,1774" origin="0.5,0.5" depth="0.55" compress="true" />
     <ContainedSprite name="Aegis window suit" allowedcontainertags="divingsuitcontainerwindow" texture="%ModDir%/Assets/Factions/coalition/rack-window-v2.png" sourcerect="0,0,640,1744" origin="-0.12,-0.14" depth="0.55" compress="true" />
     <ContainedSprite name="Aegis horizontal suit" allowedcontainertags="divingsuitcontainerhorizontal" texture="%ModDir%/Assets/Factions/coalition/packed-suit.png" sourcerect="96,173,1428,586" origin="0.5,0.5" depth="0.55" compress="true" />
@@ -291,7 +291,7 @@
       <Item identifier="copper" />
     </Deconstruct>
     <InventoryIcon texture="%ModDir%/Assets/Factions/separatists/packed-icon.png" sourcerect="0,0,384,160" origin="0.5,0.5" compress="true" />
-    <Sprite texture="%ModDir%/Assets/Factions/separatists/packed-suit.png" sourcerect="96,173,1428,586" origin="0.5,0.5" depth="0.55" compress="true" />
+    <Sprite texture="%ModDir%/Assets/Factions/separatists/dropped-suit.png" sourcerect="0,0,1280,960" origin="0.5,0.73" depth="0.55" compress="true" />
     <ContainedSprite name="Aegis upright suit" allowedcontainertags="divingsuitcontainervertical" texture="%ModDir%/Assets/Factions/separatists/rack-suit.png" sourcerect="0,0,887,1774" origin="0.5,0.5" depth="0.55" compress="true" />
     <ContainedSprite name="Aegis window suit" allowedcontainertags="divingsuitcontainerwindow" texture="%ModDir%/Assets/Factions/separatists/rack-window-v2.png" sourcerect="0,0,640,1744" origin="-0.12,-0.14" depth="0.55" compress="true" />
     <ContainedSprite name="Aegis horizontal suit" allowedcontainertags="divingsuitcontainerhorizontal" texture="%ModDir%/Assets/Factions/separatists/packed-suit.png" sourcerect="96,173,1428,586" origin="0.5,0.5" depth="0.55" compress="true" />
@@ -426,7 +426,7 @@
       <Item identifier="copper" />
     </Deconstruct>
     <InventoryIcon texture="%ModDir%/Assets/Factions/husk/packed-icon.png" sourcerect="0,0,384,160" origin="0.5,0.5" compress="true" />
-    <Sprite texture="%ModDir%/Assets/Factions/husk/packed-suit.png" sourcerect="96,173,1428,586" origin="0.5,0.5" depth="0.55" compress="true" />
+    <Sprite texture="%ModDir%/Assets/Factions/husk/dropped-suit.png" sourcerect="0,0,1280,960" origin="0.5,0.73" depth="0.55" compress="true" />
     <ContainedSprite name="Aegis upright suit" allowedcontainertags="divingsuitcontainervertical" texture="%ModDir%/Assets/Factions/husk/rack-suit.png" sourcerect="0,0,887,1774" origin="0.5,0.5" depth="0.55" compress="true" />
     <ContainedSprite name="Aegis window suit" allowedcontainertags="divingsuitcontainerwindow" texture="%ModDir%/Assets/Factions/husk/rack-window-v2.png" sourcerect="0,0,640,1744" origin="-0.12,-0.14" depth="0.55" compress="true" />
     <ContainedSprite name="Aegis horizontal suit" allowedcontainertags="divingsuitcontainerhorizontal" texture="%ModDir%/Assets/Factions/husk/packed-suit.png" sourcerect="96,173,1428,586" origin="0.5,0.5" depth="0.55" compress="true" />
@@ -561,7 +561,7 @@
       <Item identifier="copper" />
     </Deconstruct>
     <InventoryIcon texture="%ModDir%/Assets/Factions/clowns/packed-icon.png" sourcerect="0,0,384,160" origin="0.5,0.5" compress="true" />
-    <Sprite texture="%ModDir%/Assets/Factions/clowns/packed-suit.png" sourcerect="96,173,1428,586" origin="0.5,0.5" depth="0.55" compress="true" />
+    <Sprite texture="%ModDir%/Assets/Factions/clowns/dropped-suit.png" sourcerect="0,0,1280,960" origin="0.5,0.73" depth="0.55" compress="true" />
     <ContainedSprite name="Aegis upright suit" allowedcontainertags="divingsuitcontainervertical" texture="%ModDir%/Assets/Factions/clowns/rack-suit.png" sourcerect="0,0,887,1774" origin="0.5,0.5" depth="0.55" compress="true" />
     <ContainedSprite name="Aegis window suit" allowedcontainertags="divingsuitcontainerwindow" texture="%ModDir%/Assets/Factions/clowns/rack-window-v2.png" sourcerect="0,0,640,1744" origin="-0.12,-0.14" depth="0.55" compress="true" />
     <ContainedSprite name="Aegis horizontal suit" allowedcontainertags="divingsuitcontainerhorizontal" texture="%ModDir%/Assets/Factions/clowns/packed-suit.png" sourcerect="96,173,1428,586" origin="0.5,0.5" depth="0.55" compress="true" />

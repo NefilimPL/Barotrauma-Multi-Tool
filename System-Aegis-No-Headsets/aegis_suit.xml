@@ -17,7 +17,7 @@
       <Item identifier="copper" />
     </Deconstruct>
     <InventoryIcon texture="%ModDir%/Assets/AegisSuit/packed-icon.png" sourcerect="0,0,384,160" origin="0.5,0.5" compress="true" />
-    <Sprite texture="%ModDir%/Assets/AegisSuit/packed-suit.png" sourcerect="96,173,1428,586" origin="0.5,0.5" depth="0.55" compress="true" />
+    <Sprite texture="%ModDir%/Assets/AegisSuit/dropped-suit.png" sourcerect="0,0,1280,960" origin="0.5,0.73" depth="0.55" compress="true" />
     <ContainedSprite name="Aegis upright suit" allowedcontainertags="divingsuitcontainervertical" texture="%ModDir%/Assets/AegisSuit/rack-suit.png" sourcerect="0,0,887,1774" origin="0.5,0.5" depth="0.55" compress="true" />
     <ContainedSprite name="Aegis window suit" allowedcontainertags="divingsuitcontainerwindow" texture="%ModDir%/Assets/AegisSuit/rack-window-v2.png" sourcerect="0,0,640,1744" origin="-0.12,-0.14" depth="0.55" compress="true" />
     <ContainedSprite name="Aegis horizontal suit" allowedcontainertags="divingsuitcontainerhorizontal" texture="%ModDir%/Assets/AegisSuit/packed-suit.png" sourcerect="96,173,1428,586" origin="0.5,0.5" depth="0.55" compress="true" />
