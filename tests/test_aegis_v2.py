@@ -223,6 +223,48 @@ class AegisNativeRepairTests(LuaCase):
             require('AegisSuit.repair').install(G,E)
         """)
 
+    def test_repair_installs_the_native_access_hook_for_both_game_versions(self):
+        lua_test = """
+            local mod,hasHiddenFlag=...
+            package.path=mod..'/?.lua;'..package.path
+            package.loaded['AegisSuit.repair']=nil
+            local registered,bestTool
+            G.patch=function(name,class,method,fn,after,types)
+                if method=='GetBestRepairItem' then
+                    assert(hasHiddenFlag,'this helper does not exist in the older game')
+                    bestTool=fn;return
+                end
+                if name~='native-repair-access-distance' then return end
+                if (#types==4)~=hasHiddenFlag then error('native method not found') end
+                assert(types[1]=='Barotrauma.Item' and types[2]=='System.Single&' and types[3]=='System.Boolean')
+                assert(not hasHiddenFlag or types[4]=='System.Boolean')
+                registered=fn
+            end
+            require('AegisSuit.repair').install(G,E)
+            assert(registered~=nil)
+            G.repairScope={owner=owner,repairable=repairable,item=suit}
+            local hit={item=device}
+            assert(registered(owner,hit)==true and hit.PreventExecution)
+            local other={item={}}
+            assert(registered(owner,other)==nil and not other.PreventExecution)
+            if hasHiddenFlag then
+                assert(bestTool,'the unheld servo would be discarded during native repair')
+                local tool={character=owner}
+                assert(bestTool(repairable,tool)==suit and tool.PreventExecution)
+                local foreign={character={}}
+                assert(bestTool(repairable,foreign)==nil and not foreign.PreventExecution)
+                local otherRepairable={character=owner}
+                assert(bestTool({},otherRepairable)==nil and not otherRepairable.PreventExecution)
+                G.repairScope=nil
+                local manual={character=owner}
+                assert(bestTool(repairable,manual)==nil and not manual.PreventExecution)
+            end
+        """
+        for directory in ('System-Aegis', 'System-Aegis-No-Headsets'):
+            for has_hidden_flag in (False, True):
+                with self.subTest(directory=directory, companion_update=has_hidden_flag):
+                    self.lua.execute(lua_test, directory + '/Lua', has_hidden_flag)
+
     def test_native_update_runs_with_suit_tool_and_restores_player_selection(self):
         self.lua.execute("""
             local selected=owner.SelectedItem

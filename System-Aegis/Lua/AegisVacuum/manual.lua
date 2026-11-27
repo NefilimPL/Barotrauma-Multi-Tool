@@ -80,7 +80,13 @@ function M.install(G,E)
     end
     local signature={'Barotrauma.Item','System.Int32','System.Boolean','System.Boolean','Barotrauma.Character',
         'System.Boolean','System.Boolean','System.Boolean'}
-    G.patch('manual-drag-character','Barotrauma.CharacterInventory','TryPutItem',function(inv,p) return drop(inv,p,'index') end,false,signature)
+    local function dropOnCharacter(inv,p) return drop(inv,p,'index') end
+    if not pcall(G.patch,'manual-drag-character','Barotrauma.CharacterInventory','TryPutItem',
+        dropOnCharacter,false,signature) then
+        -- The Companion Update added two optional flags for prosthetic items.
+        signature[9],signature[10]='System.Boolean','System.Boolean'
+        G.patch('manual-drag-character','Barotrauma.CharacterInventory','TryPutItem',dropOnCharacter,false,signature)
+    end
     G.patch('manual-drag-container','Barotrauma.ItemInventory','TryPutItem',function(inv,p) return drop(inv,p,'i') end,false,signature)
 end
 return M

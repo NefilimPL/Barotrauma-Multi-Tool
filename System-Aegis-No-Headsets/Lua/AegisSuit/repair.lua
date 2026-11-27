@@ -78,7 +78,7 @@ function M.install(G,E)
         local s=G.repairScope
         if s and s.owner==owner and p['item']==s.repairable.Item then p.PreventExecution=true;return true end
     end,false,{'Barotrauma.Item','System.Boolean'})
-    G.patch('native-repair-access-distance','Barotrauma.Character','CanInteractWith',function(owner,p)
+    local function allowScopedRepair(owner,p)
         local s=G.repairScope
         if s and s.owner==owner and p['item']==s.repairable.Item then
             -- Leave the native out-float untouched. Assigning a Lua number
@@ -86,7 +86,23 @@ function M.install(G,E)
             -- unboxed as System.Single when the prefix returns.
             p.PreventExecution=true;return true
         end
-    end,false,{'Barotrauma.Item','System.Single&','System.Boolean'})
+    end
+    local distanceTypes={'Barotrauma.Item','System.Single&','System.Boolean'}
+    if not pcall(G.patch,'native-repair-access-distance','Barotrauma.Character','CanInteractWith',
+        allowScopedRepair,false,distanceTypes) then
+        -- The Companion Update added the optional allowHiddenItems argument.
+        distanceTypes[4]='System.Boolean'
+        G.patch('native-repair-access-distance','Barotrauma.Character','CanInteractWith',
+            allowScopedRepair,false,distanceTypes)
+        -- The new native update discards repair tools that are not held in a hand.
+        E.LuaUserData.MakeMethodAccessible(descriptor,'GetBestRepairItem')
+        G.patch('native-repair-mounted-tool','Barotrauma.Items.Components.Repairable','GetBestRepairItem',function(r,p)
+            local s=G.repairScope
+            if s and s.repairable==r and s.owner==p['character'] then
+                p.PreventExecution=true;return s.item
+            end
+        end)
+    end
     G.patch('native-repair-selection','Barotrauma.Character','set_SelectedItem',function(owner,p)
         if G.repairScope and G.repairScope.owner==owner then p.PreventExecution=true end
     end)

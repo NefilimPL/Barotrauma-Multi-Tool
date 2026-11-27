@@ -2,20 +2,38 @@ from lua_support import LuaCase
 
 
 class VacuumManualTests(LuaCase):
-    def test_native_container_drag_uses_its_actual_parameter_name(self):
-        self.lua.execute('''
+    def test_native_drag_uses_each_inventory_signature_and_parameter_name(self):
+        lua_test = '''
+            local mod,trailingFlags=...
+            package.path=mod..'/?.lua;'..package.path
+            package.loaded['AegisVacuum.manual']=nil
             local hooks={};E.CLIENT=true;E.Character={Controlled=owner}
             E.Inventory={DraggingItems={item}};E.PlayerInput={PrimaryMouseButtonReleased=function() return true end}
-            G.patch=function(n,c,m,fn) hooks[n]=fn end
+            G.patch=function(n,c,m,fn,after,types)
+                if m=='TryPutItem' then
+                    if #types~=8+trailingFlags then error('native method not found') end
+                    assert(types[2]=='System.Int32' and types[5]=='Barotrauma.Character')
+                    assert(trailingFlags==0 or (types[9]=='System.Boolean' and types[10]=='System.Boolean'))
+                end
+                hooks[n]=fn
+            end
             G.context=function() return ctx end
             local requested
             G.request=function(action,p,target,view) requested=view.targets end
             require('AegisVacuum.manual').install(G,E)
-            local p=setmetatable({i=0,user=owner,item=item},{__index=function(t,k) error('unknown native argument '..k) end})
             local inv={GetItemAt=function(i) assert(i==0);return pack end}
-            assert(hooks['manual-drag-container'](inv,p))
-            assert(p.PreventExecution and requested[1]==item.ID)
-        ''')
+            for kind,slot in pairs({character='index',container='i'}) do
+                hooks['manual-drag-start']()
+                local p=setmetatable({[slot]=0,user=owner,item=item},
+                    {__index=function(t,k) error('unknown native argument '..k) end})
+                assert(hooks['manual-drag-'..kind](inv,p))
+                assert(p.PreventExecution and requested[1]==item.ID)
+            end
+        '''
+        for directory in ('System-Aegis', 'System-Aegis-No-Headsets'):
+            for trailing_flags in (0, 2):
+                with self.subTest(directory=directory, trailing_flags=trailing_flags):
+                    self.lua.execute(lua_test, directory + '/Lua', trailing_flags)
 
     def setUp(self):
         super().setUp()
