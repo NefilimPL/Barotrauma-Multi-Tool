@@ -104,18 +104,18 @@ function M.install(G,E,root)
         sprite.SourceRect=E.Rectangle(x,y,w,h)
         return E.Vector2(w/2,h/2)
     end
-    local function drawSheet(batch,cam,name,index,point,angle,sx,sy,alpha,band)
+    local function drawSheet(batch,cam,name,index,point,angle,sx,sy,alpha,first,last)
         local sprite=assets[name]
         if not sprite then
             sprite=E.Sprite(root..'/Assets/AegisCombat/'..name..'.png',E.Vector2(.5,.5))
             assets[name]=sprite
         end
         local origin=frame(sprite,index)
-        if band then
+        if first and (first>0 or last<1) then
             local rect=sprite.SourceRect
-            local top,bottom=math.floor(rect.Height*band[1]),math.floor(rect.Height*band[2])
+            local top,bottom=math.floor(rect.Height*first),math.floor(rect.Height*last)
             sprite.SourceRect=E.Rectangle(rect.X,rect.Y+top,rect.Width,bottom-top)
-            -- Keep each cropped strip registered to the same full-frame pivot.
+            -- Keep each cropped band registered to the same full-frame pivot.
             origin=E.Vector2(rect.Width/2,rect.Height/2-top)
         end
         local screen=project(cam,point.x,point.y)
@@ -194,6 +194,8 @@ function M.install(G,E,root)
             E.Vector2(width*cam.Zoom,length/electricity.FrameSize.Y*cam.Zoom))
     end
     local masks={}
+    local shieldStrips=16
+    local shieldHeight=2*C.shieldRadius*math.sin(C.shieldHalfAngle)
     local function visible(cam,s,radius)
         local view=cam.WorldView
         if not view then return true end
@@ -201,34 +203,48 @@ function M.install(G,E,root)
         return s.x+radius>=view.X and s.x-radius<=view.X+view.Width
             and s.y+radius>=view.Y-view.Height and s.y-radius<=view.Y
     end
+    local function refreshMask(mask,s)
+        if not mask or G.now>=mask.expires then return true end
+        local moved=math.abs(mask.x-s.x)+math.abs(mask.y-s.y)
+        local turned=math.abs(mask.angle-s.angle)
+        return moved>8 or turned>.05 or (G.now>=mask.resampleAt and (moved>2 or turned>.01))
+    end
     local function drawShield(batch,cam,s)
         if not visible(cam,s) then return end
         local key=s.id or s
         local mask=masks[key]
-        if not mask or G.now>=mask.expires or math.abs(mask.x-s.x)+math.abs(mask.y-s.y)>2
-            or math.abs(mask.angle-s.angle)>.01 then
-            mask={x=s.x,y=s.y,angle=s.angle,expires=G.now+.1,strips={}}
+        local cosine,sine=math.cos(s.angle),math.sin(s.angle)
+        if refreshMask(mask,s) then
+            -- Give small interpolation changes up to two simulation ticks to
+            -- settle. Large changes use the new wall coverage immediately.
+            local bands={}
+            mask={x=s.x,y=s.y,angle=s.angle,expires=G.now+.1,resampleAt=G.now+1/30,bands=bands}
             masks[key]=mask
             local emitter={x=s.x,y=s.y}
-            local height=2*C.shieldRadius*math.sin(C.shieldHalfAngle)
-            for strip=0,15 do
-                local y=(.5-(strip+.5)/16)*height
-                local x=math.sqrt(math.max(0,C.shieldRadius*C.shieldRadius-y*y))
-                mask.strips[strip+1]=not G.cast(emitter,{x=s.x+x*math.cos(s.angle)-y*math.sin(s.angle),
-                    y=s.y+x*math.sin(s.angle)+y*math.cos(s.angle)},0,nil,true)
+            local first
+            for strip=0,shieldStrips do
+                local clear=false
+                if strip<shieldStrips then
+                    local y=(.5-(strip+.5)/shieldStrips)*shieldHeight
+                    local x=math.sqrt(math.max(0,C.shieldRadius*C.shieldRadius-y*y))
+                    clear=not G.cast(emitter,{x=s.x+x*cosine-y*sine,y=s.y+x*sine+y*cosine},0,nil,true)
+                end
+                if clear then
+                    first=first or strip
+                elseif first then
+                    bands[#bands+1]=first/shieldStrips;bands[#bands+1]=strip/shieldStrips
+                    first=nil
+                end
             end
         end
+        if #mask.bands==0 then return end
         local energy=math.max(.15,math.min(1,(s.energy or 100)/100))
-        local height=2*C.shieldRadius*math.sin(C.shieldHalfAngle)
-        local center={x=s.x+C.shieldRadius*.75*math.cos(s.angle),y=s.y+C.shieldRadius*.75*math.sin(s.angle)}
-        -- Clip individual texture strips instead of discarding the whole sheet
-        -- when even one edge touches the ceiling or a wall.
-        for strip=0,15 do
-            if mask.strips[strip+1] then
-                drawSheet(batch,cam,'shield-active',math.floor(G.now*12)%16,center,s.angle,
-                    C.shieldRadius*.86/314,height/314,
-                    C.shieldTextureOpacity*(.8+.2*energy)*(.95+.05*math.sin(G.now*5)),{strip/16,(strip+1)/16})
-            end
+        local center={x=s.x+C.shieldRadius*.75*cosine,y=s.y+C.shieldRadius*.75*sine}
+        local index=math.floor(G.now*12)%16
+        local alpha=C.shieldTextureOpacity*(.8+.2*energy)*(.95+.05*math.sin(G.now*5))
+        for i=1,#mask.bands,2 do
+            drawSheet(batch,cam,'shield-active',index,center,s.angle,C.shieldRadius*.86/314,shieldHeight/314,
+                alpha,mask.bands[i],mask.bands[i+1])
         end
     end
     local function shieldVisual(s,item,energy)

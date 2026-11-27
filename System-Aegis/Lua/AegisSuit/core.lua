@@ -120,20 +120,8 @@ function M.contact(s,target,now)
         return true,target.visible==true
     end
     if s.mode=='grab' and s.grip then
-        if not target.free or not target.distance or target.distance>C.gripReleaseRange then return false,false end
-        local grip=s.grip
-        if target.visible then
-            s.contactId=target.id;s.contactAt=now;grip.closestDistance=target.distance
-            return true,true
-        end
-        if s.contactId==target.id and now-(s.contactAt or -100)<=C.gripOcclusionGrace then
-            grip.closestDistance=grip.closestDistance or target.distance
-            if target.distance<=grip.closestDistance-C.gripProgressDistance then
-                grip.closestDistance=target.distance;s.contactAt=now
-            end
-            return true,true
-        end
-        return false,false
+        local retained=target.free==true and target.distance~=nil and target.distance<=C.gripReleaseRange
+        return retained,retained
     end
     if M.choose(s.mode,{target},target.id) then
         s.contactId=target.id;s.contactAt=now;return true,true
@@ -150,20 +138,22 @@ function M.ai(targets)
     if repair then return 'repair',repair end
     return 'off',nil
 end
-function M.aimGrab(origin,cursor,targets)
+function M.aimGrab(origin,cursor,targets,visible)
     -- Native multiplayer sends an aim angle, not the cursor's distance.
     local dx,dy=cursor.x-origin.x,cursor.y-origin.y
     local length=math.sqrt(dx*dx+dy*dy)
     if length<1e-6 then return end
     dx,dy=dx/length,dy/length
-    local best,nearest
+    local best,nearest,alignment
     for _,t in ipairs(targets) do
-        if M.choose('grab',{t},t.id) then
+        if t.kind=='grab' and t.free and t.distance and t.distance>=0 and t.distance<=C.grabRange then
             local x,y=t.point.x-origin.x,t.point.y-origin.y
             local along=x*dx+y*dy
             local across=math.abs(x*dy-y*dx)
-            if along>=0 and across<40 and (not nearest or along<nearest) then
-                best,nearest=t,along
+            if along>=0 and across<40 and
+                (not best or across<alignment or (across==alignment and along<nearest)) and
+                (visible and visible(t) or not visible and t.visible) then
+                best,nearest,alignment=t,along,across
             end
         end
     end

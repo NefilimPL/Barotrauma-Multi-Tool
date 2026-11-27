@@ -3,7 +3,7 @@ local C=require('AegisCombat.config')
 local P={}
 function P.install(G,E)
     local function is(value,name) return value and E.LuaUserData.IsTargetType(value,'Barotrauma.'..name) end
-    local collisionMask,collisionNone,collisionItemBlocking
+    local collisionMask,collisionNone,collisionItemBlocking,collisionPlatform
     function G.friendly(a,b) return a and b and (a==b or a.IsFriendly(b)) or false end
     function G.direction(item)
         local angle=item.body.TransformedRotation
@@ -24,7 +24,7 @@ function P.install(G,E)
     end
     -- Ray-cast each submarine coordinate space and outside space, admitting
     -- only fixtures that belong to that space. All public positions are world units.
-    function G.cast(a,b,radius,owner,wallsOnly,allCharacters,gripTarget)
+    function G.cast(a,b,radius,owner,wallsOnly,allCharacters,gripTarget,includePlatforms)
         if not collisionMask then
             E.LuaUserData.RegisterType('Barotrauma.Physics')
             local physics=E.LuaUserData.CreateStatic('Barotrauma.Physics')
@@ -34,7 +34,9 @@ function P.install(G,E)
                 physics.CollisionItemBlocking+physics.CollisionProjectile+physics.CollisionLagCompensationBody
             collisionNone=physics.CollisionNone
             collisionItemBlocking=physics.CollisionItemBlocking
+            collisionPlatform=physics.CollisionPlatform
         end
+        local mask=includePlatforms and collisionMask+collisionPlatform or collisionMask
         local nearest=nil
         local dx,dy=b.x-a.x,b.y-a.y
         local length=math.sqrt(dx*dx+dy*dy)
@@ -85,7 +87,7 @@ function P.install(G,E)
                     -- Keep looking for closer hits, without revisiting fixtures
                     -- beyond an already accepted hit (also across sweep rails).
                     return nearest and nearest.t or -1
-                end,va,vb,collisionMask)
+                end,va,vb,mask)
             end
         end
         return nearest

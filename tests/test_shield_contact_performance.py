@@ -30,6 +30,20 @@ class ShieldContactSamplingTests(LuaCase):
             assert(reads==1,'same native limb sampled separately for every shield: '..reads)
         """)
 
+    def test_cached_distant_limbs_skip_repeated_native_friendly_checks(self):
+        self.lua.execute("""
+            local friendlyChecks=0
+            G.friendly=function() friendlyChecks=friendlyChecks+1;return false end
+            local contacts={}
+            G.updateShield(a,ctx,1/60,contacts);G.updateShield(b,ctx,1/60,contacts)
+            assert(friendlyChecks==1 and reads==1 and damage==0,
+                'a distant limb snapshot was reconsidered by the second shield')
+            b.item.WorldPosition={X=420,Y=0}
+            G.updateShield(b,ctx,1/60,contacts)
+            assert(friendlyChecks==2 and reads==1 and damage==1,
+                'a second shield within reach must still use the shared snapshot')
+        """)
+
     def test_direct_calls_without_a_scope_always_read_current_position(self):
         self.lua.execute("""
             G.updateShield(a,ctx,1/60);point={X=80,Y=0}

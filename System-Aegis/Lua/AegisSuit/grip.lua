@@ -2,23 +2,33 @@ local Core=require('AegisSuit.core')
 local C=Core.config
 local U=require('AegisCombat.util')
 local M={}
--- Probe space for the whole body, then prefer a short, unobstructed route.
--- The result is only a spring anchor; native collisions still constrain movement.
-function M.anchor(owner,offset,body,character,cast,muzzle)
+function M.anchor(owner,offset,body,character,cast,muzzle,size)
     local function world(o) return {x=owner.x+o.x,y=owner.y+o.y} end
-    local function clear(a,b,radius)
+    local function blocking(a,b,radius)
         local hit=cast(a,b,radius)
-        return not hit or (hit.t or 0)>=.97
+        if hit and (hit.t or 0)<.97 then return hit end
     end
+    local height=math.max(character and 50 or 12,size and size.Y*50 or 0)
+    local width=math.max(character and 18 or 12,size and size.X*50 or 0)
     local function fits(p)
-        local height,width=character and 50 or 12,character and 18 or 12
-        return clear(p,{x=p.x,y=p.y+height},width) and
-            clear(p,{x=p.x,y=p.y-height},width) and
-            clear({x=p.x-width,y=p.y},{x=p.x+width,y=p.y},0)
+        return not blocking(p,{x=p.x,y=p.y+height},width) and
+            not blocking(p,{x=p.x,y=p.y-height},width) and
+            not blocking({x=p.x-width,y=p.y},{x=p.x+width,y=p.y},0)
+    end
+    local function offsetTo(p) return {x=p.x-owner.x,y=p.y-owner.y} end
+    local function sweep(a,b)
+        local dx,dy=b.x-a.x,b.y-a.y
+        local length=math.sqrt(dx*dx+dy*dy)
+        if length>1e-7 then
+            local radius=(math.abs(dy)*width+math.abs(dx)*height)/length
+            return blocking(a,b,radius)
+        end
     end
     local normal=world(offset)
-    if clear(body,normal,8) and fits(normal) then
-        return offset,muzzle and not (clear(body,muzzle,8) and fits(muzzle)) or false
+    local hit=sweep(body,normal)
+    local normalFits=fits(normal)
+    if not hit and normalFits then
+        return offset,muzzle and (sweep(body,muzzle)~=nil or not fits(muzzle)) or false
     end
     local side=offset.x<0 and -1 or 1
     local candidates=character and {{x=side*80,y=65},{x=side*60,y=45},{x=side*35,y=45},{x=0,y=45},{x=-side*35,y=45},
@@ -26,25 +36,29 @@ function M.anchor(owner,offset,body,character,cast,muzzle)
         {{x=side*55,y=0},{x=side*35,y=-12},{x=side*70,y=-20},{x=0,y=0},{x=-side*35,y=-10}}
     for _,candidate in ipairs(candidates) do
         local p=world(candidate)
-        if fits(p) and clear(body,p,8) then return candidate,true end
+        if not sweep(body,p) and fits(p) then return candidate,true end
     end
-    local hit=cast(body,normal,8)
-    if hit then
-        local nx,ny=hit.nx or 0,hit.ny or 0
-        local dx,dy=normal.x-body.x,normal.y-body.y
-        local dot=dx*nx+dy*ny
-        local tx,ty=dx-dot*nx,dy-dot*ny
-        local length=math.sqrt(tx*tx+ty*ty)
-        if length<.01 then tx,ty=-ny,nx;if ty<0 then tx,ty=-tx,-ty end
-        else tx,ty=tx/length,ty/length end
-        for _,direction in ipairs({1,-1}) do
-            local p={x=hit.x+nx*22+direction*tx*60,y=hit.y+ny*22+direction*ty*60}
-            if (not character or p.y>=math.min(body.y,owner.y+45)) and fits(p) and clear(body,p,8) then
-                return {x=p.x-owner.x,y=p.y-owner.y},true
+    if normalFits and hit and hit.nx and hit.ny and (hit.nx~=0 or hit.ny~=0) then
+        local nx,ny=hit.nx,hit.ny
+        local tx,ty=-ny,nx
+        if ty<0 then tx,ty=-tx,-ty end
+        local clearance=math.abs(nx)*width+math.abs(ny)*height+10
+        for _,step in ipairs({45,90,150}) do
+            for _,distance in ipairs({step,-step}) do
+                local x,y=hit.x+tx*distance,hit.y+ty*distance
+                local p={x=x+nx*clearance,y=y+ny*clearance}
+                if not sweep(body,p) and fits(p) then
+                    if not sweep(p,normal) then return offsetTo(p),true end
+                    local far={x=x-nx*clearance,y=y-ny*clearance}
+                    if not sweep(p,far) and fits(far) and not sweep(far,normal) then
+                        if sweep(body,far) then return offsetTo(p),true end
+                        return offsetTo(far),true
+                    end
+                end
             end
         end
     end
-    return {x=body.x-owner.x,y=body.y-owner.y},true,true
+    return offsetTo(body),true,true
 end
 function M.install(G,E)
     local held={};G.heldCharacters=held
@@ -59,6 +73,11 @@ function M.install(G,E)
             if wall and E.LuaUserData.IsTargetType(wall,'Barotrauma.Structure') and
                 (wall.IsPlatform or wall.StairDirection~=none) then p.PreventExecution=true;return false end
         end)
+        if G.authoritative then
+            G.patch('held-body-awake','Barotrauma.Ragdoll','CheckBodyInRest',function(anim,p)
+                if held[anim.character] then p.PreventExecution=true end
+            end)
+        end
     end
     if not G.authoritative then return end
     local leases={}
@@ -70,7 +89,8 @@ function M.install(G,E)
             held[entity]=nil
             entity.IsForceRagdolled=lease.forced
             entity.IsRagdolled=lease.ragdolled
-            entity.AnimController.IgnorePlatforms=lease.platforms
+            local anim=entity.AnimController
+            if anim then anim.IgnorePlatforms=lease.platforms end
         end
         leases[entity]=nil;state.grip=nil
     end
@@ -87,7 +107,6 @@ function M.install(G,E)
             local p,q=owner.WorldPosition,entity.WorldPosition
             lease={state=state,item=item,owner=owner,entity=entity,
                 offset=Core.holdOffset({x=p.X,y=p.Y},{x=q.X,y=q.Y}),
-                closestDistance=target.distance,
                 character=E.LuaUserData.IsTargetType(entity,'Barotrauma.Character')}
             lease.originalOffset=lease.offset
             if lease.character then
@@ -103,58 +122,63 @@ function M.install(G,E)
             entity.AnimController.IgnorePlatforms=true
             entity.DisableImpactDamageTimer=math.max(entity.DisableImpactDamageTimer or 0,.25)
         end
-        lease.used=G.now
+        local root=G.body(entity)
         local p,q=owner.WorldPosition,entity.WorldPosition
         local muzzle=not lease.character and G.toolPose and G.toolPose(owner,state).muzzle or nil
         local preferred=lease.originalOffset
+        local sub=entity.Submarine
+        if lease.pathSub~=sub then
+            lease.pathSub=sub;lease.refuge=nil;lease.nextProbe=0
+        end
+        local origin=sub and sub.Position
+        local sx,sy=origin and origin.X or 0,origin and origin.Y or 0
         if G.cast and G.now>=(lease.nextProbe or 0) then
             lease.nextProbe=G.now+C.gripProbeInterval
             local offset,recovering,waiting=M.anchor({x=p.X,y=p.Y},preferred,
                 {x=q.X,y=q.Y},lease.character,function(a,b,radius)
-                    return G.cast(a,b,radius,owner,true,false,entity)
-                end,muzzle)
+                    return G.cast(a,b,radius,owner,true,false,entity,not lease.character)
+                end,muzzle,root.GetSize and root.GetSize())
             lease.recovering=recovering
             if waiting then
-                lease.refuge=lease.refuge or {x=q.X,y=q.Y}
-                lease.waypoint=lease.refuge
+                lease.refuge=lease.refuge or {x=q.X-sx,y=q.Y-sy}
+                lease.pathPoint=lease.refuge
             else
                 lease.refuge=nil
-                lease.waypoint=recovering and {x=p.X+offset.x,y=p.Y+offset.y} or nil
+                lease.pathPoint=recovering and {x=p.X+offset.x-sx,y=p.Y+offset.y-sy} or nil
             end
         end
-        -- A recovery waypoint is fixed in world space until the next probe.
+        -- Keep recovery points in the target's physics frame between probes.
+        local pathPoint=lease.pathPoint
+        lease.waypoint=pathPoint and {x=pathPoint.x+sx,y=pathPoint.y+sy} or nil
         local goal=lease.waypoint or muzzle or {x=p.X+preferred.x,y=p.Y+preferred.y}
         lease.offset={x=goal.x-p.X,y=goal.y-p.Y}
         local error={x=(goal.x-q.X)/100,y=(goal.y-q.Y)/100}
         local ownerBody=G.body(owner)
         local carrier=not lease.waypoint and ownerBody and ownerBody.LinearVelocity
         local vx,vy=carrier and carrier.X or 0,carrier and carrier.Y or 0
-        local feed={x=0,y=0}
-        if carrier and lease.carrier and dt>0 then
-            feed.x=math.max(-60,math.min(60,(vx-lease.carrier.x)/dt))
-            feed.y=math.max(-60,math.min(60,(vy-lease.carrier.y)/dt))
-        end
-        lease.carrier=carrier and {x=vx,y=vy} or nil
+        local reference=root.LinearVelocity
+        local steering=Core.holdAcceleration(error,{x=reference.X-vx,y=reference.Y-vy},{x=0,y=0})
         local speed=math.sqrt(vx*vx+vy*vy)+(lease.recovering and 6 or C.grabSpeed)
         local seen={}
         local function pull(body)
             if not body or not body.Enabled or body.Mass<=0 or seen[body] then return end
             seen[body]=true
             local native=body.FarseerBody
-            if native and native.Enabled==false then return end
+            if native and native.Enabled==false then
+                if not lease.character then return end
+                body.PhysEnabled=true
+            end
             local world=native and native.World
             local gravity=world and world.Gravity
             local scale=native and (native.IgnoreGravity and 0 or native.GravityScale) or 1
             local velocity=body.LinearVelocity
-            local acceleration=Core.holdAcceleration(error,
-                {x=velocity.X-vx,y=velocity.Y-vy},
-                {x=(gravity and gravity.X or 0)*(scale or 1),y=(gravity and gravity.Y or 0)*(scale or 1)})
+            local gx,gy=(gravity and gravity.X or 0)*(scale or 1),(gravity and gravity.Y or 0)*(scale or 1)
             -- Give an already moving body room for lift and steering forces.
             local speedLimit=math.max(speed,math.sqrt(velocity.X^2+velocity.Y^2)+1)
-            body.ApplyForce(E.Vector2((acceleration.x+feed.x)*body.Mass*fraction,
-                (acceleration.y+feed.y)*body.Mass*fraction),speedLimit)
+            body.ApplyForce(E.Vector2((steering.x-gx)*body.Mass*fraction,
+                (steering.y-gy)*body.Mass*fraction),speedLimit)
         end
-        pull(G.body(entity))
+        pull(root)
         if lease.character then U.each(entity.AnimController.Limbs,function(limb)
             if not limb.IsSevered then pull(limb.body) end
         end) end
@@ -166,7 +190,7 @@ function M.install(G,E)
             if entity.Removed or not G.alive or G.states[lease.item]~=state or
                 G.equipped(lease.owner)~=lease.item or lease.owner.IsUnconscious or lease.owner.IsDead or
                 state.mode~='grab' or not state.target or state.target.entity~=entity or
-                G.energy(lease.item)<=0 or G.now-(lease.used or 0)>.1 then G.releaseGrip(state) end
+                G.energy(lease.item)<=0 then G.releaseGrip(state) end
         end
     end
     function G.clearGrips() for _,lease in pairs(leases) do G.releaseGrip(lease.state) end end

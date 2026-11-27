@@ -43,6 +43,27 @@ class ServiceGripTests(LuaCase):
             assert(not target.IsForceRagdolled)
         """)
 
+    def test_resting_corpse_is_woken_before_the_grip_applies_lift(self):
+        self.lua.execute("""
+            target.IsDead=true
+            local native=root.FarseerBody
+            native.Enabled=false
+            setmetatable(root,{__newindex=function(t,k,v)
+                if k=='PhysEnabled' then native.Enabled=v else rawset(t,k,v) end
+            end})
+            assert(G.hold(owner,suit,state.target,1/60))
+            assert(native.Enabled and calls[1] and calls[1].force.Y>0,'sleeping corpse received no lift')
+        """)
+
+    def test_fast_target_retains_momentum_when_pulled_back_toward_claw(self):
+        self.lua.execute("""
+            target.character=false;carrier.LinearVelocity.X=0;root.LinearVelocity.X=8
+            G.toolPose=function() return {muzzle={x=0,y=20}} end
+            assert(G.hold(owner,suit,state.target,1/60))
+            local nextSpeed=8+calls[1].force.X/root.Mass/60
+            assert(nextSpeed>7.4 and nextSpeed<8,'grip erased momentum during acquisition')
+        """)
+
     def test_loose_item_is_pulled_to_actual_claw_instead_of_an_unrelated_offset(self):
         self.lua.execute("""
             target.character=false
@@ -58,13 +79,14 @@ class ServiceGripTests(LuaCase):
             carrier.LinearVelocity.X=0
             G.toolPose=function() return {muzzle={x=90,y=20}} end
             G.cast=function(a,b)
-                if a.x<0 and b.x>=0 then
+                if (a.x<0)~=(b.x<0) then
                     local t=-a.x/(b.x-a.x)
-                    return {t=t,x=0,y=a.y+(b.y-a.y)*t,nx=-1,ny=0}
+                    local y=a.y+(b.y-a.y)*t
+                    if y<40 then return {t=t,x=0,y=y,nx=a.x<0 and -1 or 1,ny=0} end
                 end
             end
             assert(G.hold(owner,suit,state.target,1/60))
-            assert(calls[#calls].force.Y>100,'item was pulled straight into the wall')
+            assert(calls[#calls].force.Y>98.2,'item was pulled straight into the wall')
         """)
 
     def test_wall_recovery_does_not_drag_held_target_with_carrier_velocity(self):
@@ -72,6 +94,17 @@ class ServiceGripTests(LuaCase):
             G.cast=function(a,b) return {t=.5,x=a.x,y=a.y,nx=-1,ny=0} end
             assert(G.hold(owner,suit,state.target,1/60))
             assert(math.abs(calls[#calls].force.X)<.01,'carrier pulled the target out of its safe position')
+        """)
+
+    def test_wall_recovery_moves_with_the_submarine_between_probes(self):
+        self.lua.execute("""
+            target.Submarine={Position={X=0,Y=0}}
+            G.cast=function(a,b) return {t=.5,x=a.x,y=a.y,nx=-1,ny=0} end
+            assert(G.hold(owner,suit,state.target,1/60))
+            target.Submarine.Position.X=100
+            target.WorldPosition.X=200;owner.WorldPosition.X=100;G.now=.05
+            assert(G.hold(owner,suit,state.target,1/60))
+            assert(math.abs(calls[#calls].force.X)<.01,'refuge stayed behind in world space')
         """)
 
     def test_claw_turning_toward_waypoint_does_not_cancel_recovery(self):
@@ -229,12 +262,13 @@ class ServiceSonarTests(LuaCase):
 class ServicePassableCollisionTests(LuaCase):
     def test_only_currently_held_bodies_ignore_platforms_and_stairs(self):
         self.lua.execute("""
-            local callback
+            local callbacks={}
             local E={LuaUserData={RegisterType=function() return {} end,MakeFieldAccessible=function() end,
                 CreateEnumTable=function() return {None=0} end,
                 IsTargetType=function(v,t) return v.structure and t=='Barotrauma.Structure' end}}
-            local G={authoritative=true,patch=function(id,t,m,fn) callback=fn end}
+            local G={authoritative=true,patch=function(id,t,m,fn) callbacks[m]=fn end}
             require('AegisSuit.grip').install(G,E)
+            local callback=assert(callbacks.OnLimbCollision)
             local person={};local anim={character=person}
             local wall={structure=true,IsPlatform=true,StairDirection=0}
             local p={f2={Body={UserData=wall}}};callback(anim,p);assert(not p.PreventExecution)
