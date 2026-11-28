@@ -193,3 +193,54 @@ class CombatAdapterTests(LuaCase):
             result=G.findShield({x=20,y=0},{x=0,y=0},nil,nil)
         ''')
         self.assertIsNone(self.lua.globals().result)
+
+
+class LeakReachTests(LuaCase):
+    def test_bot_uses_the_engines_reach_api_for_near_and_far_leaks(self):
+        self.lua.execute('''
+            local act,added,called
+            local gun,tool={}, {Name='RepairTool'}
+            gun.Components={tool}
+            local bot={Inventory={FindItemByTag=function() return gun end},
+                AnimController={AimSourceWorldPos={}}}
+            local range=240
+            local function check(useModern)
+                local reach=function(character) assert(character==bot);called=useModern and 'tool' or 'legacy';return range end
+                tool.CalculateReach=useModern and reach or nil
+                local legacy=setmetatable({}, {__index=function(_,key)
+                    if useModern then error('cannot access field '..key..' of AIObjectiveFixLeak') end
+                    return function(component,character) assert(component==tool);return reach(character) end
+                end})
+                local E={AIObjectiveFixLeak=legacy,Identifier={Empty={}},
+                    LuaUserData={HasMember=function(o,key) return o[key]~=nil end},
+                    AIObjectiveGoTo=function() return {kind='move'} end,
+                    AIObjectiveOperateItem=function(component)
+                        assert(component==tool);return {kind='weld'}
+                    end}
+                local G={isWeapon=function(item) return item==gun end,canSpend=function() return true end,
+                    powered=function() return true end,patch=function(id,_,_,fn)
+                        if id=='ai-electric-welder' then act=fn end
+                    end}
+                require('AegisCombat.ai').install(G,E)
+                local distance=range-1
+                local point=setmetatable({}, {__sub=function()
+                    return {LengthSquared=function() return distance*distance end}
+                end})
+                local o={character=bot,Leak={WorldPosition=point,Open=1},
+                    AddSubObjective=function(child) added=child end}
+                local p={}
+                act(o,p)
+                assert(p.PreventExecution and added.kind=='weld')
+                assert(called==(useModern and 'tool' or 'legacy'))
+                distance=range+1
+                act(o,{})
+                assert(added.kind=='move' and added.UseDistanceRelativeToAimSourcePos
+                    and added.CloseEnough==range*.9)
+            end
+            check(true)
+            check(false)
+        ''')
+
+
+class ModularLeakReachTests(LeakReachTests):
+    mod_directory = 'System-Aegis-No-Headsets'

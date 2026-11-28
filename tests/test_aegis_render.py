@@ -68,7 +68,7 @@ class AegisBeamRenderingTests(LuaCase):
             package.loaded['AegisSuit.ui']={install=function(G)
                 G.disposeSuitUI=function() end
             end}
-            item={};owner={};target={WorldPosition=vec(300,0)}
+            item={};owner={AnimController={Limbs={}}};target={WorldPosition=vec(300,0)}
             state={mode='combat',active=true,target={kind='combat',entity=target,point={x=300,y=0}},
                 lastPulse={x=300,y=0},shotTime=1}
             pose={elbow={x=40,y=20},tip={x=80,y=0},muzzle={x=104,y=0},angle=0}
@@ -78,7 +78,7 @@ class AegisBeamRenderingTests(LuaCase):
                 attachment=function() return {x=0,y=0} end,
                 toolPose=function() return pose end,
                 patch=function(name,class,method,fn) if name=='draw' then draw=fn end end}
-            E={Sprite=makeSprite,Vector2=vec,Color=color,printerror=function() end,Rectangle=function(x,y,w,h)
+            E={Sprite=makeSprite,Vector2=vec,Color=color,LuaUserData={CreateEnumTable=function() return {None=0} end},printerror=function() end,Rectangle=function(x,y,w,h)
                 return {X=x,Y=y,Width=w,Height=h} end,
                 GUI={GUI={Canvas={Rect={Width=800,Height=600}},DrawLine=function(...)
                     lines[#lines+1]={...}
@@ -127,7 +127,7 @@ class AegisBeamRenderingTests(LuaCase):
 
     def test_failed_draw_does_not_hide_other_suits_and_recovers_after_camera_fault(self):
         self.lua.execute("""
-            local second={};local secondItem={}
+            local second={AnimController={Limbs={}}};local secondItem={}
             state.owner=owner
             G.states[secondItem]={mode='off',owner=second}
             G.equipped=function(c) return c==owner and item or secondItem end

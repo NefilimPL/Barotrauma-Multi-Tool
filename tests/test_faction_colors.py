@@ -140,7 +140,7 @@ class FactionRenderingTests(unittest.TestCase):
             local function v(x,y) return {X=x,Y=y} end
             local function part(id) return {Condition=100,Prefab={Identifier={Value=id}}} end
             suit=part('aegisservosuitdescendens');arm=part('aegisservomodulecoalition');motor=part('aegisimpellermodulehusk')
-            owner={};state={owner=owner,mode='off',hasArm=true,hasImpeller=true}
+            owner={AnimController={Limbs={}}};state={owner=owner,mode='off',hasArm=true,hasImpeller=true}
             package.loaded['AegisSuit.lights']={install=function(g) g.removeLights=function() end end}
             package.loaded['AegisSuit.ui']={install=function(g) g.disposeSuitUI=function() end end}
             local function sprite(path,origin)
@@ -149,7 +149,7 @@ class FactionRenderingTests(unittest.TestCase):
                 s.Remove=function() s.removed=true end
                 sprites[#sprites+1]=s;return s
             end
-            E={Sprite=sprite,Vector2=v,Color={White={}},printerror=function() end,
+            E={Sprite=sprite,Vector2=v,Color={White={}},LuaUserData={CreateEnumTable=function() return {None=0} end},printerror=function() end,
                 Rectangle=function(x,y,w,h) return {X=x,Y=y,Width=w,Height=h} end,
                 GUI={GUI={Canvas={Rect={Width=800,Height=600}},DrawLine=function() end}}}
             G={now=1,authoritative=true,states={[suit]=state},

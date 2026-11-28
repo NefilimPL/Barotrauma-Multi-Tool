@@ -129,6 +129,7 @@ function A.install(G,E)
     local function heldOrOwned(character,tag)
         return character.Inventory and character.Inventory.FindItemByTag(tag,true)
     end
+    local reachOnTool
     -- Leak AI hard-codes a welding-fuel tag in OwnInventory (the first
     -- container). Use its ordinary movement/operation objectives with electric
     -- power instead; hidden fuel probes would never satisfy that check.
@@ -139,7 +140,8 @@ function A.install(G,E)
         p.PreventExecution=true
         if not G.canSpend(item,0,C.toolCost/60) then A.resupply(character,item,0,o,C.toolCost/60);return end
         local tool=U.component(item,'RepairTool')
-        local reach=E.AIObjectiveFixLeak.CalculateReach(tool,character)
+        if reachOnTool==nil then reachOnTool=E.LuaUserData.HasMember(tool,'CalculateReach') end
+        local reach=reachOnTool and tool.CalculateReach(character) or E.AIObjectiveFixLeak.CalculateReach(tool,character)
         local delta=o.Leak.WorldPosition-character.AnimController.AimSourceWorldPos
         local objective
         if delta.LengthSquared()>reach*reach then
