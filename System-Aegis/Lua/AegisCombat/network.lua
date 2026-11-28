@@ -12,12 +12,15 @@ function N.install(G,E)
     local sequence,lastSequence=0,-1
     local epoch=math.floor(E.Timer.GetTime()*1000)%4294967296
     local lastEpoch,oldEpochs=nil,{}
+    local function canBroadcast()
+        return E.SERVER and not E.CLIENT and E.Game.IsMultiplayer
+    end
     function G.event(kind,s,position,endpoint)
         local point=type(position)=='table' and position or U.point(position)
         local _,angle=G.direction(s.item)
         if point.nx and point.ny then angle=Core.angle(point.nx,point.ny) end
         if G.onEffect then G.onEffect(kind,point,angle,s.item.ID,endpoint) end
-        if not E.SERVER or not E.Game.Server then return end
+        if not canBroadcast() then return end
         local message=E.Networking.Start(eventName)
         message.WriteByte(eventIDs[kind]);message.WriteUInt16(s.item.ID)
         message.WriteSingle(point.x);message.WriteSingle(point.y);message.WriteSingle(angle)
@@ -85,7 +88,7 @@ function N.install(G,E)
     end
     local nextSnapshot=0
     function G.sendSnapshot()
-        if not E.SERVER or not E.Game.Server or G.now<nextSnapshot then return end
+        if not canBroadcast() or G.now<nextSnapshot then return end
         nextSnapshot=G.now+C.snapshotInterval
         sequence=sequence+1
         local shields={}

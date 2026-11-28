@@ -508,6 +508,7 @@ function M.new(E)
         if G.clearSonars then G.clearSonars() end
         if G.clearRepairs then G.clearRepairs() end
         if G.clearSupplies then G.clearSupplies() end
+        if G.clearGear then G.clearGear() end
         if G.clearClient then G.clearClient() end
         G.states={};G.nextOwners=0
     end

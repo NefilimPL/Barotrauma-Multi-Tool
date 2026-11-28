@@ -73,11 +73,12 @@ function M.install(G,E)
         local manager=owner.AIController and owner.AIController.ObjectiveManager
         local remaining=tankCharge(G.tank(item))
         if s.resupply then
-            if s.resupply.IsCompleted or not needed(item,s.supplySlot,remaining) then cancel(s)
-            elseif G.now>s.supplyDeadline or not manager or manager.CurrentObjective~=s.supplyRoot then
+            if s.resupply.IsCompleted or not needed(item,s.supplySlot,remaining)
+                or not manager or manager.CurrentObjective~=s.supplyRoot then cancel(s)
+            elseif s.resupply.Abandon or G.now>s.supplyDeadline then
                 backOff(s,s.supplyTarget)
                 cancel(s)
-            elseif s.resupply.Abandon then backOff(s,s.supplyTarget);cancel(s) end
+            end
         end
         if G.now<(s.nextResupply or 0) then return end
         s.nextResupply=G.now+1

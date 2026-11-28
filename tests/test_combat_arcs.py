@@ -88,7 +88,7 @@ class ImpactArcTests(LuaCase):
             local function take() cursor=cursor+1;return packet[cursor] end
             local message={WriteByte=put,WriteUInt16=put,WriteSingle=put,
                 ReadByte=take,ReadUInt16=take,ReadSingle=take}
-            local env={SERVER=true,Game={IsSingleplayer=false,Server={}},Timer={GetTime=function() return 0 end},
+            local env={SERVER=true,Game={IsSingleplayer=false,IsMultiplayer=true},Timer={GetTime=function() return 0 end},
                 Networking={Start=function() return message end,Send=function() end}}
             local server={direction=function() return {},0 end}
             require('AegisCombat.network').install(server,env)

@@ -42,7 +42,7 @@
     <!-- First RepairTool must be a welder: native leak AI asks for the first. -->
     <!-- RepairTool offsets are display units; RangedWeapon offsets are scaled by the engine. -->
     <RepairTool usablein="None" characterusable="false" structurefixamount="2.2" firedamage="10" range="200" barrelpos="56.1,5.1" particles="weld"
-                repairmultiple="true" repairthroughwalls="false" repairthroughholes="true" combatpriority="0" ignorecharacters="true">
+                repairmultiple="true" repairthroughwalls="false" repairthroughholes="false" combatpriority="0" ignorecharacters="true">
       <RequiredItems items="mobilebattery,reactorfuel" type="Contained" />
       <ParticleEmitter particle="weld" particlespersecond="50" copyentityangle="true" scalemin="1.5" scalemax="1.5" colormultiplier="20,180,255,155" />
       <ParticleEmitterHitStructure particle="weldspark" particlespersecond="150" anglemin="-40" anglemax="40" velocitymin="200" velocitymax="800" />

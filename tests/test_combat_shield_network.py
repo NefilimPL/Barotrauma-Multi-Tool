@@ -1,6 +1,42 @@
 from lua_support import LuaCase
 
 
+class CombatNetworkBoundaryTests(LuaCase):
+    def test_only_dedicated_server_broadcasts_without_accessing_luagame_server(self):
+        self.lua.execute('''
+            local sends,effects=0,0
+            local message=setmetatable({}, {__index=function() return function() end end})
+            local G={now=1,states={},rings={},direction=function() return nil,0 end,
+                onEffect=function() effects=effects+1 end}
+            local E={CLIENT=true,SERVER=true,
+                Game=setmetatable({IsSingleplayer=true,IsMultiplayer=false},{
+                    __index=function(_,key) error('cannot access field '..key..' of LuaGame') end
+                }),
+                Timer={GetTime=function() return 1 end},
+                Networking={Start=function() return message end,Receive=function() end,
+                    Send=function() sends=sends+1 end}}
+            local N=require('AegisCombat.network')
+            local function emit()
+                G.sendSnapshot()
+                G.event('shot',{item={ID=1}},{x=0,y=0})
+            end
+            N.install(G,E)
+            emit()
+            E.Game.IsSingleplayer=false
+            E.Game.IsMultiplayer=true
+            emit()
+            assert(sends==0 and effects==2)
+            E.CLIENT=false
+            N.install(G,E)
+            emit()
+            assert(sends==2 and effects==3)
+        ''')
+
+
+class ModularCombatNetworkBoundaryTests(CombatNetworkBoundaryTests):
+    mod_directory = 'System-Aegis-No-Headsets'
+
+
 class ShieldFriendlyFireTests(LuaCase):
     def setUp(self):
         super().setUp()

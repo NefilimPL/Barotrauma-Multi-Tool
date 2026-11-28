@@ -1,7 +1,17 @@
-from lua_support import LuaCase
+from xml.etree import ElementTree as ET
+
+from lua_support import ROOT, LuaCase
 
 
 class CombatAdapterTests(LuaCase):
+    def test_handheld_welding_ray_can_hit_the_fixture_of_a_broken_wall(self):
+        for mod in ('System-Aegis', 'System-Aegis-No-Headsets'):
+            for filename in ('aegis_combat.xml', 'aegis_tools.xml'):
+                for tool in ET.parse(ROOT / mod / filename).getroot().iter('RepairTool'):
+                    if float(tool.get('structurefixamount', '0')) > 0:
+                        with self.subTest(mod=mod, filename=filename):
+                            self.assertNotEqual(tool.get('repairthroughholes', 'false').lower(), 'true')
+
     def test_shield_and_shot_spend_the_same_physical_source(self):
         self.lua.execute('insert(0,20,false);insert(1,60,true);G.spend(gun,0,1);G.shieldDebit(gun,4)')
         self.assertEqual(self.lua.eval('gun.OwnInventory.GetItemAt(0).Condition'),15)

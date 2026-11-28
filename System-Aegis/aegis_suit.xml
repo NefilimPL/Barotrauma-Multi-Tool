@@ -1,6 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <Items>
   <Item identifier="aegisservosuit" category="Diving,Equipment" tags="diving,deepdiving,human,aegisservosuit,divinggear_wearableindoors" scale="0.06" fireproof="true" allowdroppingonswapwith="diving" impactsoundtag="impact_metal_heavy" addedrepairspeedmultiplier="4.5" cannotrepairfail="true">
+    <PreferredContainer primary="divingsuitcontainer" spawnprobability="0" />
     <Price baseprice="4500" sold="true" minavailable="1" maxavailable="1">
       <Price storeidentifier="merchantresearch" />
       <Price storeidentifier="merchantmilitary" />

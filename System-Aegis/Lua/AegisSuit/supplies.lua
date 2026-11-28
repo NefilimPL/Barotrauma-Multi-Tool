@@ -60,8 +60,8 @@ function M.install(G,E)
         if not owner.IsBot or owner.IsUnconscious then cancel(s);return end
         local manager=owner.AIController and owner.AIController.ObjectiveManager
         if s.resupply then
-            if s.resupply.IsCompleted or s.resupply.Abandon then cancel(s)
-            elseif G.now>s.supplyDeadline or not manager or manager.CurrentObjective~=s.supplyRoot then
+            if s.resupply.IsCompleted or s.resupply.Abandon or not manager or manager.CurrentObjective~=s.supplyRoot then cancel(s)
+            elseif G.now>s.supplyDeadline then
                 s.failedSupplies=s.failedSupplies or {};s.failedSupplies[s.supplyTarget.ID]=G.now+30
                 cancel(s)
             else return end

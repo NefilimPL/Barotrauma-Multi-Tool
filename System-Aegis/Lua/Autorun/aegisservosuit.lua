@@ -14,6 +14,7 @@ local ok,err=pcall(function()
     require('AegisSuit.network').install(G,_G)
     require('AegisSuit.repair').install(G,_G)
     require('AegisSuit.supplies').install(G,_G)
+    require('AegisSuit.gear').install(G,_G)
     require('AegisSuit.pulse').install(G,_G)
     if CLIENT then require('AegisSuit.client').install(G,_G,root) end
     G.install()

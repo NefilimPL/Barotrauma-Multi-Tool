@@ -1,6 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <Items>
   <Item identifier="aegisservosuitdescendens" category="Diving,Equipment" tags="diving,deepdiving,human,aegisservosuit,divinggear_wearableindoors" scale="0.06" fireproof="true" allowdroppingonswapwith="diving" impactsoundtag="impact_metal_heavy" addedrepairspeedmultiplier="4.5" cannotrepairfail="true" name="Aegis servo suit — Descendants">
+    <PreferredContainer primary="divingsuitcontainer" spawnprobability="0" />
     <Price baseprice="10000" sold="false" soldelsewhere="false" minavailable="1" maxavailable="1" canbespecial="false">
       <Price storeidentifier="merchantresearch" sold="true" multiplier="1.0" />
     </Price>
@@ -136,6 +137,7 @@
     <Holdable slots="Any,RightHand" handle1="0,0" holdpos="0,0" msg="ItemMsgPickUpSelect" />
   </Item>
   <Item identifier="aegisservosuitcoalition" category="Diving,Equipment" tags="diving,deepdiving,human,aegisservosuit,divinggear_wearableindoors" scale="0.06" fireproof="true" allowdroppingonswapwith="diving" impactsoundtag="impact_metal_heavy" addedrepairspeedmultiplier="4.5" cannotrepairfail="true" name="Aegis servo suit — Coalition">
+    <PreferredContainer primary="divingsuitcontainer" spawnprobability="0" />
     <Price baseprice="10000" sold="false" soldelsewhere="false" minavailable="1" maxavailable="1" canbespecial="false" requiredfaction="coalition">
       <Price storeidentifier="merchantmilitary" sold="true" multiplier="1.0" />
     </Price>
@@ -271,6 +273,7 @@
     <Holdable slots="Any,RightHand" handle1="0,0" holdpos="0,0" msg="ItemMsgPickUpSelect" />
   </Item>
   <Item identifier="aegisservosuitseparatists" category="Diving,Equipment" tags="diving,deepdiving,human,aegisservosuit,divinggear_wearableindoors" scale="0.06" fireproof="true" allowdroppingonswapwith="diving" impactsoundtag="impact_metal_heavy" addedrepairspeedmultiplier="4.5" cannotrepairfail="true" name="Aegis servo suit — Separatists">
+    <PreferredContainer primary="divingsuitcontainer" spawnprobability="0" />
     <Price baseprice="10000" sold="false" soldelsewhere="false" minavailable="1" maxavailable="1" canbespecial="false" requiredfaction="separatists">
       <Price storeidentifier="merchantmilitary" sold="true" multiplier="1.0" />
     </Price>
@@ -406,6 +409,7 @@
     <Holdable slots="Any,RightHand" handle1="0,0" holdpos="0,0" msg="ItemMsgPickUpSelect" />
   </Item>
   <Item identifier="aegisservosuithusk" category="Diving,Equipment" tags="diving,deepdiving,human,aegisservosuit,divinggear_wearableindoors" scale="0.06" fireproof="true" allowdroppingonswapwith="diving" impactsoundtag="impact_metal_heavy" addedrepairspeedmultiplier="4.5" cannotrepairfail="true" name="Aegis servo suit — Church of Husk">
+    <PreferredContainer primary="divingsuitcontainer" spawnprobability="0" />
     <Price baseprice="10000" sold="false" soldelsewhere="false" minavailable="1" maxavailable="1" canbespecial="false" requiredfaction="huskcult">
       <Price storeidentifier="merchanthusk" sold="true" multiplier="1.0" />
     </Price>
@@ -541,6 +545,7 @@
     <Holdable slots="Any,RightHand" handle1="0,0" holdpos="0,0" msg="ItemMsgPickUpSelect" />
   </Item>
   <Item identifier="aegisservosuitclowns" category="Diving,Equipment" tags="diving,deepdiving,human,aegisservosuit,divinggear_wearableindoors" scale="0.06" fireproof="true" allowdroppingonswapwith="diving" impactsoundtag="impact_metal_heavy" addedrepairspeedmultiplier="4.5" cannotrepairfail="true" name="Aegis servo suit — Children of the Honkmother">
+    <PreferredContainer primary="divingsuitcontainer" spawnprobability="0" />
     <Price baseprice="10000" sold="false" soldelsewhere="false" minavailable="1" maxavailable="1" canbespecial="false" requiredfaction="clowns">
       <Price storeidentifier="merchantclown" sold="true" multiplier="1.0" />
     </Price>

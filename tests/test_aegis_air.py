@@ -1,6 +1,30 @@
 from lua_support import LuaCase
 
 
+class SuitFetchInterruptionTests(LuaCase):
+    def test_stock_stays_available_when_bot_changes_its_current_objective(self):
+        self.lua.execute('''
+            local G={authoritative=true,now=10,patch=function() end,energy=function() return 0 end,
+                tank=function() end}
+            local E={LuaUserData={RegisterType=function() end,MakePropertyAccessible=function() end},
+                Util={RegisterItemGroup=function() end,GetItemGroup=function() return {} end}}
+            local oldObjective={}
+            local manager={CurrentObjective={}}
+            local owner={IsBot=true,AIController={ObjectiveManager=manager}}
+            local fetch={IsCompleted=false}
+            local s={resupply=fetch,supplyRoot=oldObjective,supplyTarget={ID=9},supplySlot=0,
+                supplyDeadline=20,supplyOwner=owner,nextResupply=11}
+            require('AegisSuit.supplies').install(G,E)
+            G.updateSupplies(owner,{},s)
+            assert(fetch.IsCompleted and not s.resupply,'obsolete fetch stayed active')
+            assert(not s.failedSupplies or not s.failedSupplies[9],'an interruption blacklisted usable stock')
+        ''')
+
+
+class ModularSuitFetchInterruptionTests(SuitFetchInterruptionTests):
+    mod_directory = 'System-Aegis-No-Headsets'
+
+
 class SuitAirTests(LuaCase):
     mod_directory = 'System-Aegis-No-Headsets'
 
